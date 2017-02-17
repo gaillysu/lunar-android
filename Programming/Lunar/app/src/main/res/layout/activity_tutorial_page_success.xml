@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/baseBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.medcorp.view.customfontview.RobotoTextView
+        android:id="@+id/activity_tutorial_page5_search_success_textview"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
+        roboto:bold="true"
+        android:textSize="36sp"
+        android:text="@string/tutorial_success_title"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/tutorial_nevo_link_success"/>
+
+    <com.medcorp.view.customfontview.RobotoButton
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/tutorial_success_tap_to_continue"
+        style="@style/TutorialButton"
+        android:id="@+id/activity_tutorial_success_next_button"
+        android:textColor="@color/tutorial_text_color"
+        android:layout_marginBottom="61dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
+</RelativeLayout>

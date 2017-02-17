@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="48dp">
+        <ImageButton
+            android:id="@+id/register_title_back_image_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/back_page_button_icon"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:tint="@color/register_account_back_tint_color"
+            android:padding="5dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            android:layout_centerInParent="true"
+            android:textSize="22sp"
+            android:text="@string/register_user_info_page_text"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/black"/>
+</RelativeLayout>

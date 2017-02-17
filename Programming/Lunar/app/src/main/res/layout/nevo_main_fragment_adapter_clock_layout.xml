@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:android_custom="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_weight="4">
+
+        <com.medcorp.view.RoundProgressBar
+            android:id="@+id/main_steps_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_margin="10dp"
+            android_custom:max="100"
+            android_custom:roundColor="@android:color/transparent"
+            android_custom:roundProgressColor="@color/colorPrimary"
+            android_custom:roundWidth="4dp"
+            android_custom:textIsDisplayable="false"/>
+
+        <ImageView
+            android:id="@+id/clock_imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:src="@drawable/lunar_watch_icon"
+            />
+        <ImageView
+            android:id="@+id/HomeClockHour"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:src="@drawable/lunar_clockview_hour"/>
+
+        <ImageView
+            android:id="@+id/HomeClockMinute"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:src="@drawable/lunar_clockview_minute"/>
+    </RelativeLayout>
+    <include
+        android:id="@+id/main_clock_content_nevo_include"
+        layout="@layout/lunar_fragment_main_content_news_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginTop="40dp"
+        android:layout_weight="1"
+        />
+</LinearLayout>

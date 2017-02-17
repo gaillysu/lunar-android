@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_horizontal"
+              android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/analysis_solar_fragment_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textAllCaps="true"
+            android:text="@string/analysis_fragment_this_week_steps"
+            android:textColor="@color/text_color"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:textSize="16sp"
+            />
+        <android.support.v4.view.ViewPager
+            android:id="@+id/analysis_solar_fragment_view_pager"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="20dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
+        </android.support.v4.view.ViewPager>
+    <!--</Line-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/analysis_fragment_solar_page_time_on_battery_text"
+                android:textColor="@color/text_color"
+                android:textSize="18sp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:text="@string/analysis_fragment_solar_page_time_on_solar_text"
+                android:textColor="@color/text_color"
+                android:textSize="18sp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/today_solar_battery_time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:gravity="center_vertical"
+                android:text="0"
+                android:textColor="@color/profile_fragment_text_right_color"
+                android:textSize="18sp"
+                />
+
+            <TextView
+                android:id="@+id/today_solar_solar_time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="20dp"
+                android:text="0"
+                android:textColor="@color/profile_fragment_text_right_color"
+                android:textSize="18sp"
+                />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ui_page_control_point"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        />
+</LinearLayout>

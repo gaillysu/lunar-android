@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_margin="20dp"
+              android:background="@color/window_background_color"
+              android:orientation="vertical"
+              android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/alarm_add"
+        android:textColor="@color/text_color"
+        android:textSize="26sp"
+        android:id="@+id/textView3"/>
+
+    <EditText
+        android:id="@+id/edit_input_alarm_name"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textColor="@color/text_color"
+        android:textColorHint="@color/text_color"
+        android:background="@color/transparent"
+        android:maxLines="1"
+        android:hint="@string/edit_alarm_name"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/text_color"
+            android:text="@string/edit_alarm_repeat"
+            android:textSize="26sp"/>
+        <!--<Button-->
+        <!--android:id="@+id/edit_alarm_repeat_is_once"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:text="@string/edit_alarm_repeat_Once"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:background="@color/transparent"-->
+        <!--/>-->
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            style="@style/new_alarm_clock_repeat_days_llyt">
+
+            <Button
+                android:id="@+id/tag_btn_monday"
+                style="@style/new_alarm_clock_repeat_days_tag_btn"
+                android:text="@string/monday">
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/new_alarm_clock_repeat_days_llyt">
+
+            <Button
+                android:id="@+id/tag_btn_tuesday"
+                style="@style/new_alarm_clock_repeat_days_tag_btn"
+                android:text="@string/tuesday">
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/new_alarm_clock_repeat_days_llyt">
+
+            <Button
+                android:id="@+id/tag_btn_wednesday"
+                style="@style/new_alarm_clock_repeat_days_tag_btn"
+                android:text="@string/wednesday"
+                >
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/new_alarm_clock_repeat_days_llyt">
+
+            <Button
+                android:id="@+id/tag_btn_thursday"
+                style="@style/new_alarm_clock_repeat_days_tag_btn"
+                android:text="@string/thursday">
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/new_alarm_clock_repeat_days_llyt">
+
+            <Button
+                android:id="@+id/tog_btn_friday"
+                style="@style/new_alarm_clock_repeat_days_tag_btn"
+                android:text="@string/friday"
+                >
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/new_alarm_clock_repeat_days_llyt">
+            <Button
+                android:id="@+id/tag_btn_saturday"
+                style="@style/new_alarm_clock_repeat_days_tag_btn"
+                android:text="@string/saturday"
+                >
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/new_alarm_clock_repeat_days_llyt">
+
+            <Button
+                android:id="@+id/tag_btn_sunday"
+                style="@style/new_alarm_clock_repeat_days_tag_btn"
+                android:text="@string/sunday">
+            </Button>
+        </LinearLayout>
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/select_alarm_style_radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/alarm_style_sleep"
+            style="@style/StepsGoalDialogRadioBUttonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:textColor="@color/text_color"
+            android:text="@string/edit_alarm_sleep"/>
+
+        <RadioButton
+            android:id="@+id/alarm_style_wake"
+            style="@style/StepsGoalDialogRadioBUttonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/text_color"
+            android:text="@string/edit_alarm_wake"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/cancel_edit_alarm_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:text="@string/goal_cancel"
+            android:textColor="@color/colorPrimary"
+            />
+
+        <Button
+            android:id="@+id/add_new_alarm_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:text="@string/goal_ok"
+            android:textColor="@color/colorPrimary"
+            />
+    </LinearLayout>
+</LinearLayout>

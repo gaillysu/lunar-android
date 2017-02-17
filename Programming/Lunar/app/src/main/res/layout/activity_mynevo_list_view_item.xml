@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:roboto="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="15dp"
+                android:paddingLeft="16dp"
+                android:background="@color/window_background_color"
+                android:paddingRight="16dp"
+                android:paddingTop="15dp"
+    >
+
+    <com.medcorp.view.customfontview.RobotoTextView
+        android:id="@+id/activity_mynevo_list_view_item_title_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="16sp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_mynevo_list_view_item_title_label"
+        android:orientation="horizontal"
+        >
+
+        <com.medcorp.view.customfontview.RobotoTextView
+            android:id="@+id/activity_mynevo_list_view_item_version_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/customGray"
+            android:textSize="14sp"/>
+
+        <com.medcorp.view.customfontview.RobotoTextView
+            android:id="@+id/activity_mynevo_list_view_item_infomation_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/activity_mynevo_list_view_item_version_label"
+            android:paddingLeft="10dp"
+            android:textColor="@color/customOrange"
+            android:textSize="14sp"
+            roboto:bold="true"/>
+
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/activity_mynevo_list_view_item_update_image"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/firmware_update"/>
+</RelativeLayout>

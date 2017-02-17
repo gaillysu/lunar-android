@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:roboto="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginTop="15dp"
+              android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/firmware"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_nevo_firmware"
+                android:textColor="@color/text_color"
+                android:textSize="20sp"
+                />
+
+            <TextView
+                android:id="@+id/my_watch_update_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/firmware"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/register_account_text_color"
+                android:textSize="8sp"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/my_watch_version_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawablePadding="5dp"
+            android:drawableRight="@drawable/right_arrow"
+            android:drawableTint="@color/text_color"
+            android:gravity="center|right"
+            android:text="@string/my_nevo_new_update_available"
+            android:textColor="@color/colorAccent"
+            android:textSize="20sp"
+            />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/my_nevo_battery"
+            android:textColor="@color/text_color"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:id="@+id/my_device_battery_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/my_device_right_show_version_text_color"
+            android:textSize="20sp"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        >
+
+        <TextView
+            android:id="@+id/my_device_version_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/my_device_right_show_version_text_color"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/my_device_version_text"
+            android:layout_alignBottom="@+id/my_device_version_text"
+            android:layout_alignParentStart="true"
+            android:text="@string/my_nevo_application"
+            android:textColor="@color/text_color"
+            android:textSize="20sp"/>
+    </RelativeLayout>
+
+</LinearLayout>

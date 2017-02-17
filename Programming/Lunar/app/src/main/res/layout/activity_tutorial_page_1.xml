@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/baseBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+        <com.medcorp.view.customfontview.RobotoTextView
+            android:id="@+id/activity_tutorial_page1_start_textview"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:gravity="center_horizontal"
+            roboto:bold="true"
+            android:textSize="36sp"
+            android:text="@string/tutorial_1_title"/>
+
+        <com.medcorp.view.customfontview.RobotoTextView
+            android:id="@+id/activity_tutorial_page1_notice_textview"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:text="@string/tutorial_1_text"
+            />
+
+        <ImageView
+            android:layout_centerInParent="true"
+            android:layout_width="260dp"
+            android:layout_height="260dp"
+            android:layout_weight="1"
+            android:padding="20dp"
+            android:layout_below="@id/activity_tutorial_page1_notice_textview"
+            android:src="@drawable/tutorial_nevo_1"
+            android:id="@+id/imageView"/>
+
+        <com.medcorp.view.customfontview.RobotoButton
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/tutorial_1_lets_activate"
+            android:id="@+id/activity_tutorial_1_activate_button"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="60dp"
+            android:textColor="@color/tutorial_text_color"
+            style="@style/TutorialButton"
+             />
+
+</LinearLayout>
