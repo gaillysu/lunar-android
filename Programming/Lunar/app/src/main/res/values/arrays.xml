@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="profile_gender" translatable="false">
+        <item>female</item>
+        <item>male</item>
+    </string-array>
+    <string-array name="profile_gender_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+    <string-array name="profile_unit" translatable="false">
+        <item>Metric</item>
+        <item>Inch</item>
+    </string-array>
+    <string-array name="profile_unit_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="notification_array" translatable="false">
+        <item>2 o\'clock</item>
+        <item>4 o\'clock</item>
+        <item>6 o\'clock</item>
+        <item>8 o\'clock</item>
+        <item>10 o\'clock</item>
+        <item>12 o\'clock</item>
+    </string-array>
+    <string-array name="week_day" translatable="false">
+        <item name="disable">@string/disable</item>
+        <item name="sunday">@string/sunday</item>
+        <item name="monday">@string/monday</item>
+        <item name="tuesday">@string/tuesday</item>
+        <item name="wednesday">@string/wednesday</item>
+        <item name="thursday">@string/thursday</item>
+        <item name="friday">@string/friday</item>
+        <item name="saturday">@string/saturday</item>
+    </string-array>
+    <string-array name="solar_describe_battery_text" translatable="false">
+        <item>Solar</item>
+        <item>Battery</item>
+    </string-array>
+</resources>

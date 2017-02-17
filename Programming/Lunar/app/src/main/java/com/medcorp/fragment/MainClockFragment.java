@@ -1,0 +1,359 @@
+package com.medcorp.fragment;
+
+import android.location.Address;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
+import com.medcorp.R;
+import com.medcorp.event.ChangeGoalEvent;
+import com.medcorp.event.DateSelectChangedEvent;
+import com.medcorp.event.LocationChangedEvent;
+import com.medcorp.event.Timer10sEvent;
+import com.medcorp.event.bluetooth.LittleSyncEvent;
+import com.medcorp.event.bluetooth.OnSyncEvent;
+import com.medcorp.event.bluetooth.PositionAddressChangeEvent;
+import com.medcorp.event.bluetooth.SolarConvertEvent;
+import com.medcorp.fragment.base.BaseFragment;
+import com.medcorp.model.Sleep;
+import com.medcorp.model.SleepData;
+import com.medcorp.model.Steps;
+import com.medcorp.model.User;
+import com.medcorp.util.Common;
+import com.medcorp.util.Preferences;
+import com.medcorp.util.SleepDataHandler;
+import com.medcorp.util.SleepDataUtils;
+import com.medcorp.util.TimeUtil;
+import com.medcorp.view.RoundProgressBar;
+
+import net.medcorp.library.worldclock.City;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
+
+/**
+ * Created by Jason on 2016/12/26.
+ */
+
+public class MainClockFragment extends BaseFragment {
+
+    @Bind(R.id.HomeClockHour)
+    ImageView hourImage;
+    @Bind(R.id.HomeClockMinute)
+    ImageView minImage;
+    @Bind(R.id.lunar_main_clock_sleep_time_count)
+    TextView lunarSleepTotal;
+    @Bind(R.id.lunar_main_clock_home_city_time)
+    TextView lunarHomeCityTime;
+    @Bind(R.id.lunar_main_clock_home_city_name)
+    TextView homeCityName;
+    @Bind(R.id.lunar_main_clock_home_country)
+    TextView countryName;
+    @Bind(R.id.lunar_main_clock_home_city_sunrise_time_tv)
+    TextView sunriseOfSunsetTime;
+    @Bind(R.id.lunar_main_clock_home_city_name_tv)
+    TextView sunriseCityName;
+    @Bind(R.id.lunar_main_clock_steps_goal_analysis)
+    RoundProgressBar goalProgress;
+    @Bind(R.id.lunar_main_clock_steps_count)
+    TextView stepsCount;
+    @Bind(R.id.steps_of_goal_percentage)
+    TextView goalPercentage;
+    @Bind(R.id.lunar_main_clock_home_city_sunrise_icon)
+    ImageView sunriseOrSunsetIv;
+    @Bind(R.id.lunar_main_clock_home_city_sunrise)
+    TextView sunriseTv;
+    @Bind(R.id.lunar_main_clock_battery_status)
+    TextView solar_harvest_status;
+    private Date userSelectDate;
+    private Handler mUiHandler = new Handler(Looper.getMainLooper());
+    private User user;
+
+    private String homeName;
+    private String homeCountryName;
+    private Address mPositionLocal;
+    private SunriseSunsetCalculator calculator;
+    private Realm realm = Realm.getDefaultInstance();
+
+    private City mDefaultTimeZoneCity;
+
+    private void refreshClock() {
+        final Calendar calendar = Calendar.getInstance();
+        int mCurHour = calendar.get(Calendar.HOUR);
+        int mCurMin = calendar.get(Calendar.MINUTE);
+        minImage.setRotation((float) (mCurMin * 6));
+        hourImage.setRotation((float) ((mCurHour + mCurMin / 60.0) * 30));
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        user = getModel().getNevoUser();
+        String selectDate = Preferences.getSelectDate(this.getContext());
+        if (selectDate == null) {
+            userSelectDate = new Date();
+        } else {
+            try {
+                userSelectDate = new SimpleDateFormat("yyyy-MM-dd").parse(selectDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View mainClockFragmentView = inflater.inflate(R.layout.lunar_main_fragment_adapter_clock_layout, container, false);
+        ButterKnife.bind(this, mainClockFragmentView);
+        mPositionLocal = Preferences.getLocation(MainClockFragment.this.getContext());
+        refreshClock();
+        initData(userSelectDate);
+        return mainClockFragmentView;
+    }
+
+    private void initData(Date date) {
+        lunarSleepTotal.setText(countSleepTime(date));
+        Steps dailySteps = getModel().getDailySteps(user.getNevoUserID(), date);
+        mDefaultTimeZoneCity = getDefaultTimeZoneCity();
+        stepsCount.setText(dailySteps.getSteps() + "");
+        setHomeCityData();
+        setSunsetOrSunrise();
+        float percent = (float) dailySteps.getSteps() / (float) dailySteps.getGoal();
+        goalProgress.setProgress(percent * 100 >= 100f ? 100 : (int) (percent * 100));
+        goalPercentage.setText((percent * 100 >= 100f ? 100 : (int) (percent * 100)) + "%" + getString(R.string.lunar_steps_percentage));
+    }
+
+    private void setSunsetOrSunrise() {
+        if (mPositionLocal != null) {
+            calculator = computeSunriseTime(mPositionLocal.getLatitude(), mPositionLocal.getLongitude()
+                    , Calendar.getInstance().getTimeZone().getID());
+        } else {
+            calculator = computeSunriseTime(mDefaultTimeZoneCity.getLat(),
+                    mDefaultTimeZoneCity.getLng(), Calendar.getInstance().getTimeZone().getID());
+        }
+        String officialSunrise = calculator.getOfficialSunriseForDate(Calendar.getInstance());
+        String officialSunset = calculator.getOfficialSunsetForDate(Calendar.getInstance());
+
+        int sunriseHour = Integer.parseInt(officialSunrise.split(":")[0]);
+        int sunriseMin = Integer.parseInt(officialSunrise.split(":")[1]);
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        if (sunriseHour * 60 + sunriseMin > hour * 60 + minute) {
+            sunriseOfSunsetTime.setText(sunriseHour + ":" + sunriseMin);
+            sunriseOrSunsetIv.setImageDrawable(getResources().getDrawable(R.drawable.sunrise_icon));
+            sunriseTv.setText(getString(R.string.lunar_main_clock_home_city_sunrise));
+        } else {
+            sunriseOfSunsetTime.setText(new Integer(officialSunset.split(":")[0]).intValue() - 12 + ":"
+                    + officialSunset.split(":")[1] + getString(R.string.time_able_afternoon));
+            sunriseTv.setText(getString(R.string.lunar_main_clock_home_city_sunset));
+            sunriseOrSunsetIv.setImageDrawable(getResources().getDrawable(R.drawable.sunset_icon));
+        }
+
+    }
+
+    private void setHomeCityData() {
+        mDefaultTimeZoneCity = getDefaultTimeZoneCity();
+        homeName = Preferences.getPositionCity(MainClockFragment.this.getActivity());
+        homeCountryName = Preferences.getPositionCountry(MainClockFragment.this.getActivity());
+        if (homeName == null) {
+            if (mPositionLocal == null) {
+                homeName = mDefaultTimeZoneCity.getName();
+                homeCountryName = mDefaultTimeZoneCity.getCountry();
+            } else {
+                homeName = mPositionLocal.getLocality();
+                homeCountryName = mPositionLocal.getCountryName();
+            }
+        }
+        if (mPositionLocal == null) {
+            sunriseCityName.setText(mDefaultTimeZoneCity.getName());
+        } else {
+            sunriseCityName.setText(mPositionLocal.getLocality());
+        }
+        homeCityName.setText(homeName);
+        countryName.setText(homeCountryName);
+        setHomeCityTime();
+    }
+
+    public void setHomeCityTime() {
+        Calendar mCalendar;
+        if (Preferences.getPositionCity(MainClockFragment.this.getActivity()) != null) {
+            mCalendar = Calendar.getInstance(TimeZone.getTimeZone(
+                    Preferences.getHomeTimezoneId(MainClockFragment.this.getActivity())));
+        } else {
+            mCalendar = Calendar.getInstance();
+        }
+        String am_pm = mCalendar.get(Calendar.HOUR_OF_DAY) < 12 ?
+                getString(R.string.time_able_morning) : getString(R.string.time_able_afternoon);
+        String minute = mCalendar.get(Calendar.MINUTE) >= 10 ? mCalendar.get(Calendar.MINUTE) + "" : "0" + mCalendar.get(Calendar.MINUTE);
+        lunarHomeCityTime.setText(mCalendar.get(Calendar.HOUR_OF_DAY) + ":" + minute + am_pm);
+    }
+
+    private SunriseSunsetCalculator computeSunriseTime(double latitude, double longitude, String zone) {
+        com.luckycatlabs.sunrisesunset.dto.Location sunriseLocation =
+                new com.luckycatlabs.sunrisesunset.dto.Location(latitude + "", longitude + "");
+        return new SunriseSunsetCalculator(sunriseLocation, zone);
+    }
+
+    private String countSleepTime(Date date) {
+        Sleep[] sleepArray = getModel().getDailySleep(user.getNevoUserID(), date);
+        SleepDataHandler handler = new SleepDataHandler(Arrays.asList(sleepArray));
+        List<SleepData> sleepDataList = handler.getSleepData(date);
+        String totalSleepTime;
+        if (!sleepDataList.isEmpty()) {
+            SleepData sleepData;
+            if (sleepDataList.size() == 2) {
+                sleepData = SleepDataUtils.mergeYesterdayToday(sleepDataList.get(1), sleepDataList.get(0));
+                totalSleepTime = TimeUtil.formatTime(sleepData.getTotalSleep());
+            } else {
+                sleepData = sleepDataList.get(0);
+                totalSleepTime = TimeUtil.formatTime(sleepData.getTotalSleep());
+            }
+            return totalSleepTime;
+        }
+        return new String("00:00");
+    }
+
+    @Subscribe
+    public void onEvent(LocationChangedEvent locationChangedEvent) {
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                initData(userSelectDate);
+            }
+        });
+    }
+
+    @Subscribe
+    public void onEvent(PositionAddressChangeEvent addressDateEvent) {
+        mPositionLocal = addressDateEvent.getAddress();
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                initData(userSelectDate);
+            }
+        });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onEvent(LittleSyncEvent event) {
+        if (event.isSuccess()) {
+            Steps steps = getModel().getDailySteps(getModel().getNevoUser().getNevoUserID(), Common.removeTimeFromDate(userSelectDate));
+            if (steps == null) {
+                return;
+            }
+            mUiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    initData(userSelectDate);
+                }
+            });
+        }
+    }
+
+    @Subscribe
+    public void onEvent(final DateSelectChangedEvent event) {
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                userSelectDate = event.getDate();
+                initData(userSelectDate);
+            }
+        });
+    }
+
+    @Subscribe
+    public void onEvent(final Timer10sEvent event) {
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshClock();
+                setHomeCityTime();
+            }
+        });
+    }
+
+    @Subscribe
+    public void onEvent(ChangeGoalEvent cahngeGoal){
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                initData(userSelectDate);
+            }
+        });
+    }
+
+    @Subscribe
+    public void onEvent(final OnSyncEvent event) {
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED || event.getStatus() == OnSyncEvent.SYNC_EVENT.TODAY_SYNC_STOPPED) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    initData(userSelectDate);
+                }
+            });
+        }
+    }
+
+    @Subscribe
+    public void onEvent(final SolarConvertEvent event) {
+        solar_harvest_status.post(new Runnable() {
+            @Override
+            public void run() {
+                //NOTICE: nevo solar adc threshold is 200，but lunar is 170
+                if (event.getPv_adc() >= 170) {
+                    solar_harvest_status.setText(R.string.lunar_home_clock_solar_harvest_charge);
+                } else {
+                    solar_harvest_status.setText(R.string.lunar_home_clock_solar_harvest_idle);
+                }
+            }
+        });
+    }
+
+
+    public City getDefaultTimeZoneCity() {
+        RealmResults<City> cities = realm.where(City.class).findAll();
+        TimeZone timeZone = Calendar.getInstance().getTimeZone();
+        String localCityName = timeZone.getID().split("/")[1].replace("_", " ");
+        for (City city : cities) {
+            if (city.getName().equals(localCityName)) {
+                return city;
+            }
+        }
+        return new City();
+    }
+}
+

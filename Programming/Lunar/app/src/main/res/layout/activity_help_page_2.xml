@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/baseBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.medcorp.view.customfontview.RobotoTextView
+        android:id="@+id/activity_help_page_2_textview"
+        android:textColor="@color/textColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        roboto:bold="true"
+        android:textSize="36sp"
+        android:layout_marginTop="50dp"
+        android:text="@string/help_track_sleep_title"/>
+
+    <com.medcorp.view.customfontview.RobotoTextView
+        android:layout_below="@+id/activity_help_page_2_textview"
+        android:textColor="@color/black"
+        android:layout_width="275dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="5dp"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:text="@string/help_track_sleep_message"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/nevo_sleep_mode_image"
+        />
+
+    <com.medcorp.view.customfontview.RobotoButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/help_got_it"
+        android:textAllCaps="false"
+        android:id="@+id/activity_tutorial_sleep_close_button"
+        android:background="@color/transparent"
+        android:textColor="@color/colorPrimaryDark"
+        roboto:light="true"
+        android:textSize="21sp"
+        android:layout_alignParentBottom="true"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_marginBottom="60dp"/>
+
+</RelativeLayout>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="com.medcorp"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:installLocation="preferExternal"
+    >
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true"/>
+
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <application
+        android:name=".application.ApplicationModel"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/NevoTheme"
+        tools:replace="android:theme">
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="@string/provider_file_string"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
+        <activity
+            android:name=".activity.tutorial.TutorialPageVideoActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.login.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark"/>
+        <activity
+            android:name=".activity.login.SignupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark"/>
+        <activity
+            android:name=".activity.EditAlarmActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.GoalsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.EditGoalsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.MyNevoActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.DfuActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.SettingNotificationActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.EditSettingNotificationActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.SettingAboutActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.tutorial.TutorialPage1Activity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.tutorial.TutorialPage2Activity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.tutorial.TutorialPage3Activity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.tutorial.TutorialPage4Activity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.tutorial.TutorialPage5Activity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.tutorial.TutorialPageSuccessActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.tutorial.TutorialPageFailedActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ConnectToOtherAppsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.OpenSleepTrackActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.NotificationActivity"
+            android:label="Dfu"/>
+
+        <service
+            android:name="net.medcorp.library.ble.ble.MEDBTService"
+            android:enabled="true"/>
+        <service
+            android:name=".ble.controller.SyncControllerImpl$LocalService"
+            android:enabled="true"/>
+        <service
+            android:name=".ble.notification.NevoNotificationListener"
+            android:enabled="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.octo.android.robospice.JacksonSpringAndroidSpiceService"
+            android:exported="false"/>
+        <service
+            android:name=".network.validic.service.BaseValidicRetroService"
+            android:exported="false"/>
+        <service
+            android:name=".network.med.service.BaseMedRetroService"
+            android:exported="false"/>
+        <service
+            android:name=".ble.dfu.DfuService"
+            android:exported="true"
+            android:label="Dfu">
+            <intent-filter>
+                <action android:name="no.nordicsemi.android.action.DFU_UPLOAD"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="56d7d51267e58e1d950037de"/>
+
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Nevo_Android">
+        </meta-data>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="bf39954f177ecf7d9d8a5efe2e1d624856f03464"/>
+
+        //Lunar
+        <activity
+            android:name=".activity.UserInfoActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.ForgetPasswordActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.ForgetPasswordResultActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.EditWorldClockActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"
+            />
+
+        <activity
+            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity
+            android:name="com.medcorp.activity.EditNotificationLampActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name="com.medcorp.activity.EditNotificationAttributeActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name="com.medcorp.activity.MoreSettingActivity"
+            android:screenOrientation="portrait"
+            />
+    </application>
+
+</manifest>

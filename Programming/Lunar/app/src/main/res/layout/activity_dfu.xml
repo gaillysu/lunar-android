@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:android_custom="http://schemas.android.com/apk/res-auto"
+              xmlns:roboto="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:weightSum="1"
+              android:background="@color/window_background_color">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.medcorp.view.customfontview.RobotoTextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:textSize="23sp"
+            android:textColor="@color/text_color"
+            android:id="@+id/titleTextView"
+            android:text="@string/dfu_update"
+            android:background="@color/colorPrimary"
+            android:gravity="center" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="275dp"
+        android:layout_height="275dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.18"
+        android:layout_marginTop="30dp" >
+
+        <ImageView
+            android:layout_width="262dp"
+            android:layout_height="262dp"
+            android:layout_centerInParent = "true"
+            android:id="@+id/clock_imageView"
+            android:src="@drawable/lunar_watch_icon"/>
+
+        <ImageView
+            android:layout_width="262dp"
+            android:layout_height="262dp"
+            android:layout_centerInParent = "true"
+            android:id="@+id/HomeClockHour"
+            android:src="@drawable/lunar_clockview_hour"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:layout_width="262dp"
+            android:layout_height="262dp"
+            android:layout_centerInParent = "true"
+            android:id="@+id/HomeClockMinute"
+            android:src="@drawable/lunar_clockview_minute"
+            android:visibility="visible"/>
+
+        <com.medcorp.view.RoundProgressBar
+            android:id="@+id/roundProgressBar"
+            android:layout_width="275dp"
+            android:layout_height="275dp"
+            android:layout_centerInParent = "true"
+            android_custom:roundColor="#00000000"
+            android_custom:roundWidth="8dp"
+            android_custom:roundProgressColor="@color/colorPrimary"
+            android_custom:textIsDisplayable="false"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.medcorp.view.customfontview.RobotoTextView
+                android:id="@+id/activity_dfu_percent_textview"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                roboto:bold="true"
+                android:textSize="28sp" />
+            <com.medcorp.view.customfontview.RobotoTextView
+                android:id="@+id/activity_dfu_infomation_textview"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:gravity="center"
+                roboto:thin="true" />
+
+            <!-- this should be a button but leave it for now.-->
+            <com.medcorp.view.customfontview.RobotoButton
+                android:id="@+id/activity_dfu_back2settings_textview"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/dfu_back_to_settings"
+                android:background="@drawable/outline_button"
+                android:textSize="18sp"
+                android:textAllCaps="false"
+                android:textColor="@color/colorPrimary"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:visibility="invisible"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

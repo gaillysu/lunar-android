@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="DEVICEINFO_UDID" translatable="false">0000180a-0000-1000-8000-00805f9b34fb</string>
+    <string name="DEVICEINFO_FIRMWARE_VERSION" translatable="false">00002a26-0000-1000-8000-00805f9b34fb</string>
+    <string name="DEVICEINFO_SOFTWARE_VERSION" translatable="false">00002a28-0000-1000-8000-00805f9b34fb</string>
+
+    // Client Characteristic
+    <string name="CLIENT_CHARACTERISTIC_CONFIG" translatable="false">00002902-0000-1000-8000-00805f9b34fb</string>
+    //Lunar communicaiton service, from v6/88, lunar has below service UUID and device name to distinguish from nevo
+    <string name="NEVO_SERVICE" translatable="false">f0ba3028-6cac-4c99-9089-4b0a1df45002</string>
+
+    //This service will return us all the data we ask for through notification
+    <string name="NEVO_CALLBACK_CHARACTERISTIC" translatable="false">f0ba3029-6cac-4c99-9089-4b0a1df45002</string>
+    <string name="NEVO_INPUT_CHARACTERISTIC" translatable="false">f0ba302a-6cac-4c99-9089-4b0a1df45002</string>
+    <string name="NEVO_OTA_CHARACTERISTIC" translatable="false">f0ba302b-6cac-4c99-9089-4b0a1df45002</string>
+    <string name="NEVO_NOTIFICATION_CHARACTERISTIC" translatable="false">f0ba302c-6cac-4c99-9089-4b0a1df45002</string>
+
+    <string name="NEVO_OTA_SERVICE" translatable="false">00001530-1212-efde-1523-785feabcd123</string>
+    <string name="NEVO_OTA_CONTROL_CHARACTERISTIC" translatable="false">00001532-1212-efde-1523-785feabcd123</string>
+    <string name="NEVO_OTA_CALLBACK_CHARACTERISTIC" translatable="false">00001531-1212-efde-1523-785feabcd123</string>
+</resources>

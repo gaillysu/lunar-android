@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/window_background_color"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.medcorp.view.customfontview.RobotoTextView
+        android:id="@+id/activity_tutorial_page2_start_textview"
+        android:textColor="@color/text_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        roboto:bold="true"
+        android:textSize="36sp"
+        android:layout_marginTop="50dp"
+        android:text="@string/tutorial_2_title"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/bluetooth_icon"
+        android:id="@+id/activity_tutorial_page2_image"
+        android:tint="@color/text_color"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        android:orientation="vertical">
+    <com.medcorp.view.customfontview.RobotoButton
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/tutorial_2_continue"
+        android:id="@+id/activity_tutorial_2_continue_button"
+        android:layout_below="@+id/activity_tutorial_page2_image"
+        style="@style/TutorialButton" />
+
+    <com.medcorp.view.customfontview.RobotoTextView
+        android:layout_below="@+id/activity_tutorial_2_continue_button"
+        android:id="@+id/activity_tutorial_page2_notice_textview"
+        android:textColor="@color/text_color"
+        android:layout_alignStart="@+id/activity_tutorial_2_continue_button"
+        android:layout_alignEnd="@+id/activity_tutorial_2_continue_button"
+        android:paddingTop="5dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:text="@string/tutorial_2_text"/>
+    </LinearLayout>
+</RelativeLayout>

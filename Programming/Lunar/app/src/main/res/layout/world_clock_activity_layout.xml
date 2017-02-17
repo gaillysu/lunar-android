@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/window_background_color"
+              android:orientation="vertical">
+
+    <include layout="@layout/toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+
+        <LinearLayout
+            android:id="@+id/search_grounp"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_marginLeft="18dp"
+            android:layout_weight="1"
+            android:background="@drawable/world_search_city_edit_background"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="8dp"
+                android:src="@drawable/ic_edit_world_clock_search"
+                />
+
+            <EditText
+                android:id="@+id/search_world_city_edit_city_name_ed"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:maxLines="1"
+                android:paddingLeft="5dp"
+                />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/edit_world_clock_cancel_search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:text="@string/cancel_update"
+            android:textAllCaps="false"
+            android:textColor="@color/text_color"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/black"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:background="@color/analysis_fragment_tablayout_background_color"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="@string/edit_home_position_city"
+                android:textColor="@color/colorAccent"
+                android:textSize="20dp"
+                />
+
+            <TextView
+                android:id="@+id/edit_home_city_tv"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="@string/edit_home_position_city"
+                android:textColor="@color/text_color"
+                android:textSize="20dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:background="@color/analysis_fragment_tablayout_background_color"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="@string/edit_home_all_city"
+                android:textColor="@color/colorAccent"
+                android:textSize="20dp"
+                />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                >
+
+                <ListView
+                    android:id="@+id/show_all_city_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@android:color/transparent"
+                    />
+
+                <com.medcorp.view.SideBar
+                    android:id="@+id/choose_activity_list_index_sidebar"
+                    android:layout_width="30.0dip"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="end|center"/>
+            </FrameLayout>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/search_city_result_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@android:color/transparent"
+            android:visibility="gone"
+            />
+    </FrameLayout>
+</LinearLayout>

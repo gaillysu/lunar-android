@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:roboto="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/baseBackground"
+                android:orientation="vertical">
+
+    <com.medcorp.view.customfontview.RobotoTextView
+        android:id="@+id/activity_tutorial_page3_start_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:text="@string/tutorial_3_title"
+        android:textColor="@color/black"
+        android:textSize="36sp"
+        roboto:bold="true"/>
+
+    <com.medcorp.view.customfontview.RobotoTextView
+        android:id="@+id/activity_tutorial_page3_notice_textview"
+        android:layout_width="275dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@+id/activity_tutorial_page3_start_textview"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="5dp"
+        android:text="@string/tutorial_3_text"
+        android:textColor="@color/black"
+        android:textSize="12sp"/>
+
+    <ImageView
+        android:id="@+id/activity_tutorial_page3_image"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_marginTop="20dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/tutorial_nevo_settime"
+        android:padding="20dp"/>
+
+    <com.medcorp.view.customfontview.RobotoButton
+        android:id="@+id/activity_tutorial_3_next_button"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/transparent"
+        android:text="@string/tutorial_3_next"
+        android:textAllCaps="false"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/tutorial_next_text_color"
+        android:textSize="21sp"
+        roboto:light="true"/>
+
+</RelativeLayout>

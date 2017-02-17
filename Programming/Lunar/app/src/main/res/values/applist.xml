@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        //if some phone model app package is not include, pls add it
+        <string-array name="CALL_APPS" translatable="false">
+            <item>com.google.android.dialer</item>
+            <item>com.android.dialer</item>
+            <item>com.android.server.telecom</item>
+            <item>com.android.providers.telephony</item>
+            <item>com.android.incallui</item>
+            <item>com.android.phone</item>
+        </string-array>
+
+        <string-array name="SMS_APPS" translatable="false">
+            <item>com.android.mms</item>
+            <item>com.google.android.talk</item>
+            <item>com.google.android.apps.messaging</item>
+            <item>com.sonyericsson.conversations</item>
+            <item>com.htc.sense.mms</item>
+            <item>com.facebook.orca</item>
+        </string-array>
+
+        <string-array name="EMAIL_APPS" translatable="false">
+            <item>com.yahoo.mobile.client.android.mail</item>
+            <item>com.google.android.gm</item>
+            <item>com.google.android.apps.inbox</item>
+            <item>com.microsoft.office.outlook</item>
+            <item>com.android.email</item>
+            <item>com.google.android.email</item>
+            <item>com.kingsoft.email</item>
+            <item>com.tencent.androidqqmail</item>
+            <item>com.outlook.Z7</item>
+            <item>com.htc.android.mail</item>
+            <item>com.motorola.email</item>
+        </string-array>
+
+        <string-array name="CALENDAR_APPS" translatable="false">
+            <item>com.google.android.calendar</item>
+            <item>com.android.calendar</item>
+            <item>com.htc.calendar</item>
+        </string-array>
+
+        <string-array name="SOCIAL_APPS" translatable="false">
+            <item>com.facebook.katana</item>
+            <item>com.facebook.lite</item>
+            <item>com.facebook.Mentions</item>
+            <item>com.google.android.apps.plus</item>
+            <item>com.instagram.android</item>
+            <item>com.snapchat.android</item>
+            <item>com.linkedin.android</item>
+            <item>com.twitter.android</item>
+            <item>com.pinterest</item>
+            <item>com.tencent.mm</item>
+            <item>com.whatsapp</item>
+            <item>com.tencent.mobileqq</item>
+            <item>com.tencent.mobileqqi</item>
+            <item>com.tencent.qq.kddi</item>
+            <item>com.tencent.qqlite</item>
+        </string-array>
+
+</resources>

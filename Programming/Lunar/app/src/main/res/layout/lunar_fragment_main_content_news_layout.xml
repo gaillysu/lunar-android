@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/main_fragment_describe_text_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="@string/lunar_fragment_calorie_text"
+                android:textColor="@color/text_color"
+                android:textSize="17sp"/>
+
+            <TextView
+                android:id="@+id/main_fragment_describe_text_three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/lunar_fragment_activity_time_text"
+                android:textColor="@color/text_color"
+                android:textSize="17sp"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/lunar_fragment_show_user_consume_calories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:paddingLeft="10dp"
+                android:text="0"
+                android:maxLines="1"
+                android:textColor="@color/profile_fragment_text_right_color"
+                android:textSize="17sp"
+                />
+
+            <TextView
+                android:id="@+id/lunar_fragment_show_user_activity_time_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:paddingLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:text="0"
+                android:maxLines="1"
+                android:textColor="@color/profile_fragment_text_right_color"
+                android:textSize="17sp"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/main_fragment_describe_text_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="@string/lunar_fragment_steps_text"
+                android:textColor="@color/text_color"
+                android:textSize="17sp"
+                />
+
+            <TextView
+                android:id="@+id/main_fragment_describe_text_four"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/lunar_fragment_distance_km_text"
+                android:textColor="@color/text_color"
+                android:textSize="17sp"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/lunar_fragment_show_user_steps_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:maxLines="1"
+                android:paddingLeft="10dp"
+                android:text="0"
+                android:textColor="@color/profile_fragment_text_right_color"
+                android:textSize="17sp"
+                />
+
+            <TextView
+                android:id="@+id/lunar_fragment_show_user_steps_distance_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:paddingLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:text="0"
+                android:maxLines="1"
+                android:textColor="@color/profile_fragment_text_right_color"
+                android:textSize="17sp"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

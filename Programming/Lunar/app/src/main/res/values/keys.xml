@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="key_nevo" translatable="false">nevo</string>
+    <string name="key_notification" translatable="false">notification</string>
+    <string name="key_firmwares" translatable="false">firmwares</string>
+
+    <!-- preset keys -->
+    <string name="key_preset" translatable="false">preset</string>
+    <string name="key_preset_id" translatable="false">Preset_ID</string>
+    <string name="key_preset_label" translatable="false">Preset_Label</string>
+    <string name="key_preset_steps" translatable="false">Preset_Steps</string>
+
+    <!-- alarm keys -->
+    <string name="key_alarm_id" translatable="false">Alarm_ID</string>
+    <string name="key_alarm_label" translatable="false">alarm_label</string>
+
+    <!-- sleep keys -->
+    <string name="key_sleep_duration" translatable="false">sleepDuration</string>
+    <string name="key_sleep_deep_duration" translatable="false">sleepDeepDuration</string>
+    <string name="key_sleep_light_duration" translatable="false">sleepLightDuration</string>
+    <string name="key_sleep_start_time" translatable="false">startDateTime</string>
+    <string name="key_sleep_end_time" translatable="false">endDateTime</string>
+    <string name="key_sleep_wake_duration" translatable="false">sleepWakeDuration</string>
+    <string name="key_sleep_hourly_wake" translatable="false">mergeHourlyWakeTime</string>
+    <string name="key_sleep_hourly_light" translatable="false">mergeHourlyLightTime</string>
+    <string name="key_sleep_hourly_deep" translatable="false">mergeHourlyDeepTime</string>
+
+    <!-- preferences-->
+     <string name="key_prefs_nevo_shared_pref" translatable="false">Nevo_Shared_Preferences</string>
+    <string name="key_prefs_step_preset_id" translatable="false">steps_preset_id</string>
+    <string name="key_prefs_link_loss" translatable="false">link_loss_enable</string>
+    <string name="key_prefs_google_fit" translatable="false">google_fit_status</string>
+    <string name="key_prefs_select_date" translatable="false">select_date</string>
+    <string name="key_prefs_is_first_login" translatable="false">is_not_first_login</string>
+    <string name="key_prefs_is_metrics" translatable="false">is_not_metrics</string>
+    <string name="key_prefs_is_home" translatable="false">is_select_city</string>
+    <string name="key_init_alarm" translatable="false"> is_init_alarm</string>
+    <string name="key_prefs_watch_id" translatable="false">watch_id</string>
+    <string name="key_prefs_watch_model" translatable="false">watch_model</string>
+
+    <string name="key_prefs_home_city" translatable="false">home_city</string>
+    <string name="key_prefs_home_country" translatable="false">home_country</string>
+    <string name="key_prefs_home_timezone" translatable="false">timezone_id</string>
+    <string name="key_prefs_location_city" translatable="false">location_city</string>
+    <!-- aid OTA -->
+    <string name="key_manual_mode" translatable="false">manualMode</string>
+    <string name="key_back_to_settings" translatable="false">backtosetting</string>
+    <!-- Validic keys-->
+    <string name="key_validic_organization_id" translatable="false">56d3b075407e010001000000</string>
+    <string name="key_validic_organization_token" translatable="false">b85dcb3b85e925200f3fd4cafe6dce92295f449d9596b137941de7e9e2c3e7ae</string>
+    <!-- Nevo API token -->
+    <string name="token" translatable="false">SU9gPy5e1d1t7W8FG2fQ6MuT06cY95MB</string>
+</resources>

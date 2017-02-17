@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="15dp"
+    android:paddingTop="15dp"
+    android:paddingRight="15dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/activity_goals_list_view_item_goal_steps_wrapper"
+        >
+
+        <com.medcorp.view.customfontview.RobotoTextView
+            android:id="@+id/activity_goals_list_view_item_goal_steps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            android:textSize="25sp"
+            roboto:thin="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+        <android.support.v7.widget.SwitchCompat
+            android:shadowColor="@color/colorPrimary"
+            android:id="@+id/activity_goals_list_view_item_goals_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:focusable="false" />
+    </RelativeLayout>
+
+    <com.medcorp.view.customfontview.RobotoTextView
+        android:id="@+id/activity_goals_list_view_item_goals_label"
+        android:layout_below="@+id/activity_goals_list_view_item_goal_steps_wrapper"
+        android:paddingTop="15dp"
+        android:paddingBottom="25dp"
+        android:paddingLeft="5dp"
+        android:textColor="@color/text_color"
+        roboto:bold="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"/>
+
+</RelativeLayout>

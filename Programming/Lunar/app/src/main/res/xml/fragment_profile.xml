@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent">
+
+    <EditTextPreference
+        android:id="@+id/fragment_edit_profile_height"
+        android:dialogTitle="@string/profile_input_height"
+        android:inputType="numberDecimal"
+        android:key="fragment_edit_profile_height"
+        android:summary="@string/profile_set_height"
+        android:title="175"/>
+
+    <EditTextPreference
+        android:id="@+id/fragment_edit_profile_weight"
+        android:dialogTitle="@string/profile_input_weight"
+        android:inputType="numberDecimal"
+        android:key="fragment_edit_profile_weight"
+        android:summary="@string/profile_set_weight"
+        android:title="70"/>
+
+    <ListPreference
+        android:id="@+id/fragment_edit_profile_gender"
+        android:defaultValue="1"
+        android:dialogTitle="@string/profile_input_gender"
+        android:entries="@array/profile_gender"
+        android:entryValues="@array/profile_gender_values"
+        android:key="fragment_edit_profile_gender"
+        android:summary="@string/profile_set_gender"
+        android:title="male"/>
+    <EditTextPreference
+        android:id="@+id/fragment_edit_profile_age"
+        android:dialogTitle="@string/profile_input_age"
+        android:inputType="numberDecimal"
+        android:key="fragment_edit_profile_age"
+        android:summary="@string/profile_set_age"
+        android:title="18"/>
+
+
+</PreferenceScreen>

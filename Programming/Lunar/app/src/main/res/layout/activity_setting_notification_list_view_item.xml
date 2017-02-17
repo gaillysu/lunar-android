@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:roboto="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingBottom="6dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="6dp"
+                 >
+
+    <ImageView
+        android:id="@+id/activity_setting_notification_image"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:scaleType="fitXY"
+        android:layout_centerVertical="true"
+        android:src="@drawable/setting"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:background="@color/transparent"
+        android:orientation="vertical"
+        android:layout_marginLeft="56dp">
+
+        <com.medcorp.view.customfontview.RobotoTextView
+            android:id="@+id/activity_setting_notification_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/notification_list_text_color"
+            android:textSize="16sp"
+            roboto:bold="true"/>
+
+        <com.medcorp.view.customfontview.RobotoTextView
+            android:id="@+id/activity_setting_notification_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/notification_list_text_color"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
+</RelativeLayout>

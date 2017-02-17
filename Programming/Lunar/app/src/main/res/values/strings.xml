@@ -1,0 +1,467 @@
+<resources>
+<!-- for better translation, remove all strings into every flavor: nevo,lunar-->
+    <string name="profile_gender" translatable="false">profile_gender</string>
+    <string name="profile_gender_values" translatable="false">profile_gender_values</string>
+    <string name="edit_notification_item_name">Edit</string>
+    <string name="edit_notification_delete_item">Delete</string>
+    <string name="add_new_notification_dialog_title">Add name</string>
+    <string name="add_new_notification_dialog_hint_content">Input name</string>
+    <string name="new_nt_def_name">name</string>
+    <string name="new_nt_select_color">Choose color</string>
+    <string name="notification_def_name">Red</string>
+    <string name="unit_length" >mi</string>
+    <string name="unit_cal">kcal</string>
+    <string name="lunar_steps_percentage">OF GOAL</string>
+    <string name="home_time_home_city_name"  translatable="false">Getting location.. </string>
+    <string name="permission_location_message">We need your location to search for your LunaR and to determine the sunset and sunrise time</string>
+    <string name="my_watch_firmwer_version">Version </string>
+    <string name="def_alarm_name">Alarm</string>
+    <string name="sunrise_activity_toolbar_title">Sunset Sunrise</string>
+    <string name="my_watch_firmwer_version_describe">\" is now available for your LunaR!</string>
+
+
+    <string name="app_name">LunaR</string>
+    <string name="menu_drawer_activity">Dashboard</string>
+    <string name="menu_drawer_alarm">Alarm</string>
+    <string name="menu_drawer_hometime">Home Time</string>
+    <string name="menu_drawer_sleep">Sleep</string>
+    <string name="menu_drawer_settings">Settings</string>
+    <string name="choose_activity_title_choose_city_tv">Choose a City</string>
+    <string name="provider_file_string" translatable="false">com.med.lunar.fileprovider</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="time_able_morning">am</string>
+    <string name="time_able_afternoon">pm</string>
+
+    <string name="ble_not_supported">Smartphone does not support BLE</string>
+    <string name="ble_deactivated">Bluetooth is turned off, please turn the bluetooth on to make connection.</string>
+    <string name="ble_unstable">Bluetooth connection is unstable, please keep the watch closer to the phone.</string>
+    <string name="ble_connect_timeout">If connected to the internet, press Help button for solutions</string>
+    <string name="ble_notification_title">Notification</string>
+    <string name="ble_notification_message">Lunar is not paired, please pair first</string>
+    <string name="ble_command_timeout_title">Bluetooth communication timeout</string>
+    <string name="ble_connect_timeout_url">https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android</string>
+    <string name="ble_connection_timeout_title">Bluetooth connection timeout</string>
+    <string name="ble_connection_timeout_cancel">Cancel</string>
+    <string name="ble_connection_timeout_help">Help</string>
+    <string name="edit_user_first_name"> Click to set your first name</string>
+    <string name="edit_user_last_name">Click to set your last name</string>
+    <string name="notification_call_title">Call</string>
+    <string name="notification_sms_title">SMS</string>
+    <string name="notification_email_title">Email</string>
+    <string name="notification_facebook_title">Facebook</string>
+    <string name="notification_calendar_title">Calendar</string>
+    <string name="notification_wechat_title">WeChat</string>
+    <string name="notification_whatsapp_title">WhatsApp</string>
+
+    <string name="location_access_title">This app needs location access</string>
+
+    <string name="dfu_update">Update</string>
+    <string name="dfu_back_to_settings">Back to settings</string>
+    <string name="dfu_retry">Retry</string>
+    <string name="dfu_update_title">Do not exit this screen</string>
+    <string name="dfu_update_content">Please follow the instructions and wait until the update has been finished.</string>
+    <string name="dfu_update_positive">Update</string>
+    <string name="dfu_update_negative">Cancel</string>
+    <string name="dfu_update_prepare">Prepare for update&#8230;</string>
+    <string name="dfu_firmware_updated">Firmware updated</string>
+    <string name="dfu_continue">Continue</string>
+    <string name="dfu_back">Back</string>
+    <string name="dfu_press_third_button">Press the third button</string>
+    <string name="dfu_press_third_button_description">Don’t exit this screen while reactivating your bluetooth!</string>
+    <string name="dfu_failed_preparing">Failed to prepare the update, please restart the BT of lunar or reinstall battery.</string>
+    <string name="dfu_re_upgrade">Try again</string>
+    <string name="dfu_continue_button">Continue</string>
+    <string name="dfu_connect_error_no_nevo_do_ota">lunar isn\'t connected, can\'t perform OTA update</string>
+    <string name="dfu_checking_firmware">Checking firmware version, please wait&#8230;</string>
+    <string name="dfu_error_lowbattery">Not enough battery to upgrade.</string>
+    <string name="dfu_error_timeout">Connection timed out</string>
+    <string name="dfu_error_noconnect">No lunar connected</string>
+    <string name="dfu_error_openfile">Open Firmware file error.</string>
+    <string name="dfu_error_checksum">Checksum error.</string>
+    <string name="dfu_error_nofounDFUservice">No OTA service found, please wait for few minutes and try again.</string>
+    <string name="dfu_error_other">Couldn\'t update due to an error.</string>
+    <string name="dfu_update_message">Updating&#8230;</string>
+    <string name="dfu_update_available">An update is available for your watch.</string>
+
+    <string name="notification_allow">Allow Notifications</string>
+    <string name="notification">Notification</string>
+    <string name="notification_led_red">Red LED</string>
+    <string name="notification_led_blue">Blue LED</string>
+    <string name="notification_led_light_green">Light green LED</string>
+    <string name="notification_led_yellow">Yellow LED</string>
+    <string name="notification_led_orange">Orange LED</string>
+    <string name="notification_led_green">Green LED</string>
+    <string name="notification_position">Position</string>
+    <string name="notification_ok">OK</string>
+    <string name="notification_cancel">Cancel</string>
+    <string name="notification_deactivated">Deactivated</string>
+    <string name="notification_access_title">Notification Access</string>
+    <string name="notification_connect_title">Nevo connected</string>
+    <string name="notification_connect_content">your Nevo has got connected</string>
+    <string name="notification_disconnect_title">Nevo disconnect</string>
+    <string name="notification_disconnect_content">your Nevo has got disconnect</string>
+
+    <string name="tutorial_1_title">Let\'s get started!</string>
+
+    <string name="tutorial_2_title">Turn on Bluetooth</string>
+    <string name="tutorial_2_dialog_negative">Settings</string>
+    <string name="tutorial_2_dialog_positive">Turn on Bluetooth in the settings to connect with lunar</string>
+
+    <string name="tutorial_3_title">Set time</string>
+    <string name="tutorial_3_next">Next</string>
+
+    <string name="tutorial_4_next">Next</string>
+
+    <string name="tutorial_5_text">Keep lunar close to your phone</string>
+
+    <string name="tutorial_failed_title">Cannot connect</string>
+    <string name="tutorial_failed_try_again">Try Again</string>
+
+    <string name="tutorial_success_title">Connected</string>
+    <string name="tutorial_success_tap_to_continue">Tap to continue</string>
+
+    <string name="sleep_sleep_duration">Sleep duration</string>
+    <string name="sleep_sleep_time">Sleep time</string>
+    <string name="sleep_wake_time">Wake time</string>
+    <string name="sleep_deep_sleep">Deep sleep</string>
+    <string name="sleep_time">Time</string>
+    <string name="sleep_light_sleep">Light sleep</string>
+    <string name="sleep_awake">Awake</string>
+
+    <string name="sleep_wake_duration">Wake duration</string>
+    <string name="sleep_today_no_sleep_message">You didn\'t sleep with your lunar.</string>
+    <string name="sleep_select_date">select a date</string>
+
+    <string name="steps_goal_title">Goal</string>
+    <string name="steps_goal">goal</string>
+    <string name="steps_progress">progress</string>
+    <string name="steps_steps">steps</string>
+
+    <string name="startup_goal_light">Light</string>
+    <string name="startup_goal_moderate">Moderate</string>
+    <string name="startup_goal_heavy">Heavy</string>
+    <string name="startup_goal_weekly_days">Weekly days</string>
+    <string name="startup_goal_weekend">Weekend</string>
+
+
+    <string name="alarm_add">Add alarm</string>
+    <string name="alarm_saved">Saved alarm!</string>
+    <string name="alarm_could_not_save">Could not save alarm!</string>
+    <string name="alarm_edit">Edit Alarm</string>
+    <string name="alarm_label_alarm">Label your alarm.</string>
+    <string name="alarm_label">label name</string>
+    <string name="alarm_week_day">Repeat time</string>
+    <string name="alarm_cancel">Cancel</string>
+    <string name="alarm_deleted">Deleted alarm!</string>
+    <string name="alarm_could_not_delete">Failed to delete alarm</string>
+    <string name="alarm_could_not_change">Failed to change alarm</string>
+    <string name="alarm_delete">Delete Alarm</string>
+    <string name="alarm_set_different_time">Set a different time</string>
+    <string name="alarm_set_label_for_alarm">Set label for alarm</string>
+    <string name="alarm_set_week_day">Set weekday for alarm</string>
+    <string name="alarm_set_week_day_dialog_text">Set the alarm clock to repeat time</string>
+    <string name="alarm_synced">Alarm Synced</string>
+    <string name="alarm_error_sync">Error Syncing Alarm</string>
+    <string name="goal_syncing_message">Syncing Goal&#8230;</string>
+    <string name="goal_synced">Goal Synced</string>
+    <string name="goal_error_sync">Error Syncing Goal</string>
+
+    <string name="goal">Goal</string>
+    <string name="goal_ok">OK</string>
+    <string name="goal_cancel">Cancel</string>
+    <string name="goal_add">Add Goal</string>
+    <string name="goal_saved">Saved goal!</string>
+    <string name="goal_step_goal">step goal</string>
+    <string name="goal_name_goal">goal name</string>
+    <string name="goal_could_not_save">Could not save goal!</string>
+    <string name="goal_edit">Edit Goal</string>
+    <string name="goal_input">Set your goal</string>
+    <string name="goal_label_goal">Label your goal</string>
+    <string name="goal_label">label name</string>
+    <string name="goal_deleted">Deleted goal!</string>
+    <string name="goal_could_not_delete">Failed to delete goal</string>
+    <string name="goal_could_not_change">Failed to change goal</string>
+    <string name="goal_delete">Delete Goal</string>
+
+
+    <string name="in_app_notification_bluetooth_disabled">Bluetooth is disabled. Enable Bluetooth.</string>
+    <string name="in_app_notification_syncing">Syncing Data&#8230;</string>
+    <string name="in_app_notification_syncing_alarm">Syncing Alarm&#8230;</string>
+    <string name="in_app_notification_synced">Syncing data finished!</string>
+    <string name="in_app_notification_no_watch">No watch connected.</string>
+    <string name="in_app_notification_max_fourteen_alarm">Lunar supports only fourteen alarms.</string>
+    <string name="title_alarm">Alarm</string>
+    <string name="title_my_nevo">My Lunar</string>
+    <string name="title_about">About</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string name="my_nevo_firmware">Firmware</string>
+    <string name="my_nevo_new_version">New version available</string>
+    <string name="my_nevo_battery">Battery</string>
+    <string name="my_nevo_battery_low">Battery Low</string>
+    <string name="my_nevo_battery_half">Battery Sufficient</string>
+    <string name="my_nevo_battery_full">Battery Full</string>
+    <string name="my_nevo_application">Application</string>
+    <string name="settings_link_loss_notification">Link loss notification</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_notifications_active_title">Active Notifications</string>
+    <string name="settings_notifications_inactive_title">Inactive Notifications</string>
+    <string name="settings_find_my_watch">Find my watch</string>
+    <string name="settings_goals">Goals</string>
+    <string name="settings_more">More Settings</string>
+    <string name="settings_support">Support</string>
+    <string name="settings_about">About</string>
+    <string name="settings_forget_watch">Forget watch</string>
+    <string name="settings_sure">Are you sure?</string>
+    <string name="settings_other_apps">Connect to other apps</string>
+    <string name="settings_other_apps_short">Other apps</string>
+
+    <string name="settings_other_apps_google_fit">Google Fit</string>
+    <string name="settings_other_apps_validic">Validic</string>
+    <string name="settings_login">Log in</string>
+
+    <string name="google_fit_could_not_login">Couldn\'t login, try again later</string>
+    <string name="google_fit_connecting">Connecting to Google Account Failed</string>
+    <string name="google_fit_logged_in">Logged in with Google Account</string>
+    <string name="google_fit_network_lost">Network Connection Lost</string>
+    <string name="google_fit_service_disconnected">Google Play Service Disconnected</string>
+    <string name="google_fit_unknown_network">Unknown Network Error Occurred</string>
+    <string name="google_fit_synced">Synced data with Google fit complete.</string>
+    <string name="google_fit_sync_error">Error syncing data to Google Fit.</string>
+    <string name="google_fit_log_out_title">Log out Google Play</string>
+    <string name="google_fit_log_out_message">Do you want to disable Google Fit?</string>
+    <string name="google_fit_cancel">Cancel</string>
+
+    <string name="validic_pin_code_title">Input PIN code</string>
+    <string name="validic_pin_code">pin code</string>
+    <string name="validic_enable_message">Please login firstly</string>
+
+    <string name="log_in">Log in</string>
+    <string name="log_in_password">Password</string>
+    <string name="log_in_popup_message">Logging in...</string>
+    <string name="log_in_success">Login success</string>
+    <string name="log_in_failed">Login failed</string>
+
+
+    <string name="register_to_login">Already a member? Login</string>
+    <string name="singnup_success">Sign up success</string>
+    <string name="singnup_failed">Sign up failed</string>
+
+    <string name="register_popup_message">Creating Account...</string>
+    <string name="register_email_error">enter a valid email address</string>
+    <string name="register_password_error">Minimum 8 characters</string>
+    <string name="register_password_confirm_error">confirm password failed</string>
+
+    <string name="profile_title">Profile</string>
+    <string name="profile_input_height">Input height</string>
+    <string name="profile_set_height">Set height (cm)</string>
+    <string name="profile_input_weight">Input weight</string>
+    <string name="profile_set_weight">Set weight (kg)</string>
+    <string name="profile_input_gender">Select gender</string>
+    <string name="profile_set_gender">Set gender</string>
+    <string name="profile_input_age">Input age</string>
+    <string name="profile_set_age">Set age</string>
+    <string name="profile_input_unit">Select unit</string>
+    <string name="profile_set_unit">Set unit</string>
+
+    <string name="tab_title_today">Today</string>
+    <string name="tab_title_History">History</string>
+
+    <string name="help_take_tour">Take the tour</string>
+    <string name="help_track_sleep_title">Track your sleep</string>
+    <string name="help_track_sleep_message">To activate sleeping-mode, push and hold the first button, until the white LED blinks.</string>
+    <string name="help_track_sleep_goodmorning">Good morning</string>
+    <string name="help_track_sleep_good_morning_message">You just finished tracking your first night of sleep with your lunar. To start tracking your daily routine,
+        push and hold the third button, until the white LED blinks</string>
+    <string name="help_got_it">Got it!</string>
+    <string name="help_goto_sleep">How to track you sleep?</string>
+
+
+    <string name="register_success">Register up success</string>
+    <string name="register_failed">Register up failed</string>
+    <string name="network_wait_text">Please wait ...</string>
+    <string name="user_email_is_error">Please check your account..Please check your email....</string>
+    <string name="add_alarm_index_out">The same type of alarm clock can only add 7!</string>
+    <string name="lunar_adapter_clock">Clock</string>
+    <string name="lunar_adapter_chart">Chart</string>
+    <string name="lunar_adapter_solar">Solar</string>
+    <string name="main_sleep_fragment_title">Sleep</string>
+    <string name="main_steps_fragment_title">Steps</string>
+    <string name="main_clock_fragment_title">Clock</string>
+
+    <string name="lunar_adapter_sleep">Sleep</string>
+    <string name="login_title_text">Cloud Platform</string>
+
+
+    <string name="info_company_height">Cm</string>
+    <string name="info_company_weight">Kg</string>
+    <string name="prompt_is_not_forget_password">Do you forgot your password?</string>
+    <string name="open_forget_password_dialog_title">Forgot password</string>
+    <string name="analysis_fragment_title_string">Analysis</string>
+    <string name="steps_goal_one">4500 steps</string>
+    <string name="steps_goal_two">6000 steps</string>
+    <string name="steps_goal_three">8000 steps</string>
+    <string name="steps_goal_four">10000 steps</string>
+    <string name="profile_fragment_first_name_text">First Name</string>
+    <string name="profile_fragment_last_name_text">Surname</string>
+    <string name="profile_fragment_user_birthday_text">Date of Birth</string>
+    <string name="profile_fragment_user_height_text">Height</string>
+    <string name="profile_fragment_user_weight_text">Weight</string>
+    <string name="profile_input_user_first_name_dialog_title">Input FirstName</string>
+    <string name="profile_input_user_surname_dialog_title">Input Surname</string>
+    <string name="profile_fragment_edit_first_name_edit_hint">Input Name</string>
+    <string name="profile_fragment_input_user_surname_dialog_title">Input Surname</string>
+    <string name="profile_fragment_input_surname_edit_hint">Surname</string>
+    <string name="lunar_fragment_calorie_text">Calories</string>
+    <string name="lunar_main_sleep_fragment_time_text">Sleep Time</string>
+    <string name="lunar_main_sleep_fragment_title_text">OVER ALL SLEEP TIME</string>
+    <string name="lunar_main_sleep_fragment_solar_title">SOLAR TIME</string>
+    <string name="lunar_main_sleep_staus_text_light">LIGHT SLEEP TIME </string>
+    <string name="lunar_main_sleep_staus_text_deep">DEEP SLEEP TIME</string>
+    <string name="lunar_main_sleep_fragment_wake_time_text">Wake Time</string>
+    <string name="lunar_main_sleep_fragment_sleep_dec">Quality</string>
+    <string name="lunar_main_sleep_fragment_duration">Duration</string>
+    <string name="lunar_fragment_steps_text">Steps</string>
+    <string name="lunar_fragment_activity_time_text">Time</string>
+    <string name="lunar_fragment_distance_km_text">Km</string>
+    <string name="my_nevo_new_update_available">UPDATE NOW</string>
+    <string name="my_device_version_text">Watch Version</string>
+
+    <string name="analysis_fragment_table_steps">Steps</string>
+    <string name="analysis_fragment_table_sleep">Sleep</string>
+    <string name="analysis_fragment_table_solar">Solar</string>
+    <string name="lunar_title_bar_tv">APR</string>
+    <string name="analysis_fragment_des_total_sleep">TOTAL SLEEP</string>
+    <string name="analysis_fragment_des_avg_sleep">Avg Sleep</string>
+    <string name="analysis_fragment_des_avg_wake">Avg Wake</string>
+    <string name="analysis_fragment_des_sleep_quality">Quality</string>
+    <string name="analysis_fragment_this_week_steps">THIS WEEK</string>
+    <string name="analysis_fragment_last_week_steps">LAST WEEK</string>
+    <string name="analysis_fragment_last_month_solar">LAST 30 DAYS</string>
+    <string name="this_week_steps_identification_one">YOU</string>
+    <string name="this_week_steps_identification_average">AVERAGE</string>
+    <string name="this_week_steps_identification_two">Avg Steps:</string>
+    <string name="steps_fragment_total_steps">Total Steps:</string>
+    <string name="steps_fragment_average_calories">Avg Calories:</string>
+    <string name="steps_fragment_average_time">Avg Time: </string>
+    <string name="main_fragment_solar_page_time_on_battery_text">Time On Battery</string>
+    <string name="main_fragment_solar_page_time_on_solar_text">Time On Solar</string>
+    <string name="user_no_select_profile_info">Please select the correct profile !</string>
+    <string name="analysis_fragment_solar_page_time_on_battery_text">Average Time On Battery</string>
+    <string name="analysis_fragment_solar_page_time_on_solar_text">Average Time On Solar</string>
+    <string name="edit_alarm_repeat">Repeat</string>
+    <string name="edit_alarm_name">Alarm Name</string>
+    <string name="input_legitimate_value">Please enter a valid value from 1 to 7</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+    <string name="sunday">Sun</string>
+    <string name="disable">Disable</string>
+    <string name="every_day">Every </string>
+    <string name="edit_alarm_sleep">Sleep Alarm</string>
+    <string name="edit_alarm_wake">Wake Alarm</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="login_skip_text">Skip</string>
+    <string name="login_page_activity_title">Login</string>
+    <string name="save_notification_ok">Notification Saved</string>
+    <string name="google_fit_log_out">Log out</string>
+
+    <string name="login_page_activity_with_other">Login with social media</string>
+    <string name="register_first_name_hint">First Name</string>
+    <string name="register_last_name_hint">Last Name</string>
+
+    <string name="register_password_confirm">Re-Type Password</string>
+    <string name="register_account_page_title">Sign Up</string>
+    <string name="register_terms_text">Terms &amp; Conditions</string>
+    <string name="register_account_message">Don\'t have  account ?\n Register here</string>
+    <string name="register_create_account">Submit</string>
+
+    <string name="log_in_email">E-mail</string>
+    <string name="register_terms_is_agree">I agree to the terms and conditions</string>
+    <string name="tutorial_1_text">Use your LunaR watch to set, track and analyse\n your personal health and fitness data</string>
+    <string name="tutorial_1_lets_activate">Activate your LunaR</string>
+    <string name="change_select_city">Change city</string>
+    <string name="tutorial_3_text">Pull out the crown out and turn to set the time on\n your LunaR watch. Be aware that LunaR doesn\’t sync\n time with your phone</string>
+    <string name="tutorial_2_text">Tap the Settings button and turn\n Bluetooth on.</string>
+    <string name="tutorial_2_continue">Turn Bluetooth on</string>
+    <string name="tutorial_4_title">Turn on LunaR </string>
+    <string name="tutorial_4_text">Push and hold the third button, until the \n LED blinks.</string>
+    <string name="tutorial_5_title">Searching...</string>
+    <string name="tutorial_failed_text">Make sure the blue LED on the LunaR is blinking\n and try again.</string>
+    <string name="in_app_notification_found_nevo">Found LunaR!</string>
+    <string name="in_app_notification_nevo_disconnected">LunaR disconnected.</string>
+    <string name="in_app_notification_searching">Searching for LunaR&#8230;</string>
+    <string name="in_app_notification_could_not_find">Could not find LunaR.</string>
+    <string name="in_app_notification_max_three_alarm">LunaR supports only three alarms.</string>
+    <string name="in_app_notification_no_goal">Please select your target.</string>
+    <string name="location_access_content">Please grant location access so it can detect lunaR.</string>
+    <string name="title_steps">Dashboard</string>
+    <string name="settings_my_nevo">My LunaR</string>
+    <string name="my_nevo_notice_message"> To save battery power, Bluetooth disconnects automatically when away from the phone for more than 1 hour. You will not receive notifications on LunaR when disconnected.</string>
+    <string name="notification_access_message">Do you want to enable notifications for LunaR ?</string>
+
+    <string name="user_info_back_text">Back</string>
+    <string name="register_user_info_page_text">Register</string>
+    <string name="register_user_info_page_next_text">Next</string>
+    <string name="activity_user_info_title_above_text">Your information</string>
+    <string name="activity_user_info_text_dec_middle">Enter your information below.\n Don\'t worry, it is completely private to you and\n your phone.</string>
+    <string name="activity_user_info_text_our_text">Check our private policy</string>
+    <string name="activity_user_info_birthday">Date of Birth</string>
+    <string name="activity_user_info_height">Height</string>
+    <string name="activity_user_info_weight">Weight</string>
+    <string name="activity_user_info_man">Male</string>
+    <string name="activity_user_info_female">Female</string>
+    <string name="user_info_user_birthday_error">Birthday may not be empty</string>
+    <string name="user_info_user_height_error">Length may not be empty</string>
+    <string name="user_info_user_weight_error">Weight may not be empty</string>
+    <string name="register_input_first_is_empty">User name cannot be empty</string>
+    <string name="forget_password_activity_title_dec">Forget Password</string>
+    <string name="forget_password_activity_page_dec">Don\'t worry.We get you \n covered.As long as \n you don\'t forget to your\n LunaR in the morning.</string>
+    <string name="forget_password_send_request_bt_text">SEND</string>
+    <string name="tips_user_account_password">Email must not be empty</string>
+    <string name="email_format_error">Invalid Email format</string>
+    <string name="forget_password_result_prompt">Check your inbox</string>
+    <string name="forget_password_input_new_password">New Password</string>
+    <string name="change_password">Sure</string>
+    <string name="password_is_not_empty">Password must not be empty</string>
+    <string name="password_is_not_repeat">Passwords do not match with each other.</string>
+    <string name="forget_password_result_email_address_text">A email has been sent to: </string>
+    <string name="forget_password_result_prompt_user_check_email">Please open the link we\’ve\n sent and verify your e-mail ad-\ndress.</string>
+    <string name="prompt_user_alarm_no_repeat">There is already a sleep alarm set for</string>
+    <string name="prompt_user_alarm_no_repeat_two">There is already a wake alarm set for</string>
+    <string name="password_change_failure">Modify password failed</string>
+    <string name="password_change_success">Change Password Success</string>
+    <string name="sunset_activity_title_tv">TODAY</string>
+    <string name="sunset_activity_title_yesterday">YESTERDAY</string>
+    <string name="sunset_activity_title_tomorrow">TOMORROW</string>
+    <string name="cancel_update">Cancel</string>
+    <string name="profile_activity_popupwindow_title">Choose picture source</string>
+    <string name="profile_activity_popupwindow_slect_library">Choose from library </string>
+    <string name="profile_activity_popupwindow_form_photo">Choose from Camera</string>
+    <string name="tell_user_change_week_day">Please change repeat week day after open Alarm!</string>
+    <string name="tell_user_update_more_alarm">Only 3 alarms are available. Upgrade your watch for more alarms!</string>
+    <string name="tell_user_this_location_time">Local time</string>
+    <string name="def_alarm_one">Alarm 1</string>
+    <string name="def_alarm_two">Alarm 2</string>
+    <string name="def_goal_name">Goal </string>
+    <string name="more_setting_unit">Unit</string>
+    <string name="more_setting_place_time">Watch digital time</string>
+    <string name="more_setting_place_local">Local Time</string>
+    <string name="more_setting_place_home">Home Time</string>
+    <string name="user_select_metrics">Metrics</string>
+    <string name="user_select_imperial">Imperial</string>
+    <string name="edit_home_position_city">Position City</string>
+    <string name="edit_home_all_city">All City</string>
+    <string name="lunar_main_clock_charging_status_title">HARVESTING STATUS</string>
+    <string name="lunar_main_clock_sleep_time_title">INACTIVITY</string>
+    <string name="lunar_main_clock_local_home_time">HOME TIME</string>
+    <string name="lunar_main_clock_home_city_sunrise">SUNRISE</string>
+    <string name="lunar_main_clock_home_city_sunset">SUNSET</string>
+    <string name="lunar_home_clock_steps_title_tv">STEPS TAKEN</string>
+    <string name="lunar_home_clock_solar_harvest_charge">Charging</string>
+    <string name="lunar_home_clock_solar_harvest_idle">Idle</string>
+</resources>
