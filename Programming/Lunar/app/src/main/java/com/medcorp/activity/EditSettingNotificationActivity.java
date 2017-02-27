@@ -17,20 +17,12 @@ import android.widget.TextView;
 import com.medcorp.R;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.ble.datasource.NotificationDataHelper;
-import com.medcorp.ble.model.color.BlueLed;
-import com.medcorp.ble.model.color.GreenLed;
-import com.medcorp.ble.model.color.LightGreenLed;
 import com.medcorp.ble.model.color.NevoLed;
-import com.medcorp.ble.model.color.OrangeLed;
-import com.medcorp.ble.model.color.RedLed;
-import com.medcorp.ble.model.color.YellowLed;
 import com.medcorp.ble.model.notification.Notification;
 import com.medcorp.ble.model.notification.OtherAppNotification;
 import com.medcorp.util.Preferences;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -59,7 +51,6 @@ public class EditSettingNotificationActivity extends BaseActivity {
     ImageView lunarWatchIcon;
 
 
-    private final List<NevoLed> ledList = new ArrayList<>();
     private NotificationDataHelper helper;
     private Notification notification;
     private NevoLed selectedLed;
@@ -76,14 +67,7 @@ public class EditSettingNotificationActivity extends BaseActivity {
         notification = (Notification) getIntent().getExtras().getSerializable(getString(R.string.key_notification));
         watchView.setVisibility(View.GONE);
         lunarWatchIcon.setVisibility(View.VISIBLE);
-
         helper = new NotificationDataHelper(this);
-        ledList.add(new RedLed());
-        ledList.add(new BlueLed());
-        ledList.add(new LightGreenLed());
-        ledList.add(new YellowLed());
-        ledList.add(new OrangeLed());
-        ledList.add(new GreenLed());
     }
 
     @Override
