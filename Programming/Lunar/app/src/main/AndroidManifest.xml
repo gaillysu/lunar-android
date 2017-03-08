@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.medcorp"
+<manifest package="com.medcorp.lunar"
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           android:installLocation="preferExternal"
@@ -8,7 +8,6 @@
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true"/>
-
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -56,6 +55,7 @@
         </activity>
         <activity
             android:name=".activity.login.LoginActivity"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark"/>
         <activity
@@ -199,16 +199,22 @@
             android:configChanges="orientation|screenSize"/>
 
         <activity
-            android:name="com.medcorp.activity.EditNotificationLampActivity"
+            android:name=".activity.EditNotificationLampActivity"
             android:screenOrientation="portrait"
             />
         <activity
-            android:name="com.medcorp.activity.EditNotificationAttributeActivity"
+            android:name=".activity.EditNotificationAttributeActivity"
             android:screenOrientation="portrait"
             />
-        <activity android:name="com.medcorp.activity.MoreSettingActivity"
+        <activity
+            android:name=".activity.MoreSettingActivity"
             android:screenOrientation="portrait"
             />
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.NoDisplay"/>
     </application>
 
 </manifest>

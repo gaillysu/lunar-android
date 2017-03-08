@@ -4,9 +4,10 @@ package com.medcorp.util;
  * Created by Karl on 11/27/15.
  */
 
-import com.medcorp.model.Sleep;
-import com.medcorp.model.SleepData;
-import com.medcorp.util.SleepDataHandler;
+
+import com.medcorp.lunar.model.Sleep;
+import com.medcorp.lunar.model.SleepData;
+import com.medcorp.lunar.util.SleepDataHandler;
 
 import junit.framework.TestCase;
 

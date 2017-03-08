@@ -2,11 +2,11 @@ package com.medcorp.database;
 
 import android.test.AndroidTestCase;
 
-import com.medcorp.database.entry.SleepDatabaseHelper;
-import com.medcorp.database.entry.UserDatabaseHelper;
-import com.medcorp.model.Sleep;
-import com.medcorp.model.User;
-import com.medcorp.util.Common;
+import com.medcorp.lunar.database.entry.SleepDatabaseHelper;
+import com.medcorp.lunar.database.entry.UserDatabaseHelper;
+import com.medcorp.lunar.model.Sleep;
+import com.medcorp.lunar.model.User;
+import com.medcorp.lunar.util.Common;
 
 import net.medcorp.library.ble.util.Optional;
 
@@ -23,7 +23,7 @@ public class SleepDatabaseHelperTest extends AndroidTestCase {
     //assume one user login and make it owner all sleep data
     private User loginUser;
 
-    private Sleep  addSleep;
+    private Sleep addSleep;
     private Sleep  updateSleep;
     private Sleep  removeSleep;
     private Date   today;
@@ -33,7 +33,7 @@ public class SleepDatabaseHelperTest extends AndroidTestCase {
         super.setUp();
 
         dbUser = new UserDatabaseHelper(getContext());
-        loginUser = new User("Karl","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"");
+        loginUser = new User("Karl","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"","");
 
         Optional<User> thisuser = dbUser.add(loginUser);
         assertEquals(false, thisuser.isEmpty());

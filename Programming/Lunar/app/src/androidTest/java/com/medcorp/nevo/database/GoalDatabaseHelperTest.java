@@ -2,10 +2,11 @@ package com.medcorp.database;
 
 import android.test.AndroidTestCase;
 
-import com.medcorp.database.entry.GoalDatabaseHelper;
-import com.medcorp.model.Goal;
+import com.medcorp.lunar.database.entry.GoalDatabaseHelper;
+import com.medcorp.lunar.model.Goal;
 
 import net.medcorp.library.ble.util.Optional;
+
 
 /**
  * Created by gaillysu on 15/12/8.
