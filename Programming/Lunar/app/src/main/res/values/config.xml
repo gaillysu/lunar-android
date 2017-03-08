@@ -7,4 +7,8 @@
     <string name="font_roboto_regular_path" translatable="false">font/Roboto-Regular.ttf</string>
     <string name="font_roboto_thin_path" translatable="false">font/Roboto-Thin.ttf</string>
     <string name="font_roboto_light_path" translatable="false">font/Roboto-Light.ttf</string>
+    <string name="we_chat_app_id">wx03cabab45bcb5bb5 </string>
+    <string name="wechat_app_secret">f4f1c23a83f3448b545957345e26af94 </string>
+    <string name="weixin_package_name">net.med_corp.lunar_wechat</string>
+    <string name="weixin_scope">snsapi_userinfo</string>
 </resources>

@@ -117,7 +117,7 @@
         android:background="@color/analysis_fragment_tablayout_background_color"
         >
 
-        <com.medcorp.view.RoundProgressBar
+        <com.medcorp.lunar.view.RoundProgressBar
             android:id="@+id/lunar_main_clock_steps_goal_analysis"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

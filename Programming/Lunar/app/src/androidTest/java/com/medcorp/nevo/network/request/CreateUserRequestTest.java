@@ -4,11 +4,11 @@ import android.test.AndroidTestCase;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.medcorp.network.validic.manager.ValidicManager;
-import com.medcorp.network.validic.model.ValidicUser;
-import com.medcorp.network.validic.model.CreateUserRequestObject;
-import com.medcorp.network.validic.model.CreateUserRequestObjectUser;
-import com.medcorp.network.validic.request.user.CreateUserRetroRequest;
+import com.medcorp.lunar.network.validic.manager.ValidicManager;
+import com.medcorp.lunar.network.validic.model.CreateUserRequestObject;
+import com.medcorp.lunar.network.validic.model.CreateUserRequestObjectUser;
+import com.medcorp.lunar.network.validic.model.ValidicUser;
+import com.medcorp.lunar.network.validic.request.user.CreateUserRetroRequest;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 

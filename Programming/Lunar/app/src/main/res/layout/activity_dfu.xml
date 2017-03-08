@@ -55,7 +55,7 @@
             android:src="@drawable/lunar_clockview_minute"
             android:visibility="visible"/>
 
-        <com.medcorp.view.RoundProgressBar
+        <com.medcorp.lunar.view.RoundProgressBar
             android:id="@+id/roundProgressBar"
             android:layout_width="275dp"
             android:layout_height="275dp"

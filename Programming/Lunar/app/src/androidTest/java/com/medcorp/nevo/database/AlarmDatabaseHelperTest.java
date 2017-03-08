@@ -2,10 +2,11 @@ package com.medcorp.nevo.database;
 
 import android.test.AndroidTestCase;
 
-import com.medcorp.database.entry.AlarmDatabaseHelper;
-import com.medcorp.model.Alarm;
+import com.medcorp.lunar.database.entry.AlarmDatabaseHelper;
+import com.medcorp.lunar.model.Alarm;
 
 import net.medcorp.library.ble.util.Optional;
+
 
 /**
  * Created by gaillysu on 15/12/8.

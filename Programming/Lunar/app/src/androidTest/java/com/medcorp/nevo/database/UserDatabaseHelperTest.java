@@ -2,9 +2,9 @@ package com.medcorp.database;
 
 import android.test.AndroidTestCase;
 
-import com.medcorp.database.entry.UserDatabaseHelper;
-import com.medcorp.database.entry.iEntryDatabaseHelper;
-import com.medcorp.model.User;
+import com.medcorp.lunar.database.entry.UserDatabaseHelper;
+import com.medcorp.lunar.database.entry.iEntryDatabaseHelper;
+import com.medcorp.lunar.model.User;
 
 import net.medcorp.library.ble.util.Optional;
 
@@ -23,11 +23,11 @@ public class UserDatabaseHelperTest extends AndroidTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         db = new UserDatabaseHelper(getContext());
-        dummyUser = new User("Karl","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"");
+        dummyUser = new User("Karl","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"","");
 
-        addUser = new User("KarlAdd","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"");
-        removeUser = new User("KarlRemove","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"");
-        updateUser = new User("KarlUpdate","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"");
+        addUser = new User("KarlAdd","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"","");
+        removeUser = new User("KarlRemove","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"","");
+        updateUser = new User("KarlUpdate","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"","");
 
 
     }

@@ -464,4 +464,9 @@
     <string name="lunar_home_clock_steps_title_tv">STEPS TAKEN</string>
     <string name="lunar_home_clock_solar_harvest_charge">Charging</string>
     <string name="lunar_home_clock_solar_harvest_idle">Idle</string>
+    <string name="wechat_uninstall">WeChat is not installed</string>
+    <string name="check_wechat_fail">Check wechat account fail</string>
+    <string name="wechat_create_account_fail">Create account fail</string>
+    <string name="wechat_login_fail">WeChat login fail</string>
+    <string name="network_error">Network error!</string>
 </resources>

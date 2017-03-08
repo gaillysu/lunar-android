@@ -44,7 +44,7 @@
             android:layout_height="260dp"
             android:layout_gravity="center"
             android:background="@drawable/tutorial_nevo_1"/>
-        <com.medcorp.view.RoundProgressBar
+        <com.medcorp.lunar.view.RoundProgressBar
             android:id="@+id/roundProgressBar"
             android:layout_width="315dp"
             android:layout_height="315dp"

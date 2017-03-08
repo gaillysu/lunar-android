@@ -35,13 +35,6 @@
                 android:textStyle="normal"
                 />
 
-            <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:background="@color/black"/>-->
-            <!--</RelativeLayout>-->
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -113,38 +106,6 @@
                     android:textColor="@color/login_text_color_with"
                     android:textSize="20sp"/>
 
-                <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center_horizontal"-->
-                <!--android:text="@string/login_page_activity_with_other"-->
-                <!--android:textColor="@color/text_color"-->
-                <!--android:textSize="18sp"-->
-                <!--android:id="@+id/textView7"/>-->
-
-                <!--<LinearLayout-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center_horizontal"-->
-                <!--android:layout_margin="10dp"-->
-                <!--android:orientation="horizontal">-->
-
-                <!--<ImageButton-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:background="@color/transparent"-->
-                <!--android:src="@drawable/google_logo_icon"-->
-                <!--/>-->
-
-                <!--<ImageButton-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="30dp"-->
-                <!--android:background="@color/transparent"-->
-                <!--android:src="@drawable/face_book_logo_icon_1"-->
-                <!--/>-->
-                <!--</LinearLayout>-->
-
                 <TextView
                     android:id="@+id/link_signup"
                     android:layout_width="fill_parent"
@@ -154,6 +115,17 @@
                     android:text="@string/register_account_message"
                     android:textColor="@color/register_account_text_color"
                     android:textSize="18sp"/>
+
+                <ImageButton
+                    android:id="@+id/wechat_login_button"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="40dp"
+                    android:scaleType="fitXY"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_wechat_green"
+                    />
             </LinearLayout>
         </LinearLayout>
     </android.support.design.widget.CoordinatorLayout>

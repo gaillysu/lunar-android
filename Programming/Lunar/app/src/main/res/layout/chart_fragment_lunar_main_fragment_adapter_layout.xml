@@ -15,7 +15,7 @@
         android:textSize="28dp"
         />
 
-    <com.medcorp.view.graphs.MainStepsBarChart
+    <com.medcorp.lunar.view.graphs.MainStepsBarChart
         android:id="@+id/lunar_main_fragment_steps_chart"
         android:layout_width="match_parent"
         android:layout_height="0dp"

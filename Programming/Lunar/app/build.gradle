@@ -11,8 +11,16 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '23.0.3'
+    signingConfigs {
+        config {
+            keyAlias 'lunar_key'
+            keyPassword 'Gh[2}86.*{&46#R='
+            storeFile file('D:/pocketKey/med_keystore.jks')
+            storePassword 'n,@4^(Z+492,$926$q97){2'
+        }
+    }
+    compileSdkVersion 25
+    buildToolsVersion '23.0.1'
     defaultConfig {
         applicationId "com.medcorp.lunar"
         minSdkVersion 18
@@ -22,11 +30,8 @@ android {
         multiDexEnabled true
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+    dexOptions {
+        javaMaxHeapSize "4g"
     }
 
     packagingOptions {
@@ -37,6 +42,14 @@ android {
         exclude 'META-INF/ASL2.0'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
+    }
+    buildTypes {
+        release{
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
+        }
     }
 }
 
@@ -77,6 +90,9 @@ dependencies {
     compile 'com.yanzhenjie:recyclerview-swipe:1.0.2'
     compile project(path: ':multi-image-selector')
     compile 'com.github.QuadFlask:colorpicker:0.0.12'
+    compile files('libs/libammsdk.jar')
+    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 }
 
 repositories {
