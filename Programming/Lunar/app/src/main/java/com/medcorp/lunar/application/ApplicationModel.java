@@ -109,6 +109,8 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -154,6 +156,9 @@ public class ApplicationModel extends Application {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         EventBus.getDefault().register(this);
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder().build();
+        Realm.setDefaultConfiguration(config);
         syncController = new SyncControllerImpl(this);
         otaController = new OtaControllerImpl(this);
         stepsDatabaseHelper = new StepsDatabaseHelper(this);
@@ -294,7 +299,7 @@ public class ApplicationModel extends Application {
     }
 
     public List<Alarm> getAllAlarm() {
-        return alarmDatabaseHelper.convertToNormalList(alarmDatabaseHelper.getAll());
+        return alarmDatabaseHelper.getAll();
     }
 
     public void saveNevoUser(User user) {
@@ -667,8 +672,8 @@ public class ApplicationModel extends Application {
         return sleepDatabaseHelper.getNeedSyncSleep(userid);
     }
 
-    public Alarm addAlarm(Alarm alarm) {
-        return alarmDatabaseHelper.add(alarm).get();
+    public void addAlarm(Alarm alarm) {
+        alarmDatabaseHelper.add(alarm);
     }
 
     public boolean updateAlarm(Alarm alarm) {
@@ -676,11 +681,11 @@ public class ApplicationModel extends Application {
     }
 
     public Alarm getAlarmById(int id) {
-        return alarmDatabaseHelper.get(id).isEmpty() ? null : alarmDatabaseHelper.get(id).get(0).get();
+        return alarmDatabaseHelper.get(id);
     }
 
-    public boolean deleteAlarm(Alarm alarm) {
-        return alarmDatabaseHelper.remove(alarm.getId());
+    public void deleteAlarm(Alarm alarm) {
+        alarmDatabaseHelper.remove(alarm.getId());
     }
 
     public List<Goal> getAllGoal() {
@@ -1025,7 +1030,7 @@ public class ApplicationModel extends Application {
                             RequestWeChatToken token = gson.fromJson(s, RequestWeChatToken.class);
                             Log.i("jason", token.toString());
                             getUserInfo(token);
-                        }else{
+                        } else {
                             EventBus.getDefault().post(new WeChatEvent());
                         }
                     }
@@ -1049,7 +1054,7 @@ public class ApplicationModel extends Application {
                     if (execute.isSuccessful()) {
                         String response = execute.body().string();
                         e.onNext(response);
-                    }else{
+                    } else {
                         e.onNext("");
                     }
                 } catch (IOException e1) {
@@ -1060,12 +1065,12 @@ public class ApplicationModel extends Application {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String response) throws Exception {
-                        if(response != null) {
+                        if (response != null) {
                             Log.i("jason", "user info ::::" + response);
                             Gson gson = new Gson();
                             WeChatUserInfoResponse mUserInfo = gson.fromJson(response, WeChatUserInfoResponse.class);
                             EventBus.getDefault().post(new ReturnUserInfoEvent(mUserInfo));
-                        }else{
+                        } else {
                             EventBus.getDefault().post(new WeChatEvent());
                         }
                     }

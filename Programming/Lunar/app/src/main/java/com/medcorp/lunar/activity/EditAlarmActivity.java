@@ -151,11 +151,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                     .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
                     .show();
         } else if (position == 3) {
-            if (!getModel().deleteAlarm(alarm)) {
-                ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_could_not_change);
-            } else {
-                ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_deleted);
-            }
+            ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_deleted);
             setResult(-1);
             finish();
         }

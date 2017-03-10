@@ -9,7 +9,6 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.medcorp.lunar.R;
-import com.medcorp.lunar.database.dao.AlarmDAO;
 import com.medcorp.lunar.database.dao.GoalDAO;
 import com.medcorp.lunar.database.dao.IDailyHistory;
 import com.medcorp.lunar.database.dao.LedLampDAO;
@@ -38,7 +37,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<UserDAO, Integer> userDao = null;
     private Dao<SleepDAO, Integer> sleepDao = null;
     private Dao<StepsDAO, Integer> stepsDao = null;
-    private Dao<AlarmDAO, Integer> alarmDao = null;
     private Dao<GoalDAO, Integer> goalsDAO = null;
     private Dao<SolarDAO, Integer> solarDAO = null;
     private Dao<LedLampDAO, Integer> ledDAO = null;
@@ -67,7 +65,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, UserDAO.class);
             TableUtils.createTable(connectionSource, SleepDAO.class);
             TableUtils.createTable(connectionSource, StepsDAO.class);
-            TableUtils.createTable(connectionSource, AlarmDAO.class);
             TableUtils.createTable(connectionSource, GoalDAO.class);
             TableUtils.createTable(connectionSource, SolarDAO.class);
             TableUtils.createTable(connectionSource, LedLampDAO.class);
@@ -95,7 +92,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, UserDAO.class, true);
             TableUtils.dropTable(connectionSource, SleepDAO.class, true);
             TableUtils.dropTable(connectionSource, StepsDAO.class, true);
-            TableUtils.dropTable(connectionSource, AlarmDAO.class, true);
             TableUtils.dropTable(connectionSource, GoalDAO.class, true);
             TableUtils.dropTable(connectionSource, SolarDAO.class, true);
             TableUtils.dropTable(connectionSource, LedLampDAO.class, true);
@@ -125,13 +121,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             stepsDao = getDao(StepsDAO.class);
 
         return stepsDao;
-    }
-
-
-    public Dao<AlarmDAO, Integer> getAlarmDao() throws SQLException {
-        if (alarmDao == null)
-            alarmDao = getDao(AlarmDAO.class);
-        return alarmDao;
     }
 
     public Dao<GoalDAO, Integer> getGoalDao() throws SQLException {
