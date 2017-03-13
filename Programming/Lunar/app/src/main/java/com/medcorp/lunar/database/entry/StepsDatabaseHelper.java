@@ -2,138 +2,79 @@ package com.medcorp.lunar.database.entry;
 
 import android.content.Context;
 
-import com.medcorp.lunar.database.DatabaseHelper;
 import com.medcorp.lunar.database.dao.StepsDAO;
 import com.medcorp.lunar.model.Steps;
 
-import net.medcorp.library.ble.util.Optional;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 /**
  * Created by karl-john on 17/11/15.
  */
-public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
+public class StepsDatabaseHelper {
 
-    private DatabaseHelper databaseHelper;
+    private Realm mRealm;
 
     public StepsDatabaseHelper(Context context) {
-        databaseHelper = DatabaseHelper.getInstance(context);
+        mRealm = Realm.getDefaultInstance();
     }
 
-    @Override
-    public Optional<Steps> add(Steps object) {
-        Optional<Steps> stepsOptional = new Optional<>();
-        try {
-            StepsDAO stepsDAO = databaseHelper.getStepsDao().createIfNotExists(convertToDao(object));
-            if (stepsDAO != null) {
-                stepsOptional.set(convertToNormal(stepsDAO));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return stepsOptional;
+    public Steps add(Steps object) {
+        mRealm.beginTransaction();
+        StepsDAO stepsDAO = mRealm.copyToRealm(convertToDao(object));
+        mRealm.commitTransaction();
+        return convertToNormal(stepsDAO);
     }
 
-    @Override
     public boolean update(Steps object) {
-
-        int result = -1;
-        try {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fNevoUserID, object.getNevoUserID()).and().eq(StepsDAO.fDate, object.getDate()).query();
-            if (stepsDAOList.isEmpty())
-                return add(object) != null;
-            StepsDAO daoobject = convertToDao(object);
-            daoobject.setID(stepsDAOList.get(0).getID());
-            result = databaseHelper.getStepsDao().update(daoobject);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result >= 0;
+        mRealm.beginTransaction();
+        StepsDAO stepsDAO = mRealm.copyToRealmOrUpdate(convertToDao(object));
+        mRealm.commitTransaction();
+        return stepsDAO == null ? false : true;
     }
 
-    @Override
-    public boolean remove(String userId, Date date) {
-        try {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fNevoUserID, userId).and().eq(StepsDAO.fDate, date.getTime()).query();
-            if (!stepsDAOList.isEmpty()) {
-                return databaseHelper.getStepsDao().delete(stepsDAOList) >= 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public void remove(String userId, Date date) {
+        mRealm.beginTransaction();
+        mRealm.where(StepsDAO.class).equalTo("nevoUserID", userId).equalTo("date", date).findFirst().deleteFromRealm();
+        mRealm.commitTransaction();
     }
 
-    @Override
-    public List<Optional<Steps>> get(String userId) {
+    public List<Steps> get(String userId) {
         return getAll(userId);
     }
 
-    @Override
-    public Optional<Steps> get(String userId, Date date) {
-        List<Optional<Steps>> stepsList = new ArrayList<>();
-        try {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fNevoUserID, userId).and().eq(StepsDAO.fDate, date.getTime()).query();
-            for (StepsDAO stepsDAO : stepsDAOList) {
-                Optional<Steps> stepsOptional = new Optional<>();
-                stepsOptional.set(convertToNormal(stepsDAO));
-                stepsList.add(stepsOptional);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return stepsList.isEmpty() ? new Optional<Steps>() : stepsList.get(0);
+
+    public Steps get(String userId, Date date) {
+        mRealm.beginTransaction();
+        StepsDAO steps = mRealm.where(StepsDAO.class).equalTo("nevoUserID", userId).equalTo("date", date).findFirst();
+        mRealm.commitTransaction();
+        return steps == null ? new Steps(System.currentTimeMillis()) : convertToNormal(steps);
     }
 
 
-
-    @Override
-    public List<Optional<Steps>> getAll(String userId) {
-        List<Optional<Steps>> stepsList = new ArrayList<>();
-        try {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().orderBy(StepsDAO.fDate, false).where().eq(StepsDAO.fNevoUserID, userId).query();
-            for (StepsDAO stepsDAO : stepsDAOList) {
-                Optional<Steps> stepsOptional = new Optional<>();
-                stepsOptional.set(convertToNormal(stepsDAO));
-                stepsList.add(stepsOptional);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return stepsList;
+    public List<Steps> getAll(String userId) {
+        mRealm.beginTransaction();
+        RealmResults<StepsDAO> allSteps = mRealm.where(StepsDAO.class).equalTo("nevoUserID", userId).findAll();
+        mRealm.commitTransaction();
+        return convertToNormalList(allSteps);
     }
 
 
     public List<Steps> getNeedSyncSteps(String userId) {
-        List<Steps> stepsList = new ArrayList<Steps>();
-        List<StepsDAO> stepsDAOList = null;
-        try {
-            stepsDAOList = databaseHelper.getStepsDao().queryBuilder().orderBy(StepsDAO.fDate, false).where().eq(StepsDAO.fNevoUserID, userId).and().isNull(StepsDAO.fCloudRecordID).query();
-            for (StepsDAO stepsDAO : stepsDAOList) {
-                stepsList.add(convertToNormal(stepsDAO));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return stepsList;
+        return getAll(userId);
     }
 
     public boolean isFoundInLocalSteps(int activity_id) {
-        try {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fID, activity_id).query();
-            return !stepsDAOList.isEmpty();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        RealmResults<StepsDAO> steps = mRealm.where(StepsDAO.class).equalTo("ID", activity_id).findAll();
+        return steps == null ? false : true;
     }
 
     public boolean isFoundInLocalSteps(Date date, String userId) {
-        return get(userId, date).notEmpty();
+        return get(userId, date) == null ? false : true;
     }
 
     private StepsDAO convertToDao(Steps steps) {
@@ -197,12 +138,11 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         return steps;
     }
 
-    @Override
-    public List<Steps> convertToNormalList(List<Optional<Steps>> optionals) {
+    public List<Steps> convertToNormalList(List<StepsDAO> optionals) {
         List<Steps> stepsList = new ArrayList<>();
-        for (Optional<Steps> stepsOptional : optionals) {
-            if (stepsOptional.notEmpty()) {
-                stepsList.add(stepsOptional.get());
+        for (StepsDAO stepsOptional : optionals) {
+            if (stepsOptional != null) {
+                stepsList.add(convertToNormal(stepsOptional));
             }
         }
         return stepsList;

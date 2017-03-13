@@ -1,51 +1,40 @@
 package com.medcorp.lunar.database.dao;
 
-import com.j256.ormlite.field.DatabaseField;
-
 import java.util.Date;
+
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by med on 16/8/30.
  */
-public class SolarDAO {
+public class SolarDAO extends RealmObject {
 
     /**
      * field name and initialize value, Primary field
      */
-    public static final String fID = "ID";
-    @DatabaseField(generatedId = true)
-    private int ID = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
+    @PrimaryKey
+    private int ID = (int) Math.floor(Math.random() * Integer.MAX_VALUE);
 
     /**
      * createDate is YYYY-MM-DD HH:MM:SS, means create or update date
      */
-    public static final String fCreatedDate = "createdDate";
-    @DatabaseField
     private Date createdDate;
 
     /**
      * date is YYYY-MM-DD,which day it is.
      */
-    public static final String fDate = "date";
-    @DatabaseField
     private Date date;
-
-    public static final String fUserId = "userId";
-    @DatabaseField
     private int userId;
 
     /**
      * default value is "[0,0,0,....0]", 24 length array
      */
-    public static final String fHourlyHarvestingTime = "hourlyHarvestingTime";
-    @DatabaseField
-    private String hourlyHarvestingTime="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlyHarvestingTime = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    /*
-    unit in "minute"
+    /**
+     * unit in "minute"
      */
-    public static final String fTotalHarvestingTime = "totalHarvestingTime";
-    @DatabaseField
     private int totalHarvestingTime;
 
     public int getID() {

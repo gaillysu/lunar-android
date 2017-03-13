@@ -2,138 +2,79 @@ package com.medcorp.lunar.database.entry;
 
 import android.content.Context;
 
-import com.medcorp.lunar.database.DatabaseHelper;
 import com.medcorp.lunar.database.dao.UserDAO;
 import com.medcorp.lunar.model.User;
 
-import net.medcorp.library.ble.util.Optional;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 /**
  * Created by karl-john on 17/11/15.
  */
-public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
+public class UserDatabaseHelper {
 
-    private DatabaseHelper databaseHelper;
+    private Realm mRealm;
 
     public UserDatabaseHelper(Context context) {
-        databaseHelper = DatabaseHelper.getInstance(context);
+        mRealm = Realm.getDefaultInstance();
     }
 
-    @Override
-    public Optional<User> add(User object) {
-        Optional<User> userOptional = new Optional<>();
-        try {
-            int res = databaseHelper.getUserDao().create(convertToDao(object));
-            if(res>0)
-            {
-                userOptional.set(object);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return userOptional;
+    public User add(User object) {
+        mRealm.beginTransaction();
+        UserDAO userDAO = mRealm.copyToRealm(convertToDao(object));
+        mRealm.commitTransaction();
+        return convertToNormal(userDAO);
     }
 
-    @Override
     public boolean update(User object) {
-        int result = -1;
-        try {
-            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fNevoUserID, object.getNevoUserID()).query();
-            if(userDAOList.isEmpty()){
-                return add(object)!=null;
-            }
-            UserDAO daoObject = convertToDao(object);
-            daoObject.setID(userDAOList.get(0).getID());
-            result = databaseHelper.getUserDao().update(daoObject);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result>=0;
+        mRealm.beginTransaction();
+        UserDAO userDAO = mRealm.copyToRealmOrUpdate(convertToDao(object));
+        mRealm.commitTransaction();
+        return userDAO != null;
     }
 
-    @Override
-    public boolean remove(String userId,Date date) {
-        try {
-            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fNevoUserID, userId).query();
-            if(!userDAOList.isEmpty())
-            {
-                return databaseHelper.getUserDao().delete(userDAOList)>=0;                
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public void remove(String userId, Date date) {
+        mRealm.beginTransaction();
+        mRealm.where(UserDAO.class).equalTo("nevoUserID", userId).equalTo("createdDate", date).findFirst().deleteFromRealm();
+        mRealm.commitTransaction();
     }
 
-    @Override
-    public List<Optional<User>> get(String userId) {
-        List<Optional<User>> userList = new ArrayList<Optional<User>>();
-        try {
-            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fNevoUserID, userId).query();
-            for(UserDAO userDAO: userDAOList) {
-                Optional<User> userOptional = new Optional<>();
-                userOptional.set(convertToNormal(userDAO));
-                userList.add(userOptional);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return userList;
+    public List<User> get(String userId) {
+        mRealm.beginTransaction();
+        RealmResults<UserDAO> nevoUser = mRealm.where(UserDAO.class).equalTo("nevoUserID", userId).findAll();
+        mRealm.commitTransaction();
+        return convertToNormalList(nevoUser);
     }
 
-    @Override
-    public Optional<User> get(String userId,Date date) {
-        List<Optional<User>> userList = get(userId);
-        return userList.isEmpty()?new Optional<User>(): userList.get(0);
+    public User get(String userId, Date date) {
+        mRealm.beginTransaction();
+        UserDAO user = mRealm.where(UserDAO.class).equalTo("nevoUserID", userId).equalTo("createdDate", date).findFirst();
+        return user == null ? new User(System.currentTimeMillis()) : convertToNormal(user);
     }
 
-    @Override
-    public List<Optional<User>> getAll(String userId) {
+    public List<User> getAll(String userId) {
         return get(userId);
     }
 
-    public Optional<User> getLoginUser()
-    {
-        Optional<User> userOptional = new Optional<>();
-        try {
-            //logged in nevo
-            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().orderBy(UserDAO.fCreatedDate,false).where().eq(UserDAO.fNevoUserIsLogin, true).query();
-            for(UserDAO userDAO: userDAOList) {
-                userOptional.set(convertToNormal(userDAO));
-                return userOptional;
+    public User getLoginUser() {
+        mRealm.beginTransaction();
+        RealmResults<UserDAO> allUser = mRealm.where(UserDAO.class).findAll();
+        mRealm.commitTransaction();
+        UserDAO userDAO = null;
+        for (UserDAO user : allUser) {
+            if (user.isNevoUserIsLogin()) {
+                userDAO = user;
+                break;
             }
-            //logged in validic
-            userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fValidicUserIsConnected, true).query();
-            for(UserDAO userDAO: userDAOList) {
-                userOptional.set(convertToNormal(userDAO));
-                return userOptional;
-            }
-            //logged out nevo, but register nevo successfully
-            userDAOList = databaseHelper.getUserDao().queryBuilder().query();
-            for(UserDAO userDAO: userDAOList) {
-                if(userDAO.getNevoUserToken()!=null) {
-                    userOptional.set(convertToNormal(userDAO));
-                    return userOptional;
-                }
-            }
-            //anonymous user
-            if(!userDAOList.isEmpty()){
-                userOptional.set(convertToNormal(userDAOList.get(0)));
-                return userOptional;
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return userOptional;
+        return convertToNormal(userDAO);
     }
 
-    private UserDAO convertToDao(User user){
+    private UserDAO convertToDao(User user) {
         UserDAO userDAO = new UserDAO();
         userDAO.setCreatedDate(user.getCreatedDate());
         userDAO.setHeight(user.getHeight());
@@ -150,14 +91,14 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         userDAO.setValidicUserID(user.getValidicUserID());
         userDAO.setValidicUserToken(user.getValidicUserToken());
         userDAO.setNevoUserIsLogin(user.isLogin());
-        userDAO.setValidicUserIsConnected(user.isConnectValidic());
+        userDAO.setConnectValidic(user.isConnectValidic());
         userDAO.setWechat(user.getWechat());
         return userDAO;
     }
 
-    private User convertToNormal(UserDAO userDAO){
+    private User convertToNormal(UserDAO userDAO) {
         User user = new User(userDAO.getCreatedDate());
-        user.setId(userDAO.getID());
+        user.setId(userDAO.getId());
         user.setAge(userDAO.getAge());
         user.setHeight(userDAO.getHeight());
         user.setBirthday(userDAO.getBirthday());
@@ -172,17 +113,16 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         user.setValidicUserID(userDAO.getValidicUserID());
         user.setValidicUserToken(userDAO.getValidicUserToken());
         user.setIsLogin(userDAO.isNevoUserIsLogin());
-        user.setIsConnectValidic(userDAO.isValidicUserIsConnected());
+        user.setIsConnectValidic(userDAO.isConnectValidic());
         user.setWechat(userDAO.getWechat());
         return user;
     }
 
-    @Override
-    public List<User> convertToNormalList(List<Optional<User>> optionals) {
+    public List<User> convertToNormalList(List<UserDAO> optionals) {
         List<User> userList = new ArrayList<>();
-        for (Optional<User> userOptional: optionals) {
-            if (userOptional.notEmpty()){
-                userList.add(userOptional.get());
+        for (UserDAO userOptional : optionals) {
+            if (userOptional != null) {
+                userList.add(convertToNormal(userOptional));
             }
         }
         return userList;

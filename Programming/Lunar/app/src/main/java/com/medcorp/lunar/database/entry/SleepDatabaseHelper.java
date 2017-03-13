@@ -2,139 +2,76 @@ package com.medcorp.lunar.database.entry;
 
 import android.content.Context;
 
-import com.medcorp.lunar.database.DatabaseHelper;
 import com.medcorp.lunar.database.dao.SleepDAO;
 import com.medcorp.lunar.model.Sleep;
 
-import net.medcorp.library.ble.util.Optional;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 /**
  * Created by karl-john on 17/11/15.
- *
  */
-public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
+public class SleepDatabaseHelper {
 
-    private  DatabaseHelper databaseHelper;
+    private Realm mRealm;
 
     public SleepDatabaseHelper(Context context) {
-        databaseHelper =  DatabaseHelper.getInstance(context);
+        Realm.init(context);
+        mRealm = Realm.getDefaultInstance();
     }
 
-    @Override
-    public Optional< Sleep> add( Sleep object) {
-        Optional< Sleep> sleepOptional = new Optional<>();
-        try {
-            SleepDAO res = databaseHelper.getSleepDao().createIfNotExists(convertToDao(object));
-            if(res != null)
-            {
-                sleepOptional.set(convertToNormal(res));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return sleepOptional;
+    public Sleep add(Sleep object) {
+        mRealm.beginTransaction();
+        SleepDAO sleepDAO = mRealm.copyToRealm(convertToDao(object));
+        mRealm.commitTransaction();
+        return convertToNormal(sleepDAO);
     }
 
-    @Override
-    public boolean update( Sleep object) {
-        int result = -1;
-        try {
-            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fNevoUserID, object.getNevoUserID()).and().eq(SleepDAO.fDate, object.getDate()).query();
-            if(sleepDAOList.isEmpty()) return add(object)!=null;
-            SleepDAO daoObject = convertToDao(object);
-            daoObject.setID(sleepDAOList.get(0).getID());
-            result = databaseHelper.getSleepDao().update(daoObject);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result>=0;
+    public boolean update(Sleep object) {
+        mRealm.beginTransaction();
+        SleepDAO sleepDAO = mRealm.copyToRealmOrUpdate(convertToDao(object));
+        mRealm.commitTransaction();
+        return sleepDAO == null ? false : true;
     }
 
-    @Override
-    public boolean remove(String userId,Date date) {
-        try {
-            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fNevoUserID, userId).and().eq(SleepDAO.fDate, date.getTime()).query();
-            if(!sleepDAOList.isEmpty())
-            {
-                return databaseHelper.getSleepDao().delete(sleepDAOList)>=0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public void remove(String userId, Date date) {
+        mRealm.where(SleepDAO.class).equalTo("nevoUserID", userId).equalTo("CreatedDate", date).findFirst().deleteFromRealm();
     }
 
-    @Override
-    public List<Optional< Sleep>> get(String userId) {
-        List<Optional< Sleep>> sleepList = new ArrayList<>();
-        try {
-            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().orderBy(SleepDAO.fDate, false).where().eq(SleepDAO.fNevoUserID, userId).query();
-            for (SleepDAO sleepDAO: sleepDAOList) {
-                Optional< Sleep> sleepOptional = new Optional<>();
-                sleepOptional.set(convertToNormal(sleepDAO));
-                sleepList.add(sleepOptional);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return sleepList;
+    public Sleep get(String userId) {
+        return convertToNormal(mRealm.where(SleepDAO.class).equalTo("nevoUserID", userId).findFirst());
     }
 
-    @Override
-    public Optional< Sleep> get(String userId, Date date) {
-        List<Optional< Sleep>> sleepList = new ArrayList<>();
-        try {
-            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fNevoUserID, userId).and().eq(SleepDAO.fDate, date.getTime()).query();
-            for (SleepDAO sleepDAO: sleepDAOList) {
-                Optional< Sleep> sleepOptional = new Optional<>();
-                sleepOptional.set(convertToNormal(sleepDAO));
-                sleepList.add(sleepOptional);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return sleepList.isEmpty()?new Optional< Sleep>():sleepList.get(0);
+    public Sleep get(String userId, Date date) {
+        SleepDAO sleep = mRealm.where(SleepDAO.class).equalTo("nevoUserID", userId).equalTo("CreatedDate", date).findFirst();
+        return convertToNormal(sleep) == null ? new Sleep(System.currentTimeMillis()) : convertToNormal(sleep);
     }
 
-    @Override
-    public List<Optional< Sleep>> getAll(String userId) {
-        return get(userId);
+
+    public List<Sleep> getAll(String userId) {
+        RealmResults<SleepDAO> nevoUserID = mRealm.where(SleepDAO.class).equalTo("nevoUserID", userId).findAll();
+        return convertToNormalList(nevoUserID);
     }
 
-    public List< Sleep> getNeedSyncSleep(String userId) {
-        List< Sleep> sleepList = new ArrayList<>();
-        try {
-            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().orderBy(SleepDAO.fDate, false).where().eq(SleepDAO.fNevoUserID, userId).and().isNull(SleepDAO.fCloudRecordID).query();
-            for (SleepDAO sleepDAO: sleepDAOList) {
-                sleepList.add(convertToNormal(sleepDAO));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return sleepList;
+    public List<Sleep> getNeedSyncSleep(String userId) {
+        List<SleepDAO> sleepDAOList = mRealm.where(SleepDAO.class).equalTo("nevoUserID", userId).findAll();
+        return convertToNormalList(sleepDAOList);
     }
 
-    public boolean isFoundInLocalSleep(int activity_id)
-    {
-        try {
-            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fID, activity_id).query();
-            return !sleepDAOList.isEmpty();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    public boolean isFoundInLocalSleep(Date date,String userId)
-    {
-        return get(userId,date).notEmpty();
+    public boolean isFoundInLocalSleep(int activity_id) {
+        List<SleepDAO> sleepDAOList = mRealm.where(SleepDAO.class).equalTo("ID", activity_id).findAll();
+        return !sleepDAOList.isEmpty();
     }
 
-    private SleepDAO convertToDao( Sleep sleep){
+    public boolean isFoundInLocalSleep(Date date, String userId) {
+        return get(userId, date) == null;
+    }
+
+    private SleepDAO convertToDao(Sleep sleep) {
         SleepDAO sleepDAO = new SleepDAO();
         sleepDAO.setID(sleep.getiD());
         sleepDAO.setNevoUserID(sleep.getNevoUserID());
@@ -156,8 +93,8 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
         return sleepDAO;
     }
 
-    private  Sleep convertToNormal(SleepDAO sleepDAO){
-         Sleep sleep = new  Sleep(sleepDAO.getCreatedDate());
+    private Sleep convertToNormal(SleepDAO sleepDAO) {
+        Sleep sleep = new Sleep(sleepDAO.getCreatedDate());
         sleep.setNevoUserID(sleepDAO.getNevoUserID());
         sleep.setiD(sleepDAO.getID());
         sleep.setDate(sleepDAO.getDate());
@@ -177,12 +114,11 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
         return sleep;
     }
 
-    @Override
-    public List< Sleep> convertToNormalList(List<Optional< Sleep>> optionals) {
-        List< Sleep> sleepList = new ArrayList<>();
-        for (Optional< Sleep> sleepOptional: optionals) {
-            if (sleepOptional.notEmpty()){
-                sleepList.add(sleepOptional.get());
+    public List<Sleep> convertToNormalList(List<SleepDAO> optionals) {
+        List<Sleep> sleepList = new ArrayList<>();
+        for (SleepDAO sleepOptional : optionals) {
+            if (sleepOptional != null) {
+                sleepList.add(convertToNormal(sleepOptional));
             }
         }
         return sleepList;

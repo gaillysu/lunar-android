@@ -1,195 +1,130 @@
 package com.medcorp.lunar.database.dao;
 
-import com.j256.ormlite.field.DatabaseField;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by gaillysu on 15/11/17.
  */
-public class StepsDAO {
+public class StepsDAO extends RealmObject{
     /**
      * field name and initialize value, Primary field
      */
-    public static final String fID = "ID";
-    @DatabaseField(id = true)
+    @PrimaryKey
     private int ID = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
 
     /**
      * this is created by saving cloud record,such as validic/med cloud
      */
-    public static final String fCloudRecordID = "cloudRecordID";
-    @DatabaseField
     private String cloudRecordID;
 
     /**
      * which user ID
      */
-    public static final String fNevoUserID = "nevoUserID";
-    @DatabaseField
     private String nevoUserID;
-
-
-    public static final String fValidicRecordID = "validicRecordID";
-    @DatabaseField
     private String validicRecordID;
 
     /**
      * created date
      */
-    public static final String fCreatedDate = "CreatedDate";
-    @DatabaseField
-    private long CreatedDate;
+    private long createdDate;
 
     /**
      *  date, one day which is Year/Month/Day
      */
-    public static final String fDate = "Date";
-    @DatabaseField
-    private long Date;
+    private long date;
 
 
     /**
      * one day's total steps, include walk and run
      */
-    public static final String fSteps = "Steps";
-    @DatabaseField
-    private int Steps;
+    private int steps;
 
     /**
      * one day's total walk steps
      */
-    public static final String fWalkSteps = "WalkSteps";
-    @DatabaseField
-    private int WalkSteps;
+    private int walkSteps;
 
     /**
      * one day's total run steps
      */
-    public static final String fRunSteps = "RunSteps";
-    @DatabaseField
-    private int RunSteps;
+    private int runSteps;
 
     /**
      * one day's total distance ,unit is meter.
      */
-    public static final String fDistance = "Distance";
-    @DatabaseField
-    private int Distance;
+    private int distance;
 
 
     /**
      * one day's total walk distance ,unit is meter.
      */
-    public static final String fWalkDistance = "WalkDistance";
-    @DatabaseField
-    private int WalkDistance;
+    private int walkDistance;
 
     /**
      * one day's total run distance ,unit is meter.
      */
-    public static final String fRunDistance = "RunDistance";
-    @DatabaseField
-    private int RunDistance;
+    private int runDistance;
 
     /**
      * one day's total walk duration ,unit is minute.
      */
-    public static final String fWalkDuration = "WalkDuration";
-    @DatabaseField
-    private int WalkDuration;
+    private int walkDuration;
 
     /**
      * one day's total run duration ,unit is minute.
      */
-    public static final String fRunDuration = "RunDuration";
-    @DatabaseField
-    private int RunDuration;
+    private int runDuration;
 
 
     /**
      * one day's total distance ,unit is calorie
      */
-    public static final String fCalories = "Calories";
-    @DatabaseField
-    private int Calories;
+    private int calories;
 
 
     /**
      * one day's hourly steps, such as: int HourlySteps[n] = {0,2000,3000,...,1000}, here "n" is fixed to 24
      * array to string  is "[0,2000,3000,...,1000]" that will be saved to the table
      */
-    public static final String fHourlySteps = "HourlySteps";
-    @DatabaseField
-    private String HourlySteps = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlySteps = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
     /**
      * one day's hourly distance, such as: int HourlyDistance[n] = {0,2000,3000,...,1000}, here "n" is fixed to 24
      * array to string  is "[0,2000,3000,...,1000]" that will be saved to the table
      */
-    public static final String fHourlyDistance = "HourlyDistance";
-    @DatabaseField
-    private String HourlyDistance;
+    private String hourlyDistance;
 
     /**
      * one day's hourly calories, such as: int HourlyCalories[n] = {0,2000,3000,...,1000}, here "n" is fixed to 24
      * array to string  is "[0,2000,3000,...,1000]" that will be saved to the table
      */
-    public static final String fHourlyCalories = "HourlyCalories";
-    @DatabaseField
-    private String HourlyCalories;
+    private String hourlyCalories;
 
 
     /**
      * match Zone duration, unit is minute
      */
-    public static final String fInZoneTime = "InZoneTime";
-    @DatabaseField
-    private int InZoneTime;
+    private int inZoneTime;
 
     /**
      * out of Zone duration, unit is minute
      */
-    public static final String fOutZoneTime = "OutZoneTime";
-    @DatabaseField
-    private int OutZoneTime;
+    private int outZoneTime;
 
     /**
      * no activity duration, unit is minute
      */
-    public static final String fNoActivityTime = "NoActivityTime";
-    @DatabaseField
-    private int NoActivityTime;
+    private int noActivityTime;
 
     /**
      * goal value
      */
-    public static final String fGoal = "Goal";
-    @DatabaseField
-    private int Goal;
-
-    public static final String fDistanceGoal = "distanceGoal";
-    @DatabaseField
+    private int goal;
     private int distanceGoal;
-
-    public static final String fCaloriesGoal = "caloriesGoal";
-    @DatabaseField
     private int caloriesGoal;
-
-    public static final String fActiveTimeGoal = "activeTimeGoal";
-    @DatabaseField
     private int activeTimeGoal;
-
-    public static final String fGoalReached = "goalReached";
-    @DatabaseField
     private byte goalReached;
-
-    /**
-     * remarks field, save extend  infomation
-     * it is a Json string
-     */
-
-    public static final String fRemarks = "Remarks";
-    @DatabaseField
-    private String Remarks;
 
     public int getID() {
         return ID;
@@ -197,6 +132,14 @@ public class StepsDAO {
 
     public void setID(int ID) {
         this.ID = ID;
+    }
+
+    public String getCloudRecordID() {
+        return cloudRecordID;
+    }
+
+    public void setCloudRecordID(String cloudRecordID) {
+        this.cloudRecordID = cloudRecordID;
     }
 
     public String getNevoUserID() {
@@ -207,164 +150,152 @@ public class StepsDAO {
         this.nevoUserID = nevoUserID;
     }
 
+    public String getValidicRecordID() {
+        return validicRecordID;
+    }
+
     public long getCreatedDate() {
-        return CreatedDate;
+        return createdDate;
     }
 
     public void setCreatedDate(long createdDate) {
-        CreatedDate = createdDate;
+        this.createdDate = createdDate;
     }
 
     public long getDate() {
-        return Date;
+        return date;
     }
 
     public void setDate(long date) {
-        Date = date;
+        this.date = date;
     }
 
     public int getSteps() {
-        return Steps;
+        return steps;
     }
 
     public void setSteps(int steps) {
-        Steps = steps;
+        this.steps = steps;
     }
 
     public int getWalkSteps() {
-        return WalkSteps;
+        return walkSteps;
     }
 
     public void setWalkSteps(int walkSteps) {
-        WalkSteps = walkSteps;
+        this.walkSteps = walkSteps;
     }
 
     public int getRunSteps() {
-        return RunSteps;
+        return runSteps;
     }
 
     public void setRunSteps(int runSteps) {
-        RunSteps = runSteps;
+        this.runSteps = runSteps;
     }
 
     public int getDistance() {
-        return Distance;
+        return distance;
     }
 
     public void setDistance(int distance) {
-        Distance = distance;
-    }
-
-    public int getCalories() {
-        return Calories;
-    }
-
-    public void setCalories(int calories) {
-        Calories = calories;
-    }
-
-    public String getHourlySteps() {
-        return HourlySteps;
-    }
-
-    public void setHourlySteps(String hourlySteps) {
-        HourlySteps = hourlySteps;
-    }
-
-    public String getHourlyDistance() {
-        return HourlyDistance;
-    }
-
-    public void setHourlyDistance(String hourlyDistance) {
-        HourlyDistance = hourlyDistance;
-    }
-
-    public String getHourlyCalories() {
-        return HourlyCalories;
-    }
-
-    public void setHourlyCalories(String hourlyCalories) {
-        HourlyCalories = hourlyCalories;
-    }
-
-    public int getInZoneTime() {
-        return InZoneTime;
-    }
-
-    public void setInZoneTime(int inZoneTime) {
-        InZoneTime = inZoneTime;
-    }
-
-    public int getOutZoneTime() {
-        return OutZoneTime;
-    }
-
-    public void setOutZoneTime(int outZoneTime) {
-        OutZoneTime = outZoneTime;
-    }
-
-    public int getNoActivityTime() {
-        return NoActivityTime;
-    }
-
-    public void setNoActivityTime(int noActivityTime) {
-        NoActivityTime = noActivityTime;
-    }
-
-    public int getGoal() {
-        return Goal;
-    }
-
-    public void setGoal(int goal) {
-        Goal = goal;
-    }
-
-    public String getRemarks() {
-        return Remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        Remarks = remarks;
+        this.distance = distance;
     }
 
     public int getWalkDistance() {
-        return WalkDistance;
+        return walkDistance;
     }
 
     public void setWalkDistance(int walkDistance) {
-        WalkDistance = walkDistance;
+        this.walkDistance = walkDistance;
     }
 
     public int getRunDistance() {
-        return RunDistance;
+        return runDistance;
     }
 
     public void setRunDistance(int runDistance) {
-        RunDistance = runDistance;
+        this.runDistance = runDistance;
     }
 
     public int getWalkDuration() {
-        return WalkDuration;
+        return walkDuration;
     }
 
     public void setWalkDuration(int walkDuration) {
-        WalkDuration = walkDuration;
+        this.walkDuration = walkDuration;
     }
 
     public int getRunDuration() {
-        return RunDuration;
+        return runDuration;
     }
 
     public void setRunDuration(int runDuration) {
-        RunDuration = runDuration;
+        this.runDuration = runDuration;
     }
 
-    public String getCloudRecordID() {
-        return cloudRecordID;
+    public int getCalories() {
+        return calories;
     }
 
-    public void setCloudRecordID(String cloudRecordID) {
-        this.cloudRecordID = cloudRecordID;
+    public void setCalories(int calories) {
+        this.calories = calories;
+    }
+
+    public String getHourlySteps() {
+        return hourlySteps;
+    }
+
+    public void setHourlySteps(String hourlySteps) {
+        this.hourlySteps = hourlySteps;
+    }
+
+    public String getHourlyDistance() {
+        return hourlyDistance;
+    }
+
+    public void setHourlyDistance(String hourlyDistance) {
+        this.hourlyDistance = hourlyDistance;
+    }
+
+    public String getHourlyCalories() {
+        return hourlyCalories;
+    }
+
+    public void setHourlyCalories(String hourlyCalories) {
+        this.hourlyCalories = hourlyCalories;
+    }
+
+    public int getInZoneTime() {
+        return inZoneTime;
+    }
+
+    public void setInZoneTime(int inZoneTime) {
+        this.inZoneTime = inZoneTime;
+    }
+
+    public int getOutZoneTime() {
+        return outZoneTime;
+    }
+
+    public void setOutZoneTime(int outZoneTime) {
+        this.outZoneTime = outZoneTime;
+    }
+
+    public int getNoActivityTime() {
+        return noActivityTime;
+    }
+
+    public void setNoActivityTime(int noActivityTime) {
+        this.noActivityTime = noActivityTime;
+    }
+
+    public int getGoal() {
+        return goal;
+    }
+
+    public void setGoal(int goal) {
+        this.goal = goal;
     }
 
     public int getDistanceGoal() {
@@ -399,11 +330,21 @@ public class StepsDAO {
         this.goalReached = goalReached;
     }
 
-
-    public String getValidicRecordID() {
-        return validicRecordID;
+    public String getRemarks() {
+        return remarks;
     }
 
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    /**
+     * remarks field, save extend  infomation
+     * it is a Json string
+     */
+
+
+    private String remarks;
     public void setValidicRecordID(String validicRecordID) {
         this.validicRecordID = validicRecordID;
     }

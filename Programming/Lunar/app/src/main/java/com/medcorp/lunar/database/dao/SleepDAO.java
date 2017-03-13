@@ -1,139 +1,106 @@
 package com.medcorp.lunar.database.dao;
 
-import com.j256.ormlite.field.DatabaseField;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by gaillysu on 15/11/17.
  */
-public class SleepDAO {
+public class SleepDAO extends RealmObject {
     /**
      * field name and initialize value, Primary field
      */
-    public static final String fID = "ID";
-    @DatabaseField(id = true)
-    private int ID = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
+    @PrimaryKey
+    private int ID = (int) Math.floor(Math.random() * Integer.MAX_VALUE);
 
     /**
      * this is created by saving validic record
      */
-    public static final String fCloudRecordID = "cloudRecordID";
-    @DatabaseField
     private String cloudRecordID;
 
     /**
      * which user ID
      */
-    public static final String fNevoUserID = "nevoUserID";
-    @DatabaseField
     private String nevoUserID;
 
     /**
      * created date
      */
-    public static final String fCreatedDate = "CreatedDate";
-    @DatabaseField
-    private long CreatedDate;
+    private long createdDate;
 
     /**
-     *  date, one day which is Year/Month/Day
+     * date, one day which is Year/Month/Day
      */
-    public static final String fDate = "Date";
-    @DatabaseField
-    private long Date;
+    private long date;
 
     /**
      * one day's total sleep time, unit is minute
      * TotalSleepTime = TotalWakeTime + TotalLightTime + TotalDeepTime
      */
-    public static final String fTotalSleepTime = "TotalSleepTime";
-    @DatabaseField
-    private int TotalSleepTime;
+    private int totalSleepTime;
 
     /**
      * one day's total wake time, unit is minute
      */
-    public static final String fTotalWakeTime = "TotalWakeTime";
-    @DatabaseField
-    private int TotalWakeTime;
+    private int totalWakeTime;
 
     /**
      * one day's total light sleep time, unit is minute
      */
-    public static final String fTotalLightTime = "TotalLightTime";
-    @DatabaseField
-    private int TotalLightTime;
+    private int totalLightTime;
 
     /**
      * one day's total deep time, unit is minute
      */
-    public static final String fTotalDeepTime = "TotalDeepTime";
-    @DatabaseField
-    private int TotalDeepTime;
+    private int totalDeepTime;
 
 
     /**
      * one day's hourly sleep time, such as: int HourlySleep[n] = {60,60,...30,60}, here "n" is fixed to 24
      * array to string  is "[60,60,...30,60]" that will be saved to the table
      */
-    public static final String fHourlySleep = "HourlySleep";
-    @DatabaseField
-    private String HourlySleep;
+    private String hourlySleep;
 
     /**
      * one day's hourly wake time, such as: int HourlyWake[n] = {60,60,...30,60}, here "n" is fixed to 24
      * array to string  is "[60,60,...30,60]" that will be saved to the table
      */
-    public static final String fHourlyWake = "HourlyWake";
-    @DatabaseField
-    private String HourlyWake;
+    private String hourlyWake;
 
     /**
      * one day's hourly light sleep time, such as: int HourlyLight[n] = {60,60,...30,60}, here "n" is fixed to 24
      * array to string  is "[60,60,...30,60]" that will be saved to the table
      */
-    public static final String fHourlyLight = "HourlyLight";
-    @DatabaseField
-    private String HourlyLight;
+    private String hourlyLight;
 
     /**
      * one day's hourly deep sleep time, such as: int HourlyDeep[n] = {60,60,...30,60}, here "n" is fixed to 24
      * array to string  is "[60,60,...30,60]" that will be saved to the table
      */
-    public static final String fHourlyDeep = "HourlyDeep";
-    @DatabaseField
-    private String HourlyDeep;
+    private String hourlyDeep;
 
     /**
-     *  Sleep start time, perhaps it is the yesterday's sometime or today's sometime
+     * Sleep start time, perhaps it is the yesterday's sometime or today's sometime
      */
-    public static final String fStart = "Start";
-    @DatabaseField
-    private long Start;
+    private long start;
 
     /**
-     *  sleep end time, it is today's sometime
+     * sleep end time, it is today's sometime
      */
-    public static final String fEnd = "End";
-    @DatabaseField
-    private long End;
+    private long end;
 
     /**
-     *  sleep quality [0..100]
-     *  sleep quality  =  100 *（TotalLightTime + TotalDeepTime) / TotalSleepTime
+     * sleep quality [0..100]
+     * sleep quality  =  100 *（TotalLightTime + TotalDeepTime) / TotalSleepTime
      */
-    public static final String fSleepQuality = "SleepQuality";
-    @DatabaseField
-    private int SleepQuality;
+    private int sleepQuality;
 
 
     /**
      * remarks field, save extend  infomation
      * it is a Json string
      */
-
-    public static final String fRemarks = "Remarks";
-    @DatabaseField
-    private String Remarks;
+    private String remarks;
 
     public int getID() {
         return ID;
@@ -141,6 +108,14 @@ public class SleepDAO {
 
     public void setID(int ID) {
         this.ID = ID;
+    }
+
+    public String getCloudRecordID() {
+        return cloudRecordID;
+    }
+
+    public void setCloudRecordID(String cloudRecordID) {
+        this.cloudRecordID = cloudRecordID;
     }
 
     public String getNevoUserID() {
@@ -152,122 +127,114 @@ public class SleepDAO {
     }
 
     public long getCreatedDate() {
-        return CreatedDate;
+        return createdDate;
     }
 
     public void setCreatedDate(long createdDate) {
-        CreatedDate = createdDate;
+        this.createdDate = createdDate;
     }
 
     public long getDate() {
-        return Date;
+        return date;
     }
 
     public void setDate(long date) {
-        Date = date;
+        this.date = date;
     }
 
     public int getTotalSleepTime() {
-        return TotalSleepTime;
+        return totalSleepTime;
     }
 
     public void setTotalSleepTime(int totalSleepTime) {
-        TotalSleepTime = totalSleepTime;
+        this.totalSleepTime = totalSleepTime;
     }
 
     public int getTotalWakeTime() {
-        return TotalWakeTime;
+        return totalWakeTime;
     }
 
     public void setTotalWakeTime(int totalWakeTime) {
-        TotalWakeTime = totalWakeTime;
+        this.totalWakeTime = totalWakeTime;
     }
 
     public int getTotalLightTime() {
-        return TotalLightTime;
+        return totalLightTime;
     }
 
     public void setTotalLightTime(int totalLightTime) {
-        TotalLightTime = totalLightTime;
+        this.totalLightTime = totalLightTime;
     }
 
     public int getTotalDeepTime() {
-        return TotalDeepTime;
+        return totalDeepTime;
     }
 
     public void setTotalDeepTime(int totalDeepTime) {
-        TotalDeepTime = totalDeepTime;
+        this.totalDeepTime = totalDeepTime;
     }
 
     public String getHourlySleep() {
-        return HourlySleep;
+        return hourlySleep;
     }
 
     public void setHourlySleep(String hourlySleep) {
-        HourlySleep = hourlySleep;
+        this.hourlySleep = hourlySleep;
     }
 
     public String getHourlyWake() {
-        return HourlyWake;
+        return hourlyWake;
     }
 
     public void setHourlyWake(String hourlyWake) {
-        HourlyWake = hourlyWake;
+        this.hourlyWake = hourlyWake;
     }
 
     public String getHourlyLight() {
-        return HourlyLight;
+        return hourlyLight;
     }
 
     public void setHourlyLight(String hourlyLight) {
-        HourlyLight = hourlyLight;
+        this.hourlyLight = hourlyLight;
     }
 
     public String getHourlyDeep() {
-        return HourlyDeep;
+        return hourlyDeep;
     }
 
     public void setHourlyDeep(String hourlyDeep) {
-        HourlyDeep = hourlyDeep;
+        this.hourlyDeep = hourlyDeep;
     }
 
     public long getStart() {
-        return Start;
+        return start;
     }
 
     public void setStart(long start) {
-        Start = start;
+        this.start = start;
     }
 
     public long getEnd() {
-        return End;
+        return end;
     }
 
     public void setEnd(long end) {
-        End = end;
+        this.end = end;
     }
 
     public int getSleepQuality() {
-        return SleepQuality;
+        return sleepQuality;
     }
 
     public void setSleepQuality(int sleepQuality) {
-        SleepQuality = sleepQuality;
+        this.sleepQuality = sleepQuality;
     }
 
     public String getRemarks() {
-        return Remarks;
+        return remarks;
     }
 
     public void setRemarks(String remarks) {
-        Remarks = remarks;
-    }
-
-    public String getCloudRecordID() {
-        return cloudRecordID;
-    }
-
-    public void setCloudRecordID(String cloudRecordID) {
-        this.cloudRecordID = cloudRecordID;
+        this.remarks = remarks;
     }
 }

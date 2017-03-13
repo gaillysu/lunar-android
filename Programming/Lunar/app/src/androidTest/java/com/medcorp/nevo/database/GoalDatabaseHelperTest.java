@@ -35,23 +35,23 @@ public class GoalDatabaseHelperTest extends AndroidTestCase {
 
     public void testAdd()
     {
-        Optional<Goal> thisPreset1 = db.add(addGoal);
-        assertEquals(false,thisPreset1.isEmpty());
-        addGoal = thisPreset1.get();
+        Goal thisPreset1 = db.add(addGoal);
+        assertEquals(false,thisPreset1);
+        addGoal = thisPreset1;
 
-        Optional<Goal> thisPreset2 = db.get(addGoal.getId()).get(0);
-        assertEquals(false,thisPreset2.isEmpty());
+        Goal thisPreset2 = db.get(addGoal.getId());
+        assertEquals(false,thisPreset2);
 
-        assertEquals(addGoal.getLabel(),thisPreset2.get().getLabel());
-        assertEquals(addGoal.getSteps(),thisPreset2.get().getSteps());
-        assertEquals(addGoal.isStatus(),thisPreset2.get().isStatus());
+        assertEquals(addGoal.getLabel(),thisPreset2.getLabel());
+        assertEquals(addGoal.getSteps(),thisPreset2.getSteps());
+        assertEquals(addGoal.isStatus(),thisPreset2.isStatus());
 
     }
     public void testUpdate()
     {
-        Optional<Goal> thisPreset1 = db.add(updateGoal);
-        assertEquals(false,thisPreset1.isEmpty());
-        updateGoal = thisPreset1.get();
+        Goal thisPreset1 = db.add(updateGoal);
+        assertEquals(false,thisPreset1);
+        updateGoal = thisPreset1;
 
         updateGoal.setStatus(!updateGoal.isStatus());
         updateGoal.setLabel("34terwfgw");
@@ -59,24 +59,22 @@ public class GoalDatabaseHelperTest extends AndroidTestCase {
 
         assertEquals(true, db.update(updateGoal));
 
-        Optional<Goal> thisPreset2 = db.get(updateGoal.getId()).get(0);
-        assertEquals(false,thisPreset2.isEmpty());
+        Goal thisPreset2 = db.get(updateGoal.getId());
+        assertEquals(false,thisPreset2);
 
-        assertEquals(thisPreset2.get().isStatus(), updateGoal.isStatus());
-        assertEquals(thisPreset2.get().getLabel(), updateGoal.getLabel());
-        assertEquals(thisPreset2.get().getSteps(), updateGoal.getSteps());
+        assertEquals(thisPreset2.isStatus(), updateGoal.isStatus());
+        assertEquals(thisPreset2.getLabel(), updateGoal.getLabel());
+        assertEquals(thisPreset2.getSteps(), updateGoal.getSteps());
 
     }
     public void testRemove()
     {
-        Optional<Goal> thisPreset1 = db.add(removeGoal);
-        assertEquals(false,thisPreset1.isEmpty());
-        removeGoal = thisPreset1.get();
+        Goal thisPreset1 = db.add(removeGoal);
+        assertEquals(false,thisPreset1);
+        removeGoal = thisPreset1;
 
-        assertEquals(true,db.remove(removeGoal.getId()));
-
-        Optional<Goal> thisPreset2 = db.get(removeGoal.getId()).get(0);
-        assertEquals(true,thisPreset2.isEmpty());
+        Goal thisPreset2 = db.get(removeGoal.getId());
+        assertEquals(true,thisPreset2);
 
     }
 }

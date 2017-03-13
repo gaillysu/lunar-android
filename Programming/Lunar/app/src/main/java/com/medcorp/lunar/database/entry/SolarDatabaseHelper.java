@@ -1,111 +1,75 @@
 package com.medcorp.lunar.database.entry;
 
 import android.content.Context;
-import com.medcorp.lunar.database.DatabaseHelper;
+
 import com.medcorp.lunar.database.dao.SolarDAO;
 import com.medcorp.lunar.model.Solar;
 import com.medcorp.lunar.util.Common;
 
 import net.medcorp.library.ble.util.Optional;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Realm;
+
 /**
  * Created by med on 16/8/30.
  */
-public class SolarDatabaseHelper implements iEntryDatabaseHelper<Solar> {
+public class SolarDatabaseHelper {
 
-    private DatabaseHelper databaseHelper;
+    private Realm mRealm;
 
     public SolarDatabaseHelper(Context context) {
-        databaseHelper = DatabaseHelper.getInstance(context);
+        Realm.init(context);
+        mRealm = Realm.getDefaultInstance();
     }
 
-    @Override
-    public Optional<Solar> add(Solar object) {
-        Optional<Solar> solarOptional = new Optional<>();
-        try {
-            SolarDAO solarDAO = databaseHelper.getSolarDAO().createIfNotExists(convertToDao(object));
-            if (solarDAO != null) {
-                solarOptional.set(convertToNormal(solarDAO));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return solarOptional;
+    public Solar add(Solar object) {
+        mRealm.beginTransaction();
+        SolarDAO solarDAO = mRealm.copyToRealm(convertToDao(object));
+        mRealm.commitTransaction();
+        return convertToNormal(solarDAO);
     }
 
-    @Override
     public boolean update(Solar object) {
-        Optional<Solar> solarOptional = get(object.getUserId()+"",object.getDate());
-        if(solarOptional.isEmpty()){
-            return add(object).notEmpty();
-        }
-        SolarDAO solarDAO = convertToDao(object);
-        solarDAO.setID(solarOptional.get().getId());
-        try {
-            return databaseHelper.getSolarDAO().update(solarDAO)>=0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        mRealm.beginTransaction();
+        SolarDAO solarDAO = mRealm.copyToRealmOrUpdate(convertToDao(object));
+        mRealm.commitTransaction();
+        return solarDAO == null ? false : true;
     }
 
-    @Override
-    public boolean remove(String userId, Date date) {
-        try {
-            List<SolarDAO> solarDAOList = databaseHelper.getSolarDAO().queryBuilder().where().eq(SolarDAO.fUserId, userId).and().eq(SolarDAO.fDate, Common.removeTimeFromDate(date)).query();
-            if (!solarDAOList.isEmpty()) {
-                return databaseHelper.getSolarDAO().delete(solarDAOList) >= 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public void remove(String userId, Date date) {
+        mRealm.where(SolarDAO.class).equalTo("ID", userId).equalTo("CreatedDate", date).findFirst().deleteFromRealm();
+
     }
 
-    @Override
-    public List<Optional<Solar>> get(String userId) {
+    public List<Solar> get(String userId) {
         return getAll(userId);
     }
 
-    @Override
     public Optional<Solar> get(String userId, Date date) {
         List<Optional<Solar>> stepsList = new ArrayList<>();
-        try {
-            List<SolarDAO> solarDAOList = databaseHelper.getSolarDAO().queryBuilder().where().eq(SolarDAO.fUserId, userId).and().eq(SolarDAO.fDate, Common.removeTimeFromDate(date)).query();
-            for (SolarDAO solarDAO : solarDAOList) {
-                Optional<Solar> solarOptional = new Optional<>();
-                solarOptional.set(convertToNormal(solarDAO));
-                stepsList.add(solarOptional);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        List<SolarDAO> solarDAOList = mRealm.where(SolarDAO.class).equalTo("ID", userId).equalTo("CreatedDate", date).findAll();
+        for (SolarDAO solarDAO : solarDAOList) {
+            Optional<Solar> solarOptional = new Optional<>();
+            solarOptional.set(convertToNormal(solarDAO));
+            stepsList.add(solarOptional);
         }
         return stepsList.isEmpty() ? new Optional<Solar>() : stepsList.get(0);
     }
 
-    @Override
-    public List<Optional<Solar>> getAll(String userId) {
-        List<Optional<Solar>> stepsList = new ArrayList<>();
-        try {
-            List<SolarDAO> solarDAOList = databaseHelper.getSolarDAO().queryBuilder().where().eq(SolarDAO.fUserId, userId).query();
-            for (SolarDAO solarDAO : solarDAOList) {
-                Optional<Solar> solarOptional = new Optional<>();
-                solarOptional.set(convertToNormal(solarDAO));
-                stepsList.add(solarOptional);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public List<Solar> getAll(String userId) {
+        List<Solar> stepsList = new ArrayList<>();
+        List<SolarDAO> solarDAOList = mRealm.where(SolarDAO.class).equalTo("ID", userId).findAll();
+        for (SolarDAO solarDAO : solarDAOList) {
+            stepsList.add(convertToNormal(solarDAO));
         }
         return stepsList;
     }
 
-    private SolarDAO convertToDao(Solar solar)
-    {
+    private SolarDAO convertToDao(Solar solar) {
         SolarDAO solarDAO = new SolarDAO();
         solarDAO.setUserId(solar.getUserId());
         solarDAO.setCreatedDate(solar.getCreatedDate());
@@ -114,6 +78,7 @@ public class SolarDatabaseHelper implements iEntryDatabaseHelper<Solar> {
         solarDAO.setHourlyHarvestingTime(solar.getHourlyHarvestingTime());
         return solarDAO;
     }
+
     private Solar convertToNormal(SolarDAO solarDAO) {
         Solar solar = new Solar(solarDAO.getCreatedDate());
         solar.setId(solarDAO.getID());
@@ -123,12 +88,11 @@ public class SolarDatabaseHelper implements iEntryDatabaseHelper<Solar> {
         solar.setUserId(solarDAO.getUserId());
         return solar;
     }
-    @Override
+
     public List<Solar> convertToNormalList(List<Optional<Solar>> optionals) {
         List<Solar> solarList = new ArrayList<>();
-        for(Optional<Solar> solarOptional:optionals)
-        {
-            if(solarOptional.notEmpty()){
+        for (Optional<Solar> solarOptional : optionals) {
+            if (solarOptional.notEmpty()) {
                 solarList.add(solarOptional.get());
             }
         }

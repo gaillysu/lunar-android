@@ -1,12 +1,11 @@
 package com.medcorp.lunar.model;
 
-import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by gaillysu on 15/4/21.
  */
-public class Alarm  extends RealmObject{
+public class Alarm {
 
     @PrimaryKey
     private int id = -1;
@@ -17,14 +16,13 @@ public class Alarm  extends RealmObject{
     private byte alarmType;
     private byte alarmNumber;
 
-    public Alarm(int hour, int minute,byte weekDay,String label,byte alarmStyle ,byte alarmNumber)
-    {
+    public Alarm(int hour, int minute, byte weekDay, String label, byte alarmStyle, byte alarmNumber) {
         this.hour = hour;
         this.minute = minute;
         this.weekDay = weekDay;
         this.label = label;
         this.alarmType = alarmStyle;
-        this.alarmNumber =alarmNumber;
+        this.alarmNumber = alarmNumber;
     }
 
     public byte getAlarmNumber() {
@@ -87,19 +85,19 @@ public class Alarm  extends RealmObject{
     public String toString() {
 
         StringBuilder builder = new StringBuilder();
-        if (hour == 0){
+        if (hour == 0) {
             builder.append("00");
-        } else if (hour < 10){
+        } else if (hour < 10) {
             builder.append("0" + hour);
-        }else{
+        } else {
             builder.append(hour);
         }
         builder.append(":");
-        if (minute== 0){
+        if (minute == 0) {
             builder.append("00");
-        } else if (minute< 10){
+        } else if (minute < 10) {
             builder.append("0" + minute);
-        }else{
+        } else {
             builder.append(minute);
         }
         return builder.toString();

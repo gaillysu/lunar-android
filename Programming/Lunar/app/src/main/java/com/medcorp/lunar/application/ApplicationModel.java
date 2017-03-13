@@ -174,7 +174,7 @@ public class ApplicationModel extends Application {
         mIWXAPI = WXAPIFactory.createWXAPI(this, getString(R.string.we_chat_app_id), true);
         worldClockDatabaseHelper = new WorldClockDatabaseHelper(this);
         worldClockDatabaseHelper.setupWorldClock();
-        Optional<User> user = userDatabaseHelper.getLoginUser();
+        User user = userDatabaseHelper.getLoginUser();
         if (Preferences.getisInitAlarm(this) && getAllAlarm().size() == 0) {
             Preferences.startInitAlarm(this, false);
             Alarm defAlarm;
@@ -187,12 +187,12 @@ public class ApplicationModel extends Application {
                 addAlarm(defAlarm);
             }
         }
-        if (user.isEmpty()) {
+        if (user == null) {
             nevoUser = new User(0);
             nevoUser.setNevoUserID("0");
             //"0" means anonymous user login
         } else {
-            nevoUser = user.get();
+            nevoUser = user;
         }
         updateGoogleFit();
     }
@@ -295,7 +295,7 @@ public class ApplicationModel extends Application {
     }
 
     public List<Steps> getAllSteps() {
-        return stepsDatabaseHelper.convertToNormalList(stepsDatabaseHelper.getAll(nevoUser.getNevoUserID()));
+        return stepsDatabaseHelper.getAll(nevoUser.getNevoUserID());
     }
 
     public List<Alarm> getAllAlarm() {
@@ -366,9 +366,9 @@ public class ApplicationModel extends Application {
 
         for (long start = calendar.getWeekStartDate().getTime(); start <=
                 calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
-            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, new Date(start));
-            if (todaySleep.notEmpty()) {
-                Sleep dailySleep = todaySleep.get();
+            Sleep todaySleep = sleepDatabaseHelper.get(userId, new Date(start));
+            if (todaySleep != null) {
+                Sleep dailySleep = todaySleep;
                 SleepData sleepData = new SleepData(dailySleep.getTotalDeepTime()
                         , dailySleep.getTotalLightTime(), dailySleep.getTotalWakeTime(),
                         start, dailySleep.getStart(), dailySleep.getEnd());
@@ -388,9 +388,9 @@ public class ApplicationModel extends Application {
         for (long start = calendar.getLastWeekStart().getTime(); start <=
                 calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
 
-            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, new Date(start));
-            if (todaySleep.notEmpty()) {
-                Sleep dailySleep = todaySleep.get();
+            Sleep todaySleep = sleepDatabaseHelper.get(userId, new Date(start));
+            if (todaySleep != null) {
+                Sleep dailySleep = todaySleep;
                 SleepData sleepData = new SleepData(dailySleep.getTotalDeepTime()
                         , dailySleep.getTotalLightTime(), dailySleep.getTotalWakeTime(),
                         new DateTime(start).getMillis(), dailySleep.getStart(), dailySleep.getEnd());
@@ -408,9 +408,9 @@ public class ApplicationModel extends Application {
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
         for (long start = calendar.getMonthStartDate().getTime(); start <=
                 date.getTime(); start += 24 * 60 * 60 * 1000L) {
-            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, new Date(start));
-            if (todaySleep.notEmpty()) {
-                Sleep dailySleep = todaySleep.get();
+            Sleep todaySleep = sleepDatabaseHelper.get(userId, new Date(start));
+            if (todaySleep != null) {
+                Sleep dailySleep = todaySleep;
                 SleepData sleepData = new SleepData(dailySleep.getTotalDeepTime()
                         , dailySleep.getTotalLightTime(), dailySleep.getTotalWakeTime(),
                         start, dailySleep.getStart(), dailySleep.getEnd());
@@ -457,9 +457,9 @@ public class ApplicationModel extends Application {
     public Steps getDailySteps(String userId, Date date) {
         Steps steps = null;
         Date dateStart = CalendarWeekUtils.getDayStartTime(date);
-        Optional<Steps> step = stepsDatabaseHelper.get(userId, dateStart);
-        if (step.notEmpty()) {
-            steps = step.get();
+        Steps step = stepsDatabaseHelper.get(userId, dateStart);
+        if (step != null) {
+            steps = step;
         } else {
             steps = new Steps(date.getTime());
             steps.setDate(date.getTime());
@@ -471,20 +471,20 @@ public class ApplicationModel extends Application {
     public Sleep[] getDailySleep(String userId, Date todayDate) {
         Date yesterdayDate = new Date(todayDate.getTime() - 24 * 60 * 60 * 1000l);
 
-        Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, todayDate);
-        Optional<Sleep> yesterdaySleep = sleepDatabaseHelper.get(userId, yesterdayDate);
+        Sleep todaySleep = sleepDatabaseHelper.get(userId, todayDate);
+        Sleep yesterdaySleep = sleepDatabaseHelper.get(userId, yesterdayDate);
 
         //use yesterday and today data to analysis sleep,pls refer to SleepDataHandler class
-        if (yesterdaySleep.notEmpty() && todaySleep.notEmpty()) {
-            return new Sleep[]{todaySleep.get(), yesterdaySleep.get()};
+        if (yesterdaySleep != null && todaySleep != null) {
+            return new Sleep[]{todaySleep, yesterdaySleep};
         }
         //use today data to analysis sleep
-        if (todaySleep.notEmpty() && yesterdaySleep.isEmpty()) {
-            return new Sleep[]{todaySleep.get()};
+        if (todaySleep != null && yesterdaySleep == null) {
+            return new Sleep[]{todaySleep};
         }
         //use yesterday data (after 18:00) to analysis sleep
-        if (yesterdaySleep.notEmpty() && todaySleep.isEmpty()) {
-            return new Sleep[]{yesterdaySleep.get()};
+        if (yesterdaySleep != null && todaySleep == null) {
+            return new Sleep[]{yesterdaySleep};
         }
         //NO data sleep
         Sleep noDataSleep = new Sleep(todayDate.getTime());
@@ -689,11 +689,11 @@ public class ApplicationModel extends Application {
     }
 
     public List<Goal> getAllGoal() {
-        return goalDatabaseHelper.convertToNormalList(goalDatabaseHelper.getAll());
+        return goalDatabaseHelper.getAll();
     }
 
     public Goal addGoal(Goal goal) {
-        return goalDatabaseHelper.add(goal).get();
+        return goalDatabaseHelper.add(goal);
     }
 
     public boolean updateGoal(Goal goal) {
@@ -701,11 +701,11 @@ public class ApplicationModel extends Application {
     }
 
     public Goal getGoalById(int id) {
-        return goalDatabaseHelper.get(id).isEmpty() ? null : goalDatabaseHelper.get(id).get(0).get();
+        return goalDatabaseHelper.get(id) == null ? null : goalDatabaseHelper.get(id);
     }
 
-    public boolean deleteAlarm(Goal goal) {
-        return goalDatabaseHelper.remove(goal.getId());
+    public void deleteAlarm(Goal goal) {
+        goalDatabaseHelper.remove(goal.getId());
     }
 
     /**
@@ -714,23 +714,23 @@ public class ApplicationModel extends Application {
      * @return
      */
     public List<LedLamp> getAllLedLamp() {
-        return ledDataBase.convertToNormalList(ledDataBase.getAll());
+        return ledDataBase.getAll();
     }
 
     public LedLamp getSelectLamp(int rid) {
-        return ledDataBase.get(rid).isEmpty() ? null : ledDataBase.get(rid).get(0).get();
+        return ledDataBase.get(rid) == null ? null : ledDataBase.get(rid);
     }
 
     public LedLamp addLedLamp(LedLamp ledLamp) {
-        return ledDataBase.add(ledLamp).get();
+        return ledDataBase.add(ledLamp);
     }
 
     public boolean upDataLedLamp(LedLamp ledLamp) {
         return ledDataBase.update(ledLamp);
     }
 
-    public boolean removeLedLamp(int id) {
-        return ledDataBase.remove(id);
+    public void removeLedLamp(int id) {
+        ledDataBase.remove(id);
     }
 
     public void getPositionLocal(final Location mLocation) {
