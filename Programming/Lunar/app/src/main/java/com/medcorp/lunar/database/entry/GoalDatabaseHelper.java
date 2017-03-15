@@ -1,7 +1,5 @@
 package com.medcorp.lunar.database.entry;
 
-import android.content.Context;
-
 import com.medcorp.lunar.database.dao.GoalDAO;
 import com.medcorp.lunar.model.Goal;
 
@@ -17,8 +15,7 @@ public class GoalDatabaseHelper {
 
     private Realm mRealm;
 
-    public GoalDatabaseHelper(Context context) {
-        Realm.init(context);
+    public GoalDatabaseHelper() {
         mRealm = Realm.getDefaultInstance();
     }
 

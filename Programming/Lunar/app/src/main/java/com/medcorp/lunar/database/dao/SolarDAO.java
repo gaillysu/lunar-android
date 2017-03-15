@@ -14,7 +14,7 @@ public class SolarDAO extends RealmObject {
      * field name and initialize value, Primary field
      */
     @PrimaryKey
-    private int ID = (int) Math.floor(Math.random() * Integer.MAX_VALUE);
+    private int id;
 
     /**
      * createDate is YYYY-MM-DD HH:MM:SS, means create or update date
@@ -37,12 +37,12 @@ public class SolarDAO extends RealmObject {
      */
     private int totalHarvestingTime;
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Date getCreatedDate() {

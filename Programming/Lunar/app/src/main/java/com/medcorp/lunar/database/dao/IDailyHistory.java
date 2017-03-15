@@ -12,6 +12,7 @@ import javax.annotation.PropertyKey;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
+import io.realm.annotations.RealmModule;
 
 /**
  * Created by gaillysu on 15/8/11.

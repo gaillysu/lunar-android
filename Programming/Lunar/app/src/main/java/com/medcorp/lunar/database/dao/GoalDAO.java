@@ -15,14 +15,6 @@ public class GoalDAO extends RealmObject{
     private boolean enabled;
     private int steps;
 
-    public GoalDAO(){}
-    public GoalDAO(String label, boolean status, int steps)
-    {
-        this.label = label;
-        this.enabled=status;
-        this.steps = steps;
-    }
-
     public int getId() {
         return id;
     }

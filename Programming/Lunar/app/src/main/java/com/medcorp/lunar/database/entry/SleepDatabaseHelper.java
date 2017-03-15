@@ -19,8 +19,7 @@ public class SleepDatabaseHelper {
 
     private Realm mRealm;
 
-    public SleepDatabaseHelper(Context context) {
-        Realm.init(context);
+    public SleepDatabaseHelper() {
         mRealm = Realm.getDefaultInstance();
     }
 
@@ -96,7 +95,7 @@ public class SleepDatabaseHelper {
     private Sleep convertToNormal(SleepDAO sleepDAO) {
         Sleep sleep = new Sleep(sleepDAO.getCreatedDate());
         sleep.setNevoUserID(sleepDAO.getNevoUserID());
-        sleep.setiD(sleepDAO.getID());
+        sleep.setiD(sleepDAO.getId());
         sleep.setDate(sleepDAO.getDate());
         sleep.setEnd(sleepDAO.getEnd());
         sleep.setHourlyDeep(sleepDAO.getHourlyDeep());

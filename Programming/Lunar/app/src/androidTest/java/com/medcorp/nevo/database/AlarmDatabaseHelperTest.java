@@ -20,7 +20,7 @@ public class AlarmDatabaseHelperTest extends AndroidTestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        db = new AlarmDatabaseHelper(getContext());
+        db = new AlarmDatabaseHelper();
         addAlarm = new Alarm(7,30, (byte) 1,"wake up alarm",(byte)0,(byte)0);
         updateAlarm = new Alarm(12,30, (byte) 1,"lunch time",(byte)0,(byte)0);
         removeAlarm = new Alarm(22,30, (byte) 0,"sleep time",(byte)0,(byte)0);

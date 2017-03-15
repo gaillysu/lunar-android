@@ -110,7 +110,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -150,6 +149,7 @@ public class ApplicationModel extends Application {
     private LedLampDatabase ledDataBase;
     private LocationController locationController;
     private IWXAPI mIWXAPI;
+    private final String REALM_NAME = "med_lunar.realm";
 
     @Override
     public void onCreate() {
@@ -157,22 +157,25 @@ public class ApplicationModel extends Application {
         Fabric.with(this, new Crashlytics());
         EventBus.getDefault().register(this);
         Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder().build();
-        Realm.setDefaultConfiguration(config);
+        worldClockDatabaseHelper = new WorldClockDatabaseHelper(this);
+//        RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
+//                .name(REALM_NAME)
+//                .modules(new WorldClockLibraryModule(),Realm.getDefaultModule())
+//                .build();
+//        Realm.setDefaultConfiguration(lunarConfig);
         syncController = new SyncControllerImpl(this);
         otaController = new OtaControllerImpl(this);
-        stepsDatabaseHelper = new StepsDatabaseHelper(this);
-        sleepDatabaseHelper = new SleepDatabaseHelper(this);
-        alarmDatabaseHelper = new AlarmDatabaseHelper(this);
-        goalDatabaseHelper = new GoalDatabaseHelper(this);
-        userDatabaseHelper = new UserDatabaseHelper(this);
-        solarDatabaseHelper = new SolarDatabaseHelper(this);
+        stepsDatabaseHelper = new StepsDatabaseHelper();
+        sleepDatabaseHelper = new SleepDatabaseHelper();
+        alarmDatabaseHelper = new AlarmDatabaseHelper();
+        goalDatabaseHelper = new GoalDatabaseHelper();
+        userDatabaseHelper = new UserDatabaseHelper();
+        solarDatabaseHelper = new SolarDatabaseHelper();
         validicMedManager = new MedManager(this);
         cloudSyncManager = new CloudSyncManager(this);
         ledDataBase = new LedLampDatabase(this);
         locationController = new LocationController(this);
         mIWXAPI = WXAPIFactory.createWXAPI(this, getString(R.string.we_chat_app_id), true);
-        worldClockDatabaseHelper = new WorldClockDatabaseHelper(this);
         worldClockDatabaseHelper.setupWorldClock();
         User user = userDatabaseHelper.getLoginUser();
         if (Preferences.getisInitAlarm(this) && getAllAlarm().size() == 0) {

@@ -1,7 +1,5 @@
 package com.medcorp.lunar.database.entry;
 
-import android.content.Context;
-
 import com.medcorp.lunar.database.dao.StepsDAO;
 import com.medcorp.lunar.model.Steps;
 
@@ -19,7 +17,7 @@ public class StepsDatabaseHelper {
 
     private Realm mRealm;
 
-    public StepsDatabaseHelper(Context context) {
+    public StepsDatabaseHelper() {
         mRealm = Realm.getDefaultInstance();
     }
 
@@ -79,7 +77,7 @@ public class StepsDatabaseHelper {
 
     private StepsDAO convertToDao(Steps steps) {
         StepsDAO stepsDao = new StepsDAO();
-        stepsDao.setID(steps.getiD());
+        stepsDao.setId(steps.getiD());
         stepsDao.setNevoUserID(steps.getNevoUserID());
         stepsDao.setCreatedDate(steps.getCreatedDate());
         stepsDao.setDate(steps.getDate());
@@ -111,7 +109,7 @@ public class StepsDatabaseHelper {
     private Steps convertToNormal(StepsDAO stepsDAO) {
         Steps steps = new Steps(stepsDAO.getCreatedDate());
         steps.setNevoUserID(stepsDAO.getNevoUserID());
-        steps.setiD(stepsDAO.getID());
+        steps.setiD(stepsDAO.getId());
         steps.setDate(stepsDAO.getDate());
         steps.setSteps(stepsDAO.getSteps());
         steps.setWalkSteps(stepsDAO.getWalkSteps());

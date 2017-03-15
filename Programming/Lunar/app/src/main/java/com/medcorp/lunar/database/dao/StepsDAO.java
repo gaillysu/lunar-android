@@ -2,16 +2,17 @@ package com.medcorp.lunar.database.dao;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.RealmModule;
 
 /**
  * Created by gaillysu on 15/11/17.
  */
-public class StepsDAO extends RealmObject{
+public class StepsDAO extends RealmObject {
     /**
      * field name and initialize value, Primary field
      */
     @PrimaryKey
-    private int ID = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
+    private int id;
 
     /**
      * this is created by saving cloud record,such as validic/med cloud
@@ -30,7 +31,7 @@ public class StepsDAO extends RealmObject{
     private long createdDate;
 
     /**
-     *  date, one day which is Year/Month/Day
+     * date, one day which is Year/Month/Day
      */
     private long date;
 
@@ -126,12 +127,12 @@ public class StepsDAO extends RealmObject{
     private int activeTimeGoal;
     private byte goalReached;
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCloudRecordID() {
@@ -345,6 +346,7 @@ public class StepsDAO extends RealmObject{
 
 
     private String remarks;
+
     public void setValidicRecordID(String validicRecordID) {
         this.validicRecordID = validicRecordID;
     }

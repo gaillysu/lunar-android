@@ -1,7 +1,5 @@
 package com.medcorp.lunar.database.entry;
 
-import android.content.Context;
-
 import com.medcorp.lunar.database.dao.AlarmDAO;
 import com.medcorp.lunar.model.Alarm;
 
@@ -18,8 +16,7 @@ public class AlarmDatabaseHelper {
 
     private Realm mRealm;
 
-    public AlarmDatabaseHelper(Context context) {
-        Realm.init(context);
+    public AlarmDatabaseHelper() {
         mRealm = Realm.getDefaultInstance();
     }
 
@@ -65,7 +62,7 @@ public class AlarmDatabaseHelper {
         int hour = Integer.parseInt(splittedAlarmStrings[0]);
         int minutes = Integer.parseInt(splittedAlarmStrings[1]);
         Alarm alarm = new Alarm(hour, minutes, alarmDAO.getWeekDay(), alarmDAO.getLabel(), alarmDAO.getAlarmType(), alarmDAO.getAlarmNumber());
-        alarm.setId(alarmDAO.getID());
+        alarm.setId(alarmDAO.getId());
         return alarm;
     }
 

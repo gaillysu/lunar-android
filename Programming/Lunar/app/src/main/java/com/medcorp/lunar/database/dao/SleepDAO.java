@@ -11,7 +11,7 @@ public class SleepDAO extends RealmObject {
      * field name and initialize value, Primary field
      */
     @PrimaryKey
-    private int ID = (int) Math.floor(Math.random() * Integer.MAX_VALUE);
+    private int id;
 
     /**
      * this is created by saving validic record
@@ -102,12 +102,12 @@ public class SleepDAO extends RealmObject {
      */
     private String remarks;
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setID(int id) {
+        this.id = id;
     }
 
     public String getCloudRecordID() {

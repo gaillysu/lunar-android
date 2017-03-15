@@ -69,7 +69,7 @@ public class LedLampDatabase {
         LedLamp led = new LedLamp();
         led.setName(res.getName());
         led.setColor(res.getColor());
-        led.setId(res.getID());
+        led.setId(res.getId());
         return led;
     }
 

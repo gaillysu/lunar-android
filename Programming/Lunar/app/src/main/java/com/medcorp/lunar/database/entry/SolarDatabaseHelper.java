@@ -1,7 +1,5 @@
 package com.medcorp.lunar.database.entry;
 
-import android.content.Context;
-
 import com.medcorp.lunar.database.dao.SolarDAO;
 import com.medcorp.lunar.model.Solar;
 import com.medcorp.lunar.util.Common;
@@ -21,8 +19,7 @@ public class SolarDatabaseHelper {
 
     private Realm mRealm;
 
-    public SolarDatabaseHelper(Context context) {
-        Realm.init(context);
+    public SolarDatabaseHelper() {
         mRealm = Realm.getDefaultInstance();
     }
 
@@ -81,7 +78,7 @@ public class SolarDatabaseHelper {
 
     private Solar convertToNormal(SolarDAO solarDAO) {
         Solar solar = new Solar(solarDAO.getCreatedDate());
-        solar.setId(solarDAO.getID());
+        solar.setId(solarDAO.getId());
         solar.setDate(solarDAO.getDate());
         solar.setHourlyHarvestingTime(solarDAO.getHourlyHarvestingTime());
         solar.setTotalHarvestingTime(solarDAO.getTotalHarvestingTime());

@@ -1,15 +1,16 @@
 package com.medcorp.lunar.database.entry;
 
-import android.content.Context;
-
 import com.medcorp.lunar.database.dao.UserDAO;
 import com.medcorp.lunar.model.User;
+
+import net.medcorp.library.worldclock.util.WorldClockLibraryModule;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 /**
@@ -18,9 +19,14 @@ import io.realm.RealmResults;
 public class UserDatabaseHelper {
 
     private Realm mRealm;
+    private final String REALM_NAME = "med_lunar.realm";
 
-    public UserDatabaseHelper(Context context) {
-        mRealm = Realm.getDefaultInstance();
+    public UserDatabaseHelper() {
+        RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
+                .name(REALM_NAME)
+                .modules(new WorldClockLibraryModule(), Realm.getDefaultModule())
+                .build();
+        mRealm = Realm.getInstance(lunarConfig);
     }
 
     public User add(User object) {
@@ -61,9 +67,7 @@ public class UserDatabaseHelper {
     }
 
     public User getLoginUser() {
-        mRealm.beginTransaction();
         RealmResults<UserDAO> allUser = mRealm.where(UserDAO.class).findAll();
-        mRealm.commitTransaction();
         UserDAO userDAO = null;
         for (UserDAO user : allUser) {
             if (user.isNevoUserIsLogin()) {

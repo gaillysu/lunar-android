@@ -14,8 +14,6 @@ public class UserDAO extends RealmObject {
      */
     @PropertyKey
     private int id;
-
-
     /**
      * default age
      */
@@ -24,17 +22,17 @@ public class UserDAO extends RealmObject {
     /**
      * default weight, 75kg
      */
-    private int weight;
+    private int weight=75;
 
     /**
      * default height, 175cm
      */
-    private int height;
+    private int height=175;
 
     /**
      * Sex = 0, female, sex = 1, male
      */
-    private int sex;
+    private int sex=1;
 
     private long birthday;
 
@@ -82,9 +80,6 @@ public class UserDAO extends RealmObject {
     private String wechat;
     private boolean isConnectValidic;
 
-    public UserDAO(){
-
-    }
 
     public int getId() {
         return id;
@@ -229,6 +224,4 @@ public class UserDAO extends RealmObject {
     public void setConnectValidic(boolean connectValidic) {
         isConnectValidic = connectValidic;
     }
-
-
 }
