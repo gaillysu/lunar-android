@@ -1,5 +1,6 @@
 package com.medcorp.lunar.database.entry;
 
+import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.dao.SolarDAO;
 import com.medcorp.lunar.model.Solar;
 import com.medcorp.lunar.util.Common;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * Created by med on 16/8/30.
@@ -20,7 +22,12 @@ public class SolarDatabaseHelper {
     private Realm mRealm;
 
     public SolarDatabaseHelper() {
-        mRealm = Realm.getDefaultInstance();
+        RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
+                .name("med_lunar.realm")
+                .modules(new LunarAllModules())
+                .build();
+        mRealm = Realm.getInstance(lunarConfig);
+//        mRealm = Realm.getDefaultInstance();
     }
 
     public Solar add(Solar object) {

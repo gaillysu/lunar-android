@@ -1,14 +1,14 @@
 package com.medcorp.lunar.database.entry;
 
-import android.content.Context;
-
 import com.medcorp.lunar.ble.model.color.LedLamp;
+import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.dao.LedLampDAO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 /**
@@ -19,9 +19,13 @@ public class LedLampDatabase {
 
     private Realm mRealm;
 
-    public LedLampDatabase(Context context) {
-        Realm.init(context);
-        mRealm = Realm.getDefaultInstance();
+    public LedLampDatabase() {
+        RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
+                .name("med_lunar.realm")
+                .modules(new LunarAllModules())
+                .build();
+        mRealm = Realm.getInstance(lunarConfig);
+//        mRealm = Realm.getDefaultInstance();
     }
 
     public LedLamp add(LedLamp object) {

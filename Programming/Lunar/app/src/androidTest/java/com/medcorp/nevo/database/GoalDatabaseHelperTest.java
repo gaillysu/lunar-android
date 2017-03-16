@@ -1,4 +1,4 @@
-package com.medcorp.database;
+package com.medcorp.lunar.database;
 
 import android.test.AndroidTestCase;
 
@@ -22,7 +22,7 @@ public class GoalDatabaseHelperTest extends AndroidTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        db = new GoalDatabaseHelper(getContext());
+        db = new GoalDatabaseHelper();
         addGoal = new Goal("Low",false,5000);
         updateGoal = new Goal("Normal",true,10000);
         removeGoal = new Goal("Player",false,20000);

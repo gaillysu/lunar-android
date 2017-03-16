@@ -1,4 +1,4 @@
-package com.medcorp.database;
+package com.medcorp.lunar.database;
 
 import android.test.AndroidTestCase;
 
@@ -23,31 +23,31 @@ public class StepsDatabaseHelperTest extends AndroidTestCase {
     private User loginUser;
 
     private Steps addSteps;
-    private Steps  updateSteps;
-    private Steps  removeSteps;
+    private Steps updateSteps;
+    private Steps removeSteps;
     private Date today;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
 
-        dbUser = new UserDatabaseHelper(getContext());
-        loginUser = new User("Karl","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"","");
+        dbUser = new UserDatabaseHelper();
+        loginUser = new User("Karl", "Chow", 1, 946728000000l, 20, 70, 180, 946728000000l, "", "");
 
-        Optional<User> thisuser = dbUser.add(loginUser);
-        assertEquals(false,thisuser.isEmpty());
+        User thisuser = dbUser.add(loginUser);
+        assertEquals(false, thisuser == null);
         //set user ID as a login user
-        loginUser.setId(thisuser.get().getId());
+        loginUser.setId(thisuser.getId());
 
-        db = new StepsDatabaseHelper(getContext());
+        db = new StepsDatabaseHelper();
 
         //this is today's data, today format is YYYYMMDD 00:00:00
         today = Common.removeTimeFromDate(new Date());
 
         //initialize sample data
-        addSteps = new Steps(new Date().getTime(),today.getTime(),1000,800,200,500,10,"","","",0,0,0,10000,0,0,0,0,"");
-        updateSteps = new Steps(new Date().getTime(),today.getTime(),2000,1800,200,1000,20,"","","",0,0,0,10000,0,0,0,0,"");
-        removeSteps = new Steps(new Date().getTime(),today.getTime(),3000,2800,200,1500,30,"","","",0,0,0,10000,0,0,0,0,"");
+        addSteps = new Steps(new Date().getTime(), today.getTime(), 1000, 800, 200, 500, 10, "", "", "", 0, 0, 0, 10000, 0, 0, 0, 0, "");
+        updateSteps = new Steps(new Date().getTime(), today.getTime(), 2000, 1800, 200, 1000, 20, "", "", "", 0, 0, 0, 10000, 0, 0, 0, 0, "");
+        removeSteps = new Steps(new Date().getTime(), today.getTime(), 3000, 2800, 200, 1500, 30, "", "", "", 0, 0, 0, 10000, 0, 0, 0, 0, "");
 
         //set who owner these data.
         addSteps.setNevoUserID(loginUser.getNevoUserID());
@@ -61,57 +61,54 @@ public class StepsDatabaseHelperTest extends AndroidTestCase {
         super.tearDown();
     }
 
-    public void testAdd()
-    {
+    public void testAdd() {
         //add sample data
-        Optional<Steps> thisSteps1 = db.add(addSteps);
-        assertEquals(false,thisSteps1.isEmpty());
+        Steps thisSteps1 = db.add(addSteps);
+        assertEquals(false, thisSteps1 == null);
 
         //read today data
-        Optional<Steps> thisSteps2 = db.get(loginUser.getNevoUserID(),today);
-        assertEquals(false,thisSteps2.isEmpty());
+        Steps thisSteps2 = db.get(loginUser.getNevoUserID(), today);
+        assertEquals(false, thisSteps2 == null);
 
         //compare data
-        assertEquals(addSteps.getSteps(),thisSteps2.get().getSteps());
+        assertEquals(addSteps.getSteps(), thisSteps2.getSteps());
     }
 
-    public void testUpdate()
-    {
+    public void testUpdate() {
 
-        Optional<Steps> thisSteps1 = db.add(updateSteps);
-        assertEquals(false,thisSteps1.isEmpty());
-        updateSteps = thisSteps1.get();
+        Steps thisSteps1 = db.add(updateSteps);
+        assertEquals(false, thisSteps1 == null);
+        updateSteps = thisSteps1;
 
-        updateSteps.setSteps((int) (Math.random()*10000));
-        updateSteps.setGoal((int) (Math.random()*10000));
+        updateSteps.setSteps((int) (Math.random() * 10000));
+        updateSteps.setGoal((int) (Math.random() * 10000));
         assertEquals(true, db.update(updateSteps));
 
         //read it again
-        Optional<Steps> thisSteps2 = db.get(loginUser.getNevoUserID(),today);
-        assertEquals(false,thisSteps2.isEmpty());
+        Steps thisSteps2 = db.get(loginUser.getNevoUserID(), today);
+        assertEquals(false, thisSteps2 == null);
 
         //compare data
-        assertEquals(updateSteps.getSteps(),thisSteps2.get().getSteps());
-        assertEquals(updateSteps.getGoal(),thisSteps2.get().getGoal());
+        assertEquals(updateSteps.getSteps(), thisSteps2.getSteps());
+        assertEquals(updateSteps.getGoal(), thisSteps2.getGoal());
     }
 
-    public void testRemove()
-    {
+    public void testRemove() {
         //add "remove" data
-        Optional<Steps> thisSteps1 = db.add(removeSteps);
-        assertEquals(false,thisSteps1.isEmpty());
+        Steps thisSteps1 = db.add(removeSteps);
+        assertEquals(false, thisSteps1 == null);
 
         //check add result
-        Optional<Steps> thisSteps2 = db.get(loginUser.getNevoUserID(),today);
-        assertEquals(false,thisSteps2.isEmpty());
-        assertEquals(removeSteps.getSteps(),thisSteps2.get().getSteps());
-        assertEquals(removeSteps.getGoal(),thisSteps2.get().getGoal());
+        Steps thisSteps2 = db.get(loginUser.getNevoUserID(), today);
+        assertEquals(false, thisSteps2 == null);
+        assertEquals(removeSteps.getSteps(), thisSteps2.getSteps());
+        assertEquals(removeSteps.getGoal(), thisSteps2.getGoal());
 
         //remove it
-        assertEquals(true,db.remove(loginUser.getNevoUserID(),today));
+        db.remove(loginUser.getNevoUserID(), today);
 
         //read it again, check it exist in database.
-        Optional<Steps> thisSteps3 = db.get(loginUser.getNevoUserID(),today);
-        assertEquals(true,thisSteps3.isEmpty());
+        Steps thisSteps3 = db.get(loginUser.getNevoUserID(), today);
+        assertEquals(true, thisSteps3 == null);
     }
 }

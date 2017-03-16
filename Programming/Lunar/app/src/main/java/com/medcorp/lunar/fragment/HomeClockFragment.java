@@ -51,7 +51,7 @@ public class HomeClockFragment extends BaseObservableFragment {
     @Bind(R.id.world_clock_fragment_show_location_city_tv)
     TextView showLocationCityInfo;
 
-    private Realm realm = Realm.getDefaultInstance();
+    private Realm realm ;
     private RealmResults<City> cities;
     private String localCityName;
     private TimeZone timeZone;
@@ -71,6 +71,7 @@ public class HomeClockFragment extends BaseObservableFragment {
         View view = inflater.inflate(R.layout.sunrise_sunset_activity, container, false);
         ButterKnife.bind(this, view);
         mPositionLocal = Preferences.getLocation(HomeClockFragment.this.getContext());
+        realm = getModel().getRealm();
         cities = realm.where(City.class).findAll();
         setHasOptionsMenu(true);
         return view;

@@ -86,6 +86,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import net.medcorp.library.ble.controller.OtaController;
 import net.medcorp.library.ble.util.Optional;
 import net.medcorp.library.worldclock.WorldClockDatabaseHelper;
+import net.medcorp.library.worldclock.util.WorldClockLibraryModule;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -110,6 +111,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -157,12 +159,13 @@ public class ApplicationModel extends Application {
         Fabric.with(this, new Crashlytics());
         EventBus.getDefault().register(this);
         Realm.init(this);
-        worldClockDatabaseHelper = new WorldClockDatabaseHelper(this);
 //        RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
 //                .name(REALM_NAME)
-//                .modules(new WorldClockLibraryModule(),Realm.getDefaultModule())
+//                .modules(new WorldClockLibraryModule(),new LunarAllModules())
+//                .deleteRealmIfMigrationNeeded()
 //                .build();
 //        Realm.setDefaultConfiguration(lunarConfig);
+        worldClockDatabaseHelper = new WorldClockDatabaseHelper(this);
         syncController = new SyncControllerImpl(this);
         otaController = new OtaControllerImpl(this);
         stepsDatabaseHelper = new StepsDatabaseHelper();
@@ -173,7 +176,7 @@ public class ApplicationModel extends Application {
         solarDatabaseHelper = new SolarDatabaseHelper();
         validicMedManager = new MedManager(this);
         cloudSyncManager = new CloudSyncManager(this);
-        ledDataBase = new LedLampDatabase(this);
+        ledDataBase = new LedLampDatabase();
         locationController = new LocationController(this);
         mIWXAPI = WXAPIFactory.createWXAPI(this, getString(R.string.we_chat_app_id), true);
         worldClockDatabaseHelper.setupWorldClock();
@@ -271,6 +274,16 @@ public class ApplicationModel extends Application {
 
     public void blinkWatch() {
         syncController.findDevice();
+    }
+
+    public Realm getRealm(){
+        String REALM_NAME = "med_library.realm";
+        RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
+                .name(REALM_NAME)
+                .modules(new WorldClockLibraryModule())
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        return Realm.getInstance(lunarConfig);
     }
 
     public void getBatteryLevelOfWatch() {

@@ -1,5 +1,6 @@
 package com.medcorp.lunar.database.entry;
 
+import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.dao.GoalDAO;
 import com.medcorp.lunar.model.Goal;
 
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * Created by karl-john on 17/11/15.
@@ -16,7 +18,12 @@ public class GoalDatabaseHelper {
     private Realm mRealm;
 
     public GoalDatabaseHelper() {
-        mRealm = Realm.getDefaultInstance();
+        RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
+                .name("med_lunar.realm")
+                .modules(new LunarAllModules())
+                .build();
+        mRealm = Realm.getInstance(lunarConfig);
+//        mRealm = Realm.getDefaultInstance();
     }
 
     public Goal add(Goal object) {

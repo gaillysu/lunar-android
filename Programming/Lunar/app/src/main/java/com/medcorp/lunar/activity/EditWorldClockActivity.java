@@ -64,7 +64,7 @@ public class EditWorldClockActivity extends BaseActivity {
     @Bind(R.id.edit_home_city_tv)
     TextView positionCityName;
 
-    private Realm realm = Realm.getDefaultInstance();
+    private Realm realm ;
     private RealmResults<City> cities;
     private List<ChooseCityViewModel> chooseCityViewModelsList;
     private PinyinComparator pinyinComparator;
@@ -88,6 +88,7 @@ public class EditWorldClockActivity extends BaseActivity {
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.choose_activity_title_choose_city_tv);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        realm = getModel().getRealm();
         initData();
     }
 

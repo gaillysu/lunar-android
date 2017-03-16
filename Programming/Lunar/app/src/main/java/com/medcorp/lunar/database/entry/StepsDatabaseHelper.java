@@ -1,5 +1,6 @@
 package com.medcorp.lunar.database.entry;
 
+import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.dao.StepsDAO;
 import com.medcorp.lunar.model.Steps;
 
@@ -8,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 /**
@@ -18,7 +20,11 @@ public class StepsDatabaseHelper {
     private Realm mRealm;
 
     public StepsDatabaseHelper() {
-        mRealm = Realm.getDefaultInstance();
+        RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
+                .name("med_lunar.realm")
+                .modules(new LunarAllModules())
+                .build();
+        mRealm = Realm.getInstance(lunarConfig);
     }
 
     public Steps add(Steps object) {

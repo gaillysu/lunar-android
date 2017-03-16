@@ -1,7 +1,6 @@
 package com.medcorp.lunar.database.entry;
 
-import android.content.Context;
-
+import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.dao.SleepDAO;
 import com.medcorp.lunar.model.Sleep;
 
@@ -10,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 /**
@@ -20,7 +20,12 @@ public class SleepDatabaseHelper {
     private Realm mRealm;
 
     public SleepDatabaseHelper() {
-        mRealm = Realm.getDefaultInstance();
+        RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
+                .name("med_lunar.realm")
+                .modules(new LunarAllModules())
+                .build();
+        mRealm = Realm.getInstance(lunarConfig);
+//        mRealm = Realm.getDefaultInstance();
     }
 
     public Sleep add(Sleep object) {

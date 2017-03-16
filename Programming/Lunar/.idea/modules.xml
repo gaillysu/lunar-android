@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../med-library/library/library.iml" filepath="$PROJECT_DIR$/../../../med-library/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/multi-image-selector/multi-image-selector.iml" filepath="$PROJECT_DIR$/multi-image-selector/multi-image-selector.iml" />
-      <module fileurl="file://$PROJECT_DIR$/realm/realm.iml" filepath="$PROJECT_DIR$/realm/realm.iml" />
       <module fileurl="file://$PROJECT_DIR$/wheelPickLib/wheelPickLib.iml" filepath="$PROJECT_DIR$/wheelPickLib/wheelPickLib.iml" />
     </modules>
   </component>

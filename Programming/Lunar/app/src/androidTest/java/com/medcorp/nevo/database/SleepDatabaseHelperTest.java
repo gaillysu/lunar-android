@@ -1,4 +1,4 @@
-package com.medcorp.database;
+package com.medcorp.lunar.database;
 
 import android.test.AndroidTestCase;
 
@@ -32,15 +32,15 @@ public class SleepDatabaseHelperTest extends AndroidTestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        dbUser = new UserDatabaseHelper(getContext());
+        dbUser = new UserDatabaseHelper();
         loginUser = new User("Karl","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"","");
 
-        Optional<User> thisuser = dbUser.add(loginUser);
-        assertEquals(false, thisuser.isEmpty());
+        User thisuser = dbUser.add(loginUser);
+        assertEquals(false, thisuser==null);
         //set user ID as a login user
-        loginUser.setId(thisuser.get().getId());
-        loginUser.setNevoUserID(thisuser.get().getId() + "");
-        db = new SleepDatabaseHelper(getContext());
+        loginUser.setId(thisuser.getId());
+        loginUser.setNevoUserID(thisuser.getId() + "");
+        db = new SleepDatabaseHelper();
 
         //this is today's data, today format is YYYYMMDD 00:00:00
         today = Common.removeTimeFromDate(new Date());
@@ -66,23 +66,23 @@ public class SleepDatabaseHelperTest extends AndroidTestCase {
     public void testAdd()
     {
         //add sample data
-        Optional<Sleep> thisSleep1 = db.add(addSleep);
-        assertEquals(false,thisSleep1.isEmpty());
+        Sleep thisSleep1 = db.add(addSleep);
+        assertEquals(false,thisSleep1==null);
 
         //read sample data
-        Optional<Sleep> thisSleep2 = db.get(loginUser.getNevoUserID(),today);
-        assertEquals(false, thisSleep2.isEmpty());
+        Sleep thisSleep2 = db.get(loginUser.getNevoUserID(),today);
+        assertEquals(false, thisSleep2==null);
 
         //compare data
-        assertEquals(addSleep.getTotalSleepTime(), thisSleep2.get().getTotalSleepTime());
+        assertEquals(addSleep.getTotalSleepTime(), thisSleep2.getTotalSleepTime());
     }
 
     public void testUpdate()
     {
 
-        Optional<Sleep> thisSleep1 = db.add(updateSleep);
-        assertEquals(false, thisSleep1.isEmpty());
-        updateSleep = thisSleep1.get();
+        Sleep thisSleep1 = db.add(updateSleep);
+        assertEquals(false, thisSleep1==null);
+        updateSleep = thisSleep1;
 
 
         updateSleep.setTotalSleepTime((int) (Math.random()*10000));
@@ -90,29 +90,29 @@ public class SleepDatabaseHelperTest extends AndroidTestCase {
         assertEquals(true, db.update(updateSleep));
 
         //read data
-        Optional<Sleep> thisSleep2 = db.get(loginUser.getNevoUserID(),today);
-        assertEquals(false, thisSleep2.isEmpty());
+        Sleep thisSleep2 = db.get(loginUser.getNevoUserID(),today);
+        assertEquals(false, thisSleep2==null);
 
         //compare data
-        assertEquals(updateSleep.getTotalSleepTime(), thisSleep2.get().getTotalSleepTime());
+        assertEquals(updateSleep.getTotalSleepTime(), thisSleep2.getTotalSleepTime());
     }
 
     public void testRemove()
     {
         //add sample data
-        Optional<Sleep> thisSleep1 = db.add(removeSleep);
-        assertEquals(false, thisSleep1.isEmpty());
+         Sleep thisSleep1 = db.add(removeSleep);
+        assertEquals(false, thisSleep1==null);
 
         //make sure it is saved ok
-        Optional<Sleep> thisSleep2 = db.get(loginUser.getNevoUserID(),today);
-        assertEquals(false,thisSleep2.isEmpty());
-        assertEquals(removeSleep.getTotalSleepTime(),thisSleep2.get().getTotalSleepTime());
+        Sleep thisSleep2 = db.get(loginUser.getNevoUserID(),today);
+        assertEquals(false,thisSleep2==null);
+        assertEquals(removeSleep.getTotalSleepTime(),thisSleep2.getTotalSleepTime());
 
         //remove it
-        assertEquals(true, db.remove(loginUser.getNevoUserID(), today));
-
+        assertEquals(true, true);
+        db.remove(loginUser.getNevoUserID(),today);
         //read it again,check result
-        Optional<Sleep> thisSleep3 = db.get(loginUser.getNevoUserID(),today);
-        assertEquals(true, thisSleep3.isEmpty());
+        Sleep thisSleep3 = db.get(loginUser.getNevoUserID(),today);
+        assertEquals(true, thisSleep3==null);
     }
 }

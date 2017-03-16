@@ -1,9 +1,8 @@
 package com.medcorp.lunar.database.entry;
 
+import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.dao.UserDAO;
 import com.medcorp.lunar.model.User;
-
-import net.medcorp.library.worldclock.util.WorldClockLibraryModule;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,12 +18,11 @@ import io.realm.RealmResults;
 public class UserDatabaseHelper {
 
     private Realm mRealm;
-    private final String REALM_NAME = "med_lunar.realm";
 
     public UserDatabaseHelper() {
         RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
-                .name(REALM_NAME)
-                .modules(new WorldClockLibraryModule(), Realm.getDefaultModule())
+                .name("med_lunar.realm")
+                .modules(new LunarAllModules())
                 .build();
         mRealm = Realm.getInstance(lunarConfig);
     }
