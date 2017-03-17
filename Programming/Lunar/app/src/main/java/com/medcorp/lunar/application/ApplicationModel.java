@@ -86,7 +86,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import net.medcorp.library.ble.controller.OtaController;
 import net.medcorp.library.ble.util.Optional;
 import net.medcorp.library.worldclock.WorldClockDatabaseHelper;
-import net.medcorp.library.worldclock.util.WorldClockLibraryModule;
+import net.medcorp.library.worldclock.WorldClockLibraryModule;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
