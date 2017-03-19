@@ -1,20 +1,30 @@
 package com.medcorp.lunar.model;
 
+import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by gaillysu on 15/4/21.
  */
-public class Alarm {
+public class Alarm extends RealmObject{
 
-    @PrimaryKey
-    private int id = -1;
+    private int id;
     private int hour;
     private int minute;
     private byte weekDay;
     private String label;
     private byte alarmType;
+    @PrimaryKey
     private byte alarmNumber;
+
+    public Alarm(){
+
+    }
+
+    public Alarm(int id, int hour, int minute, byte weekDay, String label, byte alarmStyle, byte alarmNumber){
+        this( hour,  minute,  weekDay,  label,  alarmStyle,  alarmNumber);
+        this.id = id;
+    }
 
     public Alarm(int hour, int minute, byte weekDay, String label, byte alarmStyle, byte alarmNumber) {
         this.hour = hour;

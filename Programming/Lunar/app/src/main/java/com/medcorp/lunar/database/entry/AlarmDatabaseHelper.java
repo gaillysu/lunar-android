@@ -1,14 +1,10 @@
 package com.medcorp.lunar.database.entry;
 
-import com.medcorp.lunar.database.LunarAllModules;
-import com.medcorp.lunar.database.dao.AlarmDAO;
 import com.medcorp.lunar.model.Alarm;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 /**
@@ -19,66 +15,40 @@ public class AlarmDatabaseHelper {
     private Realm mRealm;
 
     public AlarmDatabaseHelper() {
-        RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
-                .name("med_lunar.realm")
-                .modules(new LunarAllModules())
-                .build();
-        mRealm = Realm.getInstance(lunarConfig);
+       mRealm = Realm.getDefaultInstance();
     }
 
     public Alarm add(Alarm object) {
         mRealm.beginTransaction();
-        AlarmDAO alarmDAO = mRealm.copyToRealm(convertToDao(object));
+        Alarm alarm = mRealm.copyToRealm(object);
         mRealm.commitTransaction();
-        return convertToNormal(alarmDAO);
+        return alarm;
     }
 
     public boolean update(Alarm object) {
         mRealm.beginTransaction();
-        AlarmDAO alarmDAO = mRealm.copyToRealmOrUpdate(convertToDao(object));
+        Alarm alarm = mRealm.copyToRealmOrUpdate(object);
         mRealm.commitTransaction();
-        return alarmDAO == null ? false : true;
+        return alarm != null;
     }
 
     public void remove(int alarmId) {
-        mRealm.where(AlarmDAO.class).equalTo("ID", alarmId).findFirst().deleteFromRealm();
+        mRealm.beginTransaction();
+        mRealm.where(Alarm.class).equalTo("id", alarmId).findFirst().deleteFromRealm();
+        mRealm.commitTransaction();
     }
 
     public Alarm get(int alarmId) {
-        return convertToNormal(mRealm.where(AlarmDAO.class).equalTo("ID", alarmId).findFirst());
-    }
-
-    public List<Alarm> getAll() {
-        RealmResults<AlarmDAO> allAlarmsDAO = mRealm.where(AlarmDAO.class).findAll();
-        return convertToNormalList(allAlarmsDAO);
-    }
-
-    private AlarmDAO convertToDao(Alarm alarm) {
-        AlarmDAO alarmDAO = new AlarmDAO();
-        alarmDAO.setAlarm(alarm.getHour() + ":" + alarm.getMinute());
-        alarmDAO.setLabel(alarm.getLabel());
-        alarmDAO.setWeekDay(alarm.getWeekDay());
-        alarmDAO.setAlarmNumber(alarm.getAlarmNumber());
-        alarmDAO.setAlarmType(alarm.getAlarmType());
-        return alarmDAO;
-    }
-
-    private Alarm convertToNormal(AlarmDAO alarmDAO) {
-        String[] splittedAlarmStrings = alarmDAO.getAlarm().split(":");
-        int hour = Integer.parseInt(splittedAlarmStrings[0]);
-        int minutes = Integer.parseInt(splittedAlarmStrings[1]);
-        Alarm alarm = new Alarm(hour, minutes, alarmDAO.getWeekDay(), alarmDAO.getLabel(), alarmDAO.getAlarmType(), alarmDAO.getAlarmNumber());
-        alarm.setId(alarmDAO.getId());
+        mRealm.beginTransaction();
+        Alarm alarm = mRealm.where(Alarm.class).equalTo("id", alarmId).findFirst();
+        mRealm.commitTransaction();
         return alarm;
     }
 
-    public List<Alarm> convertToNormalList(List<AlarmDAO> optionals) {
-        List<Alarm> goalList = new ArrayList<>();
-        for (AlarmDAO presetOptional : optionals) {
-            if (presetOptional != null) {
-                goalList.add(convertToNormal(presetOptional));
-            }
-        }
-        return goalList;
+    public List<Alarm> getAll() {
+        mRealm.beginTransaction();
+        RealmResults<Alarm> allAlarms = mRealm.where(Alarm.class).findAll();
+        mRealm.commitTransaction();
+        return allAlarms;
     }
 }

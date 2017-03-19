@@ -1,14 +1,18 @@
 package com.medcorp.lunar.model;
 
-public class Steps implements Comparable<Steps>{
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
-    private int iD = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
+public class Steps extends RealmObject implements Comparable<Steps>{
+
+    private int id = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
 
     //IMPORTANT,HERE MUST NOT set cloudRecordID any value, pls use default value null,when we sync with cloud, it will be filled by the cloud record ID
     private String cloudRecordID;
 
     private String nevoUserID;
 
+    @PrimaryKey
     private long createdDate;
 
     private long date;
@@ -52,6 +56,9 @@ public class Steps implements Comparable<Steps>{
 
     private String remarks;
 
+    public Steps(){
+
+    }
 
     public Steps(long createdDate) {
         this.createdDate = createdDate;
@@ -83,9 +90,6 @@ public class Steps implements Comparable<Steps>{
         this.remarks = remarks;
     }
 
-    public void setiD(int iD) {
-        this.iD = iD;
-    }
 
     public void setCreatedDate(long createdDate) {
         this.createdDate = createdDate;
@@ -145,10 +149,6 @@ public class Steps implements Comparable<Steps>{
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public int getiD() {
-        return iD;
     }
 
     public long getCreatedDate() {
@@ -245,6 +245,14 @@ public class Steps implements Comparable<Steps>{
 
     public String getCloudRecordID() {
         return cloudRecordID;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setCloudRecordID(String cloudRecordID) {

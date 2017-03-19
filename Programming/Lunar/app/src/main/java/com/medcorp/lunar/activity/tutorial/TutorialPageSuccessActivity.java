@@ -30,9 +30,9 @@ public class TutorialPageSuccessActivity extends BaseActivity {
         sharedPreferences.putBoolean(Constants.FIRST_FLAG, false);
         sharedPreferences.commit();
         if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(getString(R.string.key_preset), false)) {
-            getModel().addGoal(new Goal(getString(R.string.startup_goal_light), true, 7000));
-            getModel().addGoal(new Goal(getString(R.string.startup_goal_moderate), true, 10000));
-            getModel().addGoal(new Goal(getString(R.string.startup_goal_heavy), true, 20000));
+            getModel().addGoal(new Goal(0,getString(R.string.startup_goal_light), true, 7000));
+            getModel().addGoal(new Goal(1,getString(R.string.startup_goal_moderate), true, 10000));
+            getModel().addGoal(new Goal(2,getString(R.string.startup_goal_heavy), true, 20000));
             getModel().addLedLamp(new LedLamp("Rde", getResources().getColor(R.color.red_normal)));
             getModel().addLedLamp(new LedLamp("Blue", getResources().getColor(R.color.blue_normal)));
             getModel().addLedLamp(new LedLamp("Light green", getResources().getColor(R.color.light_green_normal)));

@@ -8,7 +8,7 @@
     android:paddingTop="20dp"
     android:paddingBottom="20dp">
 
-    <com.medcorp.view.customfontview.RobotoTextView
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_alarm_edit_list_view_item_delete_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
         android:text="@string/alarm_delete"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-    <com.medcorp.view.customfontview.RobotoTextView
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_alarm_edit_list_view_item_title_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"/>
 
-    <com.medcorp.view.customfontview.RobotoTextView
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_alarm_edit_list_view_item_summary_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package com.medcorp.util;
+package com.medcorp.nevo.util;
 
 /**
  * Created by Karl on 11/27/15.

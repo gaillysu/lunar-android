@@ -3,7 +3,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <com.medcorp.view.graphs.AnalysisSleepLineChart
+    <com.medcorp.lunar.view.graphs.AnalysisSleepLineChart
         android:id="@+id/analysis_sleep_chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

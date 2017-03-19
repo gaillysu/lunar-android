@@ -3,6 +3,8 @@ package com.medcorp.lunar.ble.model.color;
 
 import com.medcorp.lunar.ble.model.color.visitor.NevoLedVisitor;
 
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by Jason on 2016/12/8.
  * s
@@ -11,6 +13,7 @@ public class LedLamp extends NevoLed {
 
 
     private int id;
+    @PrimaryKey
     private String name;
     private int color;
     private boolean isSelect;

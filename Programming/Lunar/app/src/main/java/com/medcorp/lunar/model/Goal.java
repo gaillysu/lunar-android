@@ -1,14 +1,28 @@
 package com.medcorp.lunar.model;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by Karl on 11/25/15.
  */
-public class Goal {
+public class Goal extends RealmObject {
+
+    @PrimaryKey
 
     private int id;
     private String label;
     private boolean status;
     private int steps = 10000;
+
+    public Goal() {
+
+    }
+
+    public Goal(int id, String label, boolean status, int steps) {
+        this(label,status,steps);
+        this.id = id;
+    }
 
     public Goal(String label, boolean status, int steps) {
         this.label = label;

@@ -1,4 +1,4 @@
-package com.medcorp.lunar.database;
+package com.medcorp.nevo.database;
 
 import android.test.AndroidTestCase;
 
@@ -7,8 +7,6 @@ import com.medcorp.lunar.database.entry.UserDatabaseHelper;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.util.Common;
-
-import net.medcorp.library.ble.util.Optional;
 
 import java.util.Date;
 

@@ -1,4 +1,4 @@
-package com.medcorp.network.request;
+package com.medcorp.nevo.network.request;
 
 import android.test.AndroidTestCase;
 import android.util.Log;

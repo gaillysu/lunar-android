@@ -8,8 +8,9 @@ import io.realm.annotations.PrimaryKey;
  *
  */
 public class LedLampDAO extends RealmObject{
-    @PrimaryKey
+
     private int id;
+    @PrimaryKey
     private String name;
     private int color;
 
@@ -21,7 +22,7 @@ public class LedLampDAO extends RealmObject{
         return id;
     }
 
-    public void setID(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 

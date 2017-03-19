@@ -22,7 +22,7 @@
         android:src="@drawable/ic_login_setting_page"
         android:tint="@color/setting_tint_color_icon"/>
 
-    <com.medcorp.view.customfontview.RobotoTextView
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_setting_menu_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -105,9 +105,9 @@ public class AnalysisSolarFragment extends BaseFragment {
         lastWeekChart = (AnalysisSolarLineChart) lastWeekView.findViewById(R.id.analysis_solar_chart);
         lastMonthChart = (AnalysisSolarLineChart) lastMonthView.findViewById(R.id.analysis_solar_chart);
 
-        thisWeek = getModel().getThisWeekSolar(getModel().getNevoUser().getNevoUserID(), userSelectDate);
-        lastWeek = getModel().getLastWeekSolar(getModel().getNevoUser().getNevoUserID(), userSelectDate);
-        lastMonth = getModel().getLastMonthSolar(getModel().getNevoUser().getNevoUserID(), userSelectDate);
+        thisWeek = getModel().getThisWeekSolar(getModel().getNevoUser().getId(), userSelectDate);
+        lastWeek = getModel().getLastWeekSolar(getModel().getNevoUser().getId(), userSelectDate);
+        lastMonth = getModel().getLastMonthSolar(getModel().getNevoUser().getId(), userSelectDate);
         TipsView marker = new TipsView(AnalysisSolarFragment.this.getContext(),R.layout.custom_marker_view);
         thisWeekChart.addData(thisWeek, 7);
         thisWeekChart.setMarkerView(marker);

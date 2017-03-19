@@ -24,6 +24,7 @@ import com.medcorp.lunar.ble.model.color.LedLamp;
 import com.medcorp.lunar.ble.model.goal.NumberOfStepsGoal;
 import com.medcorp.lunar.cloud.CloudSyncManager;
 import com.medcorp.lunar.cloud.validic.ValidicOperation;
+import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.entry.AlarmDatabaseHelper;
 import com.medcorp.lunar.database.entry.GoalDatabaseHelper;
 import com.medcorp.lunar.database.entry.LedLampDatabase;
@@ -84,7 +85,6 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import net.medcorp.library.ble.controller.OtaController;
-import net.medcorp.library.ble.util.Optional;
 import net.medcorp.library.worldclock.WorldClockDatabaseHelper;
 import net.medcorp.library.worldclock.WorldClockLibraryModule;
 
@@ -159,13 +159,13 @@ public class ApplicationModel extends Application {
         Fabric.with(this, new Crashlytics());
         EventBus.getDefault().register(this);
         Realm.init(this);
-//        RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
-//                .name(REALM_NAME)
-//                .modules(new WorldClockLibraryModule(),new LunarAllModules())
-//                .deleteRealmIfMigrationNeeded()
-//                .build();
-//        Realm.setDefaultConfiguration(lunarConfig);
         worldClockDatabaseHelper = new WorldClockDatabaseHelper(this);
+        RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
+                .name(REALM_NAME)
+                .modules(new WorldClockLibraryModule(),new LunarAllModules())
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(lunarConfig);
         syncController = new SyncControllerImpl(this);
         otaController = new OtaControllerImpl(this);
         stepsDatabaseHelper = new StepsDatabaseHelper();
@@ -186,9 +186,9 @@ public class ApplicationModel extends Application {
             Alarm defAlarm;
             for (int i = 0; i < 2; i++) {
                 if (i == 0) {
-                    defAlarm = new Alarm(21, 0, (byte) (0), getString(R.string.def_alarm_one), (byte) 0, (byte) 7);
+                    defAlarm = new Alarm(0,21, 0, (byte) (0), getString(R.string.def_alarm_one), (byte) 0, (byte) 7);
                 } else {
-                    defAlarm = new Alarm(8, 0, (byte) (0), getString(R.string.def_alarm_two), (byte) 1, (byte) 0);
+                    defAlarm = new Alarm(7,8, 0, (byte) (0), getString(R.string.def_alarm_two), (byte) 1, (byte) 0);
                 }
                 addAlarm(defAlarm);
             }
@@ -276,16 +276,6 @@ public class ApplicationModel extends Application {
         syncController.findDevice();
     }
 
-    public Realm getRealm(){
-        String REALM_NAME = "med_library.realm";
-        RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
-                .name(REALM_NAME)
-                .modules(new WorldClockLibraryModule())
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        return Realm.getInstance(lunarConfig);
-    }
-
     public void getBatteryLevelOfWatch() {
         syncController.getBatteryLevel();
     }
@@ -330,14 +320,14 @@ public class ApplicationModel extends Application {
         userDatabaseHelper.remove(user.getNevoUserID(), new Date(user.getCreatedDate()));
     }
 
-    public List<Solar> getThisWeekSolar(String userId, Date date) {
+    public List<Solar> getThisWeekSolar(int userId, Date date) {
         List<Solar> thisWeekSolar = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
         for (long start = calendar.getWeekStartDate().getTime(); start <=
                 calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
-            Optional<Solar> optional = solarDatabaseHelper.get(userId, new Date(start));
-            if (optional.notEmpty()) {
-                thisWeekSolar.add(optional.get());
+            Solar sleep = solarDatabaseHelper.get(userId, new Date(start));
+            if (sleep != null) {
+                thisWeekSolar.add(sleep);
             } else {
                 thisWeekSolar.add(new Solar(new Date(start), new Date(start), getNevoUser().getId(), "", 0));
             }
@@ -345,14 +335,14 @@ public class ApplicationModel extends Application {
         return thisWeekSolar;
     }
 
-    public List<Solar> getLastWeekSolar(String userId, Date date) {
+    public List<Solar> getLastWeekSolar(int userId, Date date) {
         List<Solar> lastWeekSolar = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
         for (long start = calendar.getLastWeekStart().getTime(); start <=
                 calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
-            Optional<Solar> optional = solarDatabaseHelper.get(userId, new Date(start));
-            if (optional.notEmpty()) {
-                lastWeekSolar.add(optional.get());
+            Solar solar = solarDatabaseHelper.get(userId, new Date(start));
+            if (solar != null) {
+                lastWeekSolar.add(solar);
             } else {
                 lastWeekSolar.add(new Solar(new Date(start), new Date(start), getNevoUser().getId(), "", 0));
             }
@@ -360,14 +350,14 @@ public class ApplicationModel extends Application {
         return lastWeekSolar;
     }
 
-    public List<Solar> getLastMonthSolar(String userId, Date date) {
+    public List<Solar> getLastMonthSolar(int userId, Date date) {
         List<Solar> lastMonthSolar = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
         for (long start = calendar.getMonthStartDate().getTime(); start <=
                 date.getTime(); start += 24 * 60 * 60 * 1000L) {
-            Optional<Solar> optional = solarDatabaseHelper.get(userId, new Date(start));
-            if (optional.notEmpty()) {
-                lastMonthSolar.add(optional.get());
+            Solar solar = solarDatabaseHelper.get(userId, new Date(start));
+            if (solar!=null) {
+                lastMonthSolar.add(solar);
             } else {
                 lastMonthSolar.add(new Solar(new Date(start), new Date(start), getNevoUser().getId(), "", 0));
             }
@@ -540,7 +530,7 @@ public class ApplicationModel extends Application {
         steps.setSteps((int) routine.getSteps());
         steps.setNevoUserID(getNevoUser().getNevoUserID());
         steps.setCloudRecordID(routine.get_id());
-        steps.setiD(Integer.parseInt(routine.getActivity_id()));
+        steps.setId(Integer.parseInt(routine.getActivity_id()));
         if (routine.getExtras() != null) {
             steps.setGoal(routine.getExtras().getGoal());
         } else {
@@ -576,7 +566,7 @@ public class ApplicationModel extends Application {
         Date createDate = Common.getLocalDateFromUTCTimestamp(validicSleepRecord.getTimestamp(), validicSleepRecord.getUtc_offset());
 
         Sleep sleep = new Sleep(createDate.getTime());
-        sleep.setiD(Integer.parseInt(validicSleepRecord.getActivity_id()));
+        sleep.setId(Integer.parseInt(validicSleepRecord.getActivity_id()));
         sleep.setDate(Common.removeTimeFromDate(createDate).getTime());
         if (validicSleepRecord.getExtras() != null) {
             int lightSleep = 0;

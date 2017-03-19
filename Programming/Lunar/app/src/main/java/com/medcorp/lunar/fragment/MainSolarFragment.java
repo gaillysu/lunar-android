@@ -25,8 +25,6 @@ import com.medcorp.lunar.util.Common;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.TimeUtil;
 
-import net.medcorp.library.ble.util.Optional;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.joda.time.DateTime;
@@ -82,11 +80,11 @@ public class MainSolarFragment extends BaseFragment {
         if (Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime()) {
             powOnBatteryMinutes = new DateTime().getMinuteOfDay();
         }
-        Optional<Solar> solarOptional = getModel().getSolarDatabaseHelper().get(getModel().getNevoUser().getNevoUserID(), userSelectDate);
-        if (solarOptional.notEmpty()) {
-            powerOnSolarPercent = solarOptional.get().getTotalHarvestingTime() * 100f / (powOnBatteryMinutes);
+        Solar solarOptional = getModel().getSolarDatabaseHelper().get(getModel().getNevoUser().getId(), userSelectDate);
+        if (solarOptional!=null) {
+            powerOnSolarPercent = solarOptional.getTotalHarvestingTime() * 100f / (powOnBatteryMinutes);
             powerOnBatteryPercent = 100f - powerOnSolarPercent;
-            powerOnSolarMinutes = solarOptional.get().getTotalHarvestingTime();
+            powerOnSolarMinutes = solarOptional.getTotalHarvestingTime();
             powOnBatteryMinutes = powOnBatteryMinutes - powerOnSolarMinutes;
         }
         float[] solarPieChartDate = {powerOnSolarPercent, powerOnBatteryPercent};

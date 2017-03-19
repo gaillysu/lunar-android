@@ -26,9 +26,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.base.BaseActivity;
-import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.PublicUtils;
+
+import com.medcorp.lunar.model.User;
 
 import java.io.File;
 import java.text.ParseException;

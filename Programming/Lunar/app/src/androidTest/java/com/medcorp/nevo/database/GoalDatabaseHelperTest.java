@@ -1,11 +1,9 @@
-package com.medcorp.lunar.database;
+package com.medcorp.nevo.database;
 
 import android.test.AndroidTestCase;
 
 import com.medcorp.lunar.database.entry.GoalDatabaseHelper;
 import com.medcorp.lunar.model.Goal;
-
-import net.medcorp.library.ble.util.Optional;
 
 
 /**

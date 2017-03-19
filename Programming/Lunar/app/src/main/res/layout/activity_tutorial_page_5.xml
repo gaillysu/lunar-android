@@ -9,7 +9,7 @@
                 android:paddingTop="20dp"
                 android:visibility="visible">
 
-    <com.medcorp.view.customfontview.RobotoTextView
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page5_start_searching_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:textSize="36sp"
         roboto:bold="true"/>
 
-    <com.medcorp.view.customfontview.RobotoTextView
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page5_searching_notice_textview"
         android:layout_width="275dp"
         android:layout_height="wrap_content"

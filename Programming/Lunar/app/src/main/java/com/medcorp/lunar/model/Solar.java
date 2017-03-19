@@ -5,12 +5,16 @@ import com.medcorp.lunar.util.Common;
 
 import java.util.Date;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by karl-john on 25/8/2016.
  */
 
-public class Solar {
+public class Solar extends RealmObject{
 
+    @PrimaryKey
     private int id;
 
     /**
@@ -28,6 +32,11 @@ public class Solar {
     private String hourlyHarvestingTime;
     //unit is in minutes
     private int totalHarvestingTime;
+
+    //just realm use this method
+    public Solar(){
+
+    }
 
     public Solar(Date createdDate) {
         this.createdDate = createdDate;

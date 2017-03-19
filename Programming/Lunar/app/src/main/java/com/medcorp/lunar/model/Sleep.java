@@ -1,18 +1,22 @@
 package com.medcorp.lunar.model;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by gaillysu on 15/11/17.
  */
-public class Sleep implements Comparable<Sleep>{
+public class Sleep extends RealmObject implements Comparable<Sleep>{
 
-    private int iD = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
+    @PrimaryKey
+    private int id = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
 
     //IMPORTANT,HERE MUST NOT set cloudRecordID any value, pls use default value null,when we sync with cloud, it will be filled by the cloud record ID
     private String cloudRecordID;
 
     private String nevoUserID;
 
-    private final long createdDate;
+    private long createdDate;
 
     private long date;
 
@@ -40,6 +44,10 @@ public class Sleep implements Comparable<Sleep>{
 
     private String remarks;
 
+    public Sleep(){
+
+    }
+
     public Sleep(long createdDate) {
         this.createdDate = createdDate;
     }
@@ -63,9 +71,6 @@ public class Sleep implements Comparable<Sleep>{
         this.remarks = remarks;
     }
 
-    public void setiD(int iD) {
-        this.iD = iD;
-    }
 
     public void setTotalSleepTime(int totalSleepTime) {
         this.totalSleepTime = totalSleepTime;
@@ -111,8 +116,12 @@ public class Sleep implements Comparable<Sleep>{
         this.sleepQuality = sleepQuality;
     }
 
-    public int getiD() {
-        return iD;
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public long getCreatedDate() {

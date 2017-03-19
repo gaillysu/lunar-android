@@ -10,7 +10,7 @@
                 android:paddingTop="15dp"
     >
 
-    <com.medcorp.view.customfontview.RobotoTextView
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_mynevo_list_view_item_title_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
         android:orientation="horizontal"
         >
 
-        <com.medcorp.view.customfontview.RobotoTextView
+        <com.medcorp.lunar.view.customfontview.RobotoTextView
             android:id="@+id/activity_mynevo_list_view_item_version_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
             android:textColor="@color/customGray"
             android:textSize="14sp"/>
 
-        <com.medcorp.view.customfontview.RobotoTextView
+        <com.medcorp.lunar.view.customfontview.RobotoTextView
             android:id="@+id/activity_mynevo_list_view_item_infomation_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -111,27 +111,6 @@
                 android:imeOptions="actionDone"
               />
 
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center_horizontal"-->
-                <!--android:layout_marginTop="15dp"-->
-                <!--android:text="@string/register_terms_text"-->
-                <!--android:textColor="@color/register_account_text_color"-->
-                <!--android:textSize="18sp"-->
-                <!--/>-->
-
-            <!--<CheckBox-->
-                <!--android:id="@+id/sign_up_check_user_is_agree_terms_radio_bt"-->
-                <!--style="@style/CustomCheckboxTheme"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center_horizontal"-->
-                <!--android:paddingLeft="8dp"-->
-                <!--android:text="@string/register_terms_is_agree"-->
-                <!--android:textColor="@color/text_color"/>-->
-
-            <!-- Signup Button -->
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btn_signup"
                 android:layout_width="match_parent"

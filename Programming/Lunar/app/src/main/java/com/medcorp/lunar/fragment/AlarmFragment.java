@@ -271,8 +271,8 @@ public class   AlarmFragment extends BaseObservableFragment implements OnAlarmSw
     private void refreshListView() {
         if (alarmArrayAdapter != null && alarmListView != null) {
             alarmList = getModel().getAllAlarm();
-            alarmArrayAdapter.clear();
-            alarmArrayAdapter.addAll(alarmList);
+//            alarmArrayAdapter.clear();
+//            alarmArrayAdapter.addAll(alarmList);
             alarmArrayAdapter.notifyDataSetChanged();
             alarmListView.invalidate();
         }

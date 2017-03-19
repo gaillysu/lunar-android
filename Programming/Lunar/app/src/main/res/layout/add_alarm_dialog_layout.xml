@@ -43,16 +43,6 @@
             android:textColor="@color/text_color"
             android:text="@string/edit_alarm_repeat"
             android:textSize="26sp"/>
-        <!--<Button-->
-        <!--android:id="@+id/edit_alarm_repeat_is_once"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:text="@string/edit_alarm_repeat_Once"-->
-        <!--android:textAllCaps="false"-->
-        <!--android:background="@color/transparent"-->
-        <!--/>-->
     </RelativeLayout>
 
     <LinearLayout

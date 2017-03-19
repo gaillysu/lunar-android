@@ -1,20 +1,20 @@
 package com.medcorp.lunar.database;
 
-import com.medcorp.lunar.database.dao.AlarmDAO;
-import com.medcorp.lunar.database.dao.GoalDAO;
 import com.medcorp.lunar.database.dao.IDailyHistory;
 import com.medcorp.lunar.database.dao.LedLampDAO;
-import com.medcorp.lunar.database.dao.SleepDAO;
-import com.medcorp.lunar.database.dao.SolarDAO;
-import com.medcorp.lunar.database.dao.StepsDAO;
-import com.medcorp.lunar.database.dao.UserDAO;
+import com.medcorp.lunar.model.Alarm;
+import com.medcorp.lunar.model.Goal;
+import com.medcorp.lunar.model.Sleep;
+import com.medcorp.lunar.model.Solar;
+import com.medcorp.lunar.model.Steps;
+import com.medcorp.lunar.model.User;
 
 import io.realm.annotations.RealmModule;
 
 /**
  * Created by Jason on 2017/3/16.
  */
-@RealmModule(classes = {AlarmDAO.class, GoalDAO.class, LedLampDAO.class,
-        SleepDAO.class, SolarDAO.class, StepsDAO.class, UserDAO.class, IDailyHistory.class})
+@RealmModule(classes = {Alarm.class, Goal.class, LedLampDAO.class,
+        Sleep.class, Solar.class, Steps.class, User.class, IDailyHistory.class})
 public class LunarAllModules {
 }

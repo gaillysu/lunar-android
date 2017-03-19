@@ -1,14 +1,12 @@
 package com.medcorp.lunar.database.entry;
 
 import com.medcorp.lunar.ble.model.color.LedLamp;
-import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.dao.LedLampDAO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 /**
@@ -20,12 +18,7 @@ public class LedLampDatabase {
     private Realm mRealm;
 
     public LedLampDatabase() {
-        RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
-                .name("med_lunar.realm")
-                .modules(new LunarAllModules())
-                .build();
-        mRealm = Realm.getInstance(lunarConfig);
-//        mRealm = Realm.getDefaultInstance();
+        mRealm = Realm.getDefaultInstance();
     }
 
     public LedLamp add(LedLamp object) {
@@ -38,23 +31,30 @@ public class LedLampDatabase {
 
     public boolean update(LedLamp object) {
         mRealm.beginTransaction();
-        LedLampDAO led = mRealm.where(LedLampDAO.class).equalTo("ID", object.getId()).findFirst();
+        LedLampDAO led = mRealm.where(LedLampDAO.class).equalTo("id", object.getId()).findFirst();
         LedLampDAO ledLampDAO = mRealm.copyToRealmOrUpdate(led);
         mRealm.commitTransaction();
-        return ledLampDAO == null ? false : true;
+        return ledLampDAO != null;
     }
 
     public void remove(int rid) {
-        mRealm.where(LedLampDAO.class).equalTo("ID", rid).findFirst().deleteFromRealm();
+        mRealm.beginTransaction();
+        mRealm.where(LedLampDAO.class).equalTo("id", rid).findFirst().deleteFromRealm();
+        mRealm.commitTransaction();
     }
 
 
     public LedLamp get(int rid) {
-        return convertToNormal(mRealm.where(LedLampDAO.class).equalTo("ID", rid).findFirst());
+        mRealm.beginTransaction();
+        LedLamp led = convertToNormal(mRealm.where(LedLampDAO.class).equalTo("id", rid).findFirst());
+        mRealm.commitTransaction();
+        return led;
     }
 
     public List<LedLamp> getAll() {
+        mRealm.beginTransaction();
         RealmResults<LedLampDAO> all = mRealm.where(LedLampDAO.class).findAll();
+        mRealm.commitTransaction();
         return convertToNormalList(all);
     }
 
@@ -70,17 +70,23 @@ public class LedLampDatabase {
 
 
     private LedLamp convertToNormal(LedLampDAO res) {
-        LedLamp led = new LedLamp();
-        led.setName(res.getName());
-        led.setColor(res.getColor());
-        led.setId(res.getId());
-        return led;
+        if(res != null) {
+            LedLamp led = new LedLamp();
+            led.setName(res.getName());
+            led.setColor(res.getColor());
+            led.setId(res.getId());
+            return led;
+        }
+        return null;
     }
 
     private LedLampDAO convertToDao(LedLamp object) {
-        LedLampDAO dao = new LedLampDAO();
-        dao.setColor(object.getColor());
-        dao.setName(object.getName());
-        return dao;
+        if(object!=null) {
+            LedLampDAO dao = new LedLampDAO();
+            dao.setColor(object.getColor());
+            dao.setName(object.getName());
+            return dao;
+        }
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.medcorp.application;
+package com.medcorp.nevo.application;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

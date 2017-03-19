@@ -1,18 +1,11 @@
 package com.medcorp.lunar.database.entry;
 
-import com.medcorp.lunar.database.LunarAllModules;
-import com.medcorp.lunar.database.dao.SolarDAO;
 import com.medcorp.lunar.model.Solar;
-import com.medcorp.lunar.util.Common;
 
-import net.medcorp.library.ble.util.Optional;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 /**
  * Created by med on 16/8/30.
@@ -22,84 +15,46 @@ public class SolarDatabaseHelper {
     private Realm mRealm;
 
     public SolarDatabaseHelper() {
-        RealmConfiguration lunarConfig = new RealmConfiguration.Builder()
-                .name("med_lunar.realm")
-                .modules(new LunarAllModules())
-                .build();
-        mRealm = Realm.getInstance(lunarConfig);
-//        mRealm = Realm.getDefaultInstance();
+        mRealm = Realm.getDefaultInstance();
     }
 
     public Solar add(Solar object) {
         mRealm.beginTransaction();
-        SolarDAO solarDAO = mRealm.copyToRealm(convertToDao(object));
+        Solar solar = mRealm.copyToRealm(object);
         mRealm.commitTransaction();
-        return convertToNormal(solarDAO);
+        return solar;
     }
 
     public boolean update(Solar object) {
         mRealm.beginTransaction();
-        SolarDAO solarDAO = mRealm.copyToRealmOrUpdate(convertToDao(object));
+        Solar solar = mRealm.copyToRealmOrUpdate(object);
         mRealm.commitTransaction();
-        return solarDAO == null ? false : true;
+        return solar == null ? false : true;
     }
 
     public void remove(String userId, Date date) {
-        mRealm.where(SolarDAO.class).equalTo("ID", userId).equalTo("CreatedDate", date).findFirst().deleteFromRealm();
+        mRealm.beginTransaction();
+        mRealm.where(Solar.class).equalTo("id", userId).equalTo("createdDate", date).findFirst().deleteFromRealm();
+        mRealm.commitTransaction();
 
     }
 
-    public List<Solar> get(String userId) {
+    public List<Solar> get(int userId) {
         return getAll(userId);
     }
 
-    public Optional<Solar> get(String userId, Date date) {
-        List<Optional<Solar>> stepsList = new ArrayList<>();
-        List<SolarDAO> solarDAOList = mRealm.where(SolarDAO.class).equalTo("ID", userId).equalTo("CreatedDate", date).findAll();
-        for (SolarDAO solarDAO : solarDAOList) {
-            Optional<Solar> solarOptional = new Optional<>();
-            solarOptional.set(convertToNormal(solarDAO));
-            stepsList.add(solarOptional);
-        }
-        return stepsList.isEmpty() ? new Optional<Solar>() : stepsList.get(0);
+    public Solar get(int userId, Date date) {
+        mRealm.beginTransaction();
+        Solar solar = mRealm.where(Solar.class).equalTo("id", userId).equalTo("createdDate", date).findFirst();
+        mRealm.commitTransaction();
+        return solar == null ? new Solar() : solar;
     }
 
-    public List<Solar> getAll(String userId) {
-        List<Solar> stepsList = new ArrayList<>();
-        List<SolarDAO> solarDAOList = mRealm.where(SolarDAO.class).equalTo("ID", userId).findAll();
-        for (SolarDAO solarDAO : solarDAOList) {
-            stepsList.add(convertToNormal(solarDAO));
-        }
-        return stepsList;
-    }
-
-    private SolarDAO convertToDao(Solar solar) {
-        SolarDAO solarDAO = new SolarDAO();
-        solarDAO.setUserId(solar.getUserId());
-        solarDAO.setCreatedDate(solar.getCreatedDate());
-        solarDAO.setDate(Common.removeTimeFromDate(solar.getDate()));
-        solarDAO.setTotalHarvestingTime(solar.getTotalHarvestingTime());
-        solarDAO.setHourlyHarvestingTime(solar.getHourlyHarvestingTime());
-        return solarDAO;
-    }
-
-    private Solar convertToNormal(SolarDAO solarDAO) {
-        Solar solar = new Solar(solarDAO.getCreatedDate());
-        solar.setId(solarDAO.getId());
-        solar.setDate(solarDAO.getDate());
-        solar.setHourlyHarvestingTime(solarDAO.getHourlyHarvestingTime());
-        solar.setTotalHarvestingTime(solarDAO.getTotalHarvestingTime());
-        solar.setUserId(solarDAO.getUserId());
-        return solar;
-    }
-
-    public List<Solar> convertToNormalList(List<Optional<Solar>> optionals) {
-        List<Solar> solarList = new ArrayList<>();
-        for (Optional<Solar> solarOptional : optionals) {
-            if (solarOptional.notEmpty()) {
-                solarList.add(solarOptional.get());
-            }
-        }
+    public List<Solar> getAll(int userId) {
+        mRealm.beginTransaction();
+        List<Solar> solarList = mRealm.where(Solar.class).equalTo("id", userId).findAll();
+        mRealm.commitTransaction();
         return solarList;
     }
+
 }
