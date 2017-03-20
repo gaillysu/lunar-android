@@ -12,10 +12,10 @@ import io.realm.annotations.PrimaryKey;
  * Created by karl-john on 25/8/2016.
  */
 
-public class Solar extends RealmObject{
+public class Solar extends RealmObject {
 
     @PrimaryKey
-    private int id;
+    private int id = (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
 
     /**
      * createdDate is the created/updated date, format is YYYY-MM-DD HH:MM:SS
@@ -34,7 +34,7 @@ public class Solar extends RealmObject{
     private int totalHarvestingTime;
 
     //just realm use this method
-    public Solar(){
+    public Solar() {
 
     }
 
@@ -98,7 +98,7 @@ public class Solar extends RealmObject{
         this.date = date;
     }
 
-    public int[] getHourlyHarvestingTimeInt(){
+    public int[] getHourlyHarvestingTimeInt() {
         return Common.convertJSONArrayIntToArray(getHourlyHarvestingTime());
     }
 }

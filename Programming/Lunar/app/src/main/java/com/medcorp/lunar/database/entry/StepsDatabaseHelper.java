@@ -14,29 +14,41 @@ import io.realm.RealmResults;
 public class StepsDatabaseHelper {
 
     private Realm mRealm;
+    private boolean isSuccess;
 
     public StepsDatabaseHelper() {
         mRealm = Realm.getDefaultInstance();
     }
 
-    public Steps add(Steps object) {
-        mRealm.beginTransaction();
-        Steps steps = mRealm.copyToRealm(object);
-        mRealm.commitTransaction();
-        return steps;
+    public void add(final Steps object) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealm(object);
+            }
+        });
     }
 
-    public boolean update(Steps object) {
-        mRealm.beginTransaction();
-        Steps steps = mRealm.copyToRealmOrUpdate(object);
-        mRealm.commitTransaction();
-        return steps != null;
+    public boolean update(final Steps object) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealmOrUpdate(object);
+                isSuccess = true;
+            }
+        });
+        return isSuccess;
     }
 
     public void remove(String userId, Date date) {
-        mRealm.beginTransaction();
-        mRealm.where(Steps.class).equalTo("nevoUserID", userId).equalTo("date", date.getTime()).findFirst().deleteFromRealm();
-        mRealm.commitTransaction();
+        final Steps steps = mRealm.where(Steps.class).equalTo("nevoUserID", userId)
+                .equalTo("date", date.getTime()).findFirst();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                steps.deleteFromRealm();
+            }
+        });
     }
 
     public List<Steps> get(String userId) {
@@ -44,18 +56,14 @@ public class StepsDatabaseHelper {
     }
 
 
-    public Steps get(String userId, Date date) {
-        mRealm.beginTransaction();
+    public Steps get(final String userId, final Date date) {
         Steps steps = mRealm.where(Steps.class).equalTo("nevoUserID", userId).equalTo("date", date.getTime()).findFirst();
-        mRealm.commitTransaction();
         return steps == null ? new Steps(System.currentTimeMillis()) : steps;
     }
 
 
     public List<Steps> getAll(String userId) {
-        mRealm.beginTransaction();
         RealmResults<Steps> allSteps = mRealm.where(Steps.class).equalTo("nevoUserID", userId).findAll();
-        mRealm.commitTransaction();
         return allSteps;
     }
 
@@ -65,9 +73,7 @@ public class StepsDatabaseHelper {
     }
 
     public boolean isFoundInLocalSteps(int activity_id) {
-        mRealm.beginTransaction();
         RealmResults<Steps> steps = mRealm.where(Steps.class).equalTo("id", activity_id).findAll();
-        mRealm.commitTransaction();
         return steps != null;
     }
 

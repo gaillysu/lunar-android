@@ -13,30 +13,47 @@ import io.realm.Realm;
 public class SolarDatabaseHelper {
 
     private Realm mRealm;
+    private boolean isSuccess;
 
     public SolarDatabaseHelper() {
         mRealm = Realm.getDefaultInstance();
     }
 
-    public Solar add(Solar object) {
-        mRealm.beginTransaction();
-        Solar solar = mRealm.copyToRealm(object);
-        mRealm.commitTransaction();
-        return solar;
+    public void add(final Solar object) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealm(object);
+            }
+        });
     }
 
-    public boolean update(Solar object) {
-        mRealm.beginTransaction();
-        Solar solar = mRealm.copyToRealmOrUpdate(object);
-        mRealm.commitTransaction();
-        return solar == null ? false : true;
+    public boolean update(final Solar object) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Solar solar = mRealm.where(Solar.class).equalTo("id", object.getId())
+                        .equalTo("date", object.getDate()).findFirst();
+                solar.setId(object.getId());
+                solar.setTotalHarvestingTime(object.getTotalHarvestingTime());
+                solar.setHourlyHarvestingTime(object.getHourlyHarvestingTime());
+                solar.setCreatedDate(object.getCreatedDate());
+                solar.setDate(object.getDate());
+                solar.setUserId(object.getUserId());
+                isSuccess = true;
+            }
+        });
+        return isSuccess;
     }
 
     public void remove(String userId, Date date) {
-        mRealm.beginTransaction();
-        mRealm.where(Solar.class).equalTo("id", userId).equalTo("createdDate", date).findFirst().deleteFromRealm();
-        mRealm.commitTransaction();
-
+        final Solar solar = mRealm.where(Solar.class).equalTo("userId", userId).equalTo("createdDate", date).findFirst();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                solar.deleteFromRealm();
+            }
+        });
     }
 
     public List<Solar> get(int userId) {
@@ -44,16 +61,12 @@ public class SolarDatabaseHelper {
     }
 
     public Solar get(int userId, Date date) {
-        mRealm.beginTransaction();
         Solar solar = mRealm.where(Solar.class).equalTo("id", userId).equalTo("createdDate", date).findFirst();
-        mRealm.commitTransaction();
         return solar == null ? new Solar() : solar;
     }
 
     public List<Solar> getAll(int userId) {
-        mRealm.beginTransaction();
         List<Solar> solarList = mRealm.where(Solar.class).equalTo("id", userId).findAll();
-        mRealm.commitTransaction();
         return solarList;
     }
 

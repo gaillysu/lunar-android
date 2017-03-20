@@ -698,8 +698,8 @@ public class ApplicationModel extends Application {
         return goalDatabaseHelper.getAll();
     }
 
-    public Goal addGoal(Goal goal) {
-        return goalDatabaseHelper.add(goal);
+    public void addGoal(Goal goal) {
+        goalDatabaseHelper.add(goal);
     }
 
     public boolean updateGoal(Goal goal) {
@@ -723,11 +723,11 @@ public class ApplicationModel extends Application {
         return ledDataBase.getAll();
     }
 
-    public LedLamp getSelectLamp(int rid) {
-        return ledDataBase.get(rid) == null ? null : ledDataBase.get(rid);
+    public LedLamp getSelectLamp(String name,int color) {
+        return ledDataBase.get(name,color) == null ? null : ledDataBase.get(name,color);
     }
 
-    public LedLamp addLedLamp(LedLamp ledLamp) {
+    public boolean addLedLamp(LedLamp ledLamp) {
         return ledDataBase.add(ledLamp);
     }
 
@@ -735,8 +735,8 @@ public class ApplicationModel extends Application {
         return ledDataBase.update(ledLamp);
     }
 
-    public void removeLedLamp(int id) {
-        ledDataBase.remove(id);
+    public boolean removeLedLamp(String name,int color) {
+       return ledDataBase.remove(name,color);
     }
 
     public void getPositionLocal(final Location mLocation) {

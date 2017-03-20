@@ -40,7 +40,6 @@ public class EditNotificationAttributeActivity extends BaseActivity {
     private String name;
     private int color;
     private LedLamp mLedLamp;
-    private int mLedId;
     private boolean isEdit = false;
 
 
@@ -71,8 +70,7 @@ public class EditNotificationAttributeActivity extends BaseActivity {
         Intent intent = getIntent();
         isEdit = intent.getBooleanExtra("isEdit", false);
         if (isEdit) {
-            mLedId = intent.getIntExtra("id", -1);
-            mLedLamp = getModel().getSelectLamp(mLedId);
+            mLedLamp = getModel().getSelectLamp(intent.getStringExtra("name"), intent.getIntExtra("color", -1));
             showSelectColor.setColorFilter(mLedLamp.getColor());
             name = mLedLamp.getName();
         } else {
@@ -117,13 +115,16 @@ public class EditNotificationAttributeActivity extends BaseActivity {
             case R.id.done_menu:
                 if (isEdit) {
                     mLedLamp.setSelect(mLedLamp.isSelect());
+                    mLedLamp.setName(name);
+                    mLedLamp.setColor(color);
+                    getModel().upDataLedLamp(mLedLamp);
                 } else {
                     mLedLamp = new LedLamp();
                     mLedLamp.setSelect(false);
+                    mLedLamp.setName(name);
+                    mLedLamp.setColor(color);
+                    getModel().addLedLamp(mLedLamp);
                 }
-                mLedLamp.setName(name);
-                mLedLamp.setColor(color);
-                getModel().upDataLedLamp(mLedLamp);
                 finish();
                 return true;
             case android.R.id.home:

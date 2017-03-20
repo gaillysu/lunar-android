@@ -153,17 +153,13 @@ public class EditNotificationLampActivity extends BaseActivity {
         }
     };
 
-
-    /**
-     * menu's event
-     */
     private OnSwipeMenuItemClickListener menuItemClickListener = new OnSwipeMenuItemClickListener() {
         @Override
         public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition, int direction) {
             closeable.smoothCloseMenu();
             if (menuPosition == 0) {
                 LedLamp ledLamp = userSettingAllLamp.get(adapterPosition);
-                mModel.removeLedLamp(ledLamp.getId());
+                mModel.removeLedLamp(ledLamp.getName(),ledLamp.getColor());
                 userSettingAllLamp.remove(adapterPosition);
                 mEditItemAdapter.notifyItemRemoved(adapterPosition);
             }
@@ -171,7 +167,8 @@ public class EditNotificationLampActivity extends BaseActivity {
                 LedLamp ledLamp = userSettingAllLamp.get(adapterPosition);
                 if (ledLamp != null) {
                     Intent intent = new Intent(EditNotificationLampActivity.this, EditNotificationAttributeActivity.class);
-                    intent.putExtra("id", ledLamp.getId());
+                    intent.putExtra("name", ledLamp.getName());
+                    intent.putExtra("color",ledLamp.getColor());
                     intent.putExtra("isEdit", true);
                     startActivity(intent);
                 }

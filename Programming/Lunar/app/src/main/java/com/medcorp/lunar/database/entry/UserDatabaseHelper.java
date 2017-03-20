@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 /**
@@ -15,46 +14,50 @@ import io.realm.RealmResults;
 public class UserDatabaseHelper {
 
     private Realm mRealm;
+    private boolean isSuccess;
 
     public UserDatabaseHelper() {
         mRealm = Realm.getDefaultInstance();
     }
 
-    public User add(User object) {
-        mRealm.beginTransaction();
-        User user = mRealm.copyToRealm(object);
-        mRealm.commitTransaction();
-        return user;
+    public void add(final User object) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealm(object);
+            }
+        });
     }
 
-    public boolean update(User object) {
-        mRealm.beginTransaction();
-        User userDAO = mRealm.copyToRealmOrUpdate(object);
-        mRealm.commitTransaction();
-        return userDAO != null;
+    public boolean update(final User object) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealmOrUpdate(object);
+                isSuccess = true;
+            }
+        });
+        return isSuccess;
     }
 
     public void remove(String userId, Date date) {
-        mRealm.beginTransaction();
-        mRealm.where(User.class).equalTo("nevoUserID", userId).equalTo("createdDate", date).findFirst().deleteFromRealm();
-        mRealm.commitTransaction();
+        final User user = mRealm.where(User.class).equalTo("nevoUserID", userId)
+                .equalTo("createdDate", date).findFirst();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                user.deleteFromRealm();
+            }
+        });
     }
 
     public List<User> get(String userId) {
-        mRealm.beginTransaction();
         RealmResults<User> nevoUser = mRealm.where(User.class).equalTo("nevoUserID", userId).findAll();
-        mRealm.commitTransaction();
         return nevoUser;
     }
 
     public User get(String userId, Date date) {
-        mRealm.beginTransaction();
-//        RealmQuery<User> realmQuery = mRealm.where(User.class);
-//        realmQuery.equalTo("nevoUserID", userId);
-//        realmQuery.equalTo("createdDate", date);
-//        User user = realmQuery.findFirst();
         User user = mRealm.where(User.class).equalTo("nevoUserID", userId).equalTo("createdDate", date).findFirst();
-        mRealm.commitTransaction();
         return user == null ? new User(System.currentTimeMillis()) : user;
     }
 
@@ -63,14 +66,10 @@ public class UserDatabaseHelper {
     }
 
     public User getLoginUser() {
-        mRealm.beginTransaction();
-        RealmQuery<User> realmQuery = mRealm.where(User.class);
-        RealmResults<User> allUser = realmQuery.findAll();
-//        RealmResults<User> allUser = mRealm.where(User.class).findAll();
-        mRealm.commitTransaction();
+        RealmResults<User> allUser = mRealm.where(User.class).findAll();
         for (User user : allUser) {
             if (user.isLogin()) {
-               return user;
+                return user;
             }
         }
         return null;

@@ -127,7 +127,8 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
                                                                 } else {
                                                                     lableGoal = input.toString();
                                                                 }
-                                                                goal = new Goal(lableGoal, true, steps);
+
+                                                                goal = new Goal(getModel().getAllGoal().size()+1,lableGoal, true, steps);
                                                                 getModel().addGoal(goal);
                                                                 goalList = getModel().getAllGoal();
                                                                 presetArrayAdapter.setDataset(goalList);

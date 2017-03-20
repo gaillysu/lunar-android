@@ -13,29 +13,44 @@ import io.realm.RealmResults;
 public class GoalDatabaseHelper {
 
     private Realm mRealm;
+    private boolean isSuccess;
 
     public GoalDatabaseHelper() {
        mRealm = Realm.getDefaultInstance();
     }
 
-    public Goal add(Goal object) {
-        mRealm.beginTransaction();
-        Goal goal = mRealm.copyToRealm(object);
-        mRealm.commitTransaction();
-        return goal;
+    public void add(final Goal object) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealm(object);
+            }
+        });
     }
 
-    public boolean update(Goal object) {
-        mRealm.beginTransaction();
-        Goal goal = mRealm.copyToRealmOrUpdate(object);
-        mRealm.commitTransaction();
-        return goal != null;
+    public boolean update(final Goal object) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Goal goal = mRealm.where(Goal.class).equalTo("is", object.getId()).equalTo("label", object.getLabel()).findFirst();
+                goal.setSteps(object.getSteps());
+                goal.setId(object.getId());
+                goal.setSteps(object.getSteps());
+                goal.setLabel(object.getLabel());
+                isSuccess = true;
+            }
+        });
+        return isSuccess;
     }
 
     public void remove(int presetId) {
-        mRealm.beginTransaction();
-        mRealm.where(Goal.class).equalTo("id", presetId).findFirst().deleteFromRealm();
-        mRealm.commitTransaction();
+        final Goal goal = mRealm.where(Goal.class).equalTo("id", presetId).findFirst();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                goal.deleteFromRealm();
+            }
+        });
     }
 
     public Goal get(int presetId) {

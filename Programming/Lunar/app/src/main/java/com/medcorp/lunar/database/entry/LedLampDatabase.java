@@ -16,45 +16,61 @@ import io.realm.RealmResults;
 public class LedLampDatabase {
 
     private Realm mRealm;
+    private boolean isSuccess;
 
     public LedLampDatabase() {
         mRealm = Realm.getDefaultInstance();
     }
 
-    public LedLamp add(LedLamp object) {
-        mRealm.beginTransaction();
-        LedLampDAO ledLampDAO = mRealm.copyToRealm(convertToDao(object));
-        mRealm.commitTransaction();
-        return convertToNormal(ledLampDAO);
+    public boolean add(final LedLamp object) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealm(convertToDao(object));
+                isSuccess = true;
+            }
+        });
+        return isSuccess;
     }
 
 
-    public boolean update(LedLamp object) {
-        mRealm.beginTransaction();
-        LedLampDAO led = mRealm.where(LedLampDAO.class).equalTo("id", object.getId()).findFirst();
-        LedLampDAO ledLampDAO = mRealm.copyToRealmOrUpdate(led);
-        mRealm.commitTransaction();
-        return ledLampDAO != null;
+    public boolean update(final LedLamp object) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                LedLampDAO led = mRealm.where(LedLampDAO.class).equalTo("id", object.getId()).findFirst();
+                led.setColor(object.getColor());
+                led.setName(object.getName());
+                isSuccess = true;
+            }
+        });
+        return isSuccess;
     }
 
-    public void remove(int rid) {
-        mRealm.beginTransaction();
-        mRealm.where(LedLampDAO.class).equalTo("id", rid).findFirst().deleteFromRealm();
-        mRealm.commitTransaction();
+    public boolean remove(final String name, final int color) {
+        final LedLampDAO ledLamp = mRealm.where(LedLampDAO.class)
+                .equalTo("name", name).equalTo("color", color).findFirst();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                if (ledLamp != null) {
+                    ledLamp.deleteFromRealm();
+                    isSuccess = true;
+                }
+            }
+        });
+        return isSuccess;
     }
 
 
-    public LedLamp get(int rid) {
-        mRealm.beginTransaction();
-        LedLamp led = convertToNormal(mRealm.where(LedLampDAO.class).equalTo("id", rid).findFirst());
-        mRealm.commitTransaction();
+    public LedLamp get(String name, int color) {
+        LedLamp led = convertToNormal(mRealm.where(LedLampDAO.class)
+                .equalTo("name", name).equalTo("color", color).findFirst());
         return led;
     }
 
     public List<LedLamp> getAll() {
-        mRealm.beginTransaction();
         RealmResults<LedLampDAO> all = mRealm.where(LedLampDAO.class).findAll();
-        mRealm.commitTransaction();
         return convertToNormalList(all);
     }
 
@@ -70,7 +86,7 @@ public class LedLampDatabase {
 
 
     private LedLamp convertToNormal(LedLampDAO res) {
-        if(res != null) {
+        if (res != null) {
             LedLamp led = new LedLamp();
             led.setName(res.getName());
             led.setColor(res.getColor());
@@ -81,7 +97,7 @@ public class LedLampDatabase {
     }
 
     private LedLampDAO convertToDao(LedLamp object) {
-        if(object!=null) {
+        if (object != null) {
             LedLampDAO dao = new LedLampDAO();
             dao.setColor(object.getColor());
             dao.setName(object.getName());

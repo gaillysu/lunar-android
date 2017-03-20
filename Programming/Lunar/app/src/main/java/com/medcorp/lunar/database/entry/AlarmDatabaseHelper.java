@@ -13,42 +13,58 @@ import io.realm.RealmResults;
 public class AlarmDatabaseHelper {
 
     private Realm mRealm;
+    private boolean isSuccess;
 
     public AlarmDatabaseHelper() {
-       mRealm = Realm.getDefaultInstance();
+        mRealm = Realm.getDefaultInstance();
     }
 
-    public Alarm add(Alarm object) {
-        mRealm.beginTransaction();
-        Alarm alarm = mRealm.copyToRealm(object);
-        mRealm.commitTransaction();
-        return alarm;
+    public boolean add(final Alarm object) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealm(object);
+                isSuccess = true;
+            }
+        });
+        return isSuccess;
     }
 
-    public boolean update(Alarm object) {
-        mRealm.beginTransaction();
-        Alarm alarm = mRealm.copyToRealmOrUpdate(object);
-        mRealm.commitTransaction();
-        return alarm != null;
+    public boolean update(final Alarm object) {
+       mRealm.executeTransaction(new Realm.Transaction() {
+           @Override
+           public void execute(Realm realm) {
+               Alarm alarm = mRealm.where(Alarm.class).equalTo("alarmNumber", object.getAlarmNumber()).findFirst();
+               alarm.setId(object.getId());
+               alarm.setWeekDay(object.getWeekDay());
+               alarm.setMinute(object.getMinute());
+               alarm.setLabel(object.getLabel());
+               alarm.setAlarmNumber(object.getAlarmNumber());
+               alarm.setAlarmType(object.getAlarmType());
+               alarm.setHour(object.getHour());
+               isSuccess = true;
+           }
+       });
+        return isSuccess;
     }
 
     public void remove(int alarmId) {
-        mRealm.beginTransaction();
-        mRealm.where(Alarm.class).equalTo("id", alarmId).findFirst().deleteFromRealm();
-        mRealm.commitTransaction();
+        final Alarm alarm = mRealm.where(Alarm.class).equalTo("id", alarmId).findFirst();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                alarm.deleteFromRealm();
+            }
+        });
     }
 
     public Alarm get(int alarmId) {
-        mRealm.beginTransaction();
         Alarm alarm = mRealm.where(Alarm.class).equalTo("id", alarmId).findFirst();
-        mRealm.commitTransaction();
         return alarm;
     }
 
     public List<Alarm> getAll() {
-        mRealm.beginTransaction();
         RealmResults<Alarm> allAlarms = mRealm.where(Alarm.class).findAll();
-        mRealm.commitTransaction();
         return allAlarms;
     }
 }

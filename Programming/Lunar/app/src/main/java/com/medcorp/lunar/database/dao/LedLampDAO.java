@@ -3,14 +3,14 @@ package com.medcorp.lunar.database.dao;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
+
 /**
  * Created by Jason on 2016/12/12.
- *
  */
-public class LedLampDAO extends RealmObject{
+public class LedLampDAO extends RealmObject {
 
-    private int id;
     @PrimaryKey
+    private int id = (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
     private String name;
     private int color;
 

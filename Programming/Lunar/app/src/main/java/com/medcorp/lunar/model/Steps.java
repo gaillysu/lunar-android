@@ -3,16 +3,16 @@ package com.medcorp.lunar.model;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Steps extends RealmObject implements Comparable<Steps>{
+public class Steps extends RealmObject implements Comparable<Steps> {
 
-    private int id = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
+    @PrimaryKey
+    private int id = (int) Math.floor(Math.random() * Integer.MAX_VALUE);
 
     //IMPORTANT,HERE MUST NOT set cloudRecordID any value, pls use default value null,when we sync with cloud, it will be filled by the cloud record ID
     private String cloudRecordID;
 
     private String nevoUserID;
 
-    @PrimaryKey
     private long createdDate;
 
     private long date;
@@ -35,11 +35,11 @@ public class Steps extends RealmObject implements Comparable<Steps>{
 
     private int calories;
     //IMPORTANT here must set it an array , length is 24, otherwise, it can't be upload to cloud server
-    private String hourlySteps="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlySteps = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlyDistance ="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlyDistance = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlyCalories ="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlyCalories = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
     private int inZoneTime;
 
@@ -48,7 +48,7 @@ public class Steps extends RealmObject implements Comparable<Steps>{
     private int noActivityTime;
 
     //keep name, means stepsGoal
-    private int goal ;
+    private int goal;
     private int distanceGoal;
     private int caloriesGoal;
     private int activeTimeGoal;
@@ -56,7 +56,7 @@ public class Steps extends RealmObject implements Comparable<Steps>{
 
     private String remarks;
 
-    public Steps(){
+    public Steps() {
 
     }
 
@@ -64,10 +64,10 @@ public class Steps extends RealmObject implements Comparable<Steps>{
         this.createdDate = createdDate;
     }
 
-    public Steps( long createdDate, long date, int steps, int walkSteps, int runSteps,
-                  int distance, int calories, String hourlySteps, String hourlyDistance,
-                  String hourlyCalories, int inZoneTime, int outZoneTime, int noActivityTime,
-                  int goal, int walkDistance,int runDistance,int walkDuration,int runDuration,String remarks) {
+    public Steps(long createdDate, long date, int steps, int walkSteps, int runSteps,
+                 int distance, int calories, String hourlySteps, String hourlyDistance,
+                 String hourlyCalories, int inZoneTime, int outZoneTime, int noActivityTime,
+                 int goal, int walkDistance, int runDistance, int walkDuration, int runDuration, String remarks) {
 
         this.createdDate = createdDate;
         this.date = date;
@@ -302,15 +302,13 @@ public class Steps extends RealmObject implements Comparable<Steps>{
 
     @Override
     public int compareTo(Steps another) {
-        if (getDate() < another.getDate()){
+        if (getDate() < another.getDate()) {
             return -1;
-        }else if(getDate() > another.getDate()){
+        } else if (getDate() > another.getDate()) {
             return 1;
         }
         return 0;
     }
-
-
 
 
 }

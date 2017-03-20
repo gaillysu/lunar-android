@@ -94,7 +94,7 @@ public class AnalysisStepsFragment extends BaseFragment {
             }
         }
         if (activeGoal == null) {
-            activeGoal = new Goal("Unknown", true, 1000);
+            activeGoal = new Goal(getModel().getAllGoal().size() + 1, "Unknown", true, 1000);
         }
         thisWeekData = getModel().getThisWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastWeekData = getModel().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
@@ -105,7 +105,7 @@ public class AnalysisStepsFragment extends BaseFragment {
         thisWeekChart.setMarkerView(marker);
         lastWeekChart.addData(lastWeekData, activeGoal, 7);
         lastWeekChart.setMarkerView(marker);
-        lastMonthChart.addData(lastMonthData, activeGoal,30);
+        lastMonthChart.addData(lastMonthData, activeGoal, 30);
         lastMonthChart.setMarkerView(marker);
         thisWeekChart.animateY(3000);
         lastWeekChart.animateY(3000);
@@ -181,10 +181,10 @@ public class AnalysisStepsFragment extends BaseFragment {
 
     private String getWeekCalories(List<Steps> thisWeekData, int weekCountDay) {
         int userWeight = getModel().getNevoUser().getWeight();
-        if(weekCountDay == 30) {
-            return (int) ((2.0 * userWeight * 3.5) / 200 * getAvgDurationTime(thisWeekData))/weekCountDay/1000 + "";
-        }else{
-            return (int) ((2.0 * userWeight * 3.5) / 200 * getAvgDurationTime(thisWeekData))/weekCountDay+"";
+        if (weekCountDay == 30) {
+            return (int) ((2.0 * userWeight * 3.5) / 200 * getAvgDurationTime(thisWeekData)) / weekCountDay / 1000 + "";
+        } else {
+            return (int) ((2.0 * userWeight * 3.5) / 200 * getAvgDurationTime(thisWeekData)) / weekCountDay + "";
         }
     }
 
@@ -200,32 +200,32 @@ public class AnalysisStepsFragment extends BaseFragment {
         switch (position) {
             case 0:
                 if (thisWeekData.size() != 0) {
-                    setAverageText(getWeekSteps(thisWeekData), getWeekSteps(thisWeekData)/7
-                            , getWeekCalories(thisWeekData,7)
-                            , getAvgDurationTime(thisWeekData)/7
+                    setAverageText(getWeekSteps(thisWeekData), getWeekSteps(thisWeekData) / 7
+                            , getWeekCalories(thisWeekData, 7)
+                            , getAvgDurationTime(thisWeekData) / 7
                             , getResources().getString(R.string.analysis_fragment_this_week_steps));
                 } else {
-                    setAverageText(0, 0, 0+"", 0, getResources().getString(R.string.analysis_fragment_this_week_steps));
+                    setAverageText(0, 0, 0 + "", 0, getResources().getString(R.string.analysis_fragment_this_week_steps));
                 }
                 break;
             case 1:
                 if (lastWeekData.size() != 0) {
-                    setAverageText(getWeekSteps(lastWeekData), getWeekSteps(lastWeekData)/7
-                            , getWeekCalories(lastWeekData,7)
-                            , getAvgDurationTime(lastWeekData)/7
+                    setAverageText(getWeekSteps(lastWeekData), getWeekSteps(lastWeekData) / 7
+                            , getWeekCalories(lastWeekData, 7)
+                            , getAvgDurationTime(lastWeekData) / 7
                             , getResources().getString(R.string.analysis_fragment_last_week_steps));
                 } else {
-                    setAverageText(0, 0, 0+"", 0, getResources().getString(R.string.analysis_fragment_last_week_steps));
+                    setAverageText(0, 0, 0 + "", 0, getResources().getString(R.string.analysis_fragment_last_week_steps));
                 }
                 break;
             case 2:
                 if (lastMonthData.size() != 0) {
-                    setAverageText(getWeekSteps(lastMonthData), getWeekSteps(lastMonthData)/7
-                            , getWeekCalories(lastMonthData,30)
-                            , getAvgDurationTime(lastMonthData)/30/ 1000
+                    setAverageText(getWeekSteps(lastMonthData), getWeekSteps(lastMonthData) / 7
+                            , getWeekCalories(lastMonthData, 30)
+                            , getAvgDurationTime(lastMonthData) / 30 / 1000
                             , getResources().getString(R.string.analysis_fragment_last_month_solar));
                 } else {
-                    setAverageText(0, 0, 0+"", 0, getResources().getString(R.string.analysis_fragment_last_month_solar));
+                    setAverageText(0, 0, 0 + "", 0, getResources().getString(R.string.analysis_fragment_last_month_solar));
                 }
                 break;
         }

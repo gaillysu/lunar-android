@@ -6,10 +6,10 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by gaillysu on 15/11/17.
  */
-public class Sleep extends RealmObject implements Comparable<Sleep>{
+public class Sleep extends RealmObject implements Comparable<Sleep> {
 
     @PrimaryKey
-    private int id = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
+    private int id = (int) Math.floor(Math.random() * Integer.MAX_VALUE);
 
     //IMPORTANT,HERE MUST NOT set cloudRecordID any value, pls use default value null,when we sync with cloud, it will be filled by the cloud record ID
     private String cloudRecordID;
@@ -17,7 +17,6 @@ public class Sleep extends RealmObject implements Comparable<Sleep>{
     private String nevoUserID;
 
     private long createdDate;
-
     private long date;
 
     private int totalSleepTime;
@@ -28,13 +27,13 @@ public class Sleep extends RealmObject implements Comparable<Sleep>{
 
     private int totalDeepTime;
     //for avoid got exception, here you'd better put default values: int[24] ={0...0}
-    private String hourlySleep="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlySleep = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlyWake="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlyWake = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlyLight="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlyLight = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlyDeep="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlyDeep = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
     private long start;
 
@@ -44,7 +43,7 @@ public class Sleep extends RealmObject implements Comparable<Sleep>{
 
     private String remarks;
 
-    public Sleep(){
+    public Sleep() {
 
     }
 
@@ -207,9 +206,9 @@ public class Sleep extends RealmObject implements Comparable<Sleep>{
 
     @Override
     public int compareTo(Sleep another) {
-        if (getDate() < another.getDate()){
+        if (getDate() < another.getDate()) {
             return -1;
-        }else if(getDate() > another.getDate()){
+        } else if (getDate() > another.getDate()) {
             return 1;
         }
         return 0;

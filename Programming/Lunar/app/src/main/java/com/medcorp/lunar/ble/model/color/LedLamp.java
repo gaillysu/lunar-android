@@ -3,8 +3,6 @@ package com.medcorp.lunar.ble.model.color;
 
 import com.medcorp.lunar.ble.model.color.visitor.NevoLedVisitor;
 
-import io.realm.annotations.PrimaryKey;
-
 /**
  * Created by Jason on 2016/12/8.
  * s
@@ -12,15 +10,15 @@ import io.realm.annotations.PrimaryKey;
 public class LedLamp extends NevoLed {
 
 
-    private int id;
-    @PrimaryKey
+    private int id = (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
     private String name;
     private int color;
     private boolean isSelect;
 
-    public LedLamp (){
+    public LedLamp() {
 
     }
+
 
     public LedLamp(String name, int color) {
         this.name = name;

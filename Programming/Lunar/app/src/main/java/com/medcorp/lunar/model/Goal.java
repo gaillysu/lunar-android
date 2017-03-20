@@ -9,8 +9,7 @@ import io.realm.annotations.PrimaryKey;
 public class Goal extends RealmObject {
 
     @PrimaryKey
-
-    private int id;
+    private int id = (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
     private String label;
     private boolean status;
     private int steps = 10000;
@@ -20,11 +19,11 @@ public class Goal extends RealmObject {
     }
 
     public Goal(int id, String label, boolean status, int steps) {
-        this(label,status,steps);
+        this(label, status, steps);
         this.id = id;
     }
 
-    public Goal(String label, boolean status, int steps) {
+    private Goal(String label, boolean status, int steps) {
         this.label = label;
         this.status = status;
         this.steps = steps;
