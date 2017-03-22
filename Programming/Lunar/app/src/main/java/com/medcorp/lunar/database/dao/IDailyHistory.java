@@ -8,20 +8,15 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.annotation.PropertyKey;
-
-import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
-import io.realm.annotations.RealmModule;
 
 /**
  * Created by gaillysu on 15/8/11.
  * this Model save Daily record from nevo
  * @link: DailyHistory class
  */
-public class IDailyHistory extends RealmObject {
+public class IDailyHistory{
 
-    @PropertyKey
     private int trainingID = 0;
     private long created = 0;
     private int steps = 0;

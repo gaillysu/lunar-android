@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by Jason on 2016/8/12.
@@ -52,6 +54,7 @@ public class MainSolarFragment extends BaseFragment {
     @Bind(R.id.main_fragment_solar_title_tv)
     TextView solarTitle;
     private Date userSelectDate;
+    private Solar mSolarOptional;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,11 +83,17 @@ public class MainSolarFragment extends BaseFragment {
         if (Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime()) {
             powOnBatteryMinutes = new DateTime().getMinuteOfDay();
         }
-        Solar solarOptional = getModel().getSolarDatabaseHelper().get(getModel().getNevoUser().getId(), userSelectDate);
-        if (solarOptional!=null) {
-            powerOnSolarPercent = solarOptional.getTotalHarvestingTime() * 100f / (powOnBatteryMinutes);
+        getModel().getSolarDatabaseHelper().get(getModel().getNevoUser().getId(), userSelectDate).subscribe(new Consumer<Solar>() {
+            @Override
+            public void accept(Solar solar) throws Exception {
+                mSolarOptional = solar;
+                Log.i("jason","solar::::"+mSolarOptional.toString());
+            }
+        });
+        if (mSolarOptional != null) {
+            powerOnSolarPercent = mSolarOptional.getTotalHarvestingTime() * 100f / (powOnBatteryMinutes);
             powerOnBatteryPercent = 100f - powerOnSolarPercent;
-            powerOnSolarMinutes = solarOptional.getTotalHarvestingTime();
+            powerOnSolarMinutes = mSolarOptional.getTotalHarvestingTime();
             powOnBatteryMinutes = powOnBatteryMinutes - powerOnSolarMinutes;
         }
         float[] solarPieChartDate = {powerOnSolarPercent, powerOnBatteryPercent};
@@ -151,7 +160,8 @@ public class MainSolarFragment extends BaseFragment {
 
     @Subscribe
     public void onEvent(final OnSyncEvent event) {
-        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED || event.getStatus() == OnSyncEvent.SYNC_EVENT.TODAY_SYNC_STOPPED) {
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED
+                || event.getStatus() == OnSyncEvent.SYNC_EVENT.TODAY_SYNC_STOPPED) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {

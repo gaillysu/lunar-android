@@ -5,7 +5,6 @@ import io.realm.annotations.PrimaryKey;
 
 public class Steps extends RealmObject implements Comparable<Steps> {
 
-    @PrimaryKey
     private int id = (int) Math.floor(Math.random() * Integer.MAX_VALUE);
 
     //IMPORTANT,HERE MUST NOT set cloudRecordID any value, pls use default value null,when we sync with cloud, it will be filled by the cloud record ID
@@ -310,5 +309,35 @@ public class Steps extends RealmObject implements Comparable<Steps> {
         return 0;
     }
 
-
+    @Override
+    public String toString() {
+        return "Steps{" +
+                "id=" + id +
+                ", cloudRecordID='" + cloudRecordID + '\'' +
+                ", nevoUserID='" + nevoUserID + '\'' +
+                ", createdDate=" + createdDate +
+                ", date=" + date +
+                ", steps=" + steps +
+                ", walkSteps=" + walkSteps +
+                ", runSteps=" + runSteps +
+                ", distance=" + distance +
+                ", walkDistance=" + walkDistance +
+                ", runDistance=" + runDistance +
+                ", walkDuration=" + walkDuration +
+                ", runDuration=" + runDuration +
+                ", calories=" + calories +
+                ", hourlySteps='" + hourlySteps + '\'' +
+                ", hourlyDistance='" + hourlyDistance + '\'' +
+                ", hourlyCalories='" + hourlyCalories + '\'' +
+                ", inZoneTime=" + inZoneTime +
+                ", outZoneTime=" + outZoneTime +
+                ", noActivityTime=" + noActivityTime +
+                ", goal=" + goal +
+                ", distanceGoal=" + distanceGoal +
+                ", caloriesGoal=" + caloriesGoal +
+                ", activeTimeGoal=" + activeTimeGoal +
+                ", goalReached=" + goalReached +
+                ", remarks='" + remarks + '\'' +
+                '}';
+    }
 }

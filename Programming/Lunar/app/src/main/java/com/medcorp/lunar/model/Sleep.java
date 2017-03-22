@@ -8,7 +8,6 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Sleep extends RealmObject implements Comparable<Sleep> {
 
-    @PrimaryKey
     private int id = (int) Math.floor(Math.random() * Integer.MAX_VALUE);
 
     //IMPORTANT,HERE MUST NOT set cloudRecordID any value, pls use default value null,when we sync with cloud, it will be filled by the cloud record ID
@@ -17,6 +16,7 @@ public class Sleep extends RealmObject implements Comparable<Sleep> {
     private String nevoUserID;
 
     private long createdDate;
+    @PrimaryKey
     private long date;
 
     private int totalSleepTime;
@@ -214,5 +214,26 @@ public class Sleep extends RealmObject implements Comparable<Sleep> {
         return 0;
     }
 
-
+    @Override
+    public String toString() {
+        return "Sleep{" +
+                "id=" + id +
+                ", cloudRecordID='" + cloudRecordID + '\'' +
+                ", nevoUserID='" + nevoUserID + '\'' +
+                ", createdDate=" + createdDate +
+                ", date=" + date +
+                ", totalSleepTime=" + totalSleepTime +
+                ", totalWakeTime=" + totalWakeTime +
+                ", totalLightTime=" + totalLightTime +
+                ", totalDeepTime=" + totalDeepTime +
+                ", hourlySleep='" + hourlySleep + '\'' +
+                ", hourlyWake='" + hourlyWake + '\'' +
+                ", hourlyLight='" + hourlyLight + '\'' +
+                ", hourlyDeep='" + hourlyDeep + '\'' +
+                ", start=" + start +
+                ", end=" + end +
+                ", sleepQuality=" + sleepQuality +
+                ", remarks='" + remarks + '\'' +
+                '}';
+    }
 }

@@ -14,7 +14,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class Solar extends RealmObject {
 
-    @PrimaryKey
+
     private int id = (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
 
     /**
@@ -25,7 +25,8 @@ public class Solar extends RealmObject {
     /**
      * date is the daily date,format is YYYY-MM-DD
      */
-    private Date date;
+    @PrimaryKey
+    private long date;
 
     private int userId;
     //"[0,0,0,....0]", 24 length array, unit is in minutes
@@ -42,7 +43,7 @@ public class Solar extends RealmObject {
         this.createdDate = createdDate;
     }
 
-    public Solar(Date createdDate, Date date, int userId, String hourlyHarvestingTime, int totalHarvestingTime) {
+    public Solar(Date createdDate, long date, int userId, String hourlyHarvestingTime, int totalHarvestingTime) {
         this.createdDate = createdDate;
         this.date = date;
         this.userId = userId;
@@ -90,15 +91,27 @@ public class Solar extends RealmObject {
         this.createdDate = createdDate;
     }
 
-    public Date getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
     public int[] getHourlyHarvestingTimeInt() {
         return Common.convertJSONArrayIntToArray(getHourlyHarvestingTime());
+    }
+
+    @Override
+    public String toString() {
+        return "Solar{" +
+                "id=" + id +
+                ", createdDate=" + createdDate +
+                ", date=" + date +
+                ", userId=" + userId +
+                ", hourlyHarvestingTime='" + hourlyHarvestingTime + '\'' +
+                ", totalHarvestingTime=" + totalHarvestingTime +
+                '}';
     }
 }

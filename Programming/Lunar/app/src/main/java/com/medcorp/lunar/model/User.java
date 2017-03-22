@@ -7,7 +7,6 @@ import io.realm.annotations.PrimaryKey;
 
 public class User extends RealmObject {
 
-    @PrimaryKey
     @SerializedName("id")
     private int id;
 
@@ -38,6 +37,7 @@ public class User extends RealmObject {
     @SerializedName("remarks")
     private String remarks;
 
+    @PrimaryKey
     @SerializedName("nevoUserID")
     private String nevoUserID;
 

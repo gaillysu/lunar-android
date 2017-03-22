@@ -3,6 +3,7 @@ package com.medcorp.lunar.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,11 +75,9 @@ public class MainStepsFragment extends BaseFragment {
     }
 
     private void initData(Date date) {
-
-
         User user = getModel().getNevoUser();
         steps = getModel().getDailySteps(user.getNevoUserID(), date);
-
+        Log.i("jason",steps.toString());
         showUserActivityTime.setText(TimeUtil.formatTime(steps.getWalkDuration() + steps.getRunDuration()));
         showUserSteps.setText(String.valueOf(steps.getSteps()));
         String result = null;
@@ -93,6 +92,8 @@ public class MainStepsFragment extends BaseFragment {
         showUserStepsDistance.setText(String.valueOf(result));
         showUserConsumeCalories.setText(calories);
 
+        Log.i("jason",steps.getSteps()+"");
+        Log.i("jason",steps.getHourlyCalories());
         if (steps.getSteps() != 0 && steps.getHourlySteps() != null) {
             JSONArray array = null;
             try {

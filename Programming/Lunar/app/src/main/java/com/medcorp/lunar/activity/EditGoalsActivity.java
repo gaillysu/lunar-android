@@ -73,6 +73,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                             if (input.length() == 0)
                                 return;
                             goal.setSteps(Integer.parseInt(input.toString()));
+                            getModel().updateGoal(goal);
                             presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this, goal));
                         }
                     }).negativeText(R.string.goal_cancel).show();
@@ -87,6 +88,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                             if (input.length() == 0)
                                 return;
                             goal.setLabel(input.toString());
+                            getModel().updateGoal(goal);
                             presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this, goal));
                         }
                     }).negativeText(R.string.goal_cancel)

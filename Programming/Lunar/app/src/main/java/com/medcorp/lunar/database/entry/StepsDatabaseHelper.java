@@ -5,6 +5,11 @@ import com.medcorp.lunar.model.Steps;
 import java.util.Date;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -14,30 +19,80 @@ import io.realm.RealmResults;
 public class StepsDatabaseHelper {
 
     private Realm mRealm;
-    private boolean isSuccess;
+    private boolean isNull;
+
 
     public StepsDatabaseHelper() {
         mRealm = Realm.getDefaultInstance();
     }
 
-    public void add(final Steps object) {
-        mRealm.executeTransaction(new Realm.Transaction() {
+    public Observable<Boolean> addSteps(final Steps object) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
-            public void execute(Realm realm) {
-                realm.copyToRealm(object);
+            public void subscribe(final ObservableEmitter<Boolean> e) throws Exception {
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Steps steps = realm.copyToRealm(object);
+                        if (steps != null) {
+                            e.onNext(true);
+                            e.onComplete();
+                        } else {
+                            e.onNext(false);
+                            e.onComplete();
+                        }
+                    }
+                });
             }
-        });
+        }).subscribeOn(AndroidSchedulers.mainThread());
     }
 
-    public boolean update(final Steps object) {
-        mRealm.executeTransaction(new Realm.Transaction() {
+    public Observable<Boolean> update(final Steps object) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
-            public void execute(Realm realm) {
-                realm.copyToRealmOrUpdate(object);
-                isSuccess = true;
+            public void subscribe(final ObservableEmitter<Boolean> observable) throws Exception {
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Steps steps = mRealm.where(Steps.class).equalTo("date", object.getDate())
+                                .equalTo("id", object.getId()).findFirst();
+                        if (steps != null) {
+                            steps.setId(object.getId());
+                            steps.setSteps(object.getSteps());
+                            steps.setRemarks(object.getRemarks());
+                            steps.setActiveTimeGoal(object.getActiveTimeGoal());
+                            steps.setCalories(object.getCalories());
+                            steps.setCloudRecordID(object.getCloudRecordID());
+                            steps.setActiveTimeGoal(object.getActiveTimeGoal());
+                            steps.setCreatedDate(object.getCreatedDate());
+                            steps.setCaloriesGoal(object.getCaloriesGoal());
+                            steps.setDistance(object.getDistance());
+                            steps.setDistanceGoal(object.getDistanceGoal());
+                            steps.setGoal(object.getGoal());
+                            steps.setGoalReached(object.getGoalReached());
+                            steps.setHourlyCalories(object.getHourlyCalories());
+                            steps.setHourlySteps(object.getHourlySteps());
+                            steps.setInZoneTime(object.getInZoneTime());
+                            steps.setNevoUserID(object.getNevoUserID());
+                            steps.setNoActivityTime(object.getNoActivityTime());
+                            steps.setHourlyDistance(object.getHourlyDistance());
+                            steps.setDate(object.getDate());
+                            steps.setRunDistance(object.getRunDistance());
+                            steps.setOutZoneTime(object.getOutZoneTime());
+                            steps.setWalkDistance(object.getWalkDistance());
+                            steps.setRunSteps(object.getRunSteps());
+                            steps.setWalkSteps(object.getWalkSteps());
+                            steps.setWalkDuration(object.getWalkDuration());
+                            observable.onNext(true);
+                            observable.onComplete();
+                        } else {
+                            observable.onNext(false);
+                            observable.onComplete();
+                        }
+                    }
+                });
             }
-        });
-        return isSuccess;
+        }).subscribeOn(AndroidSchedulers.mainThread());
     }
 
     public void remove(String userId, Date date) {
@@ -51,30 +106,66 @@ public class StepsDatabaseHelper {
         });
     }
 
-    public List<Steps> get(String userId) {
+    public Observable<List<Steps>> get(String userId) {
         return getAll(userId);
     }
 
 
-    public Steps get(final String userId, final Date date) {
-        Steps steps = mRealm.where(Steps.class).equalTo("nevoUserID", userId).equalTo("date", date.getTime()).findFirst();
-        return steps == null ? new Steps(System.currentTimeMillis()) : steps;
+    public Observable<Steps> get(final String userId, final Date date) {
+        return Observable.create(new ObservableOnSubscribe<Steps>() {
+            @Override
+            public void subscribe(ObservableEmitter<Steps> e) throws Exception {
+                Steps steps = mRealm.where(Steps.class).equalTo("nevoUserID", userId)
+                        .equalTo("date", date.getTime()).findFirst();
+                if (steps != null) {
+                    e.onNext(mRealm.copyFromRealm(steps));
+                    e.onComplete();
+                } else {
+                    e.onComplete();
+                }
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread());
+
     }
 
 
-    public List<Steps> getAll(String userId) {
-        RealmResults<Steps> allSteps = mRealm.where(Steps.class).equalTo("nevoUserID", userId).findAll();
-        return allSteps;
+    public Observable<List<Steps>> getAll(final String userId) {
+        return Observable.create(new ObservableOnSubscribe<List<Steps>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Steps>> e) throws Exception {
+                List<Steps> stepses = mRealm.where(Steps.class).equalTo("nevoUserID", userId).findAll();
+                e.onNext(mRealm.copyFromRealm(stepses));
+                e.onComplete();
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread());
     }
 
 
-    public List<Steps> getNeedSyncSteps(String userId) {
+    public Observable<List<Steps>> getNeedSyncSteps(String userId) {
         return getAll(userId);
     }
 
-    public boolean isFoundInLocalSteps(int activity_id) {
-        RealmResults<Steps> steps = mRealm.where(Steps.class).equalTo("id", activity_id).findAll();
-        return steps != null;
+    public boolean isFoundInLocalSteps(final int activity_id) {
+        Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                RealmResults<Steps> steps = Realm.getDefaultInstance().where(Steps.class)
+                        .equalTo("id", activity_id).findAll();
+
+                if(steps!=null){
+                    e.onNext(true);
+                    e.onComplete();
+                }
+                e.onNext(false);
+                e.onComplete();
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                isNull =  aBoolean;
+            }
+        });
+        return isNull;
     }
 
     public boolean isFoundInLocalSteps(Date date, String userId) {

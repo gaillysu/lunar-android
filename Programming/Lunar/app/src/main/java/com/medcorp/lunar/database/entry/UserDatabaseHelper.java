@@ -33,8 +33,31 @@ public class UserDatabaseHelper {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                realm.copyToRealmOrUpdate(object);
-                isSuccess = true;
+                User user = mRealm.where(User.class).equalTo("nevoUserID", object.getNevoUserID())
+                        .equalTo("createdDate", object.getCreatedDate()).findFirst();
+                if (user != null) {
+                    user.setId(object.getId());
+                    user.setWechat(object.getWechat());
+                    user.setAge(object.getAge());
+                    user.setBirthday(object.getBirthday());
+                    user.setCreatedDate(object.getCreatedDate());
+                    user.setFirstName(object.getFirstName());
+                    user.setHeight(object.getHeight());
+                    user.setWeight(object.getWeight());
+                    user.setIsConnectValidic(object.isConnectValidic());
+                    user.setLastName(object.getLastName());
+                    user.setIsLogin(object.isLogin());
+                    user.setNevoUserEmail(object.getNevoUserEmail());
+                    user.setNevoUserID(object.getNevoUserID());
+                    user.setSex(object.getSex());
+                    user.setValidicUserToken(object.getValidicUserToken());
+                    user.setRemarks(object.getRemarks());
+                    user.setValidicUserID(object.getValidicUserID());
+                    user.setNevoUserToken(object.getNevoUserToken());
+                    isSuccess = true;
+                } else {
+                    add(object);
+                }
             }
         });
         return isSuccess;

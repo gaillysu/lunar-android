@@ -54,7 +54,6 @@ public class MainSleepFragment extends BaseFragment {
 
     @Bind(R.id.fragment_sleep_history_linechart)
     SleepTodayChart lineChartSleep;
-
     private Date userSelectDate;
 
     @Override

@@ -116,6 +116,8 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.realm.Realm;
+
 public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<Void> {
     private final static String TAG = "SyncControllerImpl";
 
@@ -143,7 +145,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps
     //make sure  the whole received packets
-
+    private Realm realm;
     //start a timer to do little sync, refresh dashboard @LittleSyncEvent
     private long LITTLE_SYNC_INTERVAL = 10000L; //10s
     private Timer autoSyncTimer = null;
@@ -152,6 +154,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         if (autoSyncTimer != null)
             autoSyncTimer.cancel();
         autoSyncTimer = new Timer();
+        realm = Realm.getDefaultInstance();
         autoSyncTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -401,7 +404,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //here save solar time to local database when watch ID>1
                     if (getWatchInfomation().getWatchID() > 1) {
                         Solar solar = new Solar(new Date(history.getCreated()));
-                        solar.setDate(Common.removeTimeFromDate(solar.getCreatedDate()));
+                        solar.setDate((Common.removeTimeFromDate(solar.getCreatedDate())).getTime());
                         solar.setUserId(Integer.parseInt(((ApplicationModel) mContext).getNevoUser().getNevoUserID()));
                         solar.setTotalHarvestingTime(thispacket.getSolarHarvestingTime());
                         solar.setHourlyHarvestingTime(thispacket.getHourlyHarvestTime().toString());
@@ -434,7 +437,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //save current day's step count to "Steps" table
                     DailyStepsPacket stepPacket = new DailyStepsPacket(packet.getPackets());
                     Log.i(TAG,"little sync,Date:"+stepPacket.getDailyDate().toString() + ",steps:" + stepPacket.getDailySteps() + ",goal:"+stepPacket.getDailyStepsGoal());
-                    Steps steps = ((ApplicationModel) mContext).getDailySteps(((ApplicationModel) mContext).getNevoUser().getNevoUserID(), Common.removeTimeFromDate(new Date()));
+                    Steps steps = ((ApplicationModel) mContext).getDailySteps(((ApplicationModel   ) mContext).getNevoUser().getNevoUserID(), Common.removeTimeFromDate(new Date()));
                     steps.setCreatedDate(new Date().getTime());
                     steps.setDate(Common.removeTimeFromDate(new Date()).getTime());
                     steps.setSteps(stepPacket.getDailySteps());
