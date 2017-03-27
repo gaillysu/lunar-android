@@ -52,9 +52,9 @@ public class AnalysisStepsFragment extends BaseFragment {
     private View thisWeekView;
     private View lastWeekView;
     private View lastMonthView;
-    private List<Steps> thisWeekData;
-    private List<Steps> lastWeekData;
-    private List<Steps> lastMonthData;
+    private List<Steps> thisWeekData = new ArrayList<>();
+    private List<Steps> lastWeekData = new ArrayList<>();
+    private List<Steps> lastMonthData = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,10 +75,16 @@ public class AnalysisStepsFragment extends BaseFragment {
         return stepsView;
     }
 
+    AnalysisStepsLineChart thisWeekChart;
+    AnalysisStepsLineChart lastWeekChart;
+    AnalysisStepsLineChart lastMonthChart;
+    Goal activeGoal;
     private void initData(Date userSelectDate) {
-        AnalysisStepsLineChart thisWeekChart = (AnalysisStepsLineChart) thisWeekView.findViewById(R.id.analysis_step_chart);
-        AnalysisStepsLineChart lastWeekChart = (AnalysisStepsLineChart) lastWeekView.findViewById(R.id.analysis_step_chart);
-        AnalysisStepsLineChart lastMonthChart = (AnalysisStepsLineChart) lastMonthView.findViewById(R.id.analysis_step_chart);
+        thisWeekChart = (AnalysisStepsLineChart) thisWeekView.findViewById(R.id.analysis_step_chart);
+        lastWeekChart = (AnalysisStepsLineChart) lastWeekView.findViewById(R.id.analysis_step_chart);
+        lastMonthChart = (AnalysisStepsLineChart) lastMonthView.findViewById(R.id.analysis_step_chart);
+
+        final TipsView marker = new TipsView(AnalysisStepsFragment.this.getContext(), R.layout.custom_marker_view);
 
         /**
          * Added max in 'addData', max is the time spam in days, in 'this week' and
@@ -86,7 +92,7 @@ public class AnalysisStepsFragment extends BaseFragment {
          * In this month this is 30 (or 31) because there are 30 days in a month.
          *
          */
-        Goal activeGoal = null;
+        activeGoal = null;
         for (Goal goal : getModel().getAllGoal()) {
             if (goal.isStatus()) {
                 activeGoal = goal;
@@ -96,20 +102,49 @@ public class AnalysisStepsFragment extends BaseFragment {
         if (activeGoal == null) {
             activeGoal = new Goal(getModel().getAllGoal().size() + 1, "Unknown", true, 1000);
         }
-        thisWeekData = getModel().getThisWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
-        lastWeekData = getModel().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
-        lastMonthData = getModel().getLastMonthSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
+
         setDesText(0);
-        TipsView marker = new TipsView(AnalysisStepsFragment.this.getContext(), R.layout.custom_marker_view);
-        thisWeekChart.addData(thisWeekData, activeGoal, 7);
-        thisWeekChart.setMarkerView(marker);
-        lastWeekChart.addData(lastWeekData, activeGoal, 7);
-        lastWeekChart.setMarkerView(marker);
-        lastMonthChart.addData(lastMonthData, activeGoal, 30);
-        lastMonthChart.setMarkerView(marker);
-        thisWeekChart.animateY(3000);
-        lastWeekChart.animateY(3000);
-        lastMonthChart.animateY(3000);
+
+        getModel().getSteps(
+                getModel().getNevoUser().getNevoUserID(),
+                userSelectDate,
+                getString(R.string.current_week),new OnStepsGetListener(){
+                    @Override
+                    public void onStepsGet(List<Steps> stepsList) {
+                        thisWeekData = stepsList;
+                        thisWeekChart.addData(thisWeekData, activeGoal, 7);
+                        thisWeekChart.setMarkerView(marker);
+                        thisWeekChart.animateY(3000);
+                    }
+                });
+
+        getModel().getSteps(
+                getModel().getNevoUser().getNevoUserID(),
+                userSelectDate,
+                getString(R.string.last_week),
+                new OnStepsGetListener(){
+                    @Override
+                    public void onStepsGet(List<Steps> stepsList) {
+                        lastWeekData = stepsList;
+                        lastWeekChart.addData(lastWeekData, activeGoal, 7);
+                        lastWeekChart.setMarkerView(marker);
+                        lastWeekChart.animateY(3000);
+                    }
+                });
+
+        getModel().getSteps(
+                getModel().getNevoUser().getNevoUserID(),
+                userSelectDate,
+                getString(R.string.last_month),
+                new OnStepsGetListener(){
+                    @Override
+                    public void onStepsGet(List<Steps> stepsList) {
+                        lastMonthData = stepsList;
+                        lastMonthChart.addData(lastMonthData, activeGoal, 30);
+                        lastMonthChart.setMarkerView(marker);
+                        lastMonthChart.animateY(3000);
+                    }
+                });
     }
 
     private void initView(LayoutInflater inflater) {
@@ -229,5 +264,9 @@ public class AnalysisStepsFragment extends BaseFragment {
                 }
                 break;
         }
+    }
+
+    public interface OnStepsGetListener {
+        void onStepsGet(List<Steps> stepsList);
     }
 }

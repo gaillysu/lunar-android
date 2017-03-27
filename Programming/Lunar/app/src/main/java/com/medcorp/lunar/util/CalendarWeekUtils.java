@@ -14,15 +14,12 @@ public class CalendarWeekUtils {
     private Date lastWeekStart;
     private Date lastWeekEnd;
     private Date monthStartDate;
-    private Date dayStartTime;
-    private Date dayEndTime;
 
     public Date getMonthEndDate() {
         return monthEndDate;
     }
 
     public static Date getDayStartTime(Date date){
-
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -39,6 +36,14 @@ public class CalendarWeekUtils {
         calendar.add(Calendar.SECOND, -1);
         Date end = calendar.getTime();
         return end;
+    }
+
+    public Date getOneDayStartTime(Date date) {
+        return getDayStartTime(date);
+    }
+
+    public Date getOneDayEndTime(Date date) {
+        return getDayEndTime(date);
     }
 
     public Date getMonthStartDate() {

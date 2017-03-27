@@ -8,22 +8,22 @@
               android:padding="20dp">
 
     <TextView
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/alarm_add"
         android:textColor="@color/text_color"
-        android:textSize="26sp"
-        android:id="@+id/textView3"/>
+        android:textSize="26sp"/>
 
     <EditText
         android:id="@+id/edit_input_alarm_name"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:background="@color/transparent"
+        android:hint="@string/edit_alarm_name"
+        android:maxLines="1"
         android:textColor="@color/text_color"
         android:textColorHint="@color/text_color"
-        android:background="@color/transparent"
-        android:maxLines="1"
-        android:hint="@string/edit_alarm_name"
         />
 
     <View
@@ -40,8 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
-            android:textColor="@color/text_color"
             android:text="@string/edit_alarm_repeat"
+            android:textColor="@color/text_color"
             android:textSize="26sp"/>
     </RelativeLayout>
 
@@ -106,6 +106,7 @@
 
         <LinearLayout
             style="@style/new_alarm_clock_repeat_days_llyt">
+
             <Button
                 android:id="@+id/tag_btn_saturday"
                 style="@style/new_alarm_clock_repeat_days_tag_btn"
@@ -139,8 +140,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:textColor="@color/text_color"
-            android:text="@string/edit_alarm_sleep"/>
+            android:text="@string/edit_alarm_sleep"
+            android:textColor="@color/text_color"/>
 
         <RadioButton
             android:id="@+id/alarm_style_wake"
@@ -148,8 +149,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:textColor="@color/text_color"
-            android:text="@string/edit_alarm_wake"/>
+            android:text="@string/edit_alarm_wake"
+            android:textColor="@color/text_color"/>
     </RadioGroup>
 
     <LinearLayout

@@ -1,7 +1,6 @@
 package com.medcorp.lunar.model;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by gaillysu on 15/4/21.
@@ -14,7 +13,6 @@ public class Alarm extends RealmObject{
     private byte weekDay;
     private String label;
     private byte alarmType;
-    @PrimaryKey
     private byte alarmNumber;
 
     public Alarm(){

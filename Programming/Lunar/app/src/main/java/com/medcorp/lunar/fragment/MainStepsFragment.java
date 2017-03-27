@@ -3,7 +3,6 @@ package com.medcorp.lunar.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.fragment.base.BaseFragment;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
-import com.medcorp.lunar.util.Common;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.graphs.MainStepsBarChart;
@@ -51,7 +49,6 @@ public class MainStepsFragment extends BaseFragment {
     @Bind(R.id.lunar_main_fragment_steps_chart)
     MainStepsBarChart hourlyBarChart;
 
-    private Steps steps;
     private Date userSelectDate;
 
     @Override
@@ -75,13 +72,13 @@ public class MainStepsFragment extends BaseFragment {
     }
 
     private void initData(Date date) {
-        User user = getModel().getNevoUser();
-        steps = getModel().getDailySteps(user.getNevoUserID(), date);
-        Log.i("jason",steps.toString());
+        final User user = getModel().getNevoUser();
+        Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
         showUserActivityTime.setText(TimeUtil.formatTime(steps.getWalkDuration() + steps.getRunDuration()));
         showUserSteps.setText(String.valueOf(steps.getSteps()));
-        String result = null;
         String calories = user.getConsumedCalories(steps) + getString(R.string.unit_cal);
+
+        String result = null;
         DecimalFormat df = new DecimalFormat("######0.00");
         if (Preferences.getUnitSelect(MainStepsFragment.this.getActivity())) {
             result = df.format(user.getDistanceTraveled(steps) * 0.6213712f) + getString(R.string.unit_length);
@@ -92,8 +89,6 @@ public class MainStepsFragment extends BaseFragment {
         showUserStepsDistance.setText(String.valueOf(result));
         showUserConsumeCalories.setText(calories);
 
-        Log.i("jason",steps.getSteps()+"");
-        Log.i("jason",steps.getHourlyCalories());
         if (steps.getSteps() != 0 && steps.getHourlySteps() != null) {
             JSONArray array = null;
             try {
@@ -109,6 +104,7 @@ public class MainStepsFragment extends BaseFragment {
         } else {
             hourlyBarChart.setDataInChart(new int[]{0});
         }
+
     }
 
     @Override
@@ -149,10 +145,6 @@ public class MainStepsFragment extends BaseFragment {
     @Subscribe
     public void onEvent(LittleSyncEvent event) {
         if (event.isSuccess()) {
-            Steps steps = getModel().getDailySteps(getModel().getNevoUser().getNevoUserID(), Common.removeTimeFromDate(userSelectDate));
-            if (steps == null) {
-                return;
-            }
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
@@ -161,4 +153,5 @@ public class MainStepsFragment extends BaseFragment {
             });
         }
     }
+
 }

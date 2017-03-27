@@ -94,6 +94,7 @@ public class MainClockFragment extends BaseFragment {
     private Address mPositionLocal;
     private SunriseSunsetCalculator calculator;
     private Realm realm = Realm.getDefaultInstance();
+    private String totalSleepTime;
 
     private City mDefaultTimeZoneCity;
 
@@ -132,8 +133,8 @@ public class MainClockFragment extends BaseFragment {
     }
 
     private void initData(Date date) {
-        lunarSleepTotal.setText(countSleepTime(date));
         Steps dailySteps = getModel().getDailySteps(user.getNevoUserID(), date);
+        lunarSleepTotal.setText(countSleepTime(date));
         mDefaultTimeZoneCity = getDefaultTimeZoneCity();
         stepsCount.setText(dailySteps.getSteps() + "");
         setHomeCityData();
@@ -216,11 +217,11 @@ public class MainClockFragment extends BaseFragment {
         return new SunriseSunsetCalculator(sunriseLocation, zone);
     }
 
-    private String countSleepTime(Date date) {
+    private String countSleepTime(final Date date) {
+
         Sleep[] sleepArray = getModel().getDailySleep(user.getNevoUserID(), date);
         SleepDataHandler handler = new SleepDataHandler(Arrays.asList(sleepArray));
         List<SleepData> sleepDataList = handler.getSleepData(date);
-        String totalSleepTime;
         if (!sleepDataList.isEmpty()) {
             SleepData sleepData;
             if (sleepDataList.size() == 2) {
@@ -230,10 +231,12 @@ public class MainClockFragment extends BaseFragment {
                 sleepData = sleepDataList.get(0);
                 totalSleepTime = TimeUtil.formatTime(sleepData.getTotalSleep());
             }
-            return totalSleepTime;
+        } else {
+            totalSleepTime = new String("00:00");
         }
-        return new String("00:00");
+        return totalSleepTime;
     }
+
 
     @Subscribe
     public void onEvent(LocationChangedEvent locationChangedEvent) {
@@ -307,7 +310,7 @@ public class MainClockFragment extends BaseFragment {
     }
 
     @Subscribe
-    public void onEvent(ChangeGoalEvent cahngeGoal){
+    public void onEvent(ChangeGoalEvent cahngeGoal) {
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {

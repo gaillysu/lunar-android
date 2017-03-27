@@ -17,6 +17,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.google.gson.Gson;
 import com.medcorp.lunar.R;
+import com.medcorp.lunar.activity.EditAlarmActivity;
 import com.medcorp.lunar.ble.controller.OtaControllerImpl;
 import com.medcorp.lunar.ble.controller.SyncController;
 import com.medcorp.lunar.ble.controller.SyncControllerImpl;
@@ -55,6 +56,7 @@ import com.medcorp.lunar.event.validic.ValidicException;
 import com.medcorp.lunar.event.validic.ValidicReadMoreRoutineRecordsModelEvent;
 import com.medcorp.lunar.event.validic.ValidicReadMoreSleepRecordsModelEvent;
 import com.medcorp.lunar.event.validic.ValidicUpdateRoutineRecordsModelEvent;
+import com.medcorp.lunar.fragment.AnalysisStepsFragment;
 import com.medcorp.lunar.googlefit.GoogleFitManager;
 import com.medcorp.lunar.googlefit.GoogleFitStepsDataHandler;
 import com.medcorp.lunar.googlefit.GoogleFitTaskCounter;
@@ -152,8 +154,6 @@ public class ApplicationModel extends Application {
     private LocationController locationController;
     private IWXAPI mIWXAPI;
     private Steps steps = null;
-    private Alarm obtainAlarm;
-    private List<Alarm> allAlarm;
     private List<Steps> allSteps;
     private boolean responseCode;
     private final String REALM_NAME = "med_lunar.realm";
@@ -193,18 +193,7 @@ public class ApplicationModel extends Application {
         mIWXAPI = WXAPIFactory.createWXAPI(this, getString(R.string.we_chat_app_id), true);
         worldClockDatabaseHelper.setupWorldClock();
         User user = userDatabaseHelper.getLoginUser();
-        if (Preferences.getisInitAlarm(this) && getAllAlarm() == null) {
-            Preferences.startInitAlarm(this, false);
-            Alarm defAlarm;
-            for (int i = 0; i < 2; i++) {
-                if (i == 0) {
-                    defAlarm = new Alarm(0, 21, 0, (byte) (0), getString(R.string.def_alarm_one), (byte) 0, (byte) 7);
-                } else {
-                    defAlarm = new Alarm(7, 8, 0, (byte) (0), getString(R.string.def_alarm_two), (byte) 1, (byte) 0);
-                }
-                addAlarm(defAlarm);
-            }
-        }
+
         if (user == null) {
             nevoUser = new User(0);
             nevoUser.setNevoUserID("0");
@@ -226,7 +215,7 @@ public class ApplicationModel extends Application {
     @Subscribe
     public void onEvent(LittleSyncEvent event) {
         if (event.isSuccess()) {
-            final Steps steps = getDailySteps(nevoUser.getNevoUserID(), Common.removeTimeFromDate(new Date()));
+            Steps steps = getDailySteps(nevoUser.getNevoUserID(), Common.removeTimeFromDate(new Date()));
             getCloudSyncManager().launchSyncDaily(nevoUser, steps);
         }
     }
@@ -322,14 +311,15 @@ public class ApplicationModel extends Application {
         return allSteps;
     }
 
-    public List<Alarm> getAllAlarm() {
+    public void getAllAlarm(final SyncControllerImpl.SyncAlarmToWatchListener listener) {
         alarmDatabaseHelper.getAll().subscribe(new Consumer<List<Alarm>>() {
             @Override
             public void accept(List<Alarm> alarms) throws Exception {
-                allAlarm = alarms;
+                if (listener != null) {
+                    listener.syncAlarmToWatch(alarms);
+                }
             }
         });
-        return allAlarm;
     }
 
     public void saveNevoUser(User user) {
@@ -498,36 +488,36 @@ public class ApplicationModel extends Application {
         return lastMonth;
     }
 
-    public List<Steps> getThisWeekSteps(String userId, Date date) {
-        List<Steps> thisWeek = new ArrayList<>();
+    public void getSteps(String userId, Date date, String type,
+                         final AnalysisStepsFragment.OnStepsGetListener listener) {
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getWeekStartDate().getTime(); start <=
-                calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
-            thisWeek.add(getDailySteps(userId, new Date(start)));
+        List<Date> dateStarts = new ArrayList<>();
+        long startTime = 0;
+        long entTime = 0;
+        if (getApplicationContext().getString(R.string.current_week).equals(type)) {
+            startTime = calendar.getWeekStartDate().getTime();
+            entTime = calendar.getWeekEndDate().getTime();
+        } else if (getApplicationContext().getString(R.string.last_week).equals(type)) {
+            startTime = calendar.getLastWeekStart().getTime();
+            entTime = calendar.getLastWeekEnd().getTime();
+        } else if (getApplicationContext().getString(R.string.last_month).equals(type)) {
+            startTime = calendar.getMonthStartDate().getTime();
+            entTime = calendar.getMonthEndDate().getTime();
         }
-        return thisWeek;
-    }
 
-    public List<Steps> getLastWeekSteps(String userId, Date date) {
-        List<Steps> lastWeekSteps = new ArrayList<>();
-        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getLastWeekStart().getTime(); start <=
-                calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
-            lastWeekSteps.add(getDailySteps(userId, new Date(start)));
+        for (long start = startTime; start <= entTime; start += 24 * 60 * 60 * 1000L) {
+            Date dateStart = CalendarWeekUtils.getDayStartTime(new Date(start));
+            dateStarts.add(dateStart);
         }
-        return lastWeekSteps;
+        stepsDatabaseHelper.getDailySteps(userId, dateStarts).subscribe(new Consumer<List<Steps>>() {
+            @Override
+            public void accept(List<Steps> step) throws Exception {
+                if (null != listener) {
+                    listener.onStepsGet(step);
+                }
+            }
+        });
     }
-
-    public List<Steps> getLastMonthSteps(String userId, Date date) {
-        List<Steps> lastMonthSteps = new ArrayList<>();
-        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getMonthStartDate().getTime(); start <=
-                date.getTime(); start += 24 * 60 * 60 * 1000L) {
-            lastMonthSteps.add(getDailySteps(userId, new Date(start)));
-        }
-        return lastMonthSteps;
-    }
-
 
     public Steps getDailySteps(String userId, Date date) {
         Date dateStart = CalendarWeekUtils.getDayStartTime(date);
@@ -538,18 +528,18 @@ public class ApplicationModel extends Application {
             }
         });
         if (this.steps != null) {
-            return this.steps;
+            return steps;
         } else {
-            this.steps = new Steps(date.getTime());
-            this.steps.setDate(date.getTime());
-            this.steps.setCreatedDate(date.getTime());
+            steps = new Steps(date.getTime());
+            steps.setDate(date.getTime());
+            steps.setCreatedDate(date.getTime());
+            return steps;
         }
-        return this.steps;
     }
 
     public Sleep[] getDailySleep(String userId, Date todayDate) {
+        Sleep[] sleeps = new Sleep[2];
         Date yesterdayDate = new Date(todayDate.getTime() - 24 * 60 * 60 * 1000l);
-
         sleepDatabaseHelper.get(userId, todayDate).subscribe(new Consumer<Sleep>() {
             @Override
             public void accept(Sleep sleep) throws Exception {
@@ -779,8 +769,8 @@ public class ApplicationModel extends Application {
         return mSleeps;
     }
 
-    public void addAlarm(Alarm alarm) {
-        alarmDatabaseHelper.add(alarm);
+    public Observable<Boolean> addAlarm(Alarm alarm) {
+        return alarmDatabaseHelper.add(alarm);
     }
 
     public boolean updateAlarm(Alarm alarm) {
@@ -794,18 +784,19 @@ public class ApplicationModel extends Application {
         return responseCode;
     }
 
-    public Alarm getAlarmById(int id) {
+    public void getAlarmById(int id, final EditAlarmActivity.ObtainAlarmListener listener) {
         alarmDatabaseHelper.get(id).subscribe(new Consumer<Alarm>() {
             @Override
             public void accept(Alarm alarm) throws Exception {
-                obtainAlarm = alarm;
+                if (listener != null) {
+                    listener.obtainAlarm(alarm);
+                }
             }
         });
-        return obtainAlarm;
     }
 
-    public void deleteAlarm(Alarm alarm) {
-        alarmDatabaseHelper.remove(alarm.getId());
+    public Observable<Boolean> deleteAlarm(Alarm alarm) {
+        return alarmDatabaseHelper.remove(alarm.getId());
     }
 
     public List<Goal> getAllGoal() {

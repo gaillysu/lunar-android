@@ -1,7 +1,6 @@
 package com.medcorp.lunar.model;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 public class Steps extends RealmObject implements Comparable<Steps> {
 

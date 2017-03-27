@@ -2,6 +2,7 @@ package com.medcorp.lunar.database.entry;
 
 import com.medcorp.lunar.model.Steps;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,14 +34,35 @@ public class StepsDatabaseHelper {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        Steps steps = realm.copyToRealm(object);
-                        if (steps != null) {
-                            e.onNext(true);
-                            e.onComplete();
-                        } else {
-                            e.onNext(false);
-                            e.onComplete();
-                        }
+                        Steps steps = realm.createObject(Steps.class);
+                        steps.setId(object.getId());
+                        steps.setSteps(object.getSteps());
+                        steps.setRemarks(object.getRemarks());
+                        steps.setActiveTimeGoal(object.getActiveTimeGoal());
+                        steps.setCalories(object.getCalories());
+                        steps.setCloudRecordID(object.getCloudRecordID());
+                        steps.setActiveTimeGoal(object.getActiveTimeGoal());
+                        steps.setCreatedDate(object.getCreatedDate());
+                        steps.setCaloriesGoal(object.getCaloriesGoal());
+                        steps.setDistance(object.getDistance());
+                        steps.setDistanceGoal(object.getDistanceGoal());
+                        steps.setGoal(object.getGoal());
+                        steps.setGoalReached(object.getGoalReached());
+                        steps.setHourlyCalories(object.getHourlyCalories());
+                        steps.setHourlySteps(object.getHourlySteps());
+                        steps.setInZoneTime(object.getInZoneTime());
+                        steps.setNevoUserID(object.getNevoUserID());
+                        steps.setNoActivityTime(object.getNoActivityTime());
+                        steps.setHourlyDistance(object.getHourlyDistance());
+                        steps.setDate(object.getDate());
+                        steps.setRunDistance(object.getRunDistance());
+                        steps.setOutZoneTime(object.getOutZoneTime());
+                        steps.setWalkDistance(object.getWalkDistance());
+                        steps.setRunSteps(object.getRunSteps());
+                        steps.setWalkSteps(object.getWalkSteps());
+                        steps.setWalkDuration(object.getWalkDuration());
+                        e.onNext(true);
+                        e.onComplete();
                     }
                 });
             }
@@ -128,6 +150,32 @@ public class StepsDatabaseHelper {
 
     }
 
+    public Observable<List<Steps>> getDailySteps(final String userId, final List<Date> dates) {
+        return Observable.create(new ObservableOnSubscribe<List<Steps>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Steps>> e) throws Exception {
+                List<Steps> stepLists = new ArrayList<>();
+                for (Date date : dates) {
+                    Steps steps = mRealm.where(Steps.class).equalTo("nevoUserID", userId)
+                            .equalTo("date", date.getTime()).findFirst();
+                    if (null != steps) {
+                        stepLists.add(mRealm.copyFromRealm(steps));
+                    } else {
+                        Steps temp = new Steps();
+                        temp.setCreatedDate(date.getTime());
+                        temp.setDate(date.getTime());
+                        stepLists.add(temp);
+                    }
+                }
+                if (stepLists.size() > 0) {
+                    e.onNext(stepLists);
+                    e.onComplete();
+                }
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread());
+
+    }
+
 
     public Observable<List<Steps>> getAll(final String userId) {
         return Observable.create(new ObservableOnSubscribe<List<Steps>>() {
@@ -152,17 +200,18 @@ public class StepsDatabaseHelper {
                 RealmResults<Steps> steps = Realm.getDefaultInstance().where(Steps.class)
                         .equalTo("id", activity_id).findAll();
 
-                if(steps!=null){
+                if (steps != null) {
                     e.onNext(true);
                     e.onComplete();
+                } else {
+                    e.onNext(false);
+                    e.onComplete();
                 }
-                e.onNext(false);
-                e.onComplete();
             }
         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
-                isNull =  aBoolean;
+                isNull = aBoolean;
             }
         });
         return isNull;
