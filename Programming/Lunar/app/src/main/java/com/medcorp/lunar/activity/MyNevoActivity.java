@@ -107,7 +107,7 @@ public class MyNevoActivity extends BaseActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(MyNevoActivity.this, DfuActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putStringArrayList(MyNevoActivity.this.getString(R.string.key_firmwares), (ArrayList<String>) Common.getAllBuildinZipFirmwareURLs(MyNevoActivity.this, getModel().getSyncController().getWatchInfomation().getWatchID()));
+                    bundle.putStringArrayList(MyNevoActivity.this.getString(R.string.key_firmwares), (ArrayList<String>) Common.getAllBuildInZipFirmwareURLs(MyNevoActivity.this, getModel().getSyncController().getWatchInfomation().getWatchID()));
                     intent.putExtras(bundle);
                     MyNevoActivity.this.startActivity(intent);
                     MyNevoActivity.this.finish();

@@ -28,7 +28,6 @@ public class SleepDataHandler {
         if (sortByDate){
             Collections.sort(this.sleepList, new SleepSorter());
         }
-
     }
 
     private SleepData getSleepData(Sleep todaySleep) {
@@ -93,15 +92,31 @@ public class SleepDataHandler {
         sleepData.setHourlyWake(wakeTimeList.toString());
         sleepData.setHourlyLight(lightTimeList.toString());
         sleepData.setHourlyDeep(deepTimeList.toString());
-        Log.w("KARL","SLEEPDATA 1");
         return sleepData;
     }
 
     private boolean sleptToday(Sleep sleep) {
         try {
-            JSONArray hourlySleep = new JSONArray(sleep.getHourlySleep());
-            for (int i = 0; i < 18 && hourlySleep.length() > 18; i++) {
-                if (Integer.parseInt(hourlySleep.getString(i)) > 0) {
+            JSONArray todayHourlySleep = new JSONArray(sleep.getHourlySleep());
+            for (int i = 0; i < 18 && todayHourlySleep .length() > 18; i++) {
+                if (Integer.parseInt(todayHourlySleep .getString(i)) > 0) {
+                    return true;
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean sleptYesterday(Sleep sleep) {
+        if(sleep == null){
+            return false;
+        }
+        try {
+            JSONArray todayHourlySleep = new JSONArray(sleep.getHourlySleep());
+            for (int i = 18; i < todayHourlySleep .length(); i++) {
+                if (Integer.parseInt(todayHourlySleep .getString(i)) > 0) {
                     return true;
                 }
             }
@@ -192,7 +207,6 @@ public class SleepDataHandler {
         }
         int totalSleep = lightSleep + deepSleep + wake;
         if(totalSleep > 0) {
-            Log.w("KARL","SLEEPDATA 2");
             SleepData sleepData = new SleepData(deepSleep, lightSleep, wake, yesterdaySleep.getDate(),sleepStart,sleepEnd);
             sleepData.setHourlyWake(wakeTimeList.toString());
             sleepData.setHourlyLight(lightTimeList.toString());
@@ -253,12 +267,15 @@ public class SleepDataHandler {
         List<SleepData> sleepDataList = new ArrayList<>();
         for (int i = 0; i < sleepList.size(); i++) {
             Sleep todaySleep = sleepList.get(i);
+            Sleep yesterdaySleep = null;
+            if (i > 0){
+                yesterdaySleep = sleepList.get(i - 1);
+            }
             if (sleptToday(todaySleep)) {
                 if (!sleptAfterTwelve(todaySleep)) {
                     SleepData sleepData = getSleepData(todaySleep);
                     sleepDataList.add(sleepData);
                     if(i > 0){
-                        Sleep yesterdaySleep = sleepList.get(i -1);
                         if (isYesterday(todaySleep, yesterdaySleep)){
                             SleepData strangeData = getSleepDataAfterSix(yesterdaySleep);
                             if (strangeData.getTotalSleep() > 0) {
@@ -275,16 +292,19 @@ public class SleepDataHandler {
                     }
                 } else {
                     if (i > 0) {
-                        Sleep yesterdaySleep = sleepList.get(i - 1);
                         if (isYesterday(todaySleep, yesterdaySleep)) {
                             sleepDataList.add(merge(getSleepData(todaySleep), getSleepDataAfterSix(yesterdaySleep)));
                         }else{
                             sleepDataList.add(getSleepData(todaySleep));
                         }
+                    }else{
+                        sleepDataList.add(getSleepData(todaySleep));
                     }
                 }
             }  else if (i == sleepList.size() - 1) {
-                sleepDataList.add(getSleepDataAfterSix(todaySleep));
+                sleepDataList.add(getSleepDataAfterSix(yesterdaySleep));
+            } else if (sleptYesterday(yesterdaySleep)){
+                sleepDataList.add(getSleepDataAfterSix(yesterdaySleep));
             }
         }
 
@@ -306,18 +326,14 @@ public class SleepDataHandler {
             //only one day,yesterday or today
             if (sleepList.size() == 1) {
                 //this is only today's sleep, calculate  it from 00:00 to 17:59
-                if(Common.removeTimeFromDate(today).getTime() == currentDaySleep.getDate())
-                {
+                if(Common.removeTimeFromDate(today).getTime() == currentDaySleep.getDate()) {
                     sleepDataList.add(getSleepData(currentDaySleep));
-                }
+                } else {
                 //this is only yesterday sleep, calculate it from 18:00 to 23:59
-                else
-                {
                     sleepDataList.add(getSleepDataAfterSix(currentDaySleep));
                 }
-            }
+            } else {
             //two days,return SLEEP1 and SLEEP2
-            else {
                 if(Common.removeTimeFromDate(today).getTime() == currentDaySleep.getDate()) {
                     sleepDataList.add(0,getSleepData(currentDaySleep));
                 } else {
@@ -327,5 +343,4 @@ public class SleepDataHandler {
         }
         return sleepDataList;
     }
-
 }
