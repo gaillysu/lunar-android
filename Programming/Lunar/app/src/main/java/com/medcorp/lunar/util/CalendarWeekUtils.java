@@ -25,11 +25,10 @@ public class CalendarWeekUtils {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
-        Date start = calendar.getTime();
-       return start;
+        return calendar.getTime();
     }
 
-    public static Date getDayEndTime(Date date){
+    private static Date getDayEndTime(Date date){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.DAY_OF_MONTH, 1);
