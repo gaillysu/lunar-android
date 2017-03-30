@@ -42,8 +42,6 @@ import java.util.TimeZone;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * Created by Jason on 2016/10/26.
@@ -64,8 +62,7 @@ public class EditWorldClockActivity extends BaseActivity {
     @Bind(R.id.edit_home_city_tv)
     TextView positionCityName;
 
-    private Realm realm = Realm.getDefaultInstance();
-    private RealmResults<City> cities;
+    private List<City> cities;
     private List<ChooseCityViewModel> chooseCityViewModelsList;
     private PinyinComparator pinyinComparator;
     private ChooseCityAdapter allCityAdapter;
@@ -96,7 +93,7 @@ public class EditWorldClockActivity extends BaseActivity {
         resultList = new ArrayList<>();
         autoAdapter = new SearchWorldAdapter(resultList, this);
         searchResultListView.setAdapter(autoAdapter);
-        cities = realm.where(City.class).findAllSorted("name");
+        cities = getModel().getWorldClockDatabaseHelper().getAll();
         mPositionLocal = Preferences.getLocation(this);
         if (mPositionLocal != null) {
             cityName = mPositionLocal.getLocality();
@@ -104,7 +101,7 @@ public class EditWorldClockActivity extends BaseActivity {
         } else {
             TimeZone timeZone = Calendar.getInstance().getTimeZone();
             String localCityName = timeZone.getID().split("/")[1].replace("_", " ");
-            City city = realm.where(City.class).equalTo("name", localCityName).findFirst();
+            City city = getModel().getWorldClockDatabaseHelper().get(localCityName);
             cityName = city.getName();
             countryName = city.getCountry();
         }
@@ -244,7 +241,7 @@ public class EditWorldClockActivity extends BaseActivity {
     //save select city
     public void selectCity(int cityId) {
         //保存home time
-        City selectCity = realm.where(City.class).equalTo("id", cityId).findFirst();
+        City selectCity = getModel().getWorldClockDatabaseHelper().get(cityId);
         String temp = selectCity.getTimezoneRef().getGmt();
         temp = temp.substring(temp.indexOf("(") + 1, temp.indexOf(")"));
         Preferences.savePositionCity(EditWorldClockActivity.this, selectCity.getName());

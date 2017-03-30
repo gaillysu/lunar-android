@@ -1,56 +1,44 @@
 package com.medcorp.lunar.database.dao;
 
-import com.j256.ormlite.field.DatabaseField;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 
 /**
  * Created by Jason on 2016/12/12.
- *
  */
+public class LedLampDAO extends RealmObject {
 
-public class LedLampDAO {
-
-    public static final String IDString = "ID";
-    @DatabaseField(generatedId = true)
-    private int ID;
-
-    public static final String nameString = "name";
-    @DatabaseField
-    private String Name;
-
-    public static final String colorString = "color";
-    @DatabaseField
-    private int Color;
+    @PrimaryKey
+    private int id = (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
+    private String name;
+    private int color;
 
 
     public LedLampDAO() {
     }
 
-    public LedLampDAO(String name, int color) {
-        this.Name = name;
-        this.Color = color;
+    public int getId() {
+        return id;
     }
 
-    public int getColor() {
-        return Color;
-    }
-
-    public void setColor(int color) {
-        Color = color;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
-    public int getID() {
-        return ID;
+    public int getColor() {
+        return color;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setColor(int color) {
+        this.color = color;
     }
 }

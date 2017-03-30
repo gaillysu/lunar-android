@@ -14,7 +14,7 @@
         android:id="@+id/activity_goals_list_view_item_goal_steps_wrapper"
         >
 
-        <com.medcorp.view.customfontview.RobotoTextView
+        <com.medcorp.lunar.view.customfontview.RobotoTextView
             android:id="@+id/activity_goals_list_view_item_goal_steps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
             android:focusable="false" />
     </RelativeLayout>
 
-    <com.medcorp.view.customfontview.RobotoTextView
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_goals_list_view_item_goals_label"
         android:layout_below="@+id/activity_goals_list_view_item_goal_steps_wrapper"
         android:paddingTop="15dp"

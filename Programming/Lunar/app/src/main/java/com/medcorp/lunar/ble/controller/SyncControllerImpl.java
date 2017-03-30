@@ -68,6 +68,7 @@ import com.medcorp.lunar.event.bluetooth.LittleSyncEvent;
 import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.event.bluetooth.RequestResponseEvent;
 import com.medcorp.lunar.event.bluetooth.SolarConvertEvent;
+import com.medcorp.lunar.fragment.MainClockFragment;
 import com.medcorp.lunar.model.Alarm;
 import com.medcorp.lunar.model.Battery;
 import com.medcorp.lunar.model.DailyHistory;
@@ -116,6 +117,8 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.realm.Realm;
+
 public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<Void> {
     private final static String TAG = "SyncControllerImpl";
 
@@ -143,7 +146,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps
     //make sure  the whole received packets
-
+    private Realm realm;
     //start a timer to do little sync, refresh dashboard @LittleSyncEvent
     private long LITTLE_SYNC_INTERVAL = 10000L; //10s
     private Timer autoSyncTimer = null;
@@ -152,6 +155,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         if (autoSyncTimer != null)
             autoSyncTimer.cancel();
         autoSyncTimer = new Timer();
+        realm = Realm.getDefaultInstance();
         autoSyncTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -159,7 +163,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 getStepsAndGoal();
                 //for new Lunar UI, query adc every 10s to show solar charging status
                 sendRequest(new TestModeRequest(mContext, TestModeRequest.MODE_F4));
-                
+
                 //send a 10s event to refresh clock
                 EventBus.getDefault().post(new Timer10sEvent());
             }
@@ -254,29 +258,33 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     for (int i = 0; i < 14; i++) {
                         setAlarm(new Alarm(0, 0, (byte) 0, "", (byte) (i < 7 ? 0 : 1), (byte) i));
                     }
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(new Date());
-                    List<Alarm> alarmList = ((ApplicationModel) mContext).getAllAlarm();
-                    for (Alarm alarm : alarmList) {
-                        if ((alarm.getWeekDay() & 0x80) == 0x80) {
-                            //NOTICE: here we only disable it in the watch, but keep its status(on or off) in the app.
-                            if (alarm.getAlarmNumber() >= 7) {
-                                //discard today 's sleep alarm when it comes in active mode (BT connected)
-                                if ((alarm.getWeekDay() & 0x0F) == calendar.get(Calendar.DAY_OF_WEEK)
-                                        && (alarm.getHour() < calendar.get(Calendar.HOUR_OF_DAY) || (alarm.getHour() == calendar.get(Calendar.HOUR_OF_DAY) && alarm.getMinute() < calendar.get(Calendar.MINUTE)))) {
-                                    continue;
-                                }
-                                //discard yesterday 's sleep alarm when it comes in active mode (BT connected)
-                                else if ((((alarm.getWeekDay() & 0x0F) + 1) == calendar.get(Calendar.DAY_OF_WEEK))
-                                        || ((alarm.getWeekDay() & 0x0F) == 7 && calendar.get(Calendar.DAY_OF_WEEK) == 1)) {
-                                    continue;
+                    ((ApplicationModel) mContext).getAllAlarm(new SyncAlarmToWatchListener() {
+                        @Override
+                        public void syncAlarmToWatch(List<Alarm> alarms) {
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(new Date());
+                            for (Alarm alarm : alarms) {
+                                if ((alarm.getWeekDay() & 0x80) == 0x80) {
+                                    //NOTICE: here we only disable it in the watch, but keep its status(on or off) in the app.
+                                    if (alarm.getAlarmNumber() >= 7) {
+                                        //discard today 's sleep alarm when it comes in active mode (BT connected)
+                                        if ((alarm.getWeekDay() & 0x0F) == calendar.get(Calendar.DAY_OF_WEEK)
+                                                && (alarm.getHour() < calendar.get(Calendar.HOUR_OF_DAY) || (alarm.getHour() == calendar.get(Calendar.HOUR_OF_DAY) && alarm.getMinute() < calendar.get(Calendar.MINUTE)))) {
+                                            continue;
+                                        }
+                                        //discard yesterday 's sleep alarm when it comes in active mode (BT connected)
+                                        else if ((((alarm.getWeekDay() & 0x0F) + 1) == calendar.get(Calendar.DAY_OF_WEEK))
+                                                || ((alarm.getWeekDay() & 0x0F) == 7 && calendar.get(Calendar.DAY_OF_WEEK) == 1)) {
+                                            continue;
+                                        }
+                                    }
+                                    setAlarm(alarm);
                                 }
                             }
-                            setAlarm(alarm);
+                            //step6: start sync data, nevo-->phone
+                            syncActivityData();
                         }
-                    }
-                    //step6: start sync data, nevo-->phone
-                    syncActivityData();
+                    });
                 } else if ((byte) ReadWatchInfoRequest.HEADER == lunarData.getRawData()[1]) {
                     //get watch ID and model type
                     WatchInfoPacket watchInfoPacket = new WatchInfoPacket(packet.getPackets());
@@ -401,7 +409,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //here save solar time to local database when watch ID>1
                     if (getWatchInfomation().getWatchID() > 1) {
                         Solar solar = new Solar(new Date(history.getCreated()));
-                        solar.setDate(Common.removeTimeFromDate(solar.getCreatedDate()));
+                        solar.setDate((Common.removeTimeFromDate(solar.getCreatedDate())).getTime());
                         solar.setUserId(Integer.parseInt(((ApplicationModel) mContext).getNevoUser().getNevoUserID()));
                         solar.setTotalHarvestingTime(thispacket.getSolarHarvestingTime());
                         solar.setHourlyHarvestingTime(thispacket.getHourlyHarvestTime().toString());
@@ -432,9 +440,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     }
                 } else if ((byte) GetStepsGoalRequest.HEADER == lunarData.getRawData()[1]) {
                     //save current day's step count to "Steps" table
-                    DailyStepsPacket stepPacket = new DailyStepsPacket(packet.getPackets());
-                    Log.i(TAG,"little sync,Date:"+stepPacket.getDailyDate().toString() + ",steps:" + stepPacket.getDailySteps() + ",goal:"+stepPacket.getDailyStepsGoal());
-                    Steps steps = ((ApplicationModel) mContext).getDailySteps(((ApplicationModel) mContext).getNevoUser().getNevoUserID(), Common.removeTimeFromDate(new Date()));
+                    final DailyStepsPacket stepPacket = new DailyStepsPacket(packet.getPackets());
+                    Log.i(TAG, "little sync,Date:" + stepPacket.getDailyDate().toString() + ",steps:" + stepPacket.getDailySteps() + ",goal:" + stepPacket.getDailyStepsGoal());
+                    Steps steps = ((ApplicationModel) mContext).getDailySteps(((ApplicationModel) mContext)
+                            .getNevoUser().getNevoUserID(), Common.removeTimeFromDate(new Date()));
                     steps.setCreatedDate(new Date().getTime());
                     steps.setDate(Common.removeTimeFromDate(new Date()).getTime());
                     steps.setSteps(stepPacket.getDailySteps());
@@ -461,9 +470,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         || (byte) SetNotificationRequest.HEADER == packet.getHeader()
                         || (byte) SetGoalRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new RequestResponseEvent(true));
-                }
-                else if(packet.getHeader() == (byte) SetSunriseAndSunsetTimeRequest.HEADER)
-                {
+                } else if (packet.getHeader() == (byte) SetSunriseAndSunsetTimeRequest.HEADER) {
                     setSunriseAndSunsetSuccess = true;
                     // Notify waiting thread
                     synchronized (lockObject) {
@@ -491,19 +498,19 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //step0:firstly read watch infomation, for Lunar and nevo Solar, we use watch ID to show solar power screen
                     sendRequest(new ReadWatchInfoRequest(mContext));
                     //it is dangerous when every BLE connection invoke setRtc(), perhaps it will reset some data, so we should invoke setRTC() once time(only get paired with the watch)
-//                    if (mLocalService.getPairedWatch() != null && mLocalService.getPairedWatch().equals(connectionController.getSaveAddress())) {
-//                        mLocalService.setPairedWatch(null);
-//                        Log.w(TAG, "SET RTC");
-//                        //step 1: setRTC every connection
-//                        setRtc();
-//                    } else {
-//                        //directly do steps 2 without setRTC
-//                        //setp2:start set user profile
-//                        sendRequest(new SetProfileRequest(mContext, ((ApplicationModel) mContext).getNevoUser()));
-//                    }
+                    //                    if (mLocalService.getPairedWatch() != null && mLocalService.getPairedWatch().equals(connectionController.getSaveAddress())) {
+                    //                        mLocalService.setPairedWatch(null);
+                    //                        Log.w(TAG, "SET RTC");
+                    //                        //step 1: setRTC every connection
+                    //                        setRtc();
+                    //                    } else {
+                    //                        //directly do steps 2 without setRTC
+                    //                        //setp2:start set user profile
+                    //                        sendRequest(new SetProfileRequest(mContext, ((ApplicationModel) mContext).getNevoUser()));
+                    //                    }
                     setRtc();
                     setWorldClockOffset();
-                    if(isPendingsunriseAndsunset){
+                    if (isPendingsunriseAndsunset) {
                         //when get local location, will calculate sunrise and sunset time and send it to watch
                         EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.START));
                     }
@@ -531,7 +538,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         byte sunriseMin = (byte) Integer.parseInt(officialSunrise.split(":")[1]);
         byte sunsetHour = (byte) Integer.parseInt(officialSunset.split(":")[0]);
         byte sunsetMin = (byte) Integer.parseInt(officialSunset.split(":")[1]);
-        if(isConnected()) {
+        if (isConnected()) {
             setSunriseAndSunsetSuccess = false;
             sendRequest(new SetSunriseAndSunsetTimeRequest(mContext, sunriseHour, sunriseMin, sunsetHour, sunsetMin));
             //wait for maximum 2s, if time out-->send failed event
@@ -542,19 +549,18 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     e.printStackTrace();
                 }
             }
-            if(!setSunriseAndSunsetSuccess){
+            if (!setSunriseAndSunsetSuccess) {
                 isPendingsunriseAndsunset = true;
                 EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.FAILED));
-            }
-            else{
+            } else {
                 isPendingsunriseAndsunset = false;
             }
-        }
-        else {
+        } else {
             //pending it and send it when got connected next time.
             isPendingsunriseAndsunset = true;
         }
     }
+
     @Subscribe
     public void onEvent(BLEPairStateChangedEvent stateChangedEvent) {
         if (stateChangedEvent.getPairState() == BluetoothDevice.BOND_BONDED) {
@@ -568,10 +574,12 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     public void onEvent(HomeTimeEvent homeTimeEvent) {
         setWorldClockOffset();
     }
+
     @Subscribe
     public void onEvent(DigitalTimeChangedEvent digitalTimeChangedEvent) {
         setWorldClockOffset();
     }
+
     /**
      * This function will synchronise activity data with the watch.
      * It is a long process and hence shouldn't be done too often, so we save the date of previous sync.
@@ -608,23 +616,23 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     private void setWorldClockOffset() {
         float timeZoneOffset = 0f;
         //when user select home city Time
-        if(Preferences.getPlaceSelect(mContext)){
+        if (Preferences.getPlaceSelect(mContext)) {
             TimeZone timezone = TimeZone.getTimeZone(Preferences.getHomeTimezoneId(mContext));
             float timeHomeZoneOffset = timezone.getRawOffset() / 3600f / 1000f;
 
             TimeZone localTimezone = TimeZone.getDefault();
             float timeLocalZoneOffset = localTimezone.getRawOffset() / 3600f / 1000f;
 
-            if(timeLocalZoneOffset>timeHomeZoneOffset) {
+            if (timeLocalZoneOffset > timeHomeZoneOffset) {
                 timeZoneOffset = 24f - (timeLocalZoneOffset - timeHomeZoneOffset);
-            }
-            else {
+            } else {
                 timeZoneOffset = timeHomeZoneOffset - timeLocalZoneOffset;
             }
         }
         Log.i(TAG, "@HomeTimeEvent,set world time offset,offset:" + timeZoneOffset);
         sendRequest(new SetWorldTimeOffsetRequest(mContext, timeZoneOffset));
     }
+
     private void setRtc() {
         sendRequest(new SetRtcRequest(mContext));
     }
@@ -968,8 +976,13 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         }
 
     }
+
     @Override
-    public int getBluetoothStatus(){
+    public int getBluetoothStatus() {
         return connectionController.getBluetoothStatus();
+    }
+
+    public interface SyncAlarmToWatchListener {
+        void syncAlarmToWatch(List<Alarm> alarms);
     }
 }

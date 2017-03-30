@@ -1,8 +1,10 @@
 package com.medcorp.lunar.model;
 
-public class Steps implements Comparable<Steps>{
+import io.realm.RealmObject;
 
-    private int iD = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
+public class Steps extends RealmObject implements Comparable<Steps> {
+
+    private int id = (int) Math.floor(Math.random() * Integer.MAX_VALUE);
 
     //IMPORTANT,HERE MUST NOT set cloudRecordID any value, pls use default value null,when we sync with cloud, it will be filled by the cloud record ID
     private String cloudRecordID;
@@ -31,11 +33,11 @@ public class Steps implements Comparable<Steps>{
 
     private int calories;
     //IMPORTANT here must set it an array , length is 24, otherwise, it can't be upload to cloud server
-    private String hourlySteps="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlySteps = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlyDistance ="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlyDistance = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlyCalories ="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlyCalories = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
     private int inZoneTime;
 
@@ -44,7 +46,7 @@ public class Steps implements Comparable<Steps>{
     private int noActivityTime;
 
     //keep name, means stepsGoal
-    private int goal ;
+    private int goal;
     private int distanceGoal;
     private int caloriesGoal;
     private int activeTimeGoal;
@@ -52,15 +54,18 @@ public class Steps implements Comparable<Steps>{
 
     private String remarks;
 
+    public Steps() {
+
+    }
 
     public Steps(long createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Steps( long createdDate, long date, int steps, int walkSteps, int runSteps,
-                  int distance, int calories, String hourlySteps, String hourlyDistance,
-                  String hourlyCalories, int inZoneTime, int outZoneTime, int noActivityTime,
-                  int goal, int walkDistance,int runDistance,int walkDuration,int runDuration,String remarks) {
+    public Steps(long createdDate, long date, int steps, int walkSteps, int runSteps,
+                 int distance, int calories, String hourlySteps, String hourlyDistance,
+                 String hourlyCalories, int inZoneTime, int outZoneTime, int noActivityTime,
+                 int goal, int walkDistance, int runDistance, int walkDuration, int runDuration, String remarks) {
 
         this.createdDate = createdDate;
         this.date = date;
@@ -83,9 +88,6 @@ public class Steps implements Comparable<Steps>{
         this.remarks = remarks;
     }
 
-    public void setiD(int iD) {
-        this.iD = iD;
-    }
 
     public void setCreatedDate(long createdDate) {
         this.createdDate = createdDate;
@@ -145,10 +147,6 @@ public class Steps implements Comparable<Steps>{
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public int getiD() {
-        return iD;
     }
 
     public long getCreatedDate() {
@@ -247,6 +245,14 @@ public class Steps implements Comparable<Steps>{
         return cloudRecordID;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setCloudRecordID(String cloudRecordID) {
         this.cloudRecordID = cloudRecordID;
     }
@@ -294,15 +300,43 @@ public class Steps implements Comparable<Steps>{
 
     @Override
     public int compareTo(Steps another) {
-        if (getDate() < another.getDate()){
+        if (getDate() < another.getDate()) {
             return -1;
-        }else if(getDate() > another.getDate()){
+        } else if (getDate() > another.getDate()) {
             return 1;
         }
         return 0;
     }
 
-
-
-
+    @Override
+    public String toString() {
+        return "Steps{" +
+                "id=" + id +
+                ", cloudRecordID='" + cloudRecordID + '\'' +
+                ", nevoUserID='" + nevoUserID + '\'' +
+                ", createdDate=" + createdDate +
+                ", date=" + date +
+                ", steps=" + steps +
+                ", walkSteps=" + walkSteps +
+                ", runSteps=" + runSteps +
+                ", distance=" + distance +
+                ", walkDistance=" + walkDistance +
+                ", runDistance=" + runDistance +
+                ", walkDuration=" + walkDuration +
+                ", runDuration=" + runDuration +
+                ", calories=" + calories +
+                ", hourlySteps='" + hourlySteps + '\'' +
+                ", hourlyDistance='" + hourlyDistance + '\'' +
+                ", hourlyCalories='" + hourlyCalories + '\'' +
+                ", inZoneTime=" + inZoneTime +
+                ", outZoneTime=" + outZoneTime +
+                ", noActivityTime=" + noActivityTime +
+                ", goal=" + goal +
+                ", distanceGoal=" + distanceGoal +
+                ", caloriesGoal=" + caloriesGoal +
+                ", activeTimeGoal=" + activeTimeGoal +
+                ", goalReached=" + goalReached +
+                ", remarks='" + remarks + '\'' +
+                '}';
+    }
 }

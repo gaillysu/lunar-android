@@ -54,6 +54,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
         getMenuInflater().inflate(R.menu.menu_done, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
     @Override
     public void onBackPressed() {
         finish();
@@ -61,23 +62,22 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(position == 0)
-        {
+        if (position == 0) {
             new MaterialDialog.Builder(EditGoalsActivity.this)
                     .title(R.string.goal_edit)
                     .content(R.string.goal_input)
                     .inputType(InputType.TYPE_CLASS_NUMBER)
-                    .input("", ""+ goal.getSteps(), new MaterialDialog.InputCallback() {
+                    .input("", "" + goal.getSteps(), new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
-                            if(input.length()==0)return;
+                            if (input.length() == 0)
+                                return;
                             goal.setSteps(Integer.parseInt(input.toString()));
+                            getModel().updateGoal(goal);
                             presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this, goal));
                         }
                     }).negativeText(R.string.goal_cancel).show();
-        }
-        else if(position == 1)
-        {
+        } else if (position == 1) {
             new MaterialDialog.Builder(EditGoalsActivity.this)
                     .title(R.string.goal_edit)
                     .content(R.string.goal_label_goal)
@@ -85,35 +85,31 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                     .input(getString(R.string.goal_label), goal.getLabel(), new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
-                            if (input.length() == 0) return;
+                            if (input.length() == 0)
+                                return;
                             goal.setLabel(input.toString());
+                            getModel().updateGoal(goal);
                             presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this, goal));
                         }
                     }).negativeText(R.string.goal_cancel)
                     .show();
-        }
-        else if(position == 2)
-        {
-            if(!getModel().deleteAlarm(goal)){
-               ToastHelper.showShortToast(this, R.string.goal_could_not_delete);
-            }else{
-               ToastHelper.showShortToast(this, R.string.goal_deleted);
-            }
+        } else if (position == 2) {
+            ToastHelper.showShortToast(this, R.string.goal_deleted);
             setResult(-1);
             finish();
         }
-
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.done_menu:
-                if(getModel().updateGoal(goal)){
-                   ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_saved);
+                if (getModel().updateGoal(goal)) {
+                    ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_saved);
                     EditGoalsActivity.this.setResult(1);
                     EditGoalsActivity.this.finish();
-                }else{
-                   ToastHelper.showShortToast(EditGoalsActivity.this,R.string.goal_could_not_save);
+                } else {
+                    ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_could_not_save);
                 }
                 return true;
             case android.R.id.home:

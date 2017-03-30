@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.event.DateSelectChangedEvent;
+import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.fragment.base.BaseFragment;
 import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.SleepData;
@@ -38,7 +39,6 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2016/7/26.
- *
  */
 public class MainSleepFragment extends BaseFragment {
 
@@ -54,7 +54,6 @@ public class MainSleepFragment extends BaseFragment {
 
     @Bind(R.id.fragment_sleep_history_linechart)
     SleepTodayChart lineChartSleep;
-
     private Date userSelectDate;
 
     @Override
@@ -75,33 +74,37 @@ public class MainSleepFragment extends BaseFragment {
         return sleepView;
     }
 
-    public void initData(Date date) {
+    public void initData(final Date date) {
         User user = getModel().getNevoUser();
-        Sleep[] sleepArray = getModel().getDailySleep(user.getNevoUserID(), date);
-        SleepDataHandler handler = new SleepDataHandler(Arrays.asList(sleepArray));
-        List<SleepData> sleepDataList = handler.getSleepData(date);
+        getModel().getDailySleep(user.getNevoUserID(), date, new TodaySleepListener() {
+            @Override
+            public void todaySleep(Sleep[] sleepArray) {
+                Log.e("jason","yesterday Sleep : "+sleepArray[0].toString());
+                SleepDataHandler handler = new SleepDataHandler(Arrays.asList(sleepArray));
+                List<SleepData> sleepDataList = handler.getSleepData(date);
 
-        if (!sleepDataList.isEmpty()) {
-            SleepData sleepData;
-            if (sleepDataList.size() == 2) {
-                sleepData = SleepDataUtils.mergeYesterdayToday(sleepDataList.get(1), sleepDataList.get(0));
-                DateTime sleepStart = new DateTime(sleepData.getSleepStart()==0? Common.removeTimeFromDate(date).getTime():sleepData.getSleepStart());
-                Log.w("Karl", "Yo yo : " + sleepData.getTotalSleep());
-
-                sleepTimeTextView.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
-                durationTextView.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
-            } else {
-                sleepData = sleepDataList.get(0);
-                DateTime sleepStart = new DateTime(sleepData.getSleepStart()==0?Common.removeTimeFromDate(date).getTime():sleepData.getSleepStart());
-                sleepTimeTextView.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
-                durationTextView.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
+                if (!sleepDataList.isEmpty()) {
+                    SleepData sleepData = null;
+                    if (sleepDataList.size() == 2) {
+                        sleepData = SleepDataUtils.mergeYesterdayToday(sleepDataList.get(1), sleepDataList.get(0));
+                        DateTime sleepStart = new DateTime(sleepData.getSleepStart() == 0 ? Common.removeTimeFromDate(date).getTime() : sleepData.getSleepStart());
+                        Log.w("Karl", "Yo yo : " + sleepData.getTotalSleep());
+                        sleepTimeTextView.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
+                        durationTextView.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
+                    } else {
+                        sleepData = sleepDataList.get(0);
+                        DateTime sleepStart = new DateTime(sleepData.getSleepStart() == 0 ? Common.removeTimeFromDate(date).getTime() : sleepData.getSleepStart());
+                        sleepTimeTextView.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
+                        durationTextView.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
+                    }
+                    qualityTextView.setText(sleepData.getDeepSleep() * 100 / (sleepData.getTotalSleep() == 0 ? 1 : sleepData.getTotalSleep()) + "%");
+                    lineChartSleep.setDataInChart(sleepData);
+                    lineChartSleep.animateY(3000);
+                    DateTime sleepEnd = new DateTime(sleepData.getSleepEnd() == 0 ? Common.removeTimeFromDate(date).getTime() : sleepData.getSleepEnd());
+                    wakeTimeTextView.setText(sleepEnd.toString("HH:mm", Locale.ENGLISH));
+                }
             }
-            qualityTextView.setText(sleepData.getDeepSleep() * 100 / (sleepData.getTotalSleep() == 0 ? 1 : sleepData.getTotalSleep()) + "%");
-            lineChartSleep.setDataInChart(sleepData);
-            lineChartSleep.animateY(3000);
-            DateTime sleepEnd = new DateTime(sleepData.getSleepEnd()==0?Common.removeTimeFromDate(date).getTime():sleepData.getSleepEnd());
-            wakeTimeTextView.setText(sleepEnd.toString("HH:mm", Locale.ENGLISH));
-        }
+        });
     }
 
     @Override
@@ -127,5 +130,20 @@ public class MainSleepFragment extends BaseFragment {
         });
     }
 
+    @Subscribe
+    public void onEvent(final OnSyncEvent event) {
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED || event.getStatus() == OnSyncEvent.SYNC_EVENT.TODAY_SYNC_STOPPED) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    initData(userSelectDate);
+                }
+            });
+        }
+    }
+
+    public interface TodaySleepListener {
+        void todaySleep(Sleep[] sleeps);
+    }
 
 }

@@ -2,18 +2,21 @@ package com.medcorp.lunar.activity.tutorial;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.ble.model.color.LedLamp;
+import com.medcorp.lunar.model.Alarm;
 import com.medcorp.lunar.model.Goal;
 
 import net.medcorp.library.ble.util.Constants;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by Karl on 1/19/16.
@@ -39,11 +42,22 @@ public class TutorialPageSuccessActivity extends BaseActivity {
             getModel().addLedLamp(new LedLamp("Orange", getResources().getColor(R.color.orange_normal)));
             getModel().addLedLamp(new LedLamp("Yellow", getResources().getColor(R.color.yellow_normal)));
             getModel().addLedLamp(new LedLamp("Green", getResources().getColor(R.color.green_normal)));
-            //getModel().addAlarm(new Alarm(8, 0, (byte) 0, getString(R.string.startup_goal_weekly_days),(byte)0,(byte)0));
-            //getModel().addAlarm(new Alarm(9, 0, (byte) 0, getString(R.string.startup_goal_weekend),(byte)0,(byte)0));
+            getModel().addAlarm(new Alarm(21, 0, (byte) (0), getString(R.string.def_alarm_one), (byte) 0, (byte) 7)).subscribe(new Consumer<Boolean>() {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception {
+                    Log.e("jason", "闹钟默认" + aBoolean);
+                }
+            });
+            getModel().addAlarm(new Alarm(8, 0, (byte) (0), getString(R.string.def_alarm_two), (byte) 1, (byte) 0)).subscribe(new Consumer<Boolean>() {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception {
+                    Log.e("jaosn", "闹钟默认" + aBoolean);
+                }
+            });
             sharedPreferences.putBoolean(getString(R.string.key_preset), true);
             sharedPreferences.commit();
         }
+
     }
 
     @OnClick(R.id.activity_tutorial_success_next_button)

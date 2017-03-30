@@ -1,14 +1,20 @@
 package com.medcorp.lunar.model;
 
+import io.realm.RealmObject;
+
 /**
  * Created by Karl on 11/25/15.
  */
-public class Goal {
+public class Goal extends RealmObject {
 
-    private int id;
+    private int id = (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
     private String label;
     private boolean status;
     private int steps = 10000;
+
+    public Goal() {
+
+    }
 
     public Goal(String label, boolean status, int steps) {
         this.label = label;

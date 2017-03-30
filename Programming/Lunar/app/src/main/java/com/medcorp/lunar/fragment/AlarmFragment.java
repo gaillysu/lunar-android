@@ -28,6 +28,7 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.EditAlarmActivity;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.adapter.AlarmArrayAdapter;
+import com.medcorp.lunar.ble.controller.SyncControllerImpl;
 import com.medcorp.lunar.event.bluetooth.RequestResponseEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
 import com.medcorp.lunar.fragment.listener.OnAlarmSwitchListener;
@@ -44,6 +45,7 @@ import java.util.TreeMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by karl-john on 11/12/15.
@@ -79,16 +81,24 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
         ButterKnife.bind(this, view);
         this.inflater = inflater;
-        alarmList = getModel().getAllAlarm();
-
-        alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarmList, this);
-        alarmListView.setAdapter(alarmArrayAdapter);
-        alarmListView.setOnItemClickListener(this);
-        isMondayChecked = true;
-        mMap = new TreeMap<>();
-        refreshListView();
-        setHasOptionsMenu(true);
+        initData();
         return view;
+    }
+
+    private void initData() {
+        getModel().getAllAlarm(new SyncControllerImpl.SyncAlarmToWatchListener() {
+            @Override
+            public void syncAlarmToWatch(List<Alarm> alarms) {
+                alarmList = alarms;
+                alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarmList, AlarmFragment.this);
+                alarmListView.setAdapter(alarmArrayAdapter);
+                alarmListView.setOnItemClickListener(AlarmFragment.this);
+                isMondayChecked = true;
+                mMap = new TreeMap<>();
+                refreshListView();
+                setHasOptionsMenu(true);
+            }
+        });
     }
 
     private void initAddAlarm() {
@@ -168,64 +178,69 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         saveNewAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                Alarm newAlarm = new Alarm(hourOfDay, minute, (byte) 0, "", (byte) 0, (byte) 0);
-                StringBuffer alarmRepeatDay = new StringBuffer();
-
-                if (TextUtils.isEmpty(alarmName.getText().toString())) {
-                    newAlarm.setLabel(getString(R.string.menu_drawer_alarm) + " " + (alarmList.size() + 1));
-                } else {
-                    newAlarm.setLabel(alarmName.getText().toString());
-                }
-                List<Alarm> allAlarm = getModel().getAllAlarm();
-
-                int num = 0;//awake/normal alarm: 0~6
-                if (alarmSelectStyle == 0) {
-                    num = 7;//sleep alarm: 7~13
-                }
-
-                for (int i = 0; i < allAlarm.size(); i++) {
-                    if (allAlarm.get(i).getAlarmType() == alarmSelectStyle) {
-                        num++;
-                    }
-
-                }
-                for (int i = 0; i < allAlarm.size(); i++) {
-                    byte repeatDay = allAlarm.get(i).getWeekDay();
-                    byte alarmType = allAlarm.get(i).getAlarmType();
-                    if ((repeatDay & 0x0F) == weekDay && alarmType == alarmSelectStyle) {
-                        isRepeat = true;
-                        break;
-                    } else {
-                        isRepeat = false;
-                    }
-                }
-                if ((alarmSelectStyle == 0 && num <= 13) || (alarmSelectStyle == 1 && num <= 6)) {
-                    if (!isRepeat) {
-                        newAlarm.setWeekDay((byte) (0x80 | weekDay));
-                        newAlarm.setAlarmType(alarmSelectStyle);
-                        newAlarm.setAlarmNumber((byte) num);
-                        getModel().addAlarm(newAlarm);
-                        showSyncAlarm = true;
-                        getModel().getSyncController().setAlarm(newAlarm);
-                        ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
-                        refreshListView();
-                    } else {
-                        String[] weekDayArray = getContext().getResources().getStringArray(R.array.week_day);
-                        if (alarmSelectStyle == 0) {
-                            ToastHelper.showShortToast(AlarmFragment.this.getActivity()
-                                    , getString(R.string.prompt_user_alarm_no_repeat) + " " + weekDayArray[weekDay]);
+                getModel().getAllAlarm(new SyncControllerImpl.SyncAlarmToWatchListener() {
+                    @Override
+                    public void syncAlarmToWatch(List<Alarm> allAlarm) {
+                        final Alarm newAlarm = new Alarm(hourOfDay, minute, (byte) 0, "", (byte) 0, (byte) 0);
+                        if (TextUtils.isEmpty(alarmName.getText().toString())) {
+                            newAlarm.setLabel(getString(R.string.menu_drawer_alarm) + " " + (alarmList.size() + 1));
                         } else {
-                            ToastHelper.showShortToast(AlarmFragment.this.getActivity()
-                                    , getString(R.string.prompt_user_alarm_no_repeat_two) + " " + weekDayArray[weekDay]);
+                            newAlarm.setLabel(alarmName.getText().toString());
                         }
-                    }
-                } else {
-                    ToastHelper.showShortToast(getContext(), getResources().getString(R.string.add_alarm_index_out));
-                }
-                dialog.dismiss();
 
+                        int num = 0;//awake/normal alarm: 0~6
+                        if (alarmSelectStyle == 0) {
+                            num = 7;//sleep alarm: 7~13
+                        }
+
+                        for (int i = 0; i < allAlarm.size(); i++) {
+                            if (allAlarm.get(i).getAlarmType() == alarmSelectStyle) {
+                                num++;
+                            }
+
+                        }
+                        for (int i = 0; i < allAlarm.size(); i++) {
+                            byte repeatDay = allAlarm.get(i).getWeekDay();
+                            byte alarmType = allAlarm.get(i).getAlarmType();
+                            if ((repeatDay & 0x0F) == weekDay && alarmType == alarmSelectStyle) {
+                                isRepeat = true;
+                                break;
+                            } else {
+                                isRepeat = false;
+                            }
+                        }
+                        if ((alarmSelectStyle == 0 && num <= 13) || (alarmSelectStyle == 1 && num <= 6)) {
+                            if (!isRepeat) {
+                                newAlarm.setWeekDay((byte) (0x80 | weekDay));
+                                newAlarm.setAlarmType(alarmSelectStyle);
+                                newAlarm.setAlarmNumber((byte) num);
+                                getModel().addAlarm(newAlarm).subscribe(new Consumer<Boolean>() {
+                                    @Override
+                                    public void accept(Boolean aBoolean) throws Exception {
+                                        if (aBoolean) {
+                                            refreshListView();
+                                            showSyncAlarm = true;
+                                            getModel().getSyncController().setAlarm(newAlarm);
+                                            ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
+                                        }
+                                    }
+                                });
+                            } else {
+                                String[] weekDayArray = getContext().getResources().getStringArray(R.array.week_day);
+                                if (alarmSelectStyle == 0) {
+                                    ToastHelper.showShortToast(AlarmFragment.this.getActivity()
+                                            , getString(R.string.prompt_user_alarm_no_repeat) + " " + weekDayArray[weekDay]);
+                                } else {
+                                    ToastHelper.showShortToast(AlarmFragment.this.getActivity()
+                                            , getString(R.string.prompt_user_alarm_no_repeat_two) + " " + weekDayArray[weekDay]);
+                                }
+                            }
+                        } else {
+                            ToastHelper.showShortToast(getContext(), getResources().getString(R.string.add_alarm_index_out));
+                        }
+                        dialog.dismiss();
+                    }
+                });
             }
         });
 
@@ -256,6 +271,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         super.onActivityResult(requestCode, resultCode, data);
         //when delete (resultCode == -1) or update (resultCode == 1) the enable alarm, do alarm sync
         //resultCode == 0 ,do nothing
+        refreshListView();
         if (resultCode != 0) {
             syncAlarmByEditor(resultCode);
         }
@@ -270,11 +286,15 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
 
     private void refreshListView() {
         if (alarmArrayAdapter != null && alarmListView != null) {
-            alarmList = getModel().getAllAlarm();
-            alarmArrayAdapter.clear();
-            alarmArrayAdapter.addAll(alarmList);
-            alarmArrayAdapter.notifyDataSetChanged();
-            alarmListView.invalidate();
+            getModel().getAllAlarm(new SyncControllerImpl.SyncAlarmToWatchListener() {
+                @Override
+                public void syncAlarmToWatch(List<Alarm> alarms) {
+                    alarmArrayAdapter.clear();
+                    alarmArrayAdapter.addAll(alarms);
+                    alarmArrayAdapter.notifyDataSetChanged();
+                    alarmListView.invalidate();
+                }
+            });
         }
     }
 
@@ -295,8 +315,13 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         alarm.setWeekDay(isChecked ? (byte) (alarm.getWeekDay() | 0x80) : (byte) (alarm.getWeekDay() & 0x0F));
         getModel().updateAlarm(alarm);
         showSyncAlarm = true;
-        getModel().getSyncController().setAlarm(getModel().getAllAlarm(), false);
-        ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
+        getModel().getAllAlarm(new SyncControllerImpl.SyncAlarmToWatchListener() {
+            @Override
+            public void syncAlarmToWatch(List<Alarm> alarms) {
+                getModel().getSyncController().setAlarm(alarms, false);
+                ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
+            }
+        });
     }
 
     private int getAlarmEnableCount() {
@@ -317,11 +342,21 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         if (deleteOrUpdate == -1) {
             editAlarm.setWeekDay((byte) 0);
         } else if (deleteOrUpdate == 1) {
-            editAlarm = getModel().getAlarmById(editAlarm.getId());
+            getModel().getAlarmById(editAlarm.getId(), new EditAlarmActivity.ObtainAlarmListener() {
+                @Override
+                public void obtainAlarm(Alarm alarm) {
+                    editAlarm = alarm;
+                }
+            });
         }
         showSyncAlarm = true;
-        getModel().getSyncController().setAlarm(getModel().getAllAlarm(), false);
-        ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
+        getModel().getAllAlarm(new SyncControllerImpl.SyncAlarmToWatchListener() {
+            @Override
+            public void syncAlarmToWatch(List<Alarm> alarms) {
+                getModel().getSyncController().setAlarm(alarms, false);
+                ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
+            }
+        });
     }
 
 

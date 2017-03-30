@@ -1,121 +1,84 @@
 package com.medcorp.lunar.database.entry;
 
-import android.content.Context;
-
 import com.medcorp.lunar.ble.model.color.LedLamp;
-import com.medcorp.lunar.database.DatabaseHelper;
 import com.medcorp.lunar.database.dao.LedLampDAO;
 
-import net.medcorp.library.ble.util.Optional;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by Jason on 2016/12/12.
  */
 
-public class LedLampDatabase implements iSettingDatabaseHelper<LedLamp> {
+public class LedLampDatabase {
 
-    private DatabaseHelper databaseHelper;
+    private Realm mRealm;
+    private boolean isSuccess;
 
-    public LedLampDatabase(Context context) {
-        databaseHelper = DatabaseHelper.getInstance(context);
+    public LedLampDatabase() {
+        mRealm = Realm.getDefaultInstance();
     }
 
-    @Override
-    public Optional<LedLamp> add(LedLamp object) {
-        Optional<LedLamp> presetOptional = new Optional<>();
-        try {
-            LedLampDAO res = databaseHelper.getLedDao().createIfNotExists(convertToDao(object));
-            if (res != null) {
-                presetOptional.set(convertToNormal(res));
+    public boolean add(final LedLamp object) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealm(convertToDao(object));
+                isSuccess = true;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return presetOptional;
+        });
+        return isSuccess;
     }
 
 
-    @Override
-    public boolean update(LedLamp object) {
-        int result = -1;
-        try {
-            List<LedLampDAO> ledDaoList = databaseHelper.getLedDao()
-                    .queryBuilder().where().eq(LedLampDAO.IDString, object.getId()).query();
-
-            if(ledDaoList.isEmpty())
-                return add(object)!=null;
-
-            LedLampDAO ledDao = convertToDao(object);
-            ledDao.setID(ledDaoList.get(0).getID());
-            result = databaseHelper.getLedDao().update(ledDao);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result>=0;
-    }
-
-    @Override
-    public boolean remove(int rid) {
-        try {
-            List<LedLampDAO> ledDaoList = databaseHelper.getLedDao()
-                    .queryBuilder().where().eq(LedLampDAO.IDString, rid).query();
-            if(!ledDaoList.isEmpty())
-            {
-                return  databaseHelper.getLedDao().delete(ledDaoList)>=0;
+    public boolean update(final LedLamp object) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                LedLampDAO led = mRealm.where(LedLampDAO.class).equalTo("id", object.getId()).findFirst();
+                led.setColor(object.getColor());
+                led.setName(object.getName());
+                isSuccess = true;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        });
+        return isSuccess;
     }
 
-
-    @Override
-    public List<Optional<LedLamp>> get(int rid) {
-        List<Optional<LedLamp>> presetList = new ArrayList<>();
-        try {
-            List<LedLampDAO> ledDaoList = databaseHelper.getLedDao().queryBuilder()
-                    .where().eq(LedLampDAO.IDString, rid).query();
-
-            for(LedLampDAO ledDao : ledDaoList) {
-                Optional<LedLamp> presetOptional = new Optional<>();
-                presetOptional.set(convertToNormal(ledDao));
-                presetList.add(presetOptional);
+    public boolean remove(final String name, final int color) {
+        final LedLampDAO ledLamp = mRealm.where(LedLampDAO.class)
+                .equalTo("name", name).equalTo("color", color).findFirst();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                if (ledLamp != null) {
+                    ledLamp.deleteFromRealm();
+                    isSuccess = true;
+                }
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return presetList;
+        });
+        return isSuccess;
     }
 
-    @Override
-    public List<Optional<LedLamp>> getAll() {
-        List<Optional<LedLamp>> presetList = new ArrayList<>();
-        try {
-            List<LedLampDAO> ledDaoList = databaseHelper.getLedDao().queryBuilder().query();
-            for(LedLampDAO dao : ledDaoList) {
-                Optional<LedLamp> presetOptional = new Optional<>();
-                presetOptional.set(convertToNormal(dao));
-                presetList.add(presetOptional);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return presetList;
+
+    public LedLamp get(String name, int color) {
+        LedLamp led = convertToNormal(mRealm.where(LedLampDAO.class)
+                .equalTo("name", name).equalTo("color", color).findFirst());
+        return led;
     }
 
-    @Override
-    public List<LedLamp> convertToNormalList(List<Optional<LedLamp>> optionals) {
+    public List<LedLamp> getAll() {
+        RealmResults<LedLampDAO> all = mRealm.where(LedLampDAO.class).findAll();
+        return convertToNormalList(all);
+    }
+
+    public List<LedLamp> convertToNormalList(List<LedLampDAO> optionals) {
         List<LedLamp> ledList = new ArrayList<>();
-        for (Optional<LedLamp> presetOptional: optionals) {
-            if (presetOptional.notEmpty()){
-                ledList.add(presetOptional.get());
+        for (LedLampDAO presetOptional : optionals) {
+            if (presetOptional != null) {
+                ledList.add(convertToNormal(presetOptional));
             }
         }
         return ledList;
@@ -123,17 +86,23 @@ public class LedLampDatabase implements iSettingDatabaseHelper<LedLamp> {
 
 
     private LedLamp convertToNormal(LedLampDAO res) {
-        LedLamp led = new LedLamp();
-        led.setName(res.getName());
-        led.setColor(res.getColor());
-        led.setId(res.getID());
-        return led;
+        if (res != null) {
+            LedLamp led = new LedLamp();
+            led.setName(res.getName());
+            led.setColor(res.getColor());
+            led.setId(res.getId());
+            return led;
+        }
+        return null;
     }
 
     private LedLampDAO convertToDao(LedLamp object) {
-        LedLampDAO dao = new LedLampDAO();
-        dao.setColor(object.getColor());
-        dao.setName(object.getName());
-        return dao;
+        if (object != null) {
+            LedLampDAO dao = new LedLampDAO();
+            dao.setColor(object.getColor());
+            dao.setName(object.getName());
+            return dao;
+        }
+        return null;
     }
 }

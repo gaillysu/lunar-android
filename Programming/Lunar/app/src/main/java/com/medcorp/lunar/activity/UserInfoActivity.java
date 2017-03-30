@@ -63,7 +63,7 @@ public class UserInfoActivity extends BaseActivity {
     TextView famaleTextView;
 
     private int gender = 1; //0:female, 1: male
-
+    private String birthday;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +86,7 @@ public class UserInfoActivity extends BaseActivity {
 
     @OnClick(R.id.register_info_activity_next_tv)
     public void nextClick() {
-        String userBirthday = tv_userBirth.getText().toString();
+        String userBirthday = birthday;
         String userHeight = tv_userHeight.getText().toString();
         String userWeight = tv_userWeight.getText().toString();
         if (!TextUtils.isEmpty(userBirthday) || !TextUtils.isEmpty(userHeight) || !TextUtils.isEmpty(userWeight)) {
@@ -199,7 +199,7 @@ public class UserInfoActivity extends BaseActivity {
                     @Override
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
-
+                        birthday = year+"-"+month+"-"+day;
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         try {
                             Date userSelectDate = dateFormat.parse(dateDesc);

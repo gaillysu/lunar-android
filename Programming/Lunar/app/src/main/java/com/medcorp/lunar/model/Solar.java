@@ -5,13 +5,16 @@ import com.medcorp.lunar.util.Common;
 
 import java.util.Date;
 
+import io.realm.RealmObject;
+
 /**
  * Created by karl-john on 25/8/2016.
  */
 
-public class Solar {
+public class Solar extends RealmObject {
 
-    private int id;
+
+    private int id = (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
 
     /**
      * createdDate is the created/updated date, format is YYYY-MM-DD HH:MM:SS
@@ -21,7 +24,7 @@ public class Solar {
     /**
      * date is the daily date,format is YYYY-MM-DD
      */
-    private Date date;
+    private long date;
 
     private int userId;
     //"[0,0,0,....0]", 24 length array, unit is in minutes
@@ -29,11 +32,16 @@ public class Solar {
     //unit is in minutes
     private int totalHarvestingTime;
 
+    //just realm use this method
+    public Solar() {
+
+    }
+
     public Solar(Date createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Solar(Date createdDate, Date date, int userId, String hourlyHarvestingTime, int totalHarvestingTime) {
+    public Solar(Date createdDate, long date, int userId, String hourlyHarvestingTime, int totalHarvestingTime) {
         this.createdDate = createdDate;
         this.date = date;
         this.userId = userId;
@@ -81,15 +89,27 @@ public class Solar {
         this.createdDate = createdDate;
     }
 
-    public Date getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
-    public int[] getHourlyHarvestingTimeInt(){
+    public int[] getHourlyHarvestingTimeInt() {
         return Common.convertJSONArrayIntToArray(getHourlyHarvestingTime());
+    }
+
+    @Override
+    public String toString() {
+        return "Solar{" +
+                "id=" + id +
+                ", createdDate=" + createdDate +
+                ", date=" + date +
+                ", userId=" + userId +
+                ", hourlyHarvestingTime='" + hourlyHarvestingTime + '\'' +
+                ", totalHarvestingTime=" + totalHarvestingTime +
+                '}';
     }
 }

@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
  * Created by Administrator on 2016/7/5.
  */
 public class EmailUtils {
+
     private static Snackbar snackbar = null;
 
     public static boolean checkEmail(String email) {

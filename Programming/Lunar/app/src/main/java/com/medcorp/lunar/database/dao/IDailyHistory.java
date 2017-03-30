@@ -1,6 +1,5 @@
 package com.medcorp.lunar.database.dao;
 
-import com.j256.ormlite.field.DatabaseField;
 import com.medcorp.lunar.model.DailyHistory;
 
 import org.json.JSONException;
@@ -9,120 +8,48 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import io.realm.annotations.Ignore;
+
 /**
  * Created by gaillysu on 15/8/11.
  * this Model save Daily record from nevo
  * @link: DailyHistory class
  */
-public class IDailyHistory {
+public class IDailyHistory{
 
-    static String TRAININGID_KEY = "trainingID";
-    @DatabaseField(generatedId = true)
     private int trainingID = 0;
-    /**
-     * Created  time in milliseconds since January 1, 1970, 00:00:00 GMT
-     * for sample: Aug 12,2015,00:00:00
-     * it has a unique value, you can think it as a mainly key field
-     */
-    static String CREATED_KEY = "created";
-    @DatabaseField
     private long created = 0;
-
-    static String STEPS_KEY = "steps";
-    @DatabaseField
     private int steps = 0;
-
-    static String HOURLYSTEPS_KEY = "hourlysteps";
-    @DatabaseField
     private String hourlysteps ="";
-
-    static String DISTANCE_KEY = "distance";
-    @DatabaseField
     private double distance = 0;
-
-    static String HOURLYDISTANCE_KEY = "hourlydistance";
-    @DatabaseField
     private String hourlydistance ="";
-
-
-    static String CALORIES_KEY = "calories";
-    @DatabaseField
     private double calories = 0;
-
-    static String HOURLYCALORIES_KEY = "hourlycalories";
-    @DatabaseField
     private String hourlycalories ="";
-
-    static String InactivityTime_KEY = "InactivityTime";
-    @DatabaseField
-    private int InactivityTime = 0;
-
-    static String TotalInZoneTime_KEY = "TotalInZoneTime";
-    @DatabaseField
-    private int TotalInZoneTime = 0;
-
-    static String TotalOutZoneTime_KEY = "TotalOutZoneTime";
-    @DatabaseField
-    private int TotalOutZoneTime = 0;
-
-    static String AVGHRM_KEY = "avghrm";
-    @DatabaseField
+    private int inactivityTime = 0;
+    private int totalInZoneTime = 0;
+    private int totalOutZoneTime = 0;
     private int avghrm = 0;
-
-    static String MAXHRM_KEY = "maxhrm";
-    @DatabaseField
     private int maxhrm = 0;
-
-    static String GOALREACH_KEY = "goalreach";
-    @DatabaseField
     private double goalreach = 0;
-
-    static String TotalSleepTime_KEY = "TotalSleepTime";
-    @DatabaseField
-    private int TotalSleepTime = 0;
-
-    static String HourlySleepTime_KEY = "HourlySleepTime";
-    @DatabaseField
-    private String HourlySleepTime="";
-
-    static String TotalWakeTime_KEY = "TotalWakeTime";
-    @DatabaseField
-    private int TotalWakeTime =0;
-
-    static String HourlyWakeTime_KEY = "HourlyWakeTime";
-    @DatabaseField
-    private String HourlyWakeTime="";
-
-    static String TotalLightTime_KEY = "TotalLightTime";
-    @DatabaseField
-    private int TotalLightTime = 0;
-
-    static String HourlyLightTime_KEY = "HourlyLightTime";
-    @DatabaseField
-    private String HourlyLightTime="";
-
-    static String TotalDeepTime_KEY = "TotalDeepTime";
-    @DatabaseField
-    private int TotalDeepTime =0;
-
-    static String HourlDeepTime_KEY = "HourlDeepTime";
-    @DatabaseField
-    private String HourlDeepTime="";
+    private int totalSleepTime = 0;
+    private String hourlySleepTime="";
+    private int totalWakeTime =0;
+    private String hourlyWakeTime="";
+    private int totalLightTime = 0;
+    private String hourlyLightTime="";
+    private int totalDeepTime =0;
+    private String hourlDeepTime="";
 
     /**
      * Start date in milliseconds since January 1, 1970, 00:00:00 GMT, means sleep start time
      * this is the night sleep start
      */
-    static String STARTDATETIME_KEY = "startDateTime";
-    @DatabaseField
     private long startDateTime = 0;
 
     /**
      * End date in milliseconds since January 1, 1970, 00:00:00 GMT, means sleep end time
      * this is the night sleep end
      */
-    static String ENDDATETIME_KEY = "endDateTime";
-    @DatabaseField
     private long endDateTime = 0;
 
     /**
@@ -130,23 +57,18 @@ public class IDailyHistory {
      * this is the day sleep start
      * if I like to have a short sleep after lunch, It is a good idea for showing the second graph.
      */
-    static String RESTSTARTDATETIME_KEY = "reststartDateTime";
-    @DatabaseField
     private long reststartDateTime = 0;
 
     /**
      * End date in milliseconds since January 1, 1970, 00:00:00 GMT, means sleep end time
      * this is the day sleep end
      */
-    static String RESTENDDATETIME_KEY = "restendDateTime";
-    @DatabaseField
     private long restendDateTime = 0;
 
     //this field save other values with Json string
-    static String DESCRIPTION_KEY = "remarks";
-    @DatabaseField
     private String remarks = "";
 
+    @Ignore
     private DailyHistory dailyHistory;
 
     //must have no-arg construct function
@@ -199,6 +121,7 @@ public class IDailyHistory {
     public int getTrainingID() {
         return trainingID;
     }
+
     public void setTrainingID(int trainingID) {
         this.trainingID = trainingID;
     }
@@ -210,7 +133,6 @@ public class IDailyHistory {
     public void setCreated(long created) {
         this.created = created;
     }
-
 
     public int getSteps() {
         return steps;
@@ -261,27 +183,27 @@ public class IDailyHistory {
     }
 
     public int getInactivityTime() {
-        return InactivityTime;
+        return inactivityTime;
     }
 
     public void setInactivityTime(int inactivityTime) {
-        InactivityTime = inactivityTime;
+        this.inactivityTime = inactivityTime;
     }
 
     public int getTotalInZoneTime() {
-        return TotalInZoneTime;
+        return totalInZoneTime;
     }
 
     public void setTotalInZoneTime(int totalInZoneTime) {
-        TotalInZoneTime = totalInZoneTime;
+        this.totalInZoneTime = totalInZoneTime;
     }
 
     public int getTotalOutZoneTime() {
-        return TotalOutZoneTime;
+        return totalOutZoneTime;
     }
 
     public void setTotalOutZoneTime(int totalOutZoneTime) {
-        TotalOutZoneTime = totalOutZoneTime;
+        this.totalOutZoneTime = totalOutZoneTime;
     }
 
     public int getAvghrm() {
@@ -309,67 +231,67 @@ public class IDailyHistory {
     }
 
     public int getTotalSleepTime() {
-        return TotalSleepTime;
+        return totalSleepTime;
     }
 
     public void setTotalSleepTime(int totalSleepTime) {
-        TotalSleepTime = totalSleepTime;
+        this.totalSleepTime = totalSleepTime;
     }
 
     public String getHourlySleepTime() {
-        return HourlySleepTime;
+        return hourlySleepTime;
     }
 
     public void setHourlySleepTime(String hourlySleepTime) {
-        HourlySleepTime = hourlySleepTime;
+        this.hourlySleepTime = hourlySleepTime;
     }
 
     public int getTotalWakeTime() {
-        return TotalWakeTime;
+        return totalWakeTime;
     }
 
     public void setTotalWakeTime(int totalWakeTime) {
-        TotalWakeTime = totalWakeTime;
+        this.totalWakeTime = totalWakeTime;
     }
 
     public String getHourlyWakeTime() {
-        return HourlyWakeTime;
+        return hourlyWakeTime;
     }
 
     public void setHourlyWakeTime(String hourlyWakeTime) {
-        HourlyWakeTime = hourlyWakeTime;
+        this.hourlyWakeTime = hourlyWakeTime;
     }
 
     public int getTotalLightTime() {
-        return TotalLightTime;
+        return totalLightTime;
     }
 
     public void setTotalLightTime(int totalLightTime) {
-        TotalLightTime = totalLightTime;
+        this.totalLightTime = totalLightTime;
     }
 
     public String getHourlyLightTime() {
-        return HourlyLightTime;
+        return hourlyLightTime;
     }
 
     public void setHourlyLightTime(String hourlyLightTime) {
-        HourlyLightTime = hourlyLightTime;
+        this.hourlyLightTime = hourlyLightTime;
     }
 
     public int getTotalDeepTime() {
-        return TotalDeepTime;
+        return totalDeepTime;
     }
 
     public void setTotalDeepTime(int totalDeepTime) {
-        TotalDeepTime = totalDeepTime;
+        this.totalDeepTime = totalDeepTime;
     }
 
     public String getHourlDeepTime() {
-        return HourlDeepTime;
+        return hourlDeepTime;
     }
 
     public void setHourlDeepTime(String hourlDeepTime) {
-        HourlDeepTime = hourlDeepTime;
+        this.hourlDeepTime = hourlDeepTime;
     }
 
     public long getStartDateTime() {
@@ -388,14 +310,6 @@ public class IDailyHistory {
         this.endDateTime = endDateTime;
     }
 
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
-
     public long getReststartDateTime() {
         return reststartDateTime;
     }
@@ -412,8 +326,19 @@ public class IDailyHistory {
         this.restendDateTime = restendDateTime;
     }
 
-    public DailyHistory getDailyHistory()
-    {
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public DailyHistory getDailyHistory() {
         return dailyHistory;
+    }
+
+    public void setDailyHistory(DailyHistory dailyHistory) {
+        this.dailyHistory = dailyHistory;
     }
 }

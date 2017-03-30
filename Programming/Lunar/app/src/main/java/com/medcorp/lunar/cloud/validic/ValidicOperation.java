@@ -91,7 +91,7 @@ public class ValidicOperation {
         record.setUtc_offset(utc_offset);
         record.setDistance(steps.getDistance());
         record.setCalories_burned(steps.getCalories());
-        record.setActivity_id("" + steps.getiD());
+        record.setActivity_id("" + steps.getId());
         RoutineGoal goal = new RoutineGoal();
         goal.setGoal(steps.getGoal());
         record.setExtras(goal);
@@ -208,7 +208,7 @@ public class ValidicOperation {
         }
 
         ValidicSleepRecord record = new ValidicSleepRecord();
-        record.setActivity_id("" + sleep.getiD());
+        record.setActivity_id("" + sleep.getId());
         //validic sleep object , the value is  in seconds
         record.setAwake(60 * sleep.getTotalWakeTime());
         record.setLight(60 * sleep.getTotalLightTime());

@@ -15,7 +15,6 @@ import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.fragment.base.BaseFragment;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
-import com.medcorp.lunar.util.Common;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.graphs.MainStepsBarChart;
@@ -33,6 +32,7 @@ import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by Jason on 2016/7/19.
@@ -50,7 +50,6 @@ public class MainStepsFragment extends BaseFragment {
     @Bind(R.id.lunar_main_fragment_steps_chart)
     MainStepsBarChart hourlyBarChart;
 
-    private Steps steps;
     private Date userSelectDate;
 
     @Override
@@ -74,40 +73,42 @@ public class MainStepsFragment extends BaseFragment {
     }
 
     private void initData(Date date) {
+        final User user = getModel().getNevoUser();
+        getModel().getStepsHelper().get(user.getNevoUserID(),date).subscribe(new Consumer<Steps>() {
+            @Override
+            public void accept(Steps steps) throws Exception {
+                showUserActivityTime.setText(TimeUtil.formatTime(steps.getWalkDuration() + steps.getRunDuration()));
+                showUserSteps.setText(String.valueOf(steps.getSteps()));
+                String calories = user.getConsumedCalories(steps) + getString(R.string.unit_cal);
 
+                String result = null;
+                DecimalFormat df = new DecimalFormat("######0.00");
+                if (Preferences.getUnitSelect(MainStepsFragment.this.getActivity())) {
+                    result = df.format(user.getDistanceTraveled(steps) * 0.6213712f) + getString(R.string.unit_length);
+                } else {
+                    result = String.format(Locale.ENGLISH, "%.2f km", user.getDistanceTraveled(steps));
+                }
 
-        User user = getModel().getNevoUser();
-        steps = getModel().getDailySteps(user.getNevoUserID(), date);
+                showUserStepsDistance.setText(String.valueOf(result));
+                showUserConsumeCalories.setText(calories);
 
-        showUserActivityTime.setText(TimeUtil.formatTime(steps.getWalkDuration() + steps.getRunDuration()));
-        showUserSteps.setText(String.valueOf(steps.getSteps()));
-        String result = null;
-        String calories = user.getConsumedCalories(steps) + getString(R.string.unit_cal);
-        DecimalFormat df = new DecimalFormat("######0.00");
-        if (Preferences.getUnitSelect(MainStepsFragment.this.getActivity())) {
-            result = df.format(user.getDistanceTraveled(steps) * 0.6213712f) + getString(R.string.unit_length);
-        } else {
-            result = String.format(Locale.ENGLISH, "%.2f km", user.getDistanceTraveled(steps));
-        }
-
-        showUserStepsDistance.setText(String.valueOf(result));
-        showUserConsumeCalories.setText(calories);
-
-        if (steps.getSteps() != 0 && steps.getHourlySteps() != null) {
-            JSONArray array = null;
-            try {
-                array = new JSONArray(steps.getHourlySteps());
-            } catch (JSONException e) {
-                e.printStackTrace();
+                if (steps.getSteps() != 0 && steps.getHourlySteps() != null) {
+                    JSONArray array = null;
+                    try {
+                        array = new JSONArray(steps.getHourlySteps());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    int[] stepsArray = new int[24];
+                    for (int i = 0; i < 24; i++) {
+                        stepsArray[i] = array.optInt(i, 0);
+                    }
+                    hourlyBarChart.setDataInChart(stepsArray);
+                } else {
+                    hourlyBarChart.setDataInChart(new int[]{0});
+                }
             }
-            int[] stepsArray = new int[24];
-            for (int i = 0; i < 24; i++) {
-                stepsArray[i] = array.optInt(i, 0);
-            }
-            hourlyBarChart.setDataInChart(stepsArray);
-        } else {
-            hourlyBarChart.setDataInChart(new int[]{0});
-        }
+        });
     }
 
     @Override
@@ -148,10 +149,6 @@ public class MainStepsFragment extends BaseFragment {
     @Subscribe
     public void onEvent(LittleSyncEvent event) {
         if (event.isSuccess()) {
-            Steps steps = getModel().getDailySteps(getModel().getNevoUser().getNevoUserID(), Common.removeTimeFromDate(userSelectDate));
-            if (steps == null) {
-                return;
-            }
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
@@ -160,4 +157,5 @@ public class MainStepsFragment extends BaseFragment {
             });
         }
     }
+
 }

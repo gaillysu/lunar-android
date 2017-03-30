@@ -1,19 +1,20 @@
 package com.medcorp.lunar.model;
 
+import io.realm.RealmObject;
+
 /**
  * Created by gaillysu on 15/11/17.
  */
-public class Sleep implements Comparable<Sleep>{
+public class Sleep extends RealmObject implements Comparable<Sleep> {
 
-    private int iD = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
+    private int id = (int) Math.floor(Math.random() * Integer.MAX_VALUE);
 
     //IMPORTANT,HERE MUST NOT set cloudRecordID any value, pls use default value null,when we sync with cloud, it will be filled by the cloud record ID
     private String cloudRecordID;
 
     private String nevoUserID;
 
-    private final long createdDate;
-
+    private long createdDate;
     private long date;
 
     private int totalSleepTime;
@@ -24,13 +25,13 @@ public class Sleep implements Comparable<Sleep>{
 
     private int totalDeepTime;
     //for avoid got exception, here you'd better put default values: int[24] ={0...0}
-    private String hourlySleep="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlySleep = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlyWake="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlyWake = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlyLight="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlyLight = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlyDeep="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlyDeep = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
     private long start;
 
@@ -39,6 +40,10 @@ public class Sleep implements Comparable<Sleep>{
     private int sleepQuality;
 
     private String remarks;
+
+    public Sleep() {
+
+    }
 
     public Sleep(long createdDate) {
         this.createdDate = createdDate;
@@ -63,9 +68,6 @@ public class Sleep implements Comparable<Sleep>{
         this.remarks = remarks;
     }
 
-    public void setiD(int iD) {
-        this.iD = iD;
-    }
 
     public void setTotalSleepTime(int totalSleepTime) {
         this.totalSleepTime = totalSleepTime;
@@ -111,8 +113,12 @@ public class Sleep implements Comparable<Sleep>{
         this.sleepQuality = sleepQuality;
     }
 
-    public int getiD() {
-        return iD;
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public long getCreatedDate() {
@@ -198,13 +204,34 @@ public class Sleep implements Comparable<Sleep>{
 
     @Override
     public int compareTo(Sleep another) {
-        if (getDate() < another.getDate()){
+        if (getDate() < another.getDate()) {
             return -1;
-        }else if(getDate() > another.getDate()){
+        } else if (getDate() > another.getDate()) {
             return 1;
         }
         return 0;
     }
 
-
+    @Override
+    public String toString() {
+        return "Sleep{" +
+                "id=" + id +
+                ", cloudRecordID='" + cloudRecordID + '\'' +
+                ", nevoUserID='" + nevoUserID + '\'' +
+                ", createdDate=" + createdDate +
+                ", date=" + date +
+                ", totalSleepTime=" + totalSleepTime +
+                ", totalWakeTime=" + totalWakeTime +
+                ", totalLightTime=" + totalLightTime +
+                ", totalDeepTime=" + totalDeepTime +
+                ", hourlySleep='" + hourlySleep + '\'' +
+                ", hourlyWake='" + hourlyWake + '\'' +
+                ", hourlyLight='" + hourlyLight + '\'' +
+                ", hourlyDeep='" + hourlyDeep + '\'' +
+                ", start=" + start +
+                ", end=" + end +
+                ", sleepQuality=" + sleepQuality +
+                ", remarks='" + remarks + '\'' +
+                '}';
+    }
 }

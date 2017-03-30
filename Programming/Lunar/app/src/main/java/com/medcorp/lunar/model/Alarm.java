@@ -1,30 +1,31 @@
 package com.medcorp.lunar.model;
 
+import io.realm.RealmObject;
+
 /**
  * Created by gaillysu on 15/4/21.
  */
-public class Alarm {
+public class Alarm extends RealmObject{
 
-    private int id = -1;
+    private int id;
     private int hour;
     private int minute;
-    /**
-     * weekDay format: bit0~bit3 is for saving the really weekday (eg: Sunday is 1,...Saturday is 7)
-     * bit7 is for saving alarm on or off, 1 means on, 0 is off.
-     */
     private byte weekDay;
     private String label;
     private byte alarmType;
     private byte alarmNumber;
 
-    public Alarm(int hour, int minute,byte weekDay,String label,byte alarmStyle ,byte alarmNumber)
-    {
+    public Alarm(){
+
+    }
+
+    public Alarm(int hour, int minute, byte weekDay, String label, byte alarmStyle, byte alarmNumber) {
         this.hour = hour;
         this.minute = minute;
         this.weekDay = weekDay;
         this.label = label;
         this.alarmType = alarmStyle;
-        this.alarmNumber =alarmNumber;
+        this.alarmNumber = alarmNumber;
     }
 
     public byte getAlarmNumber() {
@@ -87,19 +88,19 @@ public class Alarm {
     public String toString() {
 
         StringBuilder builder = new StringBuilder();
-        if (hour == 0){
+        if (hour == 0) {
             builder.append("00");
-        } else if (hour < 10){
+        } else if (hour < 10) {
             builder.append("0" + hour);
-        }else{
+        } else {
             builder.append(hour);
         }
         builder.append(":");
-        if (minute== 0){
+        if (minute == 0) {
             builder.append("00");
-        } else if (minute< 10){
+        } else if (minute < 10) {
             builder.append("0" + minute);
-        }else{
+        } else {
             builder.append(minute);
         }
         return builder.toString();

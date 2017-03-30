@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.medcorp.view.customfontview.RobotoTextView
+        <com.medcorp.lunar.view.customfontview.RobotoTextView
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:textSize="23sp"
@@ -79,14 +79,14 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.medcorp.view.customfontview.RobotoTextView
+            <com.medcorp.lunar.view.customfontview.RobotoTextView
                 android:id="@+id/activity_dfu_percent_textview"
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 roboto:bold="true"
                 android:textSize="28sp" />
-            <com.medcorp.view.customfontview.RobotoTextView
+            <com.medcorp.lunar.view.customfontview.RobotoTextView
                 android:id="@+id/activity_dfu_infomation_textview"
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
@@ -96,7 +96,7 @@
                 roboto:thin="true" />
 
             <!-- this should be a button but leave it for now.-->
-            <com.medcorp.view.customfontview.RobotoButton
+            <com.medcorp.lunar.view.customfontview.RobotoButton
                 android:id="@+id/activity_dfu_back2settings_textview"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"

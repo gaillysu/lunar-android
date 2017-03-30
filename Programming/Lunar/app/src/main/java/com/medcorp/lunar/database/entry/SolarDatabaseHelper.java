@@ -1,137 +1,157 @@
 package com.medcorp.lunar.database.entry;
 
-import android.content.Context;
-import com.medcorp.lunar.database.DatabaseHelper;
-import com.medcorp.lunar.database.dao.SolarDAO;
 import com.medcorp.lunar.model.Solar;
-import com.medcorp.lunar.util.Common;
 
-import net.medcorp.library.ble.util.Optional;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.realm.Realm;
+
 /**
  * Created by med on 16/8/30.
  */
-public class SolarDatabaseHelper implements iEntryDatabaseHelper<Solar> {
+public class SolarDatabaseHelper {
 
-    private DatabaseHelper databaseHelper;
+    private Realm mRealm;
 
-    public SolarDatabaseHelper(Context context) {
-        databaseHelper = DatabaseHelper.getInstance(context);
+    public SolarDatabaseHelper() {
+        mRealm = Realm.getDefaultInstance();
     }
 
-    @Override
-    public Optional<Solar> add(Solar object) {
-        Optional<Solar> solarOptional = new Optional<>();
-        try {
-            SolarDAO solarDAO = databaseHelper.getSolarDAO().createIfNotExists(convertToDao(object));
-            if (solarDAO != null) {
-                solarOptional.set(convertToNormal(solarDAO));
+    public Observable<Boolean> add(final Solar object) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(final ObservableEmitter<Boolean> e) throws Exception {
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Solar solar = realm.createObject(Solar.class);
+                        solar.setId(object.getId());
+                        solar.setTotalHarvestingTime(object.getTotalHarvestingTime());
+                        solar.setHourlyHarvestingTime(object.getHourlyHarvestingTime());
+                        solar.setCreatedDate(object.getCreatedDate());
+                        solar.setDate(object.getDate());
+                        solar.setUserId(object.getUserId());
+                        e.onNext(true);
+                        e.onComplete();
+                    }
+                });
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return solarOptional;
+        }).subscribeOn(AndroidSchedulers.mainThread());
     }
 
-    @Override
-    public boolean update(Solar object) {
-        Optional<Solar> solarOptional = get(object.getUserId()+"",object.getDate());
-        if(solarOptional.isEmpty()){
-            return add(object).notEmpty();
-        }
-        SolarDAO solarDAO = convertToDao(object);
-        solarDAO.setID(solarOptional.get().getId());
-        try {
-            return databaseHelper.getSolarDAO().update(solarDAO)>=0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+    public Observable<Boolean> update(final Solar object) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(final ObservableEmitter<Boolean> e) throws Exception {
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Solar solar = mRealm.where(Solar.class).equalTo("id", object.getId())
+                                .equalTo("date", object.getDate()).findFirst();
+                        if (solar != null) {
+                            solar.setId(object.getId());
+                            solar.setTotalHarvestingTime(object.getTotalHarvestingTime());
+                            solar.setHourlyHarvestingTime(object.getHourlyHarvestingTime());
+                            solar.setCreatedDate(object.getCreatedDate());
+                            solar.setDate(object.getDate());
+                            solar.setUserId(object.getUserId());
+                            e.onNext(true);
+                            e.onComplete();
+                        } else {
+                            e.onNext(false);
+                            e.onComplete();
+                        }
+                    }
+                });
 
-    @Override
-    public boolean remove(String userId, Date date) {
-        try {
-            List<SolarDAO> solarDAOList = databaseHelper.getSolarDAO().queryBuilder().where().eq(SolarDAO.fUserId, userId).and().eq(SolarDAO.fDate, Common.removeTimeFromDate(date)).query();
-            if (!solarDAOList.isEmpty()) {
-                return databaseHelper.getSolarDAO().delete(solarDAOList) >= 0;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        }).subscribeOn(AndroidSchedulers.mainThread());
     }
 
-    @Override
-    public List<Optional<Solar>> get(String userId) {
+    public Observable<Boolean> remove(final String userId, final Date date) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(final ObservableEmitter<Boolean> e) throws Exception {
+                final Solar solar = mRealm.where(Solar.class).equalTo("userId", userId)
+                        .equalTo("createdDate", date).findFirst();
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        solar.deleteFromRealm();
+                        e.onNext(true);
+                        e.onComplete();
+                    }
+                });
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<List<Solar>> get(int userId) {
         return getAll(userId);
     }
 
-    @Override
-    public Optional<Solar> get(String userId, Date date) {
-        List<Optional<Solar>> stepsList = new ArrayList<>();
-        try {
-            List<SolarDAO> solarDAOList = databaseHelper.getSolarDAO().queryBuilder().where().eq(SolarDAO.fUserId, userId).and().eq(SolarDAO.fDate, Common.removeTimeFromDate(date)).query();
-            for (SolarDAO solarDAO : solarDAOList) {
-                Optional<Solar> solarOptional = new Optional<>();
-                solarOptional.set(convertToNormal(solarDAO));
-                stepsList.add(solarOptional);
+    public Observable<Solar> get(final int userId, final Date date) {
+        return Observable.create(new ObservableOnSubscribe<Solar>() {
+            @Override
+            public void subscribe(ObservableEmitter<Solar> e) throws Exception {
+                Solar solar = mRealm.where(Solar.class).equalTo("id", userId)
+                        .equalTo("date", date.getTime()).findFirst();
+                if (solar != null) {
+                    e.onNext(mRealm.copyFromRealm(solar));
+                    e.onComplete();
+                } else {
+                    e.onNext(new Solar(new Date()));
+                    e.onComplete();
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return stepsList.isEmpty() ? new Optional<Solar>() : stepsList.get(0);
+        }).subscribeOn(AndroidSchedulers.mainThread());
     }
 
-    @Override
-    public List<Optional<Solar>> getAll(String userId) {
-        List<Optional<Solar>> stepsList = new ArrayList<>();
-        try {
-            List<SolarDAO> solarDAOList = databaseHelper.getSolarDAO().queryBuilder().where().eq(SolarDAO.fUserId, userId).query();
-            for (SolarDAO solarDAO : solarDAOList) {
-                Optional<Solar> solarOptional = new Optional<>();
-                solarOptional.set(convertToNormal(solarDAO));
-                stepsList.add(solarOptional);
+    public Observable<List<Solar>> getAll(final int userId) {
+        return Observable.create(new ObservableOnSubscribe<List<Solar>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Solar>> e) throws Exception {
+                List<Solar> solarList = mRealm.where(Solar.class)
+                        .equalTo("id", userId).findAll();
+                if (solarList != null) {
+                    e.onNext(mRealm.copyFromRealm(solarList));
+                    e.onComplete();
+                } else {
+                    e.onNext(new ArrayList<Solar>());
+                    e.onComplete();
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return stepsList;
+        }).subscribeOn(AndroidSchedulers.mainThread());
     }
 
-    private SolarDAO convertToDao(Solar solar)
-    {
-        SolarDAO solarDAO = new SolarDAO();
-        solarDAO.setUserId(solar.getUserId());
-        solarDAO.setCreatedDate(solar.getCreatedDate());
-        solarDAO.setDate(Common.removeTimeFromDate(solar.getDate()));
-        solarDAO.setTotalHarvestingTime(solar.getTotalHarvestingTime());
-        solarDAO.setHourlyHarvestingTime(solar.getHourlyHarvestingTime());
-        return solarDAO;
-    }
-    private Solar convertToNormal(SolarDAO solarDAO) {
-        Solar solar = new Solar(solarDAO.getCreatedDate());
-        solar.setId(solarDAO.getID());
-        solar.setDate(solarDAO.getDate());
-        solar.setHourlyHarvestingTime(solarDAO.getHourlyHarvestingTime());
-        solar.setTotalHarvestingTime(solarDAO.getTotalHarvestingTime());
-        solar.setUserId(solarDAO.getUserId());
-        return solar;
-    }
-    @Override
-    public List<Solar> convertToNormalList(List<Optional<Solar>> optionals) {
-        List<Solar> solarList = new ArrayList<>();
-        for(Optional<Solar> solarOptional:optionals)
-        {
-            if(solarOptional.notEmpty()){
-                solarList.add(solarOptional.get());
+    public Observable<List<Solar>> getSolarDatas(final int userId, final List<Date> dates) {
+        return Observable.create(new ObservableOnSubscribe<List<Solar>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Solar>> e) throws Exception {
+                List<Solar> solars = new ArrayList<>();
+                for(Date date:dates){
+                    Solar solar = mRealm.where(Solar.class).equalTo("id", userId)
+                            .equalTo("date", date.getTime()).findFirst();
+                    if(solar!=null){
+                        solars.add(mRealm.copyFromRealm(solar));
+                    }else{
+                        Solar daySolar = new Solar(date);
+                        daySolar.setUserId(userId);
+                        daySolar.setDate(date.getTime());
+                        solars.add(daySolar);
+                    }
+                }
+                e.onNext(solars);
+                e.onComplete();
             }
-        }
-        return solarList;
+        }).subscribeOn(AndroidSchedulers.mainThread());
     }
+
+
 }

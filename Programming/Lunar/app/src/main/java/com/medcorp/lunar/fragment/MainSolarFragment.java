@@ -25,8 +25,6 @@ import com.medcorp.lunar.util.Common;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.TimeUtil;
 
-import net.medcorp.library.ble.util.Optional;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.joda.time.DateTime;
@@ -39,6 +37,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by Jason on 2016/8/12.
@@ -54,6 +53,11 @@ public class MainSolarFragment extends BaseFragment {
     @Bind(R.id.main_fragment_solar_title_tv)
     TextView solarTitle;
     private Date userSelectDate;
+    private Solar mSolarOptional;
+    private float powerOnBatteryPercent = 100f;
+    private float powerOnSolarPercent = 0f;
+    private int powerOnSolarMinutes = 0;
+    private int powOnBatteryMinutes = 24 * 60; //default battery time,unit in "minutes"
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,24 +79,27 @@ public class MainSolarFragment extends BaseFragment {
     }
 
     private void initData(Date userSelectDate) {
-        float powerOnBatteryPercent = 100f;
-        float powerOnSolarPercent = 0f;
-        int powerOnSolarMinutes = 0;
-        int powOnBatteryMinutes = 24 * 60; //default battery time,unit in "minutes"
+
         if (Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime()) {
             powOnBatteryMinutes = new DateTime().getMinuteOfDay();
         }
-        Optional<Solar> solarOptional = getModel().getSolarDatabaseHelper().get(getModel().getNevoUser().getNevoUserID(), userSelectDate);
-        if (solarOptional.notEmpty()) {
-            powerOnSolarPercent = solarOptional.get().getTotalHarvestingTime() * 100f / (powOnBatteryMinutes);
-            powerOnBatteryPercent = 100f - powerOnSolarPercent;
-            powerOnSolarMinutes = solarOptional.get().getTotalHarvestingTime();
-            powOnBatteryMinutes = powOnBatteryMinutes - powerOnSolarMinutes;
-        }
-        float[] solarPieChartDate = {powerOnSolarPercent, powerOnBatteryPercent};
-        setPieChartData(solarPieChartDate);
-        batteryTimeTv.setText(TimeUtil.formatTime(powOnBatteryMinutes));
-        solarTimeTv.setText(TimeUtil.formatTime(powerOnSolarMinutes));
+        getModel().getSolarDatabaseHelper().get(getModel().getNevoUser().getId(), userSelectDate)
+                .subscribe(new Consumer<Solar>() {
+            @Override
+            public void accept(Solar solar) throws Exception {
+                mSolarOptional = solar;
+                if (mSolarOptional != null) {
+                    powerOnSolarPercent = mSolarOptional.getTotalHarvestingTime() * 100f / (powOnBatteryMinutes);
+                    powerOnBatteryPercent = 100f - powerOnSolarPercent;
+                    powerOnSolarMinutes = mSolarOptional.getTotalHarvestingTime();
+                    powOnBatteryMinutes = powOnBatteryMinutes - powerOnSolarMinutes;
+                }
+                float[] solarPieChartDate = {powerOnSolarPercent, powerOnBatteryPercent};
+                setPieChartData(solarPieChartDate);
+                batteryTimeTv.setText(TimeUtil.formatTime(powOnBatteryMinutes));
+                solarTimeTv.setText(TimeUtil.formatTime(powerOnSolarMinutes));
+            }
+        });
     }
 
     private void setPieChartData(float[] solarPieChartDate) {
@@ -153,7 +160,8 @@ public class MainSolarFragment extends BaseFragment {
 
     @Subscribe
     public void onEvent(final OnSyncEvent event) {
-        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED || event.getStatus() == OnSyncEvent.SYNC_EVENT.TODAY_SYNC_STOPPED) {
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED
+                || event.getStatus() == OnSyncEvent.SYNC_EVENT.TODAY_SYNC_STOPPED) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {

@@ -48,6 +48,7 @@ import java.util.TimeZone;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -94,6 +95,7 @@ public class MainClockFragment extends BaseFragment {
     private Address mPositionLocal;
     private SunriseSunsetCalculator calculator;
     private Realm realm = Realm.getDefaultInstance();
+    private String totalSleepTime;
 
     private City mDefaultTimeZoneCity;
 
@@ -131,16 +133,22 @@ public class MainClockFragment extends BaseFragment {
         return mainClockFragmentView;
     }
 
-    private void initData(Date date) {
-        lunarSleepTotal.setText(countSleepTime(date));
-        Steps dailySteps = getModel().getDailySteps(user.getNevoUserID(), date);
-        mDefaultTimeZoneCity = getDefaultTimeZoneCity();
-        stepsCount.setText(dailySteps.getSteps() + "");
-        setHomeCityData();
-        setSunsetOrSunrise();
-        float percent = (float) dailySteps.getSteps() / (float) dailySteps.getGoal();
-        goalProgress.setProgress(percent * 100 >= 100f ? 100 : (int) (percent * 100));
-        goalPercentage.setText((percent * 100 >= 100f ? 100 : (int) (percent * 100)) + "%" + getString(R.string.lunar_steps_percentage));
+    private void initData(final Date date) {
+        getModel().getStepsHelper().get(user.getNevoUserID(), date).subscribe(new Consumer<Steps>() {
+            @Override
+            public void accept(Steps dailySteps) throws Exception {
+                if (dailySteps != null) {
+                    countSleepTime(date);
+                    mDefaultTimeZoneCity = getDefaultTimeZoneCity();
+                    stepsCount.setText(dailySteps.getSteps() + "");
+                    setHomeCityData();
+                    setSunsetOrSunrise();
+                    float percent = (float) dailySteps.getSteps() / (float) dailySteps.getGoal();
+                    goalProgress.setProgress(percent * 100 >= 100f ? 100 : (int) (percent * 100));
+                    goalPercentage.setText((percent * 100 >= 100f ? 100 : (int) (percent * 100)) + "%" + getString(R.string.lunar_steps_percentage));
+                }
+            }
+        });
     }
 
     private void setSunsetOrSunrise() {
@@ -216,24 +224,29 @@ public class MainClockFragment extends BaseFragment {
         return new SunriseSunsetCalculator(sunriseLocation, zone);
     }
 
-    private String countSleepTime(Date date) {
-        Sleep[] sleepArray = getModel().getDailySleep(user.getNevoUserID(), date);
-        SleepDataHandler handler = new SleepDataHandler(Arrays.asList(sleepArray));
-        List<SleepData> sleepDataList = handler.getSleepData(date);
-        String totalSleepTime;
-        if (!sleepDataList.isEmpty()) {
-            SleepData sleepData;
-            if (sleepDataList.size() == 2) {
-                sleepData = SleepDataUtils.mergeYesterdayToday(sleepDataList.get(1), sleepDataList.get(0));
-                totalSleepTime = TimeUtil.formatTime(sleepData.getTotalSleep());
-            } else {
-                sleepData = sleepDataList.get(0);
-                totalSleepTime = TimeUtil.formatTime(sleepData.getTotalSleep());
+    private void countSleepTime(final Date date) {
+        getModel().getDailySleep(user.getNevoUserID(), date, new MainSleepFragment.TodaySleepListener() {
+            @Override
+            public void todaySleep(Sleep[] sleepArray) {
+                SleepDataHandler handler = new SleepDataHandler(Arrays.asList(sleepArray));
+                List<SleepData> sleepDataList = handler.getSleepData(date);
+                if (!sleepDataList.isEmpty()) {
+                    SleepData sleepData;
+                    if (sleepDataList.size() == 2) {
+                        sleepData = SleepDataUtils.mergeYesterdayToday(sleepDataList.get(1), sleepDataList.get(0));
+                        totalSleepTime = TimeUtil.formatTime(sleepData.getTotalSleep());
+                    } else {
+                        sleepData = sleepDataList.get(0);
+                        totalSleepTime = TimeUtil.formatTime(sleepData.getTotalSleep());
+                    }
+                } else {
+                    totalSleepTime = new String("00:00");
+                }
+                lunarSleepTotal.setText(totalSleepTime);
             }
-            return totalSleepTime;
-        }
-        return new String("00:00");
+        });
     }
+
 
     @Subscribe
     public void onEvent(LocationChangedEvent locationChangedEvent) {
@@ -307,7 +320,7 @@ public class MainClockFragment extends BaseFragment {
     }
 
     @Subscribe
-    public void onEvent(ChangeGoalEvent cahngeGoal){
+    public void onEvent(ChangeGoalEvent cahngeGoal) {
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -354,6 +367,10 @@ public class MainClockFragment extends BaseFragment {
             }
         }
         return new City();
+    }
+
+    public interface ObtainDailyStepsListener {
+        void obtainDailySteps(Steps steps);
     }
 }
 

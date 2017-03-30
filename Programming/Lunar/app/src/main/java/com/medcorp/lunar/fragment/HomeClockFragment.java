@@ -27,12 +27,11 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * Created by Jason on 2016/10/24.
@@ -51,8 +50,7 @@ public class HomeClockFragment extends BaseObservableFragment {
     @Bind(R.id.world_clock_fragment_show_location_city_tv)
     TextView showLocationCityInfo;
 
-    private Realm realm = Realm.getDefaultInstance();
-    private RealmResults<City> cities;
+    private List<City> cities;
     private String localCityName;
     private TimeZone timeZone;
     private String homeCityName;
@@ -71,7 +69,7 @@ public class HomeClockFragment extends BaseObservableFragment {
         View view = inflater.inflate(R.layout.sunrise_sunset_activity, container, false);
         ButterKnife.bind(this, view);
         mPositionLocal = Preferences.getLocation(HomeClockFragment.this.getContext());
-        cities = realm.where(City.class).findAll();
+        cities = getModel().getWorldClockDatabaseHelper().getAll();
         setHasOptionsMenu(true);
         return view;
     }
@@ -146,7 +144,6 @@ public class HomeClockFragment extends BaseObservableFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        realm.close();
     }
 
     @Subscribe

@@ -27,7 +27,7 @@
         android:orientation="vertical"
         android:layout_marginLeft="56dp">
 
-        <com.medcorp.view.customfontview.RobotoTextView
+        <com.medcorp.lunar.view.customfontview.RobotoTextView
             android:id="@+id/activity_setting_notification_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
             android:textSize="16sp"
             roboto:bold="true"/>
 
-        <com.medcorp.view.customfontview.RobotoTextView
+        <com.medcorp.lunar.view.customfontview.RobotoTextView
             android:id="@+id/activity_setting_notification_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

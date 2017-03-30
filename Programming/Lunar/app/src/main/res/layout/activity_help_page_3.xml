@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.medcorp.view.customfontview.RobotoTextView
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_help_page_3_textview"
         android:textColor="@color/black"
         android:layout_width="wrap_content"
@@ -18,7 +18,7 @@
         android:layout_marginTop="50dp"
         android:text="@string/help_track_sleep_goodmorning"/>
 
-    <com.medcorp.view.customfontview.RobotoTextView
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_help_page_3_notice_textview"
         android:layout_below="@id/activity_help_page_3_textview"
         android:textColor="@color/black"
@@ -38,7 +38,7 @@
         android:background="@drawable/tutorial_nevo_bt_onoff"
         />
 
-    <com.medcorp.view.customfontview.RobotoButton
+    <com.medcorp.lunar.view.customfontview.RobotoButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

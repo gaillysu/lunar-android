@@ -6,7 +6,7 @@
                 android:background="@color/baseBackground"
                 android:orientation="vertical">
 
-    <com.medcorp.view.customfontview.RobotoTextView
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page3_start_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
         android:textSize="36sp"
         roboto:bold="true"/>
 
-    <com.medcorp.view.customfontview.RobotoTextView
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page3_notice_textview"
         android:layout_width="275dp"
         android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
         android:background="@drawable/tutorial_nevo_settime"
         android:padding="20dp"/>
 
-    <com.medcorp.view.customfontview.RobotoButton
+    <com.medcorp.lunar.view.customfontview.RobotoButton
         android:id="@+id/activity_tutorial_3_next_button"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"

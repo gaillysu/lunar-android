@@ -10,14 +10,15 @@ import com.medcorp.lunar.ble.model.color.visitor.NevoLedVisitor;
 public class LedLamp extends NevoLed {
 
 
-    private int id;
+    private int id = (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
     private String name;
     private int color;
     private boolean isSelect;
 
-    public LedLamp (){
+    public LedLamp() {
 
     }
+
 
     public LedLamp(String name, int color) {
         this.name = name;
