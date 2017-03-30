@@ -68,13 +68,14 @@ public class EditNotificationAttributeActivity extends BaseActivity {
 
     private void initView() {
         Intent intent = getIntent();
-        isEdit = intent.getBooleanExtra("isEdit", false);
+        isEdit = intent.getBooleanExtra(getString(R.string.is_edit_page), false);
         if (isEdit) {
-            mLedLamp = getModel().getSelectLamp(intent.getStringExtra("name"), intent.getIntExtra("color", -1));
+            mLedLamp = getModel().getSelectLamp(intent.getStringExtra(getString(R.string.lamp_name))
+                    , intent.getIntExtra(getString(R.string.lamp_color), -1));
             showSelectColor.setColorFilter(mLedLamp.getColor());
             name = mLedLamp.getName();
         } else {
-            name = intent.getStringExtra("name");
+            name = intent.getStringExtra(getString(R.string.lamp_name));
         }
         mNameTv.setText(name);
     }

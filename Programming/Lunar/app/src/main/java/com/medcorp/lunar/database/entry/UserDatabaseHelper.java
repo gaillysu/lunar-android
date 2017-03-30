@@ -5,6 +5,10 @@ import com.medcorp.lunar.model.User;
 import java.util.Date;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -14,53 +18,83 @@ import io.realm.RealmResults;
 public class UserDatabaseHelper {
 
     private Realm mRealm;
-    private boolean isSuccess;
-
     public UserDatabaseHelper() {
         mRealm = Realm.getDefaultInstance();
     }
 
-    public void add(final User object) {
-        mRealm.executeTransaction(new Realm.Transaction() {
+    public Observable<Boolean> add(final User object) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
-            public void execute(Realm realm) {
-                realm.copyToRealm(object);
+            public void subscribe(final ObservableEmitter<Boolean> e) throws Exception {
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        User user = realm.createObject(User.class);
+                        user.setId(object.getId());
+                        user.setWechat(object.getWechat());
+                        user.setAge(object.getAge());
+                        user.setBirthday(object.getBirthday());
+                        user.setCreatedDate(object.getCreatedDate());
+                        user.setFirstName(object.getFirstName());
+                        user.setHeight(object.getHeight());
+                        user.setWeight(object.getWeight());
+                        user.setIsConnectValidic(object.isConnectValidic());
+                        user.setLastName(object.getLastName());
+                        user.setIsLogin(object.isLogin());
+                        user.setNevoUserEmail(object.getNevoUserEmail());
+                        user.setNevoUserID(object.getNevoUserID());
+                        user.setSex(object.getSex());
+                        user.setValidicUserToken(object.getValidicUserToken());
+                        user.setRemarks(object.getRemarks());
+                        user.setValidicUserID(object.getValidicUserID());
+                        user.setNevoUserToken(object.getNevoUserToken());
+                        e.onNext(true);
+                        e.onComplete();
+                    }
+                });
             }
-        });
+        }).subscribeOn(AndroidSchedulers.mainThread());
     }
 
-    public boolean update(final User object) {
-        mRealm.executeTransaction(new Realm.Transaction() {
+    public Observable<Boolean> update(final User object) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
-            public void execute(Realm realm) {
-                User user = mRealm.where(User.class).equalTo("nevoUserID", object.getNevoUserID())
-                        .equalTo("createdDate", object.getCreatedDate()).findFirst();
-                if (user != null) {
-                    user.setId(object.getId());
-                    user.setWechat(object.getWechat());
-                    user.setAge(object.getAge());
-                    user.setBirthday(object.getBirthday());
-                    user.setCreatedDate(object.getCreatedDate());
-                    user.setFirstName(object.getFirstName());
-                    user.setHeight(object.getHeight());
-                    user.setWeight(object.getWeight());
-                    user.setIsConnectValidic(object.isConnectValidic());
-                    user.setLastName(object.getLastName());
-                    user.setIsLogin(object.isLogin());
-                    user.setNevoUserEmail(object.getNevoUserEmail());
-                    user.setNevoUserID(object.getNevoUserID());
-                    user.setSex(object.getSex());
-                    user.setValidicUserToken(object.getValidicUserToken());
-                    user.setRemarks(object.getRemarks());
-                    user.setValidicUserID(object.getValidicUserID());
-                    user.setNevoUserToken(object.getNevoUserToken());
-                    isSuccess = true;
-                } else {
-                    add(object);
-                }
+            public void subscribe(final ObservableEmitter<Boolean> e) throws Exception {
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        User user = mRealm.where(User.class).equalTo("nevoUserID", object.getNevoUserID())
+                                .equalTo("createdDate", object.getCreatedDate()).findFirst();
+                        if (user != null) {
+                            user.setId(object.getId());
+                            user.setWechat(object.getWechat());
+                            user.setAge(object.getAge());
+                            user.setBirthday(object.getBirthday());
+                            user.setCreatedDate(object.getCreatedDate());
+                            user.setFirstName(object.getFirstName());
+                            user.setHeight(object.getHeight());
+                            user.setWeight(object.getWeight());
+                            user.setIsConnectValidic(object.isConnectValidic());
+                            user.setLastName(object.getLastName());
+                            user.setIsLogin(object.isLogin());
+                            user.setNevoUserEmail(object.getNevoUserEmail());
+                            user.setNevoUserID(object.getNevoUserID());
+                            user.setSex(object.getSex());
+                            user.setValidicUserToken(object.getValidicUserToken());
+                            user.setRemarks(object.getRemarks());
+                            user.setValidicUserID(object.getValidicUserID());
+                            user.setNevoUserToken(object.getNevoUserToken());
+                            e.onNext(true);
+                            e.onComplete();
+                        } else {
+                            e.onNext(false);
+                            e.onComplete();
+                        }
+                    }
+                });
             }
         });
-        return isSuccess;
+
     }
 
     public void remove(String userId, Date date) {

@@ -338,8 +338,20 @@ public class ApplicationModel extends Application {
         });
     }
 
-    public void saveNevoUser(User user) {
-        userDatabaseHelper.update(user);
+    public void saveNevoUser(final User user) {
+        userDatabaseHelper.update(user).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (!aBoolean) {
+                    userDatabaseHelper.add(user).subscribe(new Consumer<Boolean>() {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception {
+                            Log.e("jason", "save user right");
+                        }
+                    });
+                }
+            }
+        });
     }
 
     //TODO
@@ -390,54 +402,14 @@ public class ApplicationModel extends Application {
             Date dateStart = CalendarWeekUtils.getDayStartTime(new Date(start));
             dateStarts.add(dateStart);
         }
-        solarDatabaseHelper.getSolarDatas(userId,dateStarts).subscribe(new Consumer<List<Solar>>() {
+        solarDatabaseHelper.getSolarDatas(userId, dateStarts).subscribe(new Consumer<List<Solar>>() {
             @Override
             public void accept(List<Solar> solars) throws Exception {
-                if(listener != null){
+                if (listener != null) {
                     listener.obtainSolarData(solars);
                 }
             }
         });
-    }
-
-    public List<Solar> getLastWeekSolar(int userId, Date date) {
-        List<Solar> lastWeekSolar = new ArrayList<>();
-        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getLastWeekStart().getTime(); start <=
-                calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
-            solarDatabaseHelper.get(userId, new Date(start)).subscribe(new Consumer<Solar>() {
-                @Override
-                public void accept(Solar solar) throws Exception {
-                    mSolar = solar;
-                }
-            });
-            if (mSolar != null) {
-                lastWeekSolar.add(mSolar);
-            } else {
-                lastWeekSolar.add(new Solar(new Date(start), start, getNevoUser().getId(), "", 0));
-            }
-        }
-        return lastWeekSolar;
-    }
-
-    public List<Solar> getLastMonthSolar(int userId, Date date) {
-        List<Solar> lastMonthSolar = new ArrayList<>();
-        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getMonthStartDate().getTime(); start <=
-                date.getTime(); start += 24 * 60 * 60 * 1000L) {
-            solarDatabaseHelper.get(userId, new Date(start)).subscribe(new Consumer<Solar>() {
-                @Override
-                public void accept(Solar solar) throws Exception {
-                    mSolar = solar;
-                }
-            });
-            if (mSolar != null) {
-                lastMonthSolar.add(mSolar);
-            } else {
-                lastMonthSolar.add(new Solar(new Date(start), start, getNevoUser().getId(), "", 0));
-            }
-        }
-        return lastMonthSolar;
     }
 
     public void getSleep(String userId, Date date, WeekData weekData,

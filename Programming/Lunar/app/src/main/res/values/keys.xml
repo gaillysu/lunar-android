@@ -51,9 +51,7 @@
     <string name="key_validic_organization_token" translatable="false">b85dcb3b85e925200f3fd4cafe6dce92295f449d9596b137941de7e9e2c3e7ae</string>
     <!-- Nevo API token -->
     <string name="token" translatable="false">Sfz1Nk9Qt3J0dt7jNOLX0x7VHaT83V8h</string>
-
-    <!-- Steps keys -->
-    <string name="current_week">current_week</string>
-    <string name="last_week">last_week</string>
-    <string name="last_month">last_month</string>
+    <string name="is_edit_page">isEdit</string>
+    <string name="lamp_name">lamp_name</string>
+    <string name="lamp_color">lamp_color</string>
 </resources>

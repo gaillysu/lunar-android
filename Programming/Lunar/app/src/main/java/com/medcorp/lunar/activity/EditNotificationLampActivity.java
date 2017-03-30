@@ -111,8 +111,8 @@ public class EditNotificationLampActivity extends BaseActivity {
 
     private void openChooseColor() {
         Intent intent = new Intent(EditNotificationLampActivity.this, EditNotificationAttributeActivity.class);
-        intent.putExtra("isEdit", false);
-        intent.putExtra("name", getResources().getString(R.string.notification_def_name));
+        intent.putExtra(getString(R.string.is_edit_page), false);
+        intent.putExtra(getString(R.string.lamp_name), getResources().getString(R.string.notification_def_name));
         startActivity(intent);
     }
 
@@ -167,9 +167,9 @@ public class EditNotificationLampActivity extends BaseActivity {
                 LedLamp ledLamp = userSettingAllLamp.get(adapterPosition);
                 if (ledLamp != null) {
                     Intent intent = new Intent(EditNotificationLampActivity.this, EditNotificationAttributeActivity.class);
-                    intent.putExtra("name", ledLamp.getName());
-                    intent.putExtra("color",ledLamp.getColor());
-                    intent.putExtra("isEdit", true);
+                    intent.putExtra(getString(R.string.lamp_name), ledLamp.getName());
+                    intent.putExtra(getString(R.string.lamp_color),ledLamp.getColor());
+                    intent.putExtra(getString(R.string.is_edit_page), true);
                     startActivity(intent);
                 }
             }

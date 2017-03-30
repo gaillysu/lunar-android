@@ -37,7 +37,6 @@ public class User extends RealmObject {
     @SerializedName("remarks")
     private String remarks;
 
-    @PrimaryKey
     @SerializedName("nevoUserID")
     private String nevoUserID;
 
