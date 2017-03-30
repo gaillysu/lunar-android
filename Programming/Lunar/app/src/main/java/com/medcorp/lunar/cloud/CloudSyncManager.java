@@ -349,22 +349,22 @@ public class CloudSyncManager {
             public void onRequestSuccess(WeChatLoginModel weChatLoginModel) {
                 if (weChatLoginModel.getStatus() == 1) {
                     WeChatLoginModel.UserBean user = weChatLoginModel.getUser();
-                    final User nevoUser = getModel().getNevoUser();
-                    nevoUser.setFirstName(user.getFirst_name());
-                    nevoUser.setNevoUserID("" + user.getId());
-                    nevoUser.setWechat(user.getWechat());
-                    nevoUser.setIsLogin(true);
-                    nevoUser.setCreatedDate(new Date().getTime());
+                    final User lunarUser = getModel().getNevoUser();
+                    lunarUser.setFirstName(user.getFirst_name());
+                    lunarUser.setNevoUserID("" + user.getId());
+                    lunarUser.setWechat(user.getWechat());
+                    lunarUser.setIsLogin(true);
+                    lunarUser.setCreatedDate(new Date().getTime());
                     //save it and sync with watch and cloud server
-                    getModel().saveNevoUser(nevoUser);
+                    getModel().saveNevoUser(lunarUser);
                     getModel().getSyncController().getDailyTrackerInfo(true);
-                    getModel().getNeedSyncSteps(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
+                    getModel().getNeedSyncSteps(lunarUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
                         @Override
                         public void accept(final List<Steps> stepses) throws Exception {
-                            getModel().getNeedSyncSleep(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Sleep>>() {
+                            getModel().getNeedSyncSleep(lunarUser.getNevoUserID()).subscribe(new Consumer<List<Sleep>>() {
                                 @Override
                                 public void accept(List<Sleep> sleeps) throws Exception {
-                                    launchSyncAll(nevoUser, stepses, sleeps);
+                                    launchSyncAll(lunarUser, stepses, sleeps);
                                 }
                             });
                         }
