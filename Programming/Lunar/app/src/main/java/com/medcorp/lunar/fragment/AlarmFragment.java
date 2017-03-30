@@ -90,19 +90,15 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
             @Override
             public void syncAlarmToWatch(List<Alarm> alarms) {
                 alarmList = alarms;
-                initAdapterView();
+                alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarmList, AlarmFragment.this);
+                alarmListView.setAdapter(alarmArrayAdapter);
+                alarmListView.setOnItemClickListener(AlarmFragment.this);
+                isMondayChecked = true;
+                mMap = new TreeMap<>();
+                refreshListView();
+                setHasOptionsMenu(true);
             }
         });
-    }
-
-    private void initAdapterView() {
-        alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarmList, AlarmFragment.this);
-        alarmListView.setAdapter(alarmArrayAdapter);
-        alarmListView.setOnItemClickListener(AlarmFragment.this);
-        isMondayChecked = true;
-        mMap = new TreeMap<>();
-        refreshListView();
-        setHasOptionsMenu(true);
     }
 
     private void initAddAlarm() {
@@ -275,7 +271,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         super.onActivityResult(requestCode, resultCode, data);
         //when delete (resultCode == -1) or update (resultCode == 1) the enable alarm, do alarm sync
         //resultCode == 0 ,do nothing
-        initData();
+        refreshListView();
         if (resultCode != 0) {
             syncAlarmByEditor(resultCode);
         }
@@ -293,9 +289,9 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
             getModel().getAllAlarm(new SyncControllerImpl.SyncAlarmToWatchListener() {
                 @Override
                 public void syncAlarmToWatch(List<Alarm> alarms) {
-//                    alarmList = alarms;
-//                    alarmArrayAdapter.notifyDataSetChanged();
-                    initData();
+                    alarmArrayAdapter.clear();
+                    alarmArrayAdapter.addAll(alarms);
+                    alarmArrayAdapter.notifyDataSetChanged();
                     alarmListView.invalidate();
                 }
             });

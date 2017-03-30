@@ -1,14 +1,12 @@
 package com.medcorp.lunar.model;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Karl on 11/25/15.
  */
 public class Goal extends RealmObject {
 
-    @PrimaryKey
     private int id = (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
     private String label;
     private boolean status;
@@ -18,12 +16,7 @@ public class Goal extends RealmObject {
 
     }
 
-    public Goal(int id, String label, boolean status, int steps) {
-        this(label, status, steps);
-        this.id = id;
-    }
-
-    private Goal(String label, boolean status, int steps) {
+    public Goal(String label, boolean status, int steps) {
         this.label = label;
         this.status = status;
         this.steps = steps;

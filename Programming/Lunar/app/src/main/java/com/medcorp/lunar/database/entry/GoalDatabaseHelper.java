@@ -17,18 +17,25 @@ import io.realm.RealmResults;
 public class GoalDatabaseHelper {
 
     private Realm mRealm;
+
     public GoalDatabaseHelper() {
         mRealm = Realm.getDefaultInstance();
     }
 
-    public void add(final Goal object) {
-        Observable.create(new ObservableOnSubscribe<Boolean>() {
+    public Observable<Boolean> add(final Goal object) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
-            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+            public void subscribe(final ObservableEmitter<Boolean> e) throws Exception {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        realm.copyToRealm(object);
+                        Goal goal = realm.createObject(Goal.class);
+                        goal.setSteps(object.getSteps());
+                        goal.setId(object.getId());
+                        goal.setSteps(object.getSteps());
+                        goal.setLabel(object.getLabel());
+                        e.onNext(true);
+                        e.onComplete();
                     }
                 });
             }
@@ -86,7 +93,6 @@ public class GoalDatabaseHelper {
                     e.onNext(mRealm.copyFromRealm(goal));
                     e.onComplete();
                 }
-                e.onComplete();
             }
         });
     }
@@ -98,8 +104,6 @@ public class GoalDatabaseHelper {
                 RealmResults<Goal> allGoal = mRealm.where(Goal.class).findAll();
                 if (allGoal != null) {
                     e.onNext(mRealm.copyFromRealm(allGoal));
-                    e.onComplete();
-                } else {
                     e.onComplete();
                 }
             }

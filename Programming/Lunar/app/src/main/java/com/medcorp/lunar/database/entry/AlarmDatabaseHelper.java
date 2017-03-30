@@ -80,7 +80,7 @@ public class AlarmDatabaseHelper {
     }
 
     public Observable<Boolean> remove(final int alarmId) {
-       return Observable.create(new ObservableOnSubscribe<Boolean>() {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(final ObservableEmitter<Boolean> e) throws Exception {
                 final Alarm alarm = mRealm.where(Alarm.class).equalTo("id", alarmId).findFirst();
@@ -100,12 +100,14 @@ public class AlarmDatabaseHelper {
         return Observable.create(new ObservableOnSubscribe<Alarm>() {
             @Override
             public void subscribe(ObservableEmitter<Alarm> e) throws Exception {
-                Alarm alarm =mRealm.copyFromRealm(mRealm.where(Alarm.class).equalTo("id", alarmId).findFirst());
-
-                if (alarm == null) {
-                    alarm = new Alarm();
+                Alarm obtainAlarm = null;
+                Alarm alarm = mRealm.where(Alarm.class).equalTo("id", alarmId).findFirst();
+                if (alarm != null) {
+                    obtainAlarm = mRealm.copyFromRealm(alarm);
+                } else {
+                    obtainAlarm = new Alarm();
                 }
-                e.onNext(alarm);
+                e.onNext(obtainAlarm);
                 e.onComplete();
             }
         }).subscribeOn(AndroidSchedulers.mainThread());
@@ -115,12 +117,14 @@ public class AlarmDatabaseHelper {
         return Observable.create(new ObservableOnSubscribe<List<Alarm>>() {
             @Override
             public void subscribe(ObservableEmitter<List<Alarm>> e) throws Exception {
-                List<Alarm> allAlarms = mRealm.copyFromRealm(mRealm.where(Alarm.class).findAll());
-                if (allAlarms == null) {
-                    allAlarms = new ArrayList<>();
+                List<Alarm> allAlarms = mRealm.where(Alarm.class).findAll();
+                if (allAlarms != null) {
+                    e.onNext(mRealm.copyFromRealm(allAlarms));
+                    e.onComplete();
+                } else {
+                    e.onNext(new ArrayList<Alarm>());
+                    e.onComplete();
                 }
-                e.onNext(allAlarms);
-                e.onComplete();
             }
         }).subscribeOn(AndroidSchedulers.mainThread());
     }

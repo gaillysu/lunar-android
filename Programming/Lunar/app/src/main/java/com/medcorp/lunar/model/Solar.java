@@ -6,7 +6,6 @@ import com.medcorp.lunar.util.Common;
 import java.util.Date;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by karl-john on 25/8/2016.
@@ -25,7 +24,6 @@ public class Solar extends RealmObject {
     /**
      * date is the daily date,format is YYYY-MM-DD
      */
-    @PrimaryKey
     private long date;
 
     private int userId;

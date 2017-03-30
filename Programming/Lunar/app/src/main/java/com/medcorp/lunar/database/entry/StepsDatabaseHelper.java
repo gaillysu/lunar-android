@@ -147,8 +147,9 @@ public class StepsDatabaseHelper {
                 }
             }
         }).subscribeOn(AndroidSchedulers.mainThread());
-
     }
+
+
 
     public Observable<List<Steps>> getDailySteps(final String userId, final List<Date> dates) {
         return Observable.create(new ObservableOnSubscribe<List<Steps>>() {
@@ -181,8 +182,14 @@ public class StepsDatabaseHelper {
         return Observable.create(new ObservableOnSubscribe<List<Steps>>() {
             @Override
             public void subscribe(ObservableEmitter<List<Steps>> e) throws Exception {
+                List<Steps> allSteps = null;
                 List<Steps> stepses = mRealm.where(Steps.class).equalTo("nevoUserID", userId).findAll();
-                e.onNext(mRealm.copyFromRealm(stepses));
+                if(stepses!=null){
+                    allSteps = mRealm.copyFromRealm(stepses);
+                }else{
+                    allSteps = new ArrayList<>();
+                }
+                e.onNext(allSteps);
                 e.onComplete();
             }
         }).subscribeOn(AndroidSchedulers.mainThread());

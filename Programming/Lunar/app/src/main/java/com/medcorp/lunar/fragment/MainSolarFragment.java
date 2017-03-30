@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +54,10 @@ public class MainSolarFragment extends BaseFragment {
     TextView solarTitle;
     private Date userSelectDate;
     private Solar mSolarOptional;
+    private float powerOnBatteryPercent = 100f;
+    private float powerOnSolarPercent = 0f;
+    private int powerOnSolarMinutes = 0;
+    private int powOnBatteryMinutes = 24 * 60; //default battery time,unit in "minutes"
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,30 +79,27 @@ public class MainSolarFragment extends BaseFragment {
     }
 
     private void initData(Date userSelectDate) {
-        float powerOnBatteryPercent = 100f;
-        float powerOnSolarPercent = 0f;
-        int powerOnSolarMinutes = 0;
-        int powOnBatteryMinutes = 24 * 60; //default battery time,unit in "minutes"
+
         if (Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime()) {
             powOnBatteryMinutes = new DateTime().getMinuteOfDay();
         }
-        getModel().getSolarDatabaseHelper().get(getModel().getNevoUser().getId(), userSelectDate).subscribe(new Consumer<Solar>() {
+        getModel().getSolarDatabaseHelper().get(getModel().getNevoUser().getId(), userSelectDate)
+                .subscribe(new Consumer<Solar>() {
             @Override
             public void accept(Solar solar) throws Exception {
                 mSolarOptional = solar;
-                Log.i("jason","solar::::"+mSolarOptional.toString());
+                if (mSolarOptional != null) {
+                    powerOnSolarPercent = mSolarOptional.getTotalHarvestingTime() * 100f / (powOnBatteryMinutes);
+                    powerOnBatteryPercent = 100f - powerOnSolarPercent;
+                    powerOnSolarMinutes = mSolarOptional.getTotalHarvestingTime();
+                    powOnBatteryMinutes = powOnBatteryMinutes - powerOnSolarMinutes;
+                }
+                float[] solarPieChartDate = {powerOnSolarPercent, powerOnBatteryPercent};
+                setPieChartData(solarPieChartDate);
+                batteryTimeTv.setText(TimeUtil.formatTime(powOnBatteryMinutes));
+                solarTimeTv.setText(TimeUtil.formatTime(powerOnSolarMinutes));
             }
         });
-        if (mSolarOptional != null) {
-            powerOnSolarPercent = mSolarOptional.getTotalHarvestingTime() * 100f / (powOnBatteryMinutes);
-            powerOnBatteryPercent = 100f - powerOnSolarPercent;
-            powerOnSolarMinutes = mSolarOptional.getTotalHarvestingTime();
-            powOnBatteryMinutes = powOnBatteryMinutes - powerOnSolarMinutes;
-        }
-        float[] solarPieChartDate = {powerOnSolarPercent, powerOnBatteryPercent};
-        setPieChartData(solarPieChartDate);
-        batteryTimeTv.setText(TimeUtil.formatTime(powOnBatteryMinutes));
-        solarTimeTv.setText(TimeUtil.formatTime(powerOnSolarMinutes));
     }
 
     private void setPieChartData(float[] solarPieChartDate) {

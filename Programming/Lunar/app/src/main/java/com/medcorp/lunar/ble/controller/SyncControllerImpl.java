@@ -68,6 +68,7 @@ import com.medcorp.lunar.event.bluetooth.LittleSyncEvent;
 import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.event.bluetooth.RequestResponseEvent;
 import com.medcorp.lunar.event.bluetooth.SolarConvertEvent;
+import com.medcorp.lunar.fragment.MainClockFragment;
 import com.medcorp.lunar.model.Alarm;
 import com.medcorp.lunar.model.Battery;
 import com.medcorp.lunar.model.DailyHistory;
@@ -439,9 +440,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     }
                 } else if ((byte) GetStepsGoalRequest.HEADER == lunarData.getRawData()[1]) {
                     //save current day's step count to "Steps" table
-                    DailyStepsPacket stepPacket = new DailyStepsPacket(packet.getPackets());
+                    final DailyStepsPacket stepPacket = new DailyStepsPacket(packet.getPackets());
                     Log.i(TAG, "little sync,Date:" + stepPacket.getDailyDate().toString() + ",steps:" + stepPacket.getDailySteps() + ",goal:" + stepPacket.getDailyStepsGoal());
-                    Steps steps = ((ApplicationModel) mContext).getDailySteps(((ApplicationModel) mContext).getNevoUser().getNevoUserID(), Common.removeTimeFromDate(new Date()));
+                    Steps steps = ((ApplicationModel) mContext).getDailySteps(((ApplicationModel) mContext)
+                            .getNevoUser().getNevoUserID(), Common.removeTimeFromDate(new Date()));
                     steps.setCreatedDate(new Date().getTime());
                     steps.setDate(Common.removeTimeFromDate(new Date()).getTime());
                     steps.setSteps(stepPacket.getDailySteps());
@@ -496,16 +498,16 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //step0:firstly read watch infomation, for Lunar and nevo Solar, we use watch ID to show solar power screen
                     sendRequest(new ReadWatchInfoRequest(mContext));
                     //it is dangerous when every BLE connection invoke setRtc(), perhaps it will reset some data, so we should invoke setRTC() once time(only get paired with the watch)
-//                    if (mLocalService.getPairedWatch() != null && mLocalService.getPairedWatch().equals(connectionController.getSaveAddress())) {
-//                        mLocalService.setPairedWatch(null);
-//                        Log.w(TAG, "SET RTC");
-//                        //step 1: setRTC every connection
-//                        setRtc();
-//                    } else {
-//                        //directly do steps 2 without setRTC
-//                        //setp2:start set user profile
-//                        sendRequest(new SetProfileRequest(mContext, ((ApplicationModel) mContext).getNevoUser()));
-//                    }
+                    //                    if (mLocalService.getPairedWatch() != null && mLocalService.getPairedWatch().equals(connectionController.getSaveAddress())) {
+                    //                        mLocalService.setPairedWatch(null);
+                    //                        Log.w(TAG, "SET RTC");
+                    //                        //step 1: setRTC every connection
+                    //                        setRtc();
+                    //                    } else {
+                    //                        //directly do steps 2 without setRTC
+                    //                        //setp2:start set user profile
+                    //                        sendRequest(new SetProfileRequest(mContext, ((ApplicationModel) mContext).getNevoUser()));
+                    //                    }
                     setRtc();
                     setWorldClockOffset();
                     if (isPendingsunriseAndsunset) {

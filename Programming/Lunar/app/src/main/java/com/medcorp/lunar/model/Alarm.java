@@ -19,11 +19,6 @@ public class Alarm extends RealmObject{
 
     }
 
-    public Alarm(int id, int hour, int minute, byte weekDay, String label, byte alarmStyle, byte alarmNumber){
-        this( hour,  minute,  weekDay,  label,  alarmStyle,  alarmNumber);
-        this.id = id;
-    }
-
     public Alarm(int hour, int minute, byte weekDay, String label, byte alarmStyle, byte alarmNumber) {
         this.hour = hour;
         this.minute = minute;

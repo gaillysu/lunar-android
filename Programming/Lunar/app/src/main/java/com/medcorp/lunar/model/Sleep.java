@@ -1,7 +1,6 @@
 package com.medcorp.lunar.model;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by gaillysu on 15/11/17.
@@ -16,7 +15,6 @@ public class Sleep extends RealmObject implements Comparable<Sleep> {
     private String nevoUserID;
 
     private long createdDate;
-    @PrimaryKey
     private long date;
 
     private int totalSleepTime;

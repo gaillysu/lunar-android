@@ -56,7 +56,12 @@ import com.medcorp.lunar.event.validic.ValidicException;
 import com.medcorp.lunar.event.validic.ValidicReadMoreRoutineRecordsModelEvent;
 import com.medcorp.lunar.event.validic.ValidicReadMoreSleepRecordsModelEvent;
 import com.medcorp.lunar.event.validic.ValidicUpdateRoutineRecordsModelEvent;
+import com.medcorp.lunar.fragment.AnalysisSleepFragment;
+import com.medcorp.lunar.fragment.AnalysisSolarFragment;
 import com.medcorp.lunar.fragment.AnalysisStepsFragment;
+import com.medcorp.lunar.fragment.MainFragment;
+import com.medcorp.lunar.fragment.MainSleepFragment;
+import com.medcorp.lunar.fragment.WeekData;
 import com.medcorp.lunar.googlefit.GoogleFitManager;
 import com.medcorp.lunar.googlefit.GoogleFitStepsDataHandler;
 import com.medcorp.lunar.googlefit.GoogleFitTaskCounter;
@@ -92,7 +97,6 @@ import net.medcorp.library.worldclock.WorldClockLibraryModule;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -159,11 +163,11 @@ public class ApplicationModel extends Application {
     private final String REALM_NAME = "med_lunar.realm";
     private Solar mSolar;
     private Sleep mSleep;
-    private List<Goal> allGoal;
     private boolean upDateIsSuccess;
     private Goal goal;
     private Sleep mYesterdaySleep;
     private List<Sleep> mSleeps;
+    private Sleep[] todaySleep;
 
     @Override
     public void onCreate() {
@@ -191,7 +195,6 @@ public class ApplicationModel extends Application {
         ledDataBase = new LedLampDatabase();
         locationController = new LocationController(this);
         mIWXAPI = WXAPIFactory.createWXAPI(this, getString(R.string.we_chat_app_id), true);
-        worldClockDatabaseHelper.setupWorldClock();
         User user = userDatabaseHelper.getLoginUser();
 
         if (user == null) {
@@ -208,7 +211,19 @@ public class ApplicationModel extends Application {
     public void onEvent(OnSyncEvent event) {
         if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
             updateGoogleFit();
-            getCloudSyncManager().launchSyncWeekly(nevoUser, getNeedSyncSteps(nevoUser.getNevoUserID()), getNeedSyncSleep(nevoUser.getNevoUserID()));
+            getNeedSyncSteps(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
+                @Override
+                public void accept(final List<Steps> stepses) throws Exception {
+                    if (stepses.size() > 0) {
+                        getNeedSyncSleep(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Sleep>>() {
+                            @Override
+                            public void accept(List<Sleep> sleeps) throws Exception {
+                                getCloudSyncManager().launchSyncWeekly(nevoUser, stepses, sleeps);
+                            }
+                        });
+                    }
+                }
+            });
         }
     }
 
@@ -217,6 +232,7 @@ public class ApplicationModel extends Application {
         if (event.isSuccess()) {
             Steps steps = getDailySteps(nevoUser.getNevoUserID(), Common.removeTimeFromDate(new Date()));
             getCloudSyncManager().launchSyncDaily(nevoUser, steps);
+
         }
     }
 
@@ -315,7 +331,7 @@ public class ApplicationModel extends Application {
         alarmDatabaseHelper.getAll().subscribe(new Consumer<List<Alarm>>() {
             @Override
             public void accept(List<Alarm> alarms) throws Exception {
-                if (listener != null) {
+                if (listener != null && alarms.size() > 0) {
                     listener.syncAlarmToWatch(alarms);
                 }
             }
@@ -349,24 +365,39 @@ public class ApplicationModel extends Application {
         userDatabaseHelper.remove(user.getNevoUserID(), new Date(user.getCreatedDate()));
     }
 
-    public List<Solar> getThisWeekSolar(int userId, Date date) {
-        List<Solar> thisWeekSolar = new ArrayList<>();
+    public void getSolarData(int userId, Date date, WeekData weekData, final AnalysisSolarFragment.ObtainSolarListener listener) {
+
+        List<Date> dateStarts = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getWeekStartDate().getTime(); start <=
-                calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
-            solarDatabaseHelper.get(userId, new Date(start)).subscribe(new Consumer<Solar>() {
-                @Override
-                public void accept(Solar solar) throws Exception {
-                    mSolar = solar;
-                }
-            });
-            if (mSolar != null) {
-                thisWeekSolar.add(mSolar);
-            } else {
-                thisWeekSolar.add(new Solar(new Date(start), start, getNevoUser().getId(), "", 0));
-            }
+        long startTime = 0;
+        long entTime = 0;
+        switch (weekData) {
+            case TISHWEEK:
+                startTime = calendar.getWeekStartDate().getTime();
+                entTime = calendar.getWeekEndDate().getTime();
+                break;
+            case LASTWEEK:
+                startTime = calendar.getLastWeekStart().getTime();
+                entTime = calendar.getLastWeekEnd().getTime();
+                break;
+            case LASTMONTH:
+                startTime = calendar.getMonthStartDate().getTime();
+                entTime = calendar.getMonthEndDate().getTime();
+                break;
         }
-        return thisWeekSolar;
+
+        for (long start = startTime; start <= entTime; start += 24 * 60 * 60 * 1000L) {
+            Date dateStart = CalendarWeekUtils.getDayStartTime(new Date(start));
+            dateStarts.add(dateStart);
+        }
+        solarDatabaseHelper.getSolarDatas(userId,dateStarts).subscribe(new Consumer<List<Solar>>() {
+            @Override
+            public void accept(List<Solar> solars) throws Exception {
+                if(listener != null){
+                    listener.obtainSolarData(solars);
+                }
+            }
+        });
     }
 
     public List<Solar> getLastWeekSolar(int userId, Date date) {
@@ -409,100 +440,61 @@ public class ApplicationModel extends Application {
         return lastMonthSolar;
     }
 
-    public List<SleepData> getThisWeekSleep(String userId, Date date) {
-
-        List<SleepData> thisWeekSleep = new ArrayList<>();
+    public void getSleep(String userId, Date date, WeekData weekData,
+                         final AnalysisSleepFragment.ObtainSleepDataListener weekDataListener) {
+        List<Date> dateStarts = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-
-        for (long start = calendar.getWeekStartDate().getTime(); start <=
-                calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
-            sleepDatabaseHelper.get(userId, new Date(start)).subscribe(new Consumer<Sleep>() {
-                @Override
-                public void accept(Sleep sleep) throws Exception {
-                    mSleep = sleep;
-                }
-            });
-            if (mSleep != null) {
-                Sleep dailySleep = mSleep;
-                SleepData sleepData = new SleepData(dailySleep.getTotalDeepTime()
-                        , dailySleep.getTotalLightTime(), dailySleep.getTotalWakeTime(),
-                        start, dailySleep.getStart(), dailySleep.getEnd());
-                thisWeekSleep.add(sleepData);
-            } else {
-                SleepData sleepData = new SleepData(0, 0, 0, start);
-                thisWeekSleep.add(sleepData);
-            }
+        long startTime = 0;
+        long entTime = 0;
+        switch (weekData) {
+            case TISHWEEK:
+                startTime = calendar.getWeekStartDate().getTime();
+                entTime = calendar.getWeekEndDate().getTime();
+                break;
+            case LASTWEEK:
+                startTime = calendar.getLastWeekStart().getTime();
+                entTime = calendar.getLastWeekEnd().getTime();
+                break;
+            case LASTMONTH:
+                startTime = calendar.getMonthStartDate().getTime();
+                entTime = calendar.getMonthEndDate().getTime();
+                break;
         }
-        return thisWeekSleep;
+
+        for (long start = startTime; start <= entTime; start += 24 * 60 * 60 * 1000L) {
+            Date dateStart = CalendarWeekUtils.getDayStartTime(new Date(start));
+            dateStarts.add(dateStart);
+        }
+
+        sleepDatabaseHelper.getWeekSleep(userId, dateStarts).subscribe(new Consumer<List<SleepData>>() {
+            @Override
+            public void accept(List<SleepData> sleepDatas) throws Exception {
+                if (weekDataListener != null) {
+                    weekDataListener.obtainSleepData(sleepDatas);
+                }
+            }
+        });
     }
 
-
-    public List<SleepData> getLastWeekSleep(String userId, Date date) {
-        List<SleepData> lastWeekSleep = new ArrayList<>(3);
-        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getLastWeekStart().getTime(); start <=
-                calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
-
-            sleepDatabaseHelper.get(userId, new Date(start)).subscribe(new Consumer<Sleep>() {
-                @Override
-                public void accept(Sleep sleep) throws Exception {
-                    mSleep = sleep;
-                }
-            });
-            if (mSleep != null) {
-                Sleep dailySleep = mSleep;
-                SleepData sleepData = new SleepData(dailySleep.getTotalDeepTime()
-                        , dailySleep.getTotalLightTime(), dailySleep.getTotalWakeTime(),
-                        new DateTime(start).getMillis(), dailySleep.getStart(), dailySleep.getEnd());
-                lastWeekSleep.add(sleepData);
-            } else {
-                SleepData sleepData = new SleepData(0, 0, 0, start, 0, 0);
-                lastWeekSleep.add(sleepData);
-            }
-        }
-        return lastWeekSleep;
-    }
-
-    public List<SleepData> getLastMonthSleep(String userId, Date date) {
-        List<SleepData> lastMonth = new ArrayList<>(3);
-        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getMonthStartDate().getTime(); start <=
-                date.getTime(); start += 24 * 60 * 60 * 1000L) {
-            sleepDatabaseHelper.get(userId, new Date(start)).subscribe(new Consumer<Sleep>() {
-                @Override
-                public void accept(Sleep s) throws Exception {
-                    mSleep = s;
-                }
-            });
-            if (mSleep != null) {
-                Sleep dailySleep = mSleep;
-                SleepData sleepData = new SleepData(dailySleep.getTotalDeepTime()
-                        , dailySleep.getTotalLightTime(), dailySleep.getTotalWakeTime(),
-                        start, dailySleep.getStart(), dailySleep.getEnd());
-                lastMonth.add(sleepData);
-            } else {
-                SleepData sleepData = new SleepData(0, 0, 0, start, 0, 0);
-                lastMonth.add(sleepData);
-            }
-        }
-        return lastMonth;
-    }
-
-    public void getSteps(String userId, Date date, String type,
+    public void getSteps(String userId, Date date, WeekData weekData,
                          final AnalysisStepsFragment.OnStepsGetListener listener) {
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
         List<Date> dateStarts = new ArrayList<>();
         long startTime = 0;
         long entTime = 0;
-        if (getApplicationContext().getString(R.string.current_week).equals(type)) {
-            startTime = calendar.getWeekStartDate().getTime();
-            entTime = calendar.getWeekEndDate().getTime();
-        } else if (getApplicationContext().getString(R.string.last_week).equals(type)) {
-            startTime = calendar.getLastWeekStart().getTime();
-            entTime = calendar.getLastWeekEnd().getTime();
-        } else if (getApplicationContext().getString(R.string.last_month).equals(type)) {
-            startTime = calendar.getMonthStartDate().getTime();
-            entTime = calendar.getMonthEndDate().getTime();
+        switch (weekData) {
+            case TISHWEEK:
+                startTime = calendar.getWeekStartDate().getTime();
+                entTime = calendar.getWeekEndDate().getTime();
+                break;
+            case LASTWEEK:
+                startTime = calendar.getLastWeekStart().getTime();
+                entTime = calendar.getLastWeekEnd().getTime();
+                break;
+            case LASTMONTH:
+                startTime = calendar.getMonthStartDate().getTime();
+                entTime = calendar.getMonthEndDate().getTime();
+                break;
         }
 
         for (long start = startTime; start <= entTime; start += 24 * 60 * 60 * 1000L) {
@@ -537,51 +529,60 @@ public class ApplicationModel extends Application {
         }
     }
 
-    public Sleep[] getDailySleep(String userId, Date todayDate) {
-        Sleep[] sleeps = new Sleep[2];
-        Date yesterdayDate = new Date(todayDate.getTime() - 24 * 60 * 60 * 1000l);
+    public void getDailySleep(final String userId, final Date todayDate, final MainSleepFragment.TodaySleepListener listener) {
+        final Date yesterdayDate = new Date(todayDate.getTime() - 24 * 60 * 60 * 1000l);
         sleepDatabaseHelper.get(userId, todayDate).subscribe(new Consumer<Sleep>() {
             @Override
             public void accept(Sleep sleep) throws Exception {
                 mSleep = sleep;
+                sleepDatabaseHelper.get(userId, yesterdayDate).subscribe(new Consumer<Sleep>() {
+                    @Override
+                    public void accept(Sleep sleep) throws Exception {
+                        mYesterdaySleep = sleep;
+                        //use yesterday and today data to analysis sleep,pls refer to SleepDataHandler class
+                        if (mYesterdaySleep != null && mSleep != null) {
+                            todaySleep = new Sleep[]{mSleep, mYesterdaySleep};
+                        }
+                        //use today data to analysis sleep
+                        if (mSleep != null && mYesterdaySleep == null) {
+                            todaySleep = new Sleep[]{mSleep};
+                        }
+                        //use yesterday data (after 18:00) to analysis sleep
+                        if (mYesterdaySleep != null && mSleep == null) {
+                            todaySleep = new Sleep[]{mYesterdaySleep};
+                        }
+                        if (mSleep == null && mYesterdaySleep == null) {
+                            Sleep noDataSleep = new Sleep(todayDate.getTime());
+                            noDataSleep.setDate(Common.removeTimeFromDate(todayDate).getTime());
+                            todaySleep = new Sleep[]{noDataSleep};
+                        }
+                        if (listener != null) {
+                            listener.todaySleep(todaySleep);
+                        }
+                    }
+                });
             }
         });
-        sleepDatabaseHelper.get(userId, yesterdayDate).subscribe(new Consumer<Sleep>() {
-            @Override
-            public void accept(Sleep sleep) throws Exception {
-                mYesterdaySleep = sleep;
-            }
-        });
-        //use yesterday and today data to analysis sleep,pls refer to SleepDataHandler class
-        if (mYesterdaySleep != null && mSleep != null) {
-            return new Sleep[]{mSleep, mYesterdaySleep};
-        }
-        //use today data to analysis sleep
-        if (mSleep != null && mYesterdaySleep == null) {
-            return new Sleep[]{mSleep};
-        }
-        //use yesterday data (after 18:00) to analysis sleep
-        if (mYesterdaySleep != null && mSleep == null) {
-            return new Sleep[]{mYesterdaySleep};
-        }
-        //NO data sleep
-        Sleep noDataSleep = new Sleep(todayDate.getTime());
-        noDataSleep.setDate(Common.removeTimeFromDate(todayDate).getTime());
-        return new Sleep[]{noDataSleep};
     }
 
-    public void saveDailySleep(Sleep sleep) {
-        sleepDatabaseHelper.update(sleep);
-    }
-
-    public List<Steps> getNeedSyncSteps(String userId) {
-        stepsDatabaseHelper.getNeedSyncSteps(userId).subscribe(new Consumer<List<Steps>>() {
+    public void saveDailySleep(final Sleep sleep) {
+        sleepDatabaseHelper.update(sleep).subscribe(new Consumer<Boolean>() {
             @Override
-            public void accept(List<Steps> stepses) throws Exception {
-                allSteps = stepses;
+            public void accept(Boolean aBoolean) throws Exception {
+                if (!aBoolean) {
+                    sleepDatabaseHelper.add(sleep).subscribe(new Consumer<Boolean>() {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception {
+                            Log.e("jason", "save yesterday sleep" + sleep.toString());
+                        }
+                    });
+                }
             }
         });
-        return allSteps;
+    }
+
+    public Observable<List<Steps>> getNeedSyncSteps(String userId) {
+        return stepsDatabaseHelper.getNeedSyncSteps(userId);
     }
 
     public boolean isFoundInLocalSteps(int activity_id) {
@@ -717,7 +718,7 @@ public class ApplicationModel extends Application {
         int lightSleep = 0;
         int deepSleep = 0;
         int wake = 0;
-        List<Integer> hourlySleepList = new ArrayList<Integer>();
+        List<Integer> hourlySleepList = new ArrayList<>();
         try {
             JSONArray hourlyWake = new JSONArray(sleep.getHourlyWake());
             for (int i = 0; i < hourlyWake.length(); i++) {
@@ -755,18 +756,11 @@ public class ApplicationModel extends Application {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         saveDailySleep(sleep);
     }
 
-    public List<Sleep> getNeedSyncSleep(String userid) {
-        sleepDatabaseHelper.getNeedSyncSleep(userid).subscribe(new Consumer<List<Sleep>>() {
-            @Override
-            public void accept(List<Sleep> sleeps) throws Exception {
-                mSleeps = sleeps;
-            }
-        });
-        return mSleeps;
+    public Observable<List<Sleep>> getNeedSyncSleep(String userid) {
+        return sleepDatabaseHelper.getNeedSyncSleep(userid);
     }
 
     public Observable<Boolean> addAlarm(Alarm alarm) {
@@ -799,22 +793,26 @@ public class ApplicationModel extends Application {
         return alarmDatabaseHelper.remove(alarm.getId());
     }
 
-    public List<Goal> getAllGoal() {
+    public void getAllGoal(final MainFragment.ObtainGoalListener listener) {
         goalDatabaseHelper.getAll().subscribe(new Consumer<List<Goal>>() {
             @Override
             public void accept(List<Goal> goals) throws Exception {
-                allGoal = goals;
+                if (listener != null) {
+                    listener.obtainGoal(goals);
+                }
             }
         });
-        if (allGoal != null) {
-            return allGoal;
-        } else {
-            return allGoal = new ArrayList<>();
-        }
     }
 
     public void addGoal(Goal goal) {
-        goalDatabaseHelper.add(goal);
+        goalDatabaseHelper.add(goal).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    Log.i("jason", "append success");
+                }
+            }
+        });
     }
 
     public boolean updateGoal(Goal goal) {
@@ -1041,7 +1039,17 @@ public class ApplicationModel extends Application {
     public void onValidicCreateUserEvent(ValidicCreateUserEvent validicCreateUserEvent) {
         saveNevoUser(validicCreateUserEvent.getUser());
         getSyncController().getDailyTrackerInfo(true);
-        getCloudSyncManager().launchSyncAll(nevoUser, getNeedSyncSteps(nevoUser.getNevoUserID()), getNeedSyncSleep(nevoUser.getNevoUserID()));
+        getNeedSyncSteps(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
+            @Override
+            public void accept(final List<Steps> stepses) throws Exception {
+                getNeedSyncSleep(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Sleep>>() {
+                    @Override
+                    public void accept(List<Sleep> sleeps) throws Exception {
+                        getCloudSyncManager().launchSyncAll(nevoUser, stepses, sleeps);
+                    }
+                });
+            }
+        });
     }
 
     @Subscribe

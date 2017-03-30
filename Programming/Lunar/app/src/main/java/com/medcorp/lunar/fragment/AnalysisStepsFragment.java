@@ -79,6 +79,7 @@ public class AnalysisStepsFragment extends BaseFragment {
     AnalysisStepsLineChart lastWeekChart;
     AnalysisStepsLineChart lastMonthChart;
     Goal activeGoal;
+
     private void initData(Date userSelectDate) {
         thisWeekChart = (AnalysisStepsLineChart) thisWeekView.findViewById(R.id.analysis_step_chart);
         lastWeekChart = (AnalysisStepsLineChart) lastWeekView.findViewById(R.id.analysis_step_chart);
@@ -93,22 +94,27 @@ public class AnalysisStepsFragment extends BaseFragment {
          *
          */
         activeGoal = null;
-        for (Goal goal : getModel().getAllGoal()) {
-            if (goal.isStatus()) {
-                activeGoal = goal;
-                break;
+        getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
+            @Override
+            public void obtainGoal(List<Goal> list) {
+                if (list != null) {
+                    for (Goal goal : list) {
+                        if (goal.isStatus()) {
+                            activeGoal = goal;
+                            break;
+                        }
+                    }
+                }
             }
-        }
+        });
         if (activeGoal == null) {
-            activeGoal = new Goal(getModel().getAllGoal().size() + 1, "Unknown", true, 1000);
+            activeGoal = new Goal("Unknown", true, 1000);
         }
 
         setDesText(0);
 
-        getModel().getSteps(
-                getModel().getNevoUser().getNevoUserID(),
-                userSelectDate,
-                getString(R.string.current_week),new OnStepsGetListener(){
+        getModel().getSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate
+                ,WeekData.TISHWEEK, new OnStepsGetListener() {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
                         thisWeekData = stepsList;
@@ -118,11 +124,8 @@ public class AnalysisStepsFragment extends BaseFragment {
                     }
                 });
 
-        getModel().getSteps(
-                getModel().getNevoUser().getNevoUserID(),
-                userSelectDate,
-                getString(R.string.last_week),
-                new OnStepsGetListener(){
+        getModel().getSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate,WeekData.LASTWEEK,
+                new OnStepsGetListener() {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
                         lastWeekData = stepsList;
@@ -132,11 +135,8 @@ public class AnalysisStepsFragment extends BaseFragment {
                     }
                 });
 
-        getModel().getSteps(
-                getModel().getNevoUser().getNevoUserID(),
-                userSelectDate,
-                getString(R.string.last_month),
-                new OnStepsGetListener(){
+        getModel().getSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate, WeekData.LASTMONTH,
+                new OnStepsGetListener() {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
                         lastMonthData = stepsList;

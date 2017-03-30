@@ -26,7 +26,7 @@
             android:layout_marginTop="40dp"
             android:text="@string/activity_user_info_title_above_text"
             android:textColor="@color/text_color"
-            android:textSize="30dp"
+            android:textSize="25sp"
             />
 
         <TextView
@@ -37,7 +37,7 @@
             android:text="@string/activity_user_info_text_dec_middle"
             android:textColor="@color/text_color"
             android:textSize="16sp"
-            />
+            android:id="@+id/textView7"/>
 
         <TextView
             android:layout_width="wrap_content"

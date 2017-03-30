@@ -17,6 +17,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.PresetArrayAdapter;
 import com.medcorp.lunar.base.BaseActivity;
+import com.medcorp.lunar.fragment.MainFragment;
 import com.medcorp.lunar.model.Goal;
 
 import java.util.List;
@@ -56,10 +57,16 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.steps_goal_title);
         presetListView.setVisibility(View.VISIBLE);
-        goalList = getModel().getAllGoal();
-        presetArrayAdapter = new PresetArrayAdapter(this, getModel(), goalList);
-        presetListView.setAdapter(presetArrayAdapter);
-        presetListView.setOnItemClickListener(this);
+        getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
+            @Override
+            public void obtainGoal(List<Goal> list) {
+                goalList = list;
+                presetArrayAdapter = new PresetArrayAdapter(GoalsActivity.this, getModel(), goalList);
+                presetListView.setAdapter(presetArrayAdapter);
+                presetListView.setOnItemClickListener(GoalsActivity.this);
+
+            }
+        });
     }
 
 
@@ -81,9 +88,13 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
         super.onActivityResult(requestCode, resultCode, data);
         //delete or update the goal, refresh list
         if (resultCode != 0) {
-            goalList = getModel().getAllGoal();
-            presetArrayAdapter.setDataset(goalList);
-            presetArrayAdapter.notifyDataSetChanged();
+            getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
+                @Override
+                public void obtainGoal(List<Goal> goalList) {
+                    presetArrayAdapter.setDataset(goalList);
+                    presetArrayAdapter.notifyDataSetChanged();
+                }
+            });
         }
     }
 
@@ -128,11 +139,15 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
                                                                     lableGoal = input.toString();
                                                                 }
 
-                                                                goal = new Goal(getModel().getAllGoal().size()+1,lableGoal, true, steps);
+                                                                goal = new Goal(lableGoal, true, steps);
                                                                 getModel().addGoal(goal);
-                                                                goalList = getModel().getAllGoal();
-                                                                presetArrayAdapter.setDataset(goalList);
-                                                                presetArrayAdapter.notifyDataSetChanged();
+                                                                getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
+                                                                    @Override
+                                                                    public void obtainGoal(List<Goal> goalList) {
+                                                                        presetArrayAdapter.setDataset(goalList);
+                                                                        presetArrayAdapter.notifyDataSetChanged();
+                                                                    }
+                                                                });
                                                             }
                                                         }).negativeText(R.string.goal_cancel)
                                                 .show();

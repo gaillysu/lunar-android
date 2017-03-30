@@ -39,6 +39,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import io.reactivex.functions.Consumer;
+
 
 /**
  * Created by med on 16/3/23.
@@ -114,8 +116,8 @@ public class CloudSyncManager {
             @Override
             public void onRequestSuccess(LoginUserModel loginUserModel) {
                 if (loginUserModel.getStatus() == 1) {
-                   UserWithLocation user = loginUserModel.getUser();
-                    User nevoUser = getModel().getNevoUser();
+                    UserWithLocation user = loginUserModel.getUser();
+                    final User nevoUser = getModel().getNevoUser();
                     try {
                         nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday().getDate()).getTime());
                     } catch (ParseException e) {
@@ -132,7 +134,17 @@ public class CloudSyncManager {
                     //save it and sync with watch and cloud server
                     getModel().saveNevoUser(nevoUser);
                     getModel().getSyncController().getDailyTrackerInfo(true);
-                    launchSyncAll(nevoUser, getModel().getNeedSyncSteps(nevoUser.getNevoUserID()), getModel().getNeedSyncSleep(nevoUser.getNevoUserID()));
+                    getModel().getNeedSyncSteps(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
+                        @Override
+                        public void accept(final List<Steps> stepses) throws Exception {
+                            getModel().getNeedSyncSleep(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Sleep>>() {
+                                @Override
+                                public void accept(List<Sleep> sleeps) throws Exception {
+                                    launchSyncAll(nevoUser, stepses, sleeps);
+                                }
+                            });
+                        }
+                    });
                 }
             }
         });
@@ -337,7 +349,7 @@ public class CloudSyncManager {
             public void onRequestSuccess(WeChatLoginModel weChatLoginModel) {
                 if (weChatLoginModel.getStatus() == 1) {
                     WeChatLoginModel.UserBean user = weChatLoginModel.getUser();
-                    User nevoUser = getModel().getNevoUser();
+                    final User nevoUser = getModel().getNevoUser();
                     nevoUser.setFirstName(user.getFirst_name());
                     nevoUser.setNevoUserID("" + user.getId());
                     nevoUser.setWechat(user.getWechat());
@@ -346,7 +358,17 @@ public class CloudSyncManager {
                     //save it and sync with watch and cloud server
                     getModel().saveNevoUser(nevoUser);
                     getModel().getSyncController().getDailyTrackerInfo(true);
-                    launchSyncAll(nevoUser, getModel().getNeedSyncSteps(nevoUser.getNevoUserID()), getModel().getNeedSyncSleep(nevoUser.getNevoUserID()));
+                    getModel().getNeedSyncSteps(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
+                        @Override
+                        public void accept(final List<Steps> stepses) throws Exception {
+                            getModel().getNeedSyncSleep(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Sleep>>() {
+                                @Override
+                                public void accept(List<Sleep> sleeps) throws Exception {
+                                    launchSyncAll(nevoUser, stepses, sleeps);
+                                }
+                            });
+                        }
+                    });
                     EventBus.getDefault().post(new WeChatLoginEvent(1, ""));
                 } else {
                     EventBus.getDefault().post(new WeChatLoginEvent(0, weChatLoginModel.getMessage()));
