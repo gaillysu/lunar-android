@@ -161,17 +161,17 @@ public class ApplicationModel extends Application {
     private List<Steps> allSteps;
     private boolean responseCode;
     private final String REALM_NAME = "med_lunar.realm";
-    private Solar mSolar;
     private Sleep mSleep;
     private boolean upDateIsSuccess;
     private Goal goal;
     private Sleep mYesterdaySleep;
-    private List<Sleep> mSleeps;
     private Sleep[] todaySleep;
+    private static ApplicationModel mModel;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        mModel = this;
         Fabric.with(this, new Crashlytics());
         EventBus.getDefault().register(this);
         Realm.init(this);
@@ -253,6 +253,9 @@ public class ApplicationModel extends Application {
         return mIWXAPI;
     }
 
+    public static ApplicationModel getInstance(){
+        return mModel;
+    }
     public MedManager getNetworkManage() {
         return validicMedManager;
     }

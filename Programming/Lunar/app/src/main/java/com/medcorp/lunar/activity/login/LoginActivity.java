@@ -78,7 +78,6 @@ public class LoginActivity extends BaseActivity {
         if (getModel().getNevoUser().getNevoUserEmail() != null) {
             _emailText.setText(getModel().getNevoUser().getNevoUserEmail());
         }
-        regToWx();
         progressDialog = new ProgressDialog(LoginActivity.this, AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
@@ -104,6 +103,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.wechat_login_button)
     public void weChatLogin() {
+        regToWx();
         if (!weChatApi.isWXAppInstalled()) {
             showSnackbar(R.string.wechat_uninstall);
             return;
@@ -112,6 +112,7 @@ public class LoginActivity extends BaseActivity {
         request.scope = getString(R.string.weixin_scope);
         request.state = getString(R.string.weixin_package_name);
         weChatApi.sendReq(request);
+        Log.e("jason","send weChat message");
     }
 
     private void regToWx() {
@@ -322,7 +323,6 @@ public class LoginActivity extends BaseActivity {
             showSnackbar(event.getErrorMsg());
         } else {
             onLoginSuccess();
-
         }
     }
 

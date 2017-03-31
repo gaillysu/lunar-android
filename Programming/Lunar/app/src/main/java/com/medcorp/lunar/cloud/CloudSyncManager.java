@@ -309,10 +309,10 @@ public class CloudSyncManager {
 
             @Override
             public void onRequestSuccess(CheckWeChatModel loginUserModel) {
-                if (loginUserModel.getStatus() == 1) {
-                    EventBus.getDefault().post(new CheckWeChatEvent(0, loginUserModel.getMessage()));
-                } else {
+                if (loginUserModel.getStatus() == 0) {
                     createWeChatUser(userInfo);
+                } else  if(loginUserModel.getStatus() ==1){
+                    EventBus.getDefault().post(new CheckWeChatEvent(0, loginUserModel.getMessage()));
                 }
             }
         });
