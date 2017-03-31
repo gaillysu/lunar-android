@@ -12,8 +12,8 @@
         android:id="@+id/activity_edit_alarm_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="@color/my_device_right_show_version_text_color"
         android:listSelector="?android:attr/selectableItemBackground"
-        android:divider="@null"
         android:scrollbars="none"
         android:visibility="visible"
         />

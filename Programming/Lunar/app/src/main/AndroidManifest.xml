@@ -78,7 +78,7 @@
             android:name=".activity.EditGoalsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.MyNevoActivity"
+            android:name=".activity.MyWatchActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.DfuActivity"

@@ -8,94 +8,116 @@
 
     <include layout="@layout/toolbar"/>
 
-    <RelativeLayout
-        android:id="@+id/more_setting_go_setting_goal"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="20dp"
-        android:background="?android:attr/selectableItemBackground"
-        >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
-            android:text="@string/def_goal_name"
-            android:textColor="@color/text_color"
-            android:textSize="20dp"
-            />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:src="@drawable/ic_right"
-            android:tint="@color/colorPrimary"
-            />
-
-    </RelativeLayout>
-
-    <!--select Unit-->
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="20dp"
-        android:background="?android:attr/selectableItemBackground"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:orientation="vertical"
-        android:paddingRight="16dp"
         >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:paddingLeft="16dp"
-            android:text="@string/more_setting_unit"
-            android:textColor="@color/text_color"
-            android:textSize="20dp"
-            />
 
-        <Spinner
-            android:id="@+id/more_setting_select_unit_spinner"
+        <RelativeLayout
+            android:id="@+id/more_setting_go_setting_goal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:overlapAnchor="false"
-            android:paddingLeft="16dp"
-            />
-    </LinearLayout>
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:background="?android:attr/selectableItemBackground"
+            >
 
-    <!--select sync home time or local time-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="20dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:orientation="vertical"
-        android:paddingRight="16dp"
-        >
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:paddingLeft="16dp"
-            android:text="@string/more_setting_place_time"
-            android:textColor="@color/text_color"
-            android:textSize="20dp"
-            />
+                android:layout_centerVertical="true"
+                android:text="@string/def_goal_name"
+                android:textColor="@color/text_color"
+                android:textSize="20dp"/>
 
-        <Spinner
-            android:id="@+id/more_setting_select_sync_time_spinner"
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignBottom="@+id/textView8"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_right"
+                android:tint="@color/colorPrimary"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/my_device_right_show_version_text_color"
+                />
+        </RelativeLayout>
+
+        <!--select Unit-->
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:overlapAnchor="false"
-            android:paddingLeft="16dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/more_setting_unit"
+                android:textColor="@color/text_color"
+                android:textSize="20dp"
+                />
+
+            <Spinner
+                android:id="@+id/more_setting_select_unit_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:overlapAnchor="false"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/my_device_right_show_version_text_color"
+            />
+
+        <!--select sync home time or local time-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/more_setting_place_time"
+                android:textColor="@color/text_color"
+                android:textSize="20dp"
+                />
+
+            <Spinner
+                android:id="@+id/more_setting_select_sync_time_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:overlapAnchor="false"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/my_device_right_show_version_text_color"
             />
     </LinearLayout>
 </LinearLayout>

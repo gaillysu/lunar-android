@@ -17,7 +17,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.ConnectToOtherAppsActivity;
 import com.medcorp.lunar.activity.MoreSettingActivity;
-import com.medcorp.lunar.activity.MyNevoActivity;
+import com.medcorp.lunar.activity.MyWatchActivity;
 import com.medcorp.lunar.activity.SettingNotificationActivity;
 import com.medcorp.lunar.activity.login.LoginActivity;
 import com.medcorp.lunar.activity.tutorial.TutorialPage1Activity;
@@ -100,7 +100,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         } else if (position == 2) {
 
             if (getModel().isWatchConnected()) {
-                startActivity(MyNevoActivity.class);
+                startActivity(MyWatchActivity.class);
             } else {
                 ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
             }

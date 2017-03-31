@@ -5,6 +5,8 @@
               android:layout_height="match_parent"
               android:layout_marginTop="15dp"
               android:orientation="vertical"
+              android:paddingLeft="16dp"
+              android:paddingRight="16dp"
     >
 
     <LinearLayout
@@ -12,8 +14,6 @@
         android:layout_height="48dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         >
 
         <LinearLayout
@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/my_nevo_firmware"
                 android:textColor="@color/text_color"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 />
 
             <TextView
@@ -43,6 +43,7 @@
                 />
         </LinearLayout>
 
+
         <TextView
             android:id="@+id/my_watch_version_tv"
             android:layout_width="wrap_content"
@@ -54,16 +55,20 @@
             android:gravity="center|right"
             android:text="@string/my_nevo_new_update_available"
             android:textColor="@color/colorAccent"
-            android:textSize="20sp"
+            android:textSize="18sp"
             />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/my_device_right_show_version_text_color"
+        />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         >
 
         <TextView
@@ -71,7 +76,7 @@
             android:layout_height="wrap_content"
             android:text="@string/my_nevo_battery"
             android:textColor="@color/text_color"
-            android:textSize="20sp"
+            android:textSize="18sp"
             />
 
         <TextView
@@ -80,16 +85,20 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:textColor="@color/my_device_right_show_version_text_color"
-            android:textSize="20sp"
+            android:textSize="18sp"
             />
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/my_device_right_show_version_text_color"
+        />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         >
 
         <TextView
@@ -99,7 +108,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="10dp"
             android:textColor="@color/my_device_right_show_version_text_color"
-            android:textSize="20sp"
+            android:textSize="18sp"
             />
 
         <TextView
@@ -111,7 +120,12 @@
             android:layout_alignParentStart="true"
             android:text="@string/my_nevo_application"
             android:textColor="@color/text_color"
-            android:textSize="20sp"/>
+            android:textSize="18sp"/>
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/my_device_right_show_version_text_color"
+        />
 </LinearLayout>
