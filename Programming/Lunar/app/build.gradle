@@ -56,6 +56,7 @@ android {
 }
 
 dependencies {
+    final REACT_VERSION = '2.0.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:preference-v7:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
@@ -92,8 +93,13 @@ dependencies {
 
     compile 'com.github.QuadFlask:colorpicker:0.0.12'
     compile files('libs/libammsdk.jar')
-    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+    compile "io.reactivex.rxjava2:rxandroid:$REACT_VERSION"
+    compile "io.reactivex.rxjava2:rxjava:$REACT_VERSION"
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'//调试时候使用
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
 }
 
 repositories {

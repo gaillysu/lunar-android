@@ -309,10 +309,10 @@ public class CloudSyncManager {
 
             @Override
             public void onRequestSuccess(CheckWeChatModel loginUserModel) {
-                if (loginUserModel.getStatus() == 0) {
+                if (loginUserModel.getStatus() <= 0) {
                     createWeChatUser(userInfo);
-                } else  if(loginUserModel.getStatus() ==1){
-                    EventBus.getDefault().post(new CheckWeChatEvent(0, loginUserModel.getMessage()));
+                } else if (loginUserModel.getStatus() == 1) {
+                    weChatLogin(userInfo);
                 }
             }
         });
@@ -321,7 +321,6 @@ public class CloudSyncManager {
     private void createWeChatUser(final WeChatUserInfoResponse userInfo) {
         MedOperation.getInstance(context).createWeChatAccount(userInfo,
                 new ResponseListener<CreateWeChatUserModel>() {
-
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
                         EventBus.getDefault().post(new CreateWeChatEvent(-1, context.getString(R.string.wechat_create_account_fail)));

@@ -302,7 +302,7 @@ public class LoginActivity extends BaseActivity {
 
     @Subscribe
     public void checkWeChatEvent(CheckWeChatEvent event) {
-        if (event.getStatus() == -1 | event.getStatus() == 0) {
+        if (event.getStatus() == -1) {
             showSnackbar(event.getErrorMsg());
             progressDialog.dismiss();
         }

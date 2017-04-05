@@ -11,4 +11,9 @@
     <string name="wechat_app_secret">f4f1c23a83f3448b545957345e26af94 </string>
     <string name="weixin_package_name">net.med_corp.lunar_wechat</string>
     <string name="weixin_scope">snsapi_userinfo</string>
+    <string name="network_base_url">http://lunar.karljohnchow.com</string>
+    <string name="network_authenticator_password" translatable="false" >med_app_development</string>
+    <string name="network_authenticator_name" translatable="false">apps</string>
+    <string name="network_header_authenticator_name" translatable="false">Authorization</string>
+    <string name="network_header_authenticator_value" translatable="false">Basic YXBwczptZWRfYXBwX2RldmVsb3BtZW50</string>
 </resources>
