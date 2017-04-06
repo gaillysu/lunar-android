@@ -1,7 +1,7 @@
 package com.medcorp.lunar.event;
 
 
-import com.medcorp.lunar.network.med.model.CreateUserModel;
+import com.medcorp.lunar.network_new.modle.response.RegisterNewAccountResponse;
 
 /**
  * Created by karl-john on 17/5/16.
@@ -13,9 +13,9 @@ public class SignUpEvent {
     }
 
     final private status signUpStatus;
-    final private CreateUserModel createUserModel;
+    final private RegisterNewAccountResponse createUserModel;
 
-    public SignUpEvent(status signUpStatus, CreateUserModel createUserModel) {
+    public SignUpEvent(status signUpStatus, RegisterNewAccountResponse createUserModel) {
         this.signUpStatus = signUpStatus;
         this.createUserModel = createUserModel;
     }
@@ -24,7 +24,7 @@ public class SignUpEvent {
         return signUpStatus;
     }
 
-    public CreateUserModel getCreateUserModel() {
+    public RegisterNewAccountResponse getCreateUserModel() {
         return createUserModel;
     }
 }

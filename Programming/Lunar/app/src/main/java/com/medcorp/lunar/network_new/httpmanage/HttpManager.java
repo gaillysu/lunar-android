@@ -27,11 +27,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by DengGang on 2017/1/19.
- *
- */
-
 public class HttpManager {
 
     private static volatile HttpManager httpManager = null;
@@ -75,7 +70,7 @@ public class HttpManager {
         return apiRetrofit.create(HttpApi.class);
     }
 
-    public <T> void toSubscribe(Context context,Observable<T> o, Subscriber<T> s) {
+    public <T> void toSubscribe(Context context, Observable<T> o, Subscriber<T> s) {
         o.subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())

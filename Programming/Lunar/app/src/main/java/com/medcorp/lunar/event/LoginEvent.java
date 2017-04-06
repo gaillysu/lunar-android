@@ -1,7 +1,7 @@
 package com.medcorp.lunar.event;
 
 
-import com.medcorp.lunar.network.med.model.LoginUserModel;
+import com.medcorp.lunar.network_new.modle.response.UserLoginResponse;
 
 /**
  * Created by karl-john on 17/5/16.
@@ -13,9 +13,9 @@ public class LoginEvent {
     }
 
     private status loginStatus;
-    final private LoginUserModel loginUserModel;
+    final private UserLoginResponse loginUserModel;
 
-    public LoginEvent(status loginStatus,LoginUserModel loginUserModel) {
+    public LoginEvent(status loginStatus,UserLoginResponse loginUserModel) {
         this.loginStatus = loginStatus;
         this.loginUserModel = loginUserModel;
     }
@@ -28,7 +28,7 @@ public class LoginEvent {
         this.loginStatus = loginStatus;
     }
 
-    public LoginUserModel getLoginUserModel() {
+    public UserLoginResponse getLoginUserModel() {
         return loginUserModel;
     }
 }

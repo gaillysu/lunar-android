@@ -15,19 +15,17 @@ import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.network.listener.ResponseListener;
 import com.medcorp.lunar.network.med.model.CheckWeChatModel;
-import com.medcorp.lunar.network.med.model.CreateUser;
-import com.medcorp.lunar.network.med.model.CreateUserModel;
 import com.medcorp.lunar.network.med.model.CreateWeChatUserModel;
 import com.medcorp.lunar.network.med.model.LoginUser;
-import com.medcorp.lunar.network.med.model.LoginUserModel;
 import com.medcorp.lunar.network.med.model.MedReadMoreRoutineRecordsModel;
 import com.medcorp.lunar.network.med.model.MedReadMoreSleepRecordsModel;
-import com.medcorp.lunar.network.med.model.UserWithID;
-import com.medcorp.lunar.network.med.model.UserWithLocation;
 import com.medcorp.lunar.network.med.model.WeChatLoginModel;
 import com.medcorp.lunar.network.med.model.WeChatUserInfoResponse;
 import com.medcorp.lunar.network.validic.model.ValidicReadMoreRoutineRecordsModel;
 import com.medcorp.lunar.network.validic.model.ValidicReadMoreSleepRecordsModel;
+import com.medcorp.lunar.network_new.modle.request.RegisterNewAccountRequest;
+import com.medcorp.lunar.network_new.modle.response.RegisterNewAccountResponse;
+import com.medcorp.lunar.network_new.modle.response.UserLoginResponse;
 import com.medcorp.lunar.util.Common;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -73,30 +71,31 @@ public class CloudSyncManager {
         return context;
     }
 
-    public void createUser(CreateUser createUser) {
+    public void createUser(RegisterNewAccountRequest createUser) {
         //TODO if enable validic, here open it
         //ValidicOperation.getInstance(context).createValidicUser(...);
-        MedOperation.getInstance(context).createMedUser(createUser, new RequestListener<CreateUserModel>() {
+        MedOperation.getInstance(context).createMedUser(createUser, new RequestListener<RegisterNewAccountResponse>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 //DO NOTHING
             }
 
             @Override
-            public void onRequestSuccess(CreateUserModel createUserModel) {
+            public void onRequestSuccess(RegisterNewAccountResponse createUserModel) {
                 if (createUserModel.getStatus() == 1 && createUserModel.getUser() != null) {
                     //save user ID and other profile infomation to local database
                     User nevoUser = getModel().getNevoUser();
-                    UserWithID user = createUserModel.getUser();
+                    RegisterNewAccountResponse.UserBean user = createUserModel.getUser();
                     try {
-                        nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday().getDate()).getTime());
+                        nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd")
+                                .parse(user.getBirthday().getDate()).getTime());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                     nevoUser.setFirstName(user.getFirst_name());
-                    nevoUser.setHeight((int) user.getLength());
+                    nevoUser.setHeight(user.getLength());
                     nevoUser.setLastName(user.getLast_name());
-                    nevoUser.setWeight((int) user.getWeight());
+                    nevoUser.setWeight(user.getWeight());
                     nevoUser.setNevoUserID("" + user.getId());
                     nevoUser.setNevoUserEmail(user.getEmail());
                     getModel().saveNevoUser(nevoUser);
@@ -107,16 +106,16 @@ public class CloudSyncManager {
 
     public void userLogin(LoginUser loginUser) {
         //TODO if enable validic, here call ValidicOperation function
-        MedOperation.getInstance(context).userMedLogin(loginUser, new RequestListener<LoginUserModel>() {
+        MedOperation.getInstance(context).userMedLogin(loginUser.getEmail(), loginUser.getPassword(), new RequestListener<UserLoginResponse>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
 
             }
 
             @Override
-            public void onRequestSuccess(LoginUserModel loginUserModel) {
+            public void onRequestSuccess(UserLoginResponse loginUserModel) {
                 if (loginUserModel.getStatus() == 1) {
-                    UserWithLocation user = loginUserModel.getUser();
+                    UserLoginResponse.UserBean user = loginUserModel.getUser();
                     final User nevoUser = getModel().getNevoUser();
                     try {
                         nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday().getDate()).getTime());

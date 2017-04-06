@@ -2,6 +2,8 @@ package com.medcorp.lunar.activity.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,7 +42,6 @@ public class SignupActivity extends BaseActivity {
 
     private String firstName;
     private String lastName;
-//    private CheckBox checkIsAgreeBt;
     private String email;
     private String password;
 
@@ -50,10 +51,8 @@ public class SignupActivity extends BaseActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-//        checkIsAgreeBt = (CheckBox) findViewById(R.id.sign_up_check_user_is_agree_terms_radio_bt);
         editTextFirstName = (EditText) findViewById(R.id.register_account_activity_edit_first_name);
         editLastName = (EditText) findViewById(R.id.register_account_activity_edit_last_name);
-//        checkIsAgreeBt.setChecked(false);
     }
 
     @OnClick(R.id.register_title_back_image_button)
@@ -94,20 +93,26 @@ public class SignupActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void onEvent(SignUpEvent event) {
-        switch (event.getSignUpStatus()) {
-            case FAILED:
-                onSignupFailed();
-                break;
-            case SUCCESS:
-                Toast.makeText(getBaseContext(), R.string.register_success, Toast.LENGTH_SHORT).show();
-                _signupButton.setEnabled(true);
-                getModel().getNevoUser().setNevoUserEmail(_emailText.getText().toString());
-                getModel().saveNevoUser(getModel().getNevoUser());
-                setResult(RESULT_OK, null);
-                finish();
-                break;
-        }
+    public void onEvent(final SignUpEvent event) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                switch (event.getSignUpStatus()) {
+                    case FAILED:
+                        onSignupFailed();
+                        break;
+                    case SUCCESS:
+                        Toast.makeText(getBaseContext(), R.string.register_success, Toast.LENGTH_SHORT).show();
+                        _signupButton.setEnabled(true);
+                        getModel().getNevoUser().setNevoUserEmail(_emailText.getText().toString());
+                        getModel().saveNevoUser(getModel().getNevoUser());
+                        setResult(RESULT_OK, null);
+                        finish();
+                        break;
+                }
+            }
+        });
+
     }
 
     public void onSignupFailed() {
@@ -129,10 +134,6 @@ public class SignupActivity extends BaseActivity {
         } else {
             editTextFirstName.setError(null);
         }
-//        if (!checkIsAgreeBt.isChecked()) {
-//            valid = false;
-//        }
-
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _emailText.setError(getString(R.string.register_email_error));
             valid = false;
@@ -153,5 +154,11 @@ public class SignupActivity extends BaseActivity {
         }
 
         return valid;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

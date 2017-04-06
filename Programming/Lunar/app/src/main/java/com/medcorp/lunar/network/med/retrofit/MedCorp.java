@@ -3,11 +3,8 @@ package com.medcorp.lunar.network.med.retrofit;
 
 import com.medcorp.lunar.network.med.model.CheckWeChatModel;
 import com.medcorp.lunar.network.med.model.CheckWeChatObject;
-import com.medcorp.lunar.network.med.model.CreateUserModel;
-import com.medcorp.lunar.network.med.model.CreateUserObject;
 import com.medcorp.lunar.network.med.model.CreateWeChatUserModel;
 import com.medcorp.lunar.network.med.model.LoginUserModel;
-import com.medcorp.lunar.network.med.model.LoginUserObject;
 import com.medcorp.lunar.network.med.model.MedReadMoreRoutineRecordsModel;
 import com.medcorp.lunar.network.med.model.MedReadMoreSleepRecordsModel;
 import com.medcorp.lunar.network.med.model.MedRoutineRecordModel;
@@ -31,11 +28,6 @@ import retrofit.http.Query;
  * Created by med on 16/3/21.
  */
 public interface MedCorp {
-    @POST("/user/login")
-    LoginUserModel userLogin(@Body LoginUserObject object, @Header("Authorization") String auth, @Header("Content-Type") String type);
-
-    @POST("/user/create")
-    CreateUserModel userCreate(@Body CreateUserObject object, @Header("Authorization") String auth, @Header("Content-Type") String type);
 
     @POST("/user/request_password_token")
     RequestTokenResponse requestToken(@Body RequestTokenBody body, @Header("Authorization") String auth, @Header("Content-Type") String type);

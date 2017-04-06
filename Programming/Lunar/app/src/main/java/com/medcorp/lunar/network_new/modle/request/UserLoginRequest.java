@@ -7,11 +7,11 @@ import com.medcorp.lunar.network_new.modle.base.BaseRequest;
  * Created by Jason on 2017/1/16.
  */
 
-public class UserLoginRequestModel implements BaseRequest {
+public class UserLoginRequest implements BaseRequest {
 
     private UserLoginBean user;
 
-    public UserLoginRequestModel(String email, String password){
+    public UserLoginRequest(String email, String password){
         user = new UserLoginBean(email, password);
     }
 

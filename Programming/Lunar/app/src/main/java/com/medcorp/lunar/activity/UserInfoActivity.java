@@ -19,7 +19,7 @@ import com.medcorp.lunar.activity.login.LoginActivity;
 import com.medcorp.lunar.activity.login.SignupActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.event.SignUpEvent;
-import com.medcorp.lunar.network.med.model.CreateUser;
+import com.medcorp.lunar.network_new.modle.request.RegisterNewAccountRequest;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -64,6 +64,7 @@ public class UserInfoActivity extends BaseActivity {
 
     private int gender = 1; //0:female, 1: male
     private String birthday;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,23 +92,16 @@ public class UserInfoActivity extends BaseActivity {
         String userWeight = tv_userWeight.getText().toString();
         if (!TextUtils.isEmpty(userBirthday) || !TextUtils.isEmpty(userHeight) || !TextUtils.isEmpty(userWeight)) {
             try {
-               CreateUser userInfo = new CreateUser();
-                userInfo.setFirst_name(firstName);
-                userInfo.setBirthday(userBirthday);
-                userInfo.setEmail(email);
-                userInfo.setLast_name(lastName);
-                userInfo.setLength(new Integer(userHeight.replace(getString(R.string.info_company_height), "")).intValue());
-                userInfo.setWeight(Double.parseDouble(userWeight.replace(getString(R.string.info_company_weight), "")));
-                userInfo.setPassword(password);
-                userInfo.setSex(gender);
-
+                RegisterNewAccountRequest registerModel = new RegisterNewAccountRequest(firstName, lastName, email, password
+                        , userBirthday, new Integer(userHeight.replace(getString(R.string.info_company_height), "")).intValue(),
+                        (int) Double.parseDouble(userWeight.replace(getString(R.string.info_company_weight), "")), gender);
                 progressDialog = new ProgressDialog(UserInfoActivity.this, AppTheme_Dark_Dialog);
                 progressDialog.setIndeterminate(false);
                 progressDialog.setCancelable(false);
                 progressDialog.setMessage(getString(R.string.network_wait_text));
                 progressDialog.show();
 
-                getModel().getCloudSyncManager().createUser(userInfo);
+                getModel().getCloudSyncManager().createUser(registerModel);
             } catch (NumberFormatException e) {
                 showSnackbar(R.string.user_no_select_profile_info);
             }
@@ -152,21 +146,25 @@ public class UserInfoActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void onEvent(SignUpEvent event) {
-        progressDialog.dismiss();
-        switch (event.getSignUpStatus()) {
-            case FAILED:
-                showSnackbar(R.string.register_failed);
-                break;
-            case SUCCESS:
-                showSnackbar(R.string.register_success);
-                Intent intent = new Intent(UserInfoActivity.this, LoginActivity.class);
-                intent.putExtra("isTutorialPage", true);
-                startActivity(intent);
-                finish();
-                break;
-
-        }
+    public void onEvent(final SignUpEvent event) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog.dismiss();
+                switch (event.getSignUpStatus()) {
+                    case FAILED:
+                        showSnackbar(R.string.register_failed);
+                        break;
+                    case SUCCESS:
+                        showSnackbar(R.string.register_success);
+                        Intent intent = new Intent(UserInfoActivity.this, LoginActivity.class);
+                        intent.putExtra("isTutorialPage", true);
+                        startActivity(intent);
+                        finish();
+                        break;
+                }
+            }
+        });
     }
 
     @OnClick(R.id.user_info_sex_male_tv)
@@ -199,7 +197,7 @@ public class UserInfoActivity extends BaseActivity {
                     @Override
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
-                        birthday = year+"-"+month+"-"+day;
+                        birthday = year + "-" + month + "-" + day;
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         try {
                             Date userSelectDate = dateFormat.parse(dateDesc);

@@ -21,7 +21,7 @@ public class SubscriberExtends {
     }
 
 
-    public static <T> Subscriber getSubscriber(final RequestResponse<T> requestResponse) {
+    public <T> Subscriber getSubscriber(final RequestResponse<T> requestResponse) {
         return new Subscriber<T>() {
             @Override
             public void onCompleted() {

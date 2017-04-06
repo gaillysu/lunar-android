@@ -142,17 +142,21 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void onEvent(LoginEvent event) {
-        progressDialog.dismiss();
-        switch (event.getLoginStatus()) {
-            case FAILED:
-                onLoginFailed();
-                break;
-            case SUCCESS:
-                onLoginSuccess();
-                break;
-
-        }
+    public void onEvent(final LoginEvent event) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog.dismiss();
+                switch (event.getLoginStatus()) {
+                    case FAILED:
+                        onLoginFailed();
+                        break;
+                    case SUCCESS:
+                        onLoginSuccess();
+                        break;
+                }
+            }
+        });
     }
 
     @Override

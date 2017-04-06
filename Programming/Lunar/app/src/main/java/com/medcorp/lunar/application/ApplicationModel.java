@@ -195,15 +195,12 @@ public class ApplicationModel extends Application {
         ledDataBase = new LedLampDatabase();
         locationController = new LocationController(this);
         mIWXAPI = WXAPIFactory.createWXAPI(this, getString(R.string.we_chat_app_id), true);
-        User user = userDatabaseHelper.getLoginUser();
-
-        if (user == null) {
-            nevoUser = new User(0);
-            nevoUser.setNevoUserID("0");
-            //"0" means anonymous user login
-        } else {
-            nevoUser = user;
-        }
+        userDatabaseHelper.getLoginUser().subscribe(new Consumer<User>() {
+            @Override
+            public void accept(User user) throws Exception {
+                nevoUser = user;
+            }
+        });
         updateGoogleFit();
     }
 
@@ -253,9 +250,10 @@ public class ApplicationModel extends Application {
         return mIWXAPI;
     }
 
-    public static ApplicationModel getInstance(){
+    public static ApplicationModel getInstance() {
         return mModel;
     }
+
     public MedManager getNetworkManage() {
         return validicMedManager;
     }

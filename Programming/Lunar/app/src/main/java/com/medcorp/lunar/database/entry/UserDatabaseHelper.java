@@ -18,6 +18,7 @@ import io.realm.RealmResults;
 public class UserDatabaseHelper {
 
     private Realm mRealm;
+
     public UserDatabaseHelper() {
         mRealm = Realm.getDefaultInstance();
     }
@@ -93,7 +94,7 @@ public class UserDatabaseHelper {
                     }
                 });
             }
-        });
+        }).subscribeOn(AndroidSchedulers.mainThread());
 
     }
 
@@ -122,13 +123,26 @@ public class UserDatabaseHelper {
         return get(userId);
     }
 
-    public User getLoginUser() {
-        RealmResults<User> allUser = mRealm.where(User.class).findAll();
-        for (User user : allUser) {
-            if (user.isLogin()) {
-                return user;
+    public Observable<User> getLoginUser() {
+        return Observable.create(new ObservableOnSubscribe<User>() {
+
+            @Override
+            public void subscribe(ObservableEmitter<User> e) throws Exception {
+                RealmResults<User> allUser = mRealm.where(User.class).findAll();
+                User loginUser = null;
+                for (User user : allUser) {
+                    if (user.isLogin()) {
+                        loginUser = mRealm.copyFromRealm(user);
+                    }
+                }
+                if (loginUser == null) {
+                    loginUser = new User(0);
+                    loginUser.setNevoUserID("0");
+                }
+                e.onNext(loginUser);
+                e.onComplete();
+
             }
-        }
-        return null;
+        }).subscribeOn(AndroidSchedulers.mainThread());
     }
 }

@@ -6,12 +6,12 @@ import com.medcorp.lunar.network_new.modle.base.BaseRequest;
  * Created by Jason on 2017/4/5.
  */
 
-public class UpdataAccountInformation implements BaseRequest {
+public class UpdateAccountInformationRequest implements BaseRequest {
 
     private UserBean user;
 
-    public UpdataAccountInformation(int id, String first_name, String email,
-                                    String last_name, String birthday, int length, int weight, int sex) {
+    public UpdateAccountInformationRequest(int id, String first_name, String email,
+                                           String last_name, String birthday, int length, int weight, int sex) {
         this.user = new UserBean(id, first_name, email, last_name, birthday, length, weight, sex);
     }
 

@@ -6,8 +6,9 @@ import android.support.v4.util.ArrayMap;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
+
 public class SubscriberManager {
-    private final ArrayMap<Object,CompositeSubscription> SubscriptionMap = new ArrayMap<>();
+    private final ArrayMap<Object, CompositeSubscription> SubscriptionMap = new ArrayMap<>();
     private static SubscriberManager instance = new SubscriberManager();
 
     private SubscriberManager() {
