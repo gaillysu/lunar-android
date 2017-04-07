@@ -78,7 +78,7 @@ import com.medcorp.lunar.network.listener.ResponseListener;
 import com.medcorp.lunar.network.med.manager.MedManager;
 import com.medcorp.lunar.network.med.model.MedRoutineRecordWithID;
 import com.medcorp.lunar.network.med.model.MedSleepRecordWithID;
-import com.medcorp.lunar.network.med.model.RequestWeChatToken;
+import com.medcorp.lunar.network_new.modle.request.RequestWeChatToken;
 import com.medcorp.lunar.network_new.modle.response.WeChatUserInfoResponse;
 import com.medcorp.lunar.network.validic.model.ValidicReadMoreSleepRecordsModel;
 import com.medcorp.lunar.network.validic.model.ValidicRoutineRecordModelBase;

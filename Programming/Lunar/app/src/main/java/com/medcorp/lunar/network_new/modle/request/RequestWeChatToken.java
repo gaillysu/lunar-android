@@ -1,4 +1,4 @@
-package com.medcorp.lunar.network.med.model;
+package com.medcorp.lunar.network_new.modle.request;
 
 public class RequestWeChatToken {
 

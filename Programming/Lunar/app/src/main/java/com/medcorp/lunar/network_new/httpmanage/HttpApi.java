@@ -3,10 +3,15 @@ package com.medcorp.lunar.network_new.httpmanage;
 import com.medcorp.lunar.network_new.modle.response.ChangePasswordResponse;
 import com.medcorp.lunar.network_new.modle.response.CheckEmailResponse;
 import com.medcorp.lunar.network_new.modle.response.CheckWeChatAccountResponse;
+import com.medcorp.lunar.network_new.modle.response.CreateMultiStepsRespnse;
+import com.medcorp.lunar.network_new.modle.response.CreateStepsResponse;
 import com.medcorp.lunar.network_new.modle.response.CreateWeChatAccountResponse;
 import com.medcorp.lunar.network_new.modle.response.DeleteUserAccountResponse;
 import com.medcorp.lunar.network_new.modle.response.RegisterNewAccountResponse;
 import com.medcorp.lunar.network_new.modle.response.RequestForgotPasswordResponse;
+import com.medcorp.lunar.network_new.modle.response.SleepCreateResponse;
+import com.medcorp.lunar.network_new.modle.response.SleepUpdateResponse;
+import com.medcorp.lunar.network_new.modle.response.StepsUpdateResponse;
 import com.medcorp.lunar.network_new.modle.response.UpdateAccountInformationResponse;
 import com.medcorp.lunar.network_new.modle.response.UserLoginResponse;
 import com.medcorp.lunar.network_new.modle.response.VerifyEmailResponse;
@@ -69,4 +74,25 @@ public interface HttpApi {
     @Headers({"Content-type:application/json;charset=UTF-8"})
     @POST("user/wechat/check")
     Observable<CheckWeChatAccountResponse> checkWeChatAccount(@Body RequestBody body);
+
+    @Headers({"Content-type:application/json;charset=UTF-8"})
+    @POST("steps/create")
+    Observable<CreateStepsResponse> createSteps(@Body RequestBody body);
+
+    @Headers({"Content-type:application/json;charset=UTF-8"})
+    @PUT("steps/update")
+    Observable<StepsUpdateResponse> updateSteps(@Body RequestBody body);
+
+    @Headers({"Content-type:application/json;charset=UTF-8"})
+    @POST("sleep/create")
+    Observable<SleepCreateResponse> createSleep(@Body RequestBody body);
+
+    @Headers({"Content-type:application/json;charset=UTF-8"})
+    @PUT("sleep/update")
+    Observable<SleepUpdateResponse> updateSleep(@Body RequestBody body);
+
+    @Headers({"Content-type:application/json;charset=UTF-8"})
+    @PUT("steps/create")
+    Observable<CreateMultiStepsRespnse> createMultiSteps(@Body RequestBody body);
+
 }

@@ -296,7 +296,9 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void run() {
                 if (event != null) {
-                    progressDialog.show();
+                    if (progressDialog != null) {
+                        progressDialog.show();
+                    }
                     getModel().getWeChatToken(event.getCode());
                 }
             }
@@ -357,7 +359,7 @@ public class LoginActivity extends BaseActivity {
                             getModel().getNeedSyncSleep(lunarUser.getNevoUserID()).subscribe(new Consumer<List<Sleep>>() {
                                 @Override
                                 public void accept(List<Sleep> sleeps) throws Exception {
-                                   getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses, sleeps);
+                                    getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses, sleeps);
                                 }
                             });
                         }
