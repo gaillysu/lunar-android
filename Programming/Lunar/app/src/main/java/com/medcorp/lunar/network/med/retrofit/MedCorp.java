@@ -1,17 +1,12 @@
 package com.medcorp.lunar.network.med.retrofit;
 
 
-import com.medcorp.lunar.network.med.model.CheckWeChatModel;
-import com.medcorp.lunar.network.med.model.CheckWeChatObject;
-import com.medcorp.lunar.network.med.model.CreateWeChatUserModel;
 import com.medcorp.lunar.network.med.model.MedReadMoreRoutineRecordsModel;
 import com.medcorp.lunar.network.med.model.MedReadMoreSleepRecordsModel;
 import com.medcorp.lunar.network.med.model.MedRoutineRecordModel;
 import com.medcorp.lunar.network.med.model.MedRoutineRecordObject;
 import com.medcorp.lunar.network.med.model.MedSleepRecordModel;
 import com.medcorp.lunar.network.med.model.MedSleepRecordObject;
-import com.medcorp.lunar.network.med.model.WeChatLoginModel;
-import com.medcorp.lunar.network.med.model.WeChatLoginObject;
 
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -36,13 +31,4 @@ public interface MedCorp {
 
     @GET("/sleep/user/{USER_ID}")
     MedReadMoreSleepRecordsModel getMoreSleepRecords(@Header("Authorization") String auth, @Header("Content-Type") String type, @Path("USER_ID") String userID, @Query("token") String token, @Query("start_date") long start_date, @Query("end_date") long end_date);
-
-    @POST("/user/wechat/check")
-    CheckWeChatModel checkWeChat(@Body CheckWeChatObject object, @Header("Authorization") String auth, @Header("Content-Type") String type);
-
-    @POST("/user/wechat")
-    CreateWeChatUserModel createWeChatUser(@Body CheckWeChatObject object, @Header("Authorization") String auth, @Header("Content-Type") String type);
-
-    @POST("/user/wechat/login")
-    WeChatLoginModel weChatLogin(@Body WeChatLoginObject object, @Header("Authorization") String auth, @Header("Content-Type") String type);
 }

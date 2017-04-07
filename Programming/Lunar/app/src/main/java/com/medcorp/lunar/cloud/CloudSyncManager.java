@@ -1,12 +1,8 @@
 package com.medcorp.lunar.cloud;
 
-import com.medcorp.lunar.R;
 import com.medcorp.lunar.application.ApplicationModel;
 import com.medcorp.lunar.cloud.med.MedOperation;
 import com.medcorp.lunar.cloud.validic.ValidicOperation;
-import com.medcorp.lunar.event.CheckWeChatEvent;
-import com.medcorp.lunar.event.CreateWeChatEvent;
-import com.medcorp.lunar.event.WeChatLoginEvent;
 import com.medcorp.lunar.event.validic.ValidicException;
 import com.medcorp.lunar.event.validic.ValidicReadMoreRoutineRecordsModelEvent;
 import com.medcorp.lunar.event.validic.ValidicReadMoreSleepRecordsModelEvent;
@@ -14,12 +10,8 @@ import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.network.listener.ResponseListener;
-import com.medcorp.lunar.network.med.model.CheckWeChatModel;
-import com.medcorp.lunar.network.med.model.CreateWeChatUserModel;
 import com.medcorp.lunar.network.med.model.MedReadMoreRoutineRecordsModel;
 import com.medcorp.lunar.network.med.model.MedReadMoreSleepRecordsModel;
-import com.medcorp.lunar.network.med.model.WeChatLoginModel;
-import com.medcorp.lunar.network.med.model.WeChatUserInfoResponse;
 import com.medcorp.lunar.network.validic.model.ValidicReadMoreRoutineRecordsModel;
 import com.medcorp.lunar.network.validic.model.ValidicReadMoreSleepRecordsModel;
 import com.medcorp.lunar.network_new.modle.request.RegisterNewAccountRequest;
@@ -105,7 +97,7 @@ public class CloudSyncManager {
 
     public void userLogin(String email, String password) {
         //TODO if enable validic, here call ValidicOperation function
-        MedOperation.getInstance(context).userMedLogin(email,password, new RequestListener<UserLoginResponse>() {
+        MedOperation.getInstance(context).userMedLogin(email, password, new RequestListener<UserLoginResponse>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
 
@@ -296,81 +288,5 @@ public class CloudSyncManager {
                 MedOperation.getInstance(context).addMedSleepRecord(user, sleep, new Date(sleep.getDate()), null);
             }
         }
-    }
-
-    public void checkWeChatAccount(final WeChatUserInfoResponse userInfo) {
-        MedOperation.getInstance(context).checkWeChat(userInfo, new RequestListener<CheckWeChatModel>() {
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                EventBus.getDefault().post(new CheckWeChatEvent(-1, context.getString(R.string.check_wechat_fail)));
-            }
-
-            @Override
-            public void onRequestSuccess(CheckWeChatModel loginUserModel) {
-                if (loginUserModel.getStatus() <= 0) {
-                    createWeChatUser(userInfo);
-                } else if (loginUserModel.getStatus() == 1) {
-                    weChatLogin(userInfo);
-                }
-            }
-        });
-    }
-
-    private void createWeChatUser(final WeChatUserInfoResponse userInfo) {
-        MedOperation.getInstance(context).createWeChatAccount(userInfo,
-                new ResponseListener<CreateWeChatUserModel>() {
-                    @Override
-                    public void onRequestFailure(SpiceException spiceException) {
-                        EventBus.getDefault().post(new CreateWeChatEvent(-1, context.getString(R.string.wechat_create_account_fail)));
-                    }
-
-                    @Override
-                    public void onRequestSuccess(CreateWeChatUserModel createWeChatUserModel) {
-                        if (createWeChatUserModel.getStatus() == 1) {
-                            weChatLogin(userInfo);
-                        } else {
-                            EventBus.getDefault().post(new CreateWeChatEvent(0, createWeChatUserModel.getMessage()));
-                        }
-                    }
-                });
-    }
-
-    private void weChatLogin(WeChatUserInfoResponse userInfo) {
-        MedOperation.getInstance(context).weChatLogin(userInfo, new ResponseListener<WeChatLoginModel>() {
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                EventBus.getDefault().post(new WeChatLoginEvent(-1, context.getString(R.string.wechat_login_fail)));
-            }
-
-            @Override
-            public void onRequestSuccess(WeChatLoginModel weChatLoginModel) {
-                if (weChatLoginModel.getStatus() == 1) {
-                    WeChatLoginModel.UserBean user = weChatLoginModel.getUser();
-                    final User lunarUser = getModel().getNevoUser();
-                    lunarUser.setFirstName(user.getFirst_name());
-                    lunarUser.setNevoUserID("" + user.getId());
-                    lunarUser.setWechat(user.getWechat());
-                    lunarUser.setIsLogin(true);
-                    lunarUser.setCreatedDate(new Date().getTime());
-                    //save it and sync with watch and cloud server
-                    getModel().saveNevoUser(lunarUser);
-                    getModel().getSyncController().getDailyTrackerInfo(true);
-                    getModel().getNeedSyncSteps(lunarUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
-                        @Override
-                        public void accept(final List<Steps> stepses) throws Exception {
-                            getModel().getNeedSyncSleep(lunarUser.getNevoUserID()).subscribe(new Consumer<List<Sleep>>() {
-                                @Override
-                                public void accept(List<Sleep> sleeps) throws Exception {
-                                    launchSyncAll(lunarUser, stepses, sleeps);
-                                }
-                            });
-                        }
-                    });
-                    EventBus.getDefault().post(new WeChatLoginEvent(1, ""));
-                } else {
-                    EventBus.getDefault().post(new WeChatLoginEvent(0, weChatLoginModel.getMessage()));
-                }
-            }
-        });
     }
 }

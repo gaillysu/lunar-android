@@ -1,7 +1,7 @@
 package com.medcorp.lunar.event;
 
 
-import com.medcorp.lunar.network.med.model.WeChatUserInfoResponse;
+import com.medcorp.lunar.network_new.modle.response.WeChatUserInfoResponse;
 
 /**
  * Created by Jason on 2017/3/6.

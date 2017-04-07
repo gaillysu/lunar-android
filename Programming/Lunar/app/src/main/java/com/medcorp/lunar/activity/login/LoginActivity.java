@@ -20,14 +20,22 @@ import com.medcorp.lunar.activity.ForgetPasswordActivity;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.lunar.base.BaseActivity;
-import com.medcorp.lunar.event.CheckWeChatEvent;
-import com.medcorp.lunar.event.CreateWeChatEvent;
+import com.medcorp.lunar.cloud.med.MedOperation;
 import com.medcorp.lunar.event.LoginEvent;
 import com.medcorp.lunar.event.ReturnUserInfoEvent;
 import com.medcorp.lunar.event.WeChatEvent;
-import com.medcorp.lunar.event.WeChatLoginEvent;
 import com.medcorp.lunar.event.WeChatTokenEvent;
-import com.medcorp.lunar.network.med.model.WeChatUserInfoResponse;
+import com.medcorp.lunar.model.Sleep;
+import com.medcorp.lunar.model.Steps;
+import com.medcorp.lunar.model.User;
+import com.medcorp.lunar.network_new.listener.RequestResponseListener;
+import com.medcorp.lunar.network_new.modle.request.WeChatAccountCheckRequest;
+import com.medcorp.lunar.network_new.modle.request.WeChatAccountRegisterRequest;
+import com.medcorp.lunar.network_new.modle.request.WeChatLoginRequest;
+import com.medcorp.lunar.network_new.modle.response.CheckWeChatAccountResponse;
+import com.medcorp.lunar.network_new.modle.response.CreateWeChatAccountResponse;
+import com.medcorp.lunar.network_new.modle.response.WeChatLoginResponse;
+import com.medcorp.lunar.network_new.modle.response.WeChatUserInfoResponse;
 import com.medcorp.lunar.util.Preferences;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPI;
@@ -37,9 +45,13 @@ import net.medcorp.library.ble.util.Constants;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.Date;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 
 import static com.medcorp.lunar.R.style.AppTheme_Dark_Dialog;
 
@@ -279,48 +291,104 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void weChatEvent(WeChatTokenEvent event) {
-        if (event != null) {
-            progressDialog.show();
-            getModel().getWeChatToken(event.getCode());
-        }
+    public void weChatEvent(final WeChatTokenEvent event) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if (event != null) {
+                    progressDialog.show();
+                    getModel().getWeChatToken(event.getCode());
+                }
+            }
+        });
     }
 
     @Subscribe
-    public void userInfoEvent(ReturnUserInfoEvent event) {
+    public void userInfoEvent(final ReturnUserInfoEvent event) {
         if (event != null) {
-            WeChatUserInfoResponse userInfo = event.getUserInfo();
-            getModel().getCloudSyncManager().checkWeChatAccount(userInfo);
+            final WeChatUserInfoResponse userInfo = event.getUserInfo();
+            WeChatAccountCheckRequest request = new WeChatAccountCheckRequest(userInfo.getNickname(), userInfo.getUnionid());
+            MedOperation.getInstance(this).checkWeChat(this, request, new RequestResponseListener<CheckWeChatAccountResponse>() {
+                @Override
+                public void onFailed() {
+                    showSnackbar(getString(R.string.check_wechat_fail));
+                    progressDialog.dismiss();
+                }
+
+                @Override
+                public void onSuccess(CheckWeChatAccountResponse response) {
+                    if (response.getStatus() <= 0) {
+                        createWeChatUser(userInfo);
+                    } else if (response.getStatus() == 1) {
+                        WeChatLoginRequest request = new WeChatLoginRequest(userInfo.getUnionid());
+                        weChatStartLogin(request);
+                    }
+                }
+            });
         } else {
             progressDialog.dismiss();
             showSnackbar(getString(R.string.wechat_login_fail));
         }
     }
 
-    @Subscribe
-    public void checkWeChatEvent(CheckWeChatEvent event) {
-        if (event.getStatus() == -1) {
-            showSnackbar(event.getErrorMsg());
-            progressDialog.dismiss();
-        }
+    private void weChatStartLogin(WeChatLoginRequest request) {
+        MedOperation.getInstance(this).weChatLogin(this, request, new RequestResponseListener<WeChatLoginResponse>() {
+            @Override
+            public void onFailed() {
+                showSnackbar(getString(R.string.wechat_login_fail));
+            }
+
+            @Override
+            public void onSuccess(WeChatLoginResponse response) {
+                if (response.getStatus() == 1) {
+                    WeChatLoginResponse.UserBean user = response.getUser();
+                    final User lunarUser = getModel().getNevoUser();
+                    lunarUser.setFirstName(user.getFirst_name());
+                    lunarUser.setNevoUserID("" + user.getId());
+                    lunarUser.setWechat(user.getWechat());
+                    lunarUser.setIsLogin(true);
+                    lunarUser.setCreatedDate(new Date().getTime());
+                    //save it and sync with watch and cloud server
+                    getModel().saveNevoUser(lunarUser);
+                    getModel().getSyncController().getDailyTrackerInfo(true);
+                    getModel().getNeedSyncSteps(lunarUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
+                        @Override
+                        public void accept(final List<Steps> stepses) throws Exception {
+                            getModel().getNeedSyncSleep(lunarUser.getNevoUserID()).subscribe(new Consumer<List<Sleep>>() {
+                                @Override
+                                public void accept(List<Sleep> sleeps) throws Exception {
+                                   getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses, sleeps);
+                                }
+                            });
+                        }
+                    });
+                    onLoginSuccess();
+                } else {
+                    showSnackbar(getString(R.string.wechat_login_fail));
+                }
+            }
+        });
     }
 
-    @Subscribe
-    public void createWeChatEvent(CreateWeChatEvent event) {
-        if (event.getStatus() == -1 | event.getStatus() == 0) {
-            showSnackbar(event.getStatus());
-            progressDialog.dismiss();
-        }
-    }
+    private void createWeChatUser(final WeChatUserInfoResponse userInfo) {
+        WeChatAccountRegisterRequest request = new WeChatAccountRegisterRequest(userInfo.getNickname(), userInfo.getUnionid());
+        MedOperation.getInstance(this).createWeChatAccount(this, request, new RequestResponseListener<CreateWeChatAccountResponse>() {
+            @Override
+            public void onFailed() {
+                showSnackbar(getString(R.string.wechat_create_account_fail));
+                progressDialog.dismiss();
+            }
 
-    @Subscribe
-    public void weChatLoginEvent(WeChatLoginEvent event) {
-        progressDialog.dismiss();
-        if (event.getStatus() == -1 | event.getStatus() == 0) {
-            showSnackbar(event.getErrorMsg());
-        } else {
-            onLoginSuccess();
-        }
+            @Override
+            public void onSuccess(CreateWeChatAccountResponse response) {
+                if (response.getStatus() == 1) {
+                    WeChatLoginRequest request = new WeChatLoginRequest(userInfo.getUnionid());
+                    weChatStartLogin(request);
+                } else {
+                    showSnackbar(response.getMessage());
+                }
+            }
+        });
     }
 
     @Override

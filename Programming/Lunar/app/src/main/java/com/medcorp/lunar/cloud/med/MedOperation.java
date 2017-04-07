@@ -17,25 +17,16 @@ import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.network.listener.ResponseListener;
 import com.medcorp.lunar.network.med.manager.MedManager;
-import com.medcorp.lunar.network.med.model.CheckWeChatModel;
-import com.medcorp.lunar.network.med.model.CreateWeChatUserModel;
 import com.medcorp.lunar.network.med.model.MedReadMoreRoutineRecordsModel;
 import com.medcorp.lunar.network.med.model.MedReadMoreSleepRecordsModel;
 import com.medcorp.lunar.network.med.model.MedRoutineRecord;
 import com.medcorp.lunar.network.med.model.MedRoutineRecordModel;
 import com.medcorp.lunar.network.med.model.MedSleepRecord;
 import com.medcorp.lunar.network.med.model.MedSleepRecordModel;
-import com.medcorp.lunar.network.med.model.UserWeChatInfo;
-import com.medcorp.lunar.network.med.model.WeChatLogin;
-import com.medcorp.lunar.network.med.model.WeChatLoginModel;
-import com.medcorp.lunar.network.med.model.WeChatUserInfoResponse;
 import com.medcorp.lunar.network.med.request.routine.AddRoutineRecordRequest;
 import com.medcorp.lunar.network.med.request.routine.GetMoreRoutineRecordsRequest;
 import com.medcorp.lunar.network.med.request.sleep.AddSleepRecordRequest;
 import com.medcorp.lunar.network.med.request.sleep.GetMoreSleepRecordsRequest;
-import com.medcorp.lunar.network.med.request.user.CheckWeChatRequest;
-import com.medcorp.lunar.network.med.request.user.CreateWeChatRequest;
-import com.medcorp.lunar.network.med.request.user.WeChatLoginRequest;
 import com.medcorp.lunar.network_new.httpmanage.HttpManager;
 import com.medcorp.lunar.network_new.httpmanage.RequestResponse;
 import com.medcorp.lunar.network_new.httpmanage.SubscriberExtends;
@@ -46,12 +37,18 @@ import com.medcorp.lunar.network_new.modle.request.RegisterNewAccountRequest;
 import com.medcorp.lunar.network_new.modle.request.RequestForgotPasswordTokenRequest;
 import com.medcorp.lunar.network_new.modle.request.UpdateAccountInformationRequest;
 import com.medcorp.lunar.network_new.modle.request.UserLoginRequest;
+import com.medcorp.lunar.network_new.modle.request.WeChatAccountCheckRequest;
+import com.medcorp.lunar.network_new.modle.request.WeChatAccountRegisterRequest;
+import com.medcorp.lunar.network_new.modle.request.WeChatLoginRequest;
 import com.medcorp.lunar.network_new.modle.response.ChangePasswordResponse;
 import com.medcorp.lunar.network_new.modle.response.CheckEmailResponse;
+import com.medcorp.lunar.network_new.modle.response.CheckWeChatAccountResponse;
+import com.medcorp.lunar.network_new.modle.response.CreateWeChatAccountResponse;
 import com.medcorp.lunar.network_new.modle.response.RegisterNewAccountResponse;
 import com.medcorp.lunar.network_new.modle.response.RequestForgotPasswordResponse;
 import com.medcorp.lunar.network_new.modle.response.UpdateAccountInformationResponse;
 import com.medcorp.lunar.network_new.modle.response.UserLoginResponse;
+import com.medcorp.lunar.network_new.modle.response.WeChatLoginResponse;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
@@ -278,64 +275,97 @@ public class MedOperation {
 
     }
 
-    public void checkWeChat(WeChatUserInfoResponse userInfo, final RequestListener<CheckWeChatModel> listener) {
-        UserWeChatInfo info = new UserWeChatInfo(userInfo.getNickname(), userInfo.getUnionid());
-        CheckWeChatRequest loginUserRequest = new CheckWeChatRequest(info, medManager.getAccessToken());
-        medManager.execute(loginUserRequest, new ResponseListener<CheckWeChatModel>() {
+    public void checkWeChat(final Activity context, WeChatAccountCheckRequest request, final RequestResponseListener<CheckWeChatAccountResponse> listener) {
+        Observable<CheckWeChatAccountResponse> response = httpManager.createApiService().checkWeChatAccount
+                (HttpManager.createRequestBody(mContext.getString(R.string.network_token), request));
+        httpManager.toSubscribe(mContext, response, SubscriberExtends.getInstance().getSubscriber(new RequestResponse<CheckWeChatAccountResponse>() {
             @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                if (listener != null) {
-                    listener.onRequestFailure(spiceException);
+            public void onFailure(Throwable e) {
+                if (context != null && listener != null) {
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.onFailed();
+                        }
+                    });
                 }
             }
 
             @Override
-            public void onRequestSuccess(CheckWeChatModel response) {
-                if (listener != null) {
-                    listener.onRequestSuccess(response);
+            public void onSuccess(final CheckWeChatAccountResponse response) {
+                if (context != null && listener != null) {
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.onSuccess(response);
+                        }
+                    });
                 }
             }
-        });
+        }));
     }
 
-    public void createWeChatAccount(WeChatUserInfoResponse userInfo, final ResponseListener<CreateWeChatUserModel> listener) {
-        UserWeChatInfo info = new UserWeChatInfo(userInfo.getNickname(), userInfo.getUnionid());
-        CreateWeChatRequest request = new CreateWeChatRequest(info, medManager.getAccessToken());
-        medManager.execute(request, new ResponseListener<CreateWeChatUserModel>() {
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                if (listener != null) {
-                    listener.onRequestFailure(spiceException);
-                }
-            }
+    public void createWeChatAccount(final Activity context, WeChatAccountRegisterRequest registerRequest,
+                                    final RequestResponseListener<CreateWeChatAccountResponse> listener) {
+        Observable<CreateWeChatAccountResponse> weChatAccount = httpManager.createApiService().createWeChatAccount
+                (HttpManager.createRequestBody(mContext.getString(R.string.network_token), registerRequest));
+        httpManager.toSubscribe(mContext, weChatAccount, SubscriberExtends.getInstance().getSubscriber(
+                new RequestResponse<CreateWeChatAccountResponse>() {
+                    @Override
+                    public void onFailure(Throwable e) {
+                        if (context != null && listener != null) {
+                            context.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listener.onFailed();
+                                }
+                            });
+                        }
+                    }
 
-            @Override
-            public void onRequestSuccess(CreateWeChatUserModel createWeChatUserModel) {
-                if (listener != null) {
-                    listener.onRequestSuccess(createWeChatUserModel);
-                }
-            }
-        });
+                    @Override
+                    public void onSuccess(final CreateWeChatAccountResponse o) {
+                        if (context != null && listener != null) {
+                            context.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listener.onSuccess(o);
+                                }
+                            });
+                        }
+                    }
+                }));
     }
 
-    public void weChatLogin(WeChatUserInfoResponse userInfo, final ResponseListener<WeChatLoginModel> listener) {
-        WeChatLogin user = new WeChatLogin(userInfo.getUnionid());
-        WeChatLoginRequest request = new WeChatLoginRequest(user, medManager.getAccessToken());
-        medManager.execute(request, new ResponseListener<WeChatLoginModel>() {
+    public void weChatLogin(final Activity activity, WeChatLoginRequest request,
+                            final RequestResponseListener<WeChatLoginResponse> listener) {
+        Observable<WeChatLoginResponse> response = httpManager.createApiService().weChatLogin(HttpManager.createRequestBody(
+                mContext.getString(R.string.network_token), request));
+        httpManager.toSubscribe(mContext,response,SubscriberExtends.getInstance().getSubscriber(new RequestResponse<WeChatLoginResponse>() {
             @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                if (listener != null) {
-                    listener.onRequestFailure(spiceException);
+            public void onFailure(Throwable e) {
+                if(activity!=null && listener!=null){
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.onFailed();
+                        }
+                    });
                 }
             }
 
             @Override
-            public void onRequestSuccess(WeChatLoginModel weChatLoginModel) {
-                if (listener != null) {
-                    listener.onRequestSuccess(weChatLoginModel);
+            public void onSuccess(final WeChatLoginResponse o) {
+                if(activity!=null && listener!=null){
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.onSuccess(o);
+                        }
+                    });
                 }
             }
-        });
+        }));
     }
 
     public void updateUserInformation(UpdateAccountInformationRequest request) {
