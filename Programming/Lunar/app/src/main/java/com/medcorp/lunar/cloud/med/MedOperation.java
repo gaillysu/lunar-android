@@ -1,5 +1,6 @@
 package com.medcorp.lunar.cloud.med;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.medcorp.lunar.R;
@@ -38,10 +39,17 @@ import com.medcorp.lunar.network.med.request.user.WeChatLoginRequest;
 import com.medcorp.lunar.network_new.httpmanage.HttpManager;
 import com.medcorp.lunar.network_new.httpmanage.RequestResponse;
 import com.medcorp.lunar.network_new.httpmanage.SubscriberExtends;
+import com.medcorp.lunar.network_new.listener.RequestResponseListener;
+import com.medcorp.lunar.network_new.modle.request.ChangePasswordRequest;
+import com.medcorp.lunar.network_new.modle.request.CheckEmailRequest;
 import com.medcorp.lunar.network_new.modle.request.RegisterNewAccountRequest;
+import com.medcorp.lunar.network_new.modle.request.RequestForgotPasswordTokenRequest;
 import com.medcorp.lunar.network_new.modle.request.UpdateAccountInformationRequest;
 import com.medcorp.lunar.network_new.modle.request.UserLoginRequest;
+import com.medcorp.lunar.network_new.modle.response.ChangePasswordResponse;
+import com.medcorp.lunar.network_new.modle.response.CheckEmailResponse;
 import com.medcorp.lunar.network_new.modle.response.RegisterNewAccountResponse;
+import com.medcorp.lunar.network_new.modle.response.RequestForgotPasswordResponse;
 import com.medcorp.lunar.network_new.modle.response.UpdateAccountInformationResponse;
 import com.medcorp.lunar.network_new.modle.response.UserLoginResponse;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -342,10 +350,106 @@ public class MedOperation {
 
                     @Override
                     public void onSuccess(UpdateAccountInformationResponse o) {
-                        if(o.getStatus()==1){
+                        if (o.getStatus() == 1) {
                             EventBus.getDefault().post(new UpdateUserInfoEvent(true));
-                        }else{
+                        } else {
                             EventBus.getDefault().post(new UpdateUserInfoEvent(false));
+                        }
+                    }
+                }));
+
+    }
+
+    public void obtainPasswordToken(final Activity context, RequestForgotPasswordTokenRequest request,
+                                    final RequestResponseListener listener) {
+        Observable<RequestForgotPasswordResponse> response = httpManager.createApiService().obtainPasswordToken(
+                HttpManager.createRequestBody(mContext.getString(R.string.network_token), request));
+        httpManager.toSubscribe(mContext, response, SubscriberExtends.getInstance().getSubscriber(
+                new RequestResponse<RequestForgotPasswordResponse>() {
+                    @Override
+                    public void onFailure(Throwable e) {
+                        if (context != null && listener != null) {
+                            context.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listener.onFailed();
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onSuccess(final RequestForgotPasswordResponse response) {
+                        if (context != null && listener != null) {
+                            context.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listener.onSuccess(response);
+                                }
+                            });
+                        }
+                    }
+                }));
+    }
+
+    public void changePassword(final Activity context, ChangePasswordRequest request, final RequestResponseListener listener) {
+        Observable<ChangePasswordResponse> changePasswordResponseObservable = httpManager.createApiService()
+                .changePassword(HttpManager.createRequestBody(mContext.getString(R.string.network_token), request));
+        httpManager.toSubscribe(mContext, changePasswordResponseObservable, SubscriberExtends.getInstance()
+                .getSubscriber(new RequestResponse<ChangePasswordResponse>() {
+                    @Override
+                    public void onFailure(Throwable e) {
+                        if (context != null && listener != null) {
+                            context.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listener.onFailed();
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onSuccess(final ChangePasswordResponse o) {
+
+                        if (context != null && listener != null) {
+                            context.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listener.onSuccess(o);
+                                }
+                            });
+                        }
+                    }
+                }));
+    }
+
+    public void checkEmail(final Activity context, CheckEmailRequest request, final RequestResponseListener<CheckEmailResponse> listener) {
+        Observable<CheckEmailResponse> checkEmailResponse = httpManager.createApiService().checkAccount(
+                HttpManager.createRequestBody(mContext.getString(R.string.network_token), request));
+        httpManager.toSubscribe(mContext, checkEmailResponse, SubscriberExtends.getInstance().getSubscriber(
+                new RequestResponse<CheckEmailResponse>() {
+                    @Override
+                    public void onFailure(Throwable e) {
+                        if (context != null && listener != null) {
+                            context.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listener.onFailed();
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onSuccess(final CheckEmailResponse o) {
+                        if (context != null && listener != null) {
+                            context.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listener.onSuccess(o);
+                                }
+                            });
                         }
                     }
                 }));

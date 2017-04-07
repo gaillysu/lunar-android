@@ -445,4 +445,6 @@
 
     <string name="edit_alarm_repeat">Repeat</string>
     <string name="edit_alarm_name">Alarm Name</string>
+    <string name="check_email_message">Email address already exists</string>
+    <string name="check_wechat_fail">Check wechat account fail</string>
 </resources>

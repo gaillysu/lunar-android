@@ -27,7 +27,6 @@ import com.medcorp.lunar.event.ReturnUserInfoEvent;
 import com.medcorp.lunar.event.WeChatEvent;
 import com.medcorp.lunar.event.WeChatLoginEvent;
 import com.medcorp.lunar.event.WeChatTokenEvent;
-import com.medcorp.lunar.network.med.model.LoginUser;
 import com.medcorp.lunar.network.med.model.WeChatUserInfoResponse;
 import com.medcorp.lunar.util.Preferences;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
@@ -112,7 +111,7 @@ public class LoginActivity extends BaseActivity {
         request.scope = getString(R.string.weixin_scope);
         request.state = getString(R.string.weixin_package_name);
         weChatApi.sendReq(request);
-        Log.e("jason","send weChat message");
+        Log.e("jason", "send weChat message");
     }
 
     private void regToWx() {
@@ -129,16 +128,10 @@ public class LoginActivity extends BaseActivity {
         }
 
         _loginButton.setEnabled(false);
-
         progressDialog.show();
-
         email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
-
-        LoginUser user = new LoginUser();
-        user.setEmail(email);
-        user.setPassword(password);
-        getModel().getCloudSyncManager().userLogin(user);
+        getModel().getCloudSyncManager().userLogin(email, password);
     }
 
     @Subscribe

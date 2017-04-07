@@ -1,5 +1,6 @@
 package com.medcorp.lunar.activity.login;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,7 +14,12 @@ import android.widget.Toast;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.UserInfoActivity;
 import com.medcorp.lunar.base.BaseActivity;
+import com.medcorp.lunar.cloud.med.MedOperation;
 import com.medcorp.lunar.event.SignUpEvent;
+import com.medcorp.lunar.network_new.listener.RequestResponseListener;
+import com.medcorp.lunar.network_new.modle.request.CheckEmailRequest;
+import com.medcorp.lunar.network_new.modle.response.CheckEmailResponse;
+import com.medcorp.lunar.view.ToastHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -21,6 +27,8 @@ import org.greenrobot.eventbus.Subscribe;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.medcorp.lunar.R.style.AppTheme_Dark_Dialog;
 
 public class SignupActivity extends BaseActivity {
     private static final String TAG = "SignupActivity";
@@ -45,6 +53,7 @@ public class SignupActivity extends BaseActivity {
     private String email;
     private String password;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +74,7 @@ public class SignupActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK ) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             backClick();
             return true;
         }
@@ -83,13 +92,34 @@ public class SignupActivity extends BaseActivity {
             onSignupFailed();
             return;
         }
-        Intent intent = new Intent(this, UserInfoActivity.class);
-        intent.putExtra("email", email);
-        intent.putExtra("password", password);
-        intent.putExtra("firstName", firstName);
-        intent.putExtra("lastName", lastName);
-        startActivity(intent);
-        finish();
+        final ProgressDialog progressDialog; progressDialog = new ProgressDialog(SignupActivity.this, AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage(getString(R.string.network_wait_text));
+        CheckEmailRequest request = new CheckEmailRequest(email);
+        MedOperation.getInstance(this).checkEmail(this, request, new RequestResponseListener<CheckEmailResponse>() {
+            @Override
+            public void onFailed() {
+                progressDialog.dismiss();
+                ToastHelper.showShortToast(SignupActivity.this,getString(R.string.network_error));
+            }
+
+            @Override
+            public void onSuccess(CheckEmailResponse response) {
+                progressDialog.dismiss();
+                if (response.getStatus() != 1) {
+                    Intent intent = new Intent(SignupActivity.this, UserInfoActivity.class);
+                    intent.putExtra("email", email);
+                    intent.putExtra("password", password);
+                    intent.putExtra("firstName", firstName);
+                    intent.putExtra("lastName", lastName);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    ToastHelper.showShortToast(SignupActivity.this,getString(R.string.check_email_message));
+                }
+            }
+        });
     }
 
     @Subscribe
@@ -141,7 +171,7 @@ public class SignupActivity extends BaseActivity {
             _emailText.setError(null);
         }
 
-        if (password.isEmpty() || password.length()<8) {
+        if (password.isEmpty() || password.length() < 8) {
             _passwordText.setError(getString(R.string.register_password_error));
             valid = false;
         } else {

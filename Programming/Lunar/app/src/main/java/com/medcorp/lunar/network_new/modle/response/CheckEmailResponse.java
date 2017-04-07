@@ -6,7 +6,7 @@ import com.medcorp.lunar.network_new.modle.base.BaseResponse;
  * Created by Jason on 2017/4/5.
  */
 
-public class CheckAccountResponse extends BaseResponse {
+public class CheckEmailResponse extends BaseResponse {
 
     private UserBean user;
 

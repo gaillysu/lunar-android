@@ -470,4 +470,5 @@
     <string name="wechat_login_fail">WeChat login fail</string>
     <string name="network_error">Network error!</string>
     <string name="save_update_user_info_failed">Save failed, please try again!</string>
+    <string name="check_email_message">Email address already exists</string>
 </resources>

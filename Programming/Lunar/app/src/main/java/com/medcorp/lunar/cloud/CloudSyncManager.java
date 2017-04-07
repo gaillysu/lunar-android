@@ -16,7 +16,6 @@ import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.network.listener.ResponseListener;
 import com.medcorp.lunar.network.med.model.CheckWeChatModel;
 import com.medcorp.lunar.network.med.model.CreateWeChatUserModel;
-import com.medcorp.lunar.network.med.model.LoginUser;
 import com.medcorp.lunar.network.med.model.MedReadMoreRoutineRecordsModel;
 import com.medcorp.lunar.network.med.model.MedReadMoreSleepRecordsModel;
 import com.medcorp.lunar.network.med.model.WeChatLoginModel;
@@ -104,9 +103,9 @@ public class CloudSyncManager {
         });
     }
 
-    public void userLogin(LoginUser loginUser) {
+    public void userLogin(String email, String password) {
         //TODO if enable validic, here call ValidicOperation function
-        MedOperation.getInstance(context).userMedLogin(loginUser.getEmail(), loginUser.getPassword(), new RequestListener<UserLoginResponse>() {
+        MedOperation.getInstance(context).userMedLogin(email,password, new RequestListener<UserLoginResponse>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
 

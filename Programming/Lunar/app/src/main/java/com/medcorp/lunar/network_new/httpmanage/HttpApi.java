@@ -1,7 +1,7 @@
 package com.medcorp.lunar.network_new.httpmanage;
 
 import com.medcorp.lunar.network_new.modle.response.ChangePasswordResponse;
-import com.medcorp.lunar.network_new.modle.response.CheckAccountResponse;
+import com.medcorp.lunar.network_new.modle.response.CheckEmailResponse;
 import com.medcorp.lunar.network_new.modle.response.CheckWeChatAccountResponse;
 import com.medcorp.lunar.network_new.modle.response.CreateWeChatAccountResponse;
 import com.medcorp.lunar.network_new.modle.response.DeleteUserAccountResponse;
@@ -40,7 +40,7 @@ public interface HttpApi {
 
     @Headers({"Content-type:application/json;charset=UTF-8"})
     @POST("user/check_email")
-    Observable<CheckAccountResponse> checkAccount(@Body RequestBody body);
+    Observable<CheckEmailResponse> checkAccount(@Body RequestBody body);
 
     @Headers({"Content-type:application/json;charset=UTF-8"})
     @POST("user/request_password_token")
