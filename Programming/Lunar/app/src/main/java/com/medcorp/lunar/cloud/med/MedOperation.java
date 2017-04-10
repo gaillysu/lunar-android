@@ -326,8 +326,8 @@ public class MedOperation {
 
     public void weChatLogin(final Activity activity, WeChatLoginRequest request,
                             final RequestResponseListener<WeChatLoginResponse> listener) {
-        Observable<WeChatLoginResponse> response = httpManager.createApiService().weChatLogin(HttpManager.createRequestBody(
-                mContext.getString(R.string.network_token), request));
+        Observable<WeChatLoginResponse>response = httpManager.createApiService().weChatLogin(HttpManager.createRequestBody(
+                        mContext.getString(R.string.network_token), request));
         httpManager.toSubscribe(mContext, response, SubscriberExtends.getInstance().getSubscriber(new RequestResponse<WeChatLoginResponse>() {
             @Override
             public void onFailure(Throwable e) {

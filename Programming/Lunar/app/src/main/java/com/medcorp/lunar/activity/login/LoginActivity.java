@@ -15,6 +15,12 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.ForgetPasswordActivity;
 import com.medcorp.lunar.activity.MainActivity;
@@ -78,6 +84,7 @@ public class LoginActivity extends BaseActivity {
 
     private IWXAPI weChatApi;
     private String APP_ID;
+    private CallbackManager callbackManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,6 +131,35 @@ public class LoginActivity extends BaseActivity {
         request.state = getString(R.string.weixin_package_name);
         weChatApi.sendReq(request);
         Log.e("jason", "send weChat message");
+    }
+
+    @OnClick(R.id.facebook_login_button)
+    public void facebookLogin() {
+        if (callbackManager == null) {
+            callbackManager = CallbackManager.Factory.create();
+            LoginManager.getInstance().registerCallback(callbackManager,
+                    new FacebookCallback<LoginResult>() {
+                        @Override
+                        public void onSuccess(LoginResult loginResult) {
+                            // App code
+                            AccessToken accessToken = loginResult.getAccessToken();
+                            if (accessToken != null && !accessToken.isExpired()) {
+                                // 登录
+                                Log.i("jason", accessToken.getToken() + ":::::" + accessToken.getUserId());
+                            } else {
+                            }
+                        }
+
+                        @Override
+                        public void onCancel() {
+
+                        }
+
+                        @Override
+                        public void onError(FacebookException exception) {
+                        }
+                    });
+        }
     }
 
     private void regToWx() {

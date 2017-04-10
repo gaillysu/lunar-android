@@ -19,9 +19,12 @@ import com.medcorp.lunar.network_new.modle.response.WeChatLoginResponse;
 
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -94,5 +97,12 @@ public interface HttpApi {
     @Headers({"Content-type:application/json;charset=UTF-8"})
     @PUT("steps/create")
     Observable<CreateMultiStepsRespnse> createMultiSteps(@Body RequestBody body);
+
+
+    @Headers({"Content-type:application/json;charset=UTF-8"})
+    @GET("sleep/user/{uid_example}?token={key}&start_date= {timestamp_example}&end_date= {timestamp2_example}")
+    Observable<> obtainMoreSleep(@Path("uid_example") String id,@Path("key") String key,@Path("timestamp_example") long startTime, @Path("timestamp2_example") long endTime);
+
+
 
 }

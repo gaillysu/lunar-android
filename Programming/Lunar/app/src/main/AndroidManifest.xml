@@ -32,7 +32,7 @@
         android:label="@string/app_name"
         android:theme="@style/NevoTheme"
         tools:replace="android:theme">
-
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="@string/provider_file_string"
