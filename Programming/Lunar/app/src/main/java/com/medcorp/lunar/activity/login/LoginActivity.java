@@ -222,9 +222,8 @@ public class LoginActivity extends BaseActivity {
         getModel().saveNevoUser(getModel().getNevoUser());
         setResult(RESULT_OK, null);
         Preferences.saveIsFirstLogin(this, false);
-        getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, false).apply();
         if ((getIntent().getBooleanExtra("isTutorialPage", true) &&
-                getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)) | !getModel().isWatchConnected()) {
+                getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, false)) | !getModel().isWatchConnected()) {
             startActivity(TutorialPage1Activity.class);
         } else {
             startActivity(MainActivity.class);

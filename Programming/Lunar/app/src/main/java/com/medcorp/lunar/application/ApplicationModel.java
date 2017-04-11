@@ -24,7 +24,6 @@ import com.medcorp.lunar.ble.controller.SyncControllerImpl;
 import com.medcorp.lunar.ble.model.color.LedLamp;
 import com.medcorp.lunar.ble.model.goal.NumberOfStepsGoal;
 import com.medcorp.lunar.cloud.CloudSyncManager;
-import com.medcorp.lunar.cloud.validic.ValidicOperation;
 import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.entry.AlarmDatabaseHelper;
 import com.medcorp.lunar.database.entry.GoalDatabaseHelper;
@@ -53,8 +52,6 @@ import com.medcorp.lunar.event.validic.ValidicCreateUserEvent;
 import com.medcorp.lunar.event.validic.ValidicDeleteRoutineRecordEvent;
 import com.medcorp.lunar.event.validic.ValidicDeleteSleepRecordModelEvent;
 import com.medcorp.lunar.event.validic.ValidicException;
-import com.medcorp.lunar.event.validic.ValidicReadMoreRoutineRecordsModelEvent;
-import com.medcorp.lunar.event.validic.ValidicReadMoreSleepRecordsModelEvent;
 import com.medcorp.lunar.event.validic.ValidicUpdateRoutineRecordsModelEvent;
 import com.medcorp.lunar.fragment.AnalysisSleepFragment;
 import com.medcorp.lunar.fragment.AnalysisSolarFragment;
@@ -74,11 +71,6 @@ import com.medcorp.lunar.model.SleepData;
 import com.medcorp.lunar.model.Solar;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
-import com.medcorp.lunar.network.listener.ResponseListener;
-import com.medcorp.lunar.network.validic.model.ValidicReadMoreSleepRecordsModel;
-import com.medcorp.lunar.network.validic.model.ValidicRoutineRecordModelBase;
-import com.medcorp.lunar.network.validic.model.ValidicSleepRecordModelBase;
-import com.medcorp.lunar.network.validic.model.ValidicUser;
 import com.medcorp.lunar.network_new.modle.request.RequestWeChatToken;
 import com.medcorp.lunar.network_new.modle.response.ObtainMoreSleepResponse;
 import com.medcorp.lunar.network_new.modle.response.ObtainMoreStepsResponse;
@@ -574,23 +566,6 @@ public class ApplicationModel extends Application {
         return sleepDatabaseHelper.isFoundInLocalSleep(date, userID);
     }
 
-    public void saveStepsFromValidic(ValidicRoutineRecordModelBase routine) {
-        Date createDate = Common.getLocalDateFromUTCTimestamp(routine.getTimestamp(), routine.getUtc_offset());
-
-        Steps steps = new Steps(createDate.getTime());
-        steps.setDate(Common.removeTimeFromDate(createDate).getTime());
-        steps.setSteps((int) routine.getSteps());
-        steps.setNevoUserID(getNevoUser().getNevoUserID());
-        steps.setCloudRecordID(routine.get_id());
-        steps.setId(Integer.parseInt(routine.getActivity_id()));
-        if (routine.getExtras() != null) {
-            steps.setGoal(routine.getExtras().getGoal());
-        } else {
-            steps.setGoal(7000);
-        }
-        saveDailySteps(steps);
-    }
-
     public void saveStepsFromMed(ObtainMoreStepsResponse.StepsBean routine, Date createDate) {
         Steps steps = new Steps(createDate.getTime());
         steps.setDate(Common.removeTimeFromDate(createDate).getTime());
@@ -612,65 +587,6 @@ public class ApplicationModel extends Application {
         steps.setCloudRecordID(routine.getId() + "");
         steps.setGoal(10000);
         saveDailySteps(steps);
-    }
-
-    public void saveSleepFromValidic(ValidicSleepRecordModelBase validicSleepRecord) {
-        Date createDate = Common.getLocalDateFromUTCTimestamp(validicSleepRecord.getTimestamp(), validicSleepRecord.getUtc_offset());
-
-        Sleep sleep = new Sleep(createDate.getTime());
-        sleep.setId(Integer.parseInt(validicSleepRecord.getActivity_id()));
-        sleep.setDate(Common.removeTimeFromDate(createDate).getTime());
-        if (validicSleepRecord.getExtras() != null) {
-            int lightSleep = 0;
-            int deepSleep = 0;
-            int wake = 0;
-            List<Integer> hourlySleepList = new ArrayList<>();
-
-            sleep.setHourlyWake(validicSleepRecord.getExtras().getHourlyWake());
-            sleep.setHourlyLight(validicSleepRecord.getExtras().getHourlyLight());
-            sleep.setHourlyDeep(validicSleepRecord.getExtras().getHourlyDeep());
-
-            try {
-                JSONArray hourlyWake = new JSONArray(sleep.getHourlyWake());
-                for (int i = 0; i < hourlyWake.length(); i++) {
-                    wake += Integer.parseInt(hourlyWake.getString(i));
-                    hourlySleepList.add(Integer.parseInt(hourlyWake.getString(i)));
-                }
-
-                JSONArray hourlyLight = new JSONArray(sleep.getHourlyLight());
-                for (int i = 0; i < hourlyLight.length(); i++) {
-                    lightSleep += Integer.parseInt(hourlyLight.getString(i));
-                    hourlySleepList.set(i, hourlySleepList.get(i) + Integer.parseInt(hourlyLight.getString(i)));
-                }
-
-                JSONArray hourlyDeep = new JSONArray(sleep.getHourlyDeep());
-                for (int i = 0; i < hourlyDeep.length(); i++) {
-                    deepSleep += Integer.parseInt(hourlyDeep.getString(i));
-                    hourlySleepList.set(i, hourlySleepList.get(i) + Integer.parseInt(hourlyDeep.getString(i)));
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            sleep.setHourlySleep(hourlySleepList.toString());
-            sleep.setTotalSleepTime(wake + deepSleep + lightSleep);
-            sleep.setTotalWakeTime(wake);
-            sleep.setTotalLightTime(lightSleep);
-            sleep.setTotalDeepTime(deepSleep);
-        }
-        //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
-        sleep.setStart(0);
-        sleep.setEnd(0);
-        sleep.setNevoUserID(getNevoUser().getNevoUserID());
-        sleep.setCloudRecordID(validicSleepRecord.get_id());
-        try {
-            sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        saveDailySleep(sleep);
     }
 
     public void saveSleepFromMed(ObtainMoreSleepResponse.SleepBean dailySleep, Date createDate) {
@@ -972,11 +888,6 @@ public class ApplicationModel extends Application {
         MultiDex.install(this);
     }
 
-    public void createValidicUser(String pin, ResponseListener<ValidicUser> responseListener) {
-        ValidicOperation.getInstance(this).createValidicUser(nevoUser, pin, responseListener);
-    }
-
-
     @Subscribe
     public void onValidicAddRoutineRecordEvent(ValidicAddRoutineRecordEvent
                                                        validicAddRoutineRecordEvent) {
@@ -1028,31 +939,6 @@ public class ApplicationModel extends Application {
     public void onValidicException(ValidicException validicException) {
         Log.w("Karl", "Exception occured!");
         validicException.getException().printStackTrace();
-    }
-
-    @Subscribe
-    public void onValidicReadMoreRoutineRecordsModelEvent
-            (ValidicReadMoreRoutineRecordsModelEvent validicReadMoreRoutineRecordsModelEvent) {
-        for (ValidicRoutineRecordModelBase routine : validicReadMoreRoutineRecordsModelEvent.getValidicReadMoreRoutineRecordsModel().getRoutine()) {
-            int activity_id = Integer.parseInt(routine.getActivity_id());
-            // if activity_id not exist in local Steps table, save it
-            if (!isFoundInLocalSteps(activity_id)) {
-                saveStepsFromValidic(routine);
-            }
-        }
-    }
-
-    @Subscribe
-    public void onValidicReadMoreSleepRecordsModelEvent(ValidicReadMoreSleepRecordsModelEvent
-                                                                validicReadMoreSleepRecordsModelEvent) {
-        ValidicReadMoreSleepRecordsModel validicReadMoreSleepRecordsModel = validicReadMoreSleepRecordsModelEvent.getValidicReadMoreSleepRecordsModel();
-        for (ValidicSleepRecordModelBase sleep : validicReadMoreSleepRecordsModel.getSleep()) {
-            int activity_id = Integer.parseInt(sleep.getActivity_id());
-            //if activity_id not exist in local Sleep table, save it
-            if (isFoundInLocalSleep(activity_id)) {
-                saveSleepFromValidic(sleep);
-            }
-        }
     }
 
     @Subscribe
