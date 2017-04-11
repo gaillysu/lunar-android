@@ -7,6 +7,8 @@ import com.medcorp.lunar.network_new.modle.response.CreateMultiStepsRespnse;
 import com.medcorp.lunar.network_new.modle.response.CreateStepsResponse;
 import com.medcorp.lunar.network_new.modle.response.CreateWeChatAccountResponse;
 import com.medcorp.lunar.network_new.modle.response.DeleteUserAccountResponse;
+import com.medcorp.lunar.network_new.modle.response.ObtainMoreSleepResponse;
+import com.medcorp.lunar.network_new.modle.response.ObtainMoreStepsResponse;
 import com.medcorp.lunar.network_new.modle.response.RegisterNewAccountResponse;
 import com.medcorp.lunar.network_new.modle.response.RequestForgotPasswordResponse;
 import com.medcorp.lunar.network_new.modle.response.SleepCreateResponse;
@@ -100,9 +102,16 @@ public interface HttpApi {
 
 
     @Headers({"Content-type:application/json;charset=UTF-8"})
-    @GET("sleep/user/{uid_example}?token={key}&start_date= {timestamp_example}&end_date= {timestamp2_example}")
-    Observable<> obtainMoreSleep(@Path("uid_example") String id,@Path("key") String key,@Path("timestamp_example") long startTime, @Path("timestamp2_example") long endTime);
+    @GET("steps/user/{uid_example}")
+    Observable<ObtainMoreStepsResponse> obtainMoreSteps(@Path("uid_example") String userID, @Query("key") String token,
+                                                        @Query("timestamp_example") long start_date,
+                                                        @Query("timestamp2_example") long end_date);
 
+    @Headers({"Content-type:application/json;charset=UTF-8"})
+    @GET("sleep/user/{uid_example}")
+    Observable<ObtainMoreSleepResponse> obtainMoreSleep(@Path("uid_example") String userID, @Query("key") String token,
+                                                        @Query("timestamp_example") long start_date,
+                                                        @Query("timestamp2_example") long end_date);
 
 
 }

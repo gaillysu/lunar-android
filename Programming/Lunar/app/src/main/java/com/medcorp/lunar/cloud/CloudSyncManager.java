@@ -10,11 +10,12 @@ import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.network.listener.ResponseListener;
-import com.medcorp.lunar.network.med.model.MedReadMoreRoutineRecordsModel;
-import com.medcorp.lunar.network.med.model.MedReadMoreSleepRecordsModel;
 import com.medcorp.lunar.network.validic.model.ValidicReadMoreRoutineRecordsModel;
 import com.medcorp.lunar.network.validic.model.ValidicReadMoreSleepRecordsModel;
+import com.medcorp.lunar.network_new.listener.RequestResponseListener;
 import com.medcorp.lunar.network_new.modle.request.RegisterNewAccountRequest;
+import com.medcorp.lunar.network_new.modle.response.ObtainMoreSleepResponse;
+import com.medcorp.lunar.network_new.modle.response.ObtainMoreStepsResponse;
 import com.medcorp.lunar.network_new.modle.response.RegisterNewAccountResponse;
 import com.medcorp.lunar.network_new.modle.response.UserLoginResponse;
 import com.medcorp.lunar.util.Common;
@@ -191,16 +192,15 @@ public class CloudSyncManager {
             });
         }
         if ((provider.getRawValue() & CloudServerProvider.Med.getRawValue()) == CloudServerProvider.Med.getRawValue()) {
-            MedOperation.getInstance(context).getMoreMedRoutineRecord(user, startDate, endDate, new ResponseListener<MedReadMoreRoutineRecordsModel>() {
+            MedOperation.getInstance(context).getMoreMedRoutineRecord(user, startDate, endDate, new RequestResponseListener<ObtainMoreStepsResponse>() {
                 @Override
-                public void onRequestFailure(SpiceException spiceException) {
+                public void onFailed() {
 
                 }
 
                 @Override
-                public void onRequestSuccess(MedReadMoreRoutineRecordsModel medReadMoreRoutineRecordsModel) {
-
-                    if (medReadMoreRoutineRecordsModel.getStatus() == 1 && medReadMoreRoutineRecordsModel.getSteps() != null && medReadMoreRoutineRecordsModel.getSteps().length > 0) {
+                public void onSuccess(ObtainMoreStepsResponse response) {
+                    if (response.getStatus() == 1 && response.getSteps() != null && response.getSteps().size() > 0) {
                         Date endDate = new Date(startDate.getTime() - 24 * 60 * 60 * 1000l);
                         Date startDate = new Date(endDate.getTime() - 30 * 24 * 60 * 60 * 1000l);
                         //no page split
@@ -236,15 +236,15 @@ public class CloudSyncManager {
             });
         }
         if ((provider.getRawValue() & CloudServerProvider.Med.getRawValue()) == CloudServerProvider.Med.getRawValue()) {
-            MedOperation.getInstance(context).getMoreMedSleepRecord(user, startDate, endDate, new ResponseListener<MedReadMoreSleepRecordsModel>() {
+            MedOperation.getInstance(context).getMoreMedSleepRecord(user, startDate, endDate, new RequestResponseListener<ObtainMoreSleepResponse>() {
                 @Override
-                public void onRequestFailure(SpiceException spiceException) {
+                public void onFailed() {
 
                 }
 
                 @Override
-                public void onRequestSuccess(MedReadMoreSleepRecordsModel medReadMoreSleepRecordsModel) {
-                    if (medReadMoreSleepRecordsModel.getStatus() == 1 && medReadMoreSleepRecordsModel.getSleep() != null && medReadMoreSleepRecordsModel.getSleep().length > 0) {
+                public void onSuccess(ObtainMoreSleepResponse response) {
+                    if (response.getStatus() == 1 && response.getSleep() != null && response.getSleep().size() > 0) {
                         Date endDate = new Date(startDate.getTime() - 24 * 60 * 60 * 1000l);
                         Date startDate = new Date(endDate.getTime() - 30 * 24 * 60 * 60 * 1000l);
                         //no page split

@@ -144,7 +144,6 @@ public class LoginActivity extends BaseActivity {
                             // App code
                             AccessToken accessToken = loginResult.getAccessToken();
                             if (accessToken != null && !accessToken.isExpired()) {
-                                // 登录
                                 Log.i("jason", accessToken.getToken() + ":::::" + accessToken.getUserId());
                             } else {
                             }
@@ -223,11 +222,9 @@ public class LoginActivity extends BaseActivity {
         getModel().saveNevoUser(getModel().getNevoUser());
         setResult(RESULT_OK, null);
         Preferences.saveIsFirstLogin(this, false);
-        getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, false).commit();
-        if (getModel().isWatchConnected()) {
-        }
-        if (getIntent().getBooleanExtra("isTutorialPage", true) &&
-                getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)) {
+        getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, false).apply();
+        if ((getIntent().getBooleanExtra("isTutorialPage", true) &&
+                getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)) | !getModel().isWatchConnected()) {
             startActivity(TutorialPage1Activity.class);
         } else {
             startActivity(MainActivity.class);
@@ -332,9 +329,10 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void run() {
                 if (event != null) {
-                    if (progressDialog != null) {
-                        progressDialog.show();
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
                     }
+                    progressDialog.show();
                     getModel().getWeChatToken(event.getCode());
                 }
             }
@@ -402,6 +400,7 @@ public class LoginActivity extends BaseActivity {
                     });
                     onLoginSuccess();
                 } else {
+                    onFailed();
                     showSnackbar(getString(R.string.wechat_login_fail));
                 }
             }
@@ -434,5 +433,8 @@ public class LoginActivity extends BaseActivity {
         super.onDestroy();
         Log.i("jason", "eventBus unregister");
         EventBus.getDefault().unregister(this);
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 }

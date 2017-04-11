@@ -1,19 +1,19 @@
 package com.medcorp.lunar.event.med;
 
 
-import com.medcorp.lunar.network.med.model.MedReadMoreSleepRecordsModel;
+import com.medcorp.lunar.network_new.modle.response.ObtainMoreSleepResponse;
 
 /**
  * Created by med on 16/8/23.
  */
 public class MedReadMoreSleepRecordsModelEvent {
-    final private MedReadMoreSleepRecordsModel medReadMoreSleepRecordsModel;
+    final private ObtainMoreSleepResponse medReadMoreSleepRecordsModel;
 
-    public MedReadMoreSleepRecordsModelEvent(MedReadMoreSleepRecordsModel medReadMoreSleepRecordsModel) {
+    public MedReadMoreSleepRecordsModelEvent(ObtainMoreSleepResponse medReadMoreSleepRecordsModel) {
         this.medReadMoreSleepRecordsModel = medReadMoreSleepRecordsModel;
     }
 
-    public MedReadMoreSleepRecordsModel getMedReadMoreSleepRecordsModel() {
+    public ObtainMoreSleepResponse getMedReadMoreSleepRecordsModel() {
         return medReadMoreSleepRecordsModel;
     }
 }

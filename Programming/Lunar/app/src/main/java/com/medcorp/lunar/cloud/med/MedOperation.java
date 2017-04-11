@@ -15,12 +15,6 @@ import com.medcorp.lunar.event.med.UpdateUserInfoEvent;
 import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
-import com.medcorp.lunar.network.listener.ResponseListener;
-import com.medcorp.lunar.network.med.manager.MedManager;
-import com.medcorp.lunar.network.med.model.MedReadMoreRoutineRecordsModel;
-import com.medcorp.lunar.network.med.model.MedReadMoreSleepRecordsModel;
-import com.medcorp.lunar.network.med.request.routine.GetMoreRoutineRecordsRequest;
-import com.medcorp.lunar.network.med.request.sleep.GetMoreSleepRecordsRequest;
 import com.medcorp.lunar.network_new.httpmanage.HttpManager;
 import com.medcorp.lunar.network_new.httpmanage.RequestResponse;
 import com.medcorp.lunar.network_new.httpmanage.SubscriberExtends;
@@ -41,13 +35,14 @@ import com.medcorp.lunar.network_new.modle.response.CheckEmailResponse;
 import com.medcorp.lunar.network_new.modle.response.CheckWeChatAccountResponse;
 import com.medcorp.lunar.network_new.modle.response.CreateStepsResponse;
 import com.medcorp.lunar.network_new.modle.response.CreateWeChatAccountResponse;
+import com.medcorp.lunar.network_new.modle.response.ObtainMoreSleepResponse;
+import com.medcorp.lunar.network_new.modle.response.ObtainMoreStepsResponse;
 import com.medcorp.lunar.network_new.modle.response.RegisterNewAccountResponse;
 import com.medcorp.lunar.network_new.modle.response.RequestForgotPasswordResponse;
 import com.medcorp.lunar.network_new.modle.response.SleepCreateResponse;
 import com.medcorp.lunar.network_new.modle.response.UpdateAccountInformationResponse;
 import com.medcorp.lunar.network_new.modle.response.UserLoginResponse;
 import com.medcorp.lunar.network_new.modle.response.WeChatLoginResponse;
-import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import org.greenrobot.eventbus.EventBus;
@@ -63,13 +58,11 @@ import rx.Observable;
 @SuppressWarnings("unchecked")
 public class MedOperation {
     private static MedOperation medOperationInstance = null;
-    private MedManager medManager;
     private HttpManager httpManager;
     private Context mContext;
 
     private MedOperation(Context context) {
         httpManager = HttpManager.getInstance(context);
-        medManager = new MedManager(context);
         mContext = context;
     }
 
@@ -167,7 +160,8 @@ public class MedOperation {
         }));
     }
 
-    public void getMoreMedRoutineRecord(User user, Date startDate, Date endDate, final ResponseListener listener) {
+    public void getMoreMedRoutineRecord(User user, Date startDate, Date endDate,
+                                        final RequestResponseListener<ObtainMoreStepsResponse> listener) {
         if (!user.isLogin()) {
             return;
         }
@@ -175,26 +169,26 @@ public class MedOperation {
         long startTimestamp = startDate.getTime() / 1000;
         long endTimeStamps = endDate.getTime() / 1000;
 
-        GetMoreRoutineRecordsRequest getMoreRecordsRequest = new GetMoreRoutineRecordsRequest(medManager.getAccessToken(), user.getNevoUserID(), startTimestamp, endTimeStamps);
-
-        medManager.execute(getMoreRecordsRequest, new RequestListener<MedReadMoreRoutineRecordsModel>() {
+        Observable<ObtainMoreStepsResponse> moreStepsResponse = httpManager.createApiService().obtainMoreSteps(
+                user.getNevoUserID(), mContext.getString(R.string.network_token), startTimestamp, endTimeStamps);
+        httpManager.toSubscribe(mContext,moreStepsResponse,SubscriberExtends.getInstance().getSubscriber(new RequestResponse<ObtainMoreStepsResponse>() {
             @Override
-            public void onRequestFailure(SpiceException spiceException) {
+            public void onFailure(Throwable e) {
                 if (listener != null) {
-                    listener.onRequestFailure(spiceException);
+                    listener.onFailed();
                 }
-                spiceException.printStackTrace();
-                EventBus.getDefault().post(new MedException(spiceException));
+                e.printStackTrace();
+                EventBus.getDefault().post(new MedException(e));
             }
 
             @Override
-            public void onRequestSuccess(MedReadMoreRoutineRecordsModel medReadMoreRoutineRecordsModel) {
+            public void onSuccess(ObtainMoreStepsResponse o) {
                 if (listener != null) {
-                    listener.onRequestSuccess(medReadMoreRoutineRecordsModel);
+                    listener.onSuccess(o);
                 }
-                EventBus.getDefault().post(new MedReadMoreRoutineRecordsModelEvent(medReadMoreRoutineRecordsModel));
+                EventBus.getDefault().post(new MedReadMoreRoutineRecordsModelEvent(o));
             }
-        });
+        }));
     }
 
     //BELOW ARE SLEEP FUNCTIONS
@@ -230,7 +224,8 @@ public class MedOperation {
                 }));
     }
 
-    public void getMoreMedSleepRecord(User user, Date startDate, Date endDate, final ResponseListener listener) {
+    public void getMoreMedSleepRecord(User user, Date startDate, Date endDate,
+                                      final RequestResponseListener<ObtainMoreSleepResponse> listener) {
         if (!user.isLogin()) {
             return;
         }
@@ -239,27 +234,29 @@ public class MedOperation {
         long startTimestamp = startDate.getTime() / 1000;
         long endTimeStamps = endDate.getTime() / 1000;
 
-        GetMoreSleepRecordsRequest getMoreRecordsRequest = new GetMoreSleepRecordsRequest(medManager.getAccessToken(), user.getNevoUserID(), startTimestamp, endTimeStamps);
+        Observable<ObtainMoreSleepResponse> obtainMoreSleepResponse = httpManager.createApiService()
+                .obtainMoreSleep(user.getNevoUserID(), mContext.getString(R.string.network_token),
+                startTimestamp, endTimeStamps);
 
-        medManager.execute(getMoreRecordsRequest, new RequestListener<MedReadMoreSleepRecordsModel>() {
+        httpManager.toSubscribe(mContext,obtainMoreSleepResponse,SubscriberExtends.getInstance()
+                .getSubscriber(new RequestResponse<ObtainMoreSleepResponse>() {
             @Override
-            public void onRequestFailure(SpiceException spiceException) {
+            public void onFailure(Throwable e) {
                 if (listener != null) {
-                    listener.onRequestFailure(spiceException);
+                    listener.onFailed();
                 }
-                spiceException.printStackTrace();
-                EventBus.getDefault().post(new MedException(spiceException));
+                e.printStackTrace();
+                EventBus.getDefault().post(new MedException(e));
             }
 
             @Override
-            public void onRequestSuccess(MedReadMoreSleepRecordsModel medReadMoreSleepRecordsModel) {
+            public void onSuccess(ObtainMoreSleepResponse o) {
                 if (listener != null) {
-                    listener.onRequestSuccess(medReadMoreSleepRecordsModel);
+                    listener.onSuccess(o);
                 }
-                EventBus.getDefault().post(new MedReadMoreSleepRecordsModelEvent(medReadMoreSleepRecordsModel));
+                EventBus.getDefault().post(new MedReadMoreSleepRecordsModelEvent(o));
             }
-        });
-
+        }));
     }
 
     public void checkWeChat(final Activity context, WeChatAccountCheckRequest request, final RequestResponseListener<CheckWeChatAccountResponse> listener) {

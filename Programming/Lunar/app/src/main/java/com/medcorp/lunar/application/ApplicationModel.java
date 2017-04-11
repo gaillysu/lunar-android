@@ -75,14 +75,13 @@ import com.medcorp.lunar.model.Solar;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.network.listener.ResponseListener;
-import com.medcorp.lunar.network.med.manager.MedManager;
-import com.medcorp.lunar.network.med.model.MedRoutineRecordWithID;
-import com.medcorp.lunar.network.med.model.MedSleepRecordWithID;
 import com.medcorp.lunar.network.validic.model.ValidicReadMoreSleepRecordsModel;
 import com.medcorp.lunar.network.validic.model.ValidicRoutineRecordModelBase;
 import com.medcorp.lunar.network.validic.model.ValidicSleepRecordModelBase;
 import com.medcorp.lunar.network.validic.model.ValidicUser;
 import com.medcorp.lunar.network_new.modle.request.RequestWeChatToken;
+import com.medcorp.lunar.network_new.modle.response.ObtainMoreSleepResponse;
+import com.medcorp.lunar.network_new.modle.response.ObtainMoreStepsResponse;
 import com.medcorp.lunar.network_new.modle.response.WeChatUserInfoResponse;
 import com.medcorp.lunar.util.CalendarWeekUtils;
 import com.medcorp.lunar.util.Common;
@@ -150,7 +149,6 @@ public class ApplicationModel extends Application {
     private int bleFirmwareVersion = -1;
     private GoogleFitManager googleFitManager;
     private GoogleFitTaskCounter googleFitTaskCounter;
-    private MedManager validicMedManager;
     private CloudSyncManager cloudSyncManager;
     private User nevoUser;
     private WorldClockDatabaseHelper worldClockDatabaseHelper;
@@ -190,7 +188,6 @@ public class ApplicationModel extends Application {
         goalDatabaseHelper = new GoalDatabaseHelper();
         userDatabaseHelper = new UserDatabaseHelper();
         solarDatabaseHelper = new SolarDatabaseHelper();
-        validicMedManager = new MedManager(this);
         cloudSyncManager = new CloudSyncManager(this);
         ledDataBase = new LedLampDatabase();
         locationController = new LocationController(this);
@@ -252,10 +249,6 @@ public class ApplicationModel extends Application {
 
     public static ApplicationModel getInstance() {
         return mModel;
-    }
-
-    public MedManager getNetworkManage() {
-        return validicMedManager;
     }
 
     public WorldClockDatabaseHelper getWorldClockDatabaseHelper() {
@@ -598,7 +591,7 @@ public class ApplicationModel extends Application {
         saveDailySteps(steps);
     }
 
-    public void saveStepsFromMed(MedRoutineRecordWithID routine, Date createDate) {
+    public void saveStepsFromMed(ObtainMoreStepsResponse.StepsBean routine, Date createDate) {
         Steps steps = new Steps(createDate.getTime());
         steps.setDate(Common.removeTimeFromDate(createDate).getTime());
         try {
@@ -680,13 +673,13 @@ public class ApplicationModel extends Application {
         saveDailySleep(sleep);
     }
 
-    public void saveSleepFromMed(MedSleepRecordWithID medSleepRecordWithID, Date createDate) {
+    public void saveSleepFromMed(ObtainMoreSleepResponse.SleepBean dailySleep, Date createDate) {
         Sleep sleep = new Sleep(createDate.getTime());
         sleep.setDate(Common.removeTimeFromDate(createDate).getTime());
 
-        sleep.setHourlyWake(medSleepRecordWithID.getWake_time());
-        sleep.setHourlyLight(medSleepRecordWithID.getLight_sleep());
-        sleep.setHourlyDeep(medSleepRecordWithID.getDeep_sleep());
+        sleep.setHourlyWake(dailySleep.getWake_time());
+        sleep.setHourlyLight(dailySleep.getLight_sleep());
+        sleep.setHourlyDeep(dailySleep.getDeep_sleep());
 
         int lightSleep = 0;
         int deepSleep = 0;
@@ -723,7 +716,7 @@ public class ApplicationModel extends Application {
         sleep.setEnd(0);
         sleep.setNevoUserID(getNevoUser().getNevoUserID());
         //we must set CloudRecordID here, avoid doing sync repeatly
-        sleep.setCloudRecordID(medSleepRecordWithID.getId() + "");
+        sleep.setCloudRecordID(dailySleep.getId() + "");
         try {
             sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
         } catch (JSONException e) {
@@ -1066,10 +1059,11 @@ public class ApplicationModel extends Application {
     public void onMedReadMoreRoutineRecordsModelEvent(MedReadMoreRoutineRecordsModelEvent
                                                               medReadMoreRoutineRecordsModelEvent) {
 
-        if (medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps() == null || medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps().length == 0) {
+        if (medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps() == null
+                || medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps().size() == 0) {
             return;
         }
-        for (MedRoutineRecordWithID routine : medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps()) {
+        for (ObtainMoreStepsResponse.StepsBean routine : medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps()) {
             try {
                 Date date = new SimpleDateFormat("yyyy-MM-dd").parse(routine.getDate().getDate());
                 // if not exist in local Steps table, save it
@@ -1086,10 +1080,12 @@ public class ApplicationModel extends Application {
     public void onMedReadMoreSleepRecordsModelEvent(MedReadMoreSleepRecordsModelEvent
                                                             medReadMoreSleepRecordsModelEvent) {
 
-        if (medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep() == null || medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep().length == 0) {
+        if (medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep() == null
+                || medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep().size() == 0) {
             return;
         }
-        for (MedSleepRecordWithID sleep : medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep()) {
+        for (ObtainMoreSleepResponse.SleepBean sleep :
+                medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep()) {
             try {
                 Date date = new SimpleDateFormat("yyyy-MM-dd").parse(sleep.getDate().getDate());
                 // if not exist in local Sleep table, save it

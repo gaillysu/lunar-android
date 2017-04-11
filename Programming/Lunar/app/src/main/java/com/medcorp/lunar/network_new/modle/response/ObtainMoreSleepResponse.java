@@ -2,32 +2,26 @@ package com.medcorp.lunar.network_new.modle.response;
 
 import com.medcorp.lunar.network_new.modle.base.BaseResponse;
 
+import java.util.List;
+
 /**
- * Created by Jason on 2017/4/10.
+ * Created by Jason on 2017/4/11.
  */
 
-public class ObtainDailySleepResponse extends BaseResponse{
-    
-    private SleepBean sleep;
+public class ObtainMoreSleepResponse extends BaseResponse {
 
-    public SleepBean getSleep() {
+
+    private List<SleepBean> sleep;
+
+    public List<SleepBean> getSleep() {
         return sleep;
     }
 
-    public void setSleep(SleepBean sleep) {
+    public void setSleep(List<SleepBean> sleep) {
         this.sleep = sleep;
     }
 
     public static class SleepBean {
-        /**
-         * id : 298
-         * uid : 52
-         * wake_time : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-         * light_sleep : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-         * deep_sleep : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-         * date : {"date":"2000-01-01 00:00:00.000000","timezone_type":3,"timezone":"Europe/Amsterdam"}
-         */
-
         private int id;
         private int uid;
         private String wake_time;
@@ -85,7 +79,7 @@ public class ObtainDailySleepResponse extends BaseResponse{
 
         public static class DateBean {
             /**
-             * date : 2000-01-01 00:00:00.000000
+             * date : 2017-03-31 00:00:00.000000
              * timezone_type : 3
              * timezone : Europe/Amsterdam
              */
