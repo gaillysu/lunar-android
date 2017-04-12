@@ -19,7 +19,7 @@ import com.medcorp.lunar.activity.login.LoginActivity;
 import com.medcorp.lunar.activity.login.SignupActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.event.SignUpEvent;
-import com.medcorp.lunar.network_new.modle.request.RegisterNewAccountRequest;
+import com.medcorp.lunar.network.modle.request.RegisterNewAccountRequest;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -72,10 +72,10 @@ public class UserInfoActivity extends BaseActivity {
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         Intent intent = getIntent();
-        email = intent.getStringExtra("email");
-        firstName = intent.getStringExtra("firstName");
-        lastName = intent.getStringExtra("lastName");
-        password = intent.getStringExtra("password");
+        email = intent.getStringExtra(getString(R.string.user_email_account));
+        firstName = intent.getStringExtra(getString(R.string.user_register_first_name));
+        lastName = intent.getStringExtra(getString(R.string.user_register_last_name));
+        password = intent.getStringExtra(getString(R.string.user_register_password));
 
     }
 
@@ -158,7 +158,7 @@ public class UserInfoActivity extends BaseActivity {
                     case SUCCESS:
                         showSnackbar(R.string.register_success);
                         Intent intent = new Intent(UserInfoActivity.this, LoginActivity.class);
-                        intent.putExtra("isTutorialPage", true);
+                        intent.putExtra(getString(R.string.open_activity_is_tutorial), true);
                         startActivity(intent);
                         finish();
                         break;

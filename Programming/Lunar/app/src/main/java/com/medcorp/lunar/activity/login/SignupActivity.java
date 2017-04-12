@@ -16,9 +16,9 @@ import com.medcorp.lunar.activity.UserInfoActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.cloud.med.MedOperation;
 import com.medcorp.lunar.event.SignUpEvent;
-import com.medcorp.lunar.network_new.listener.RequestResponseListener;
-import com.medcorp.lunar.network_new.modle.request.CheckEmailRequest;
-import com.medcorp.lunar.network_new.modle.response.CheckEmailResponse;
+import com.medcorp.lunar.network.listener.RequestResponseListener;
+import com.medcorp.lunar.network.modle.request.CheckEmailRequest;
+import com.medcorp.lunar.network.modle.response.CheckEmailResponse;
 import com.medcorp.lunar.view.ToastHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -67,7 +67,7 @@ public class SignupActivity extends BaseActivity {
     @OnClick(R.id.register_title_back_image_button)
     public void backClick() {
         Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-        intent.putExtra("isTutorialPage", true);
+        intent.putExtra(getString(R.string.open_activity_is_tutorial), true);
         startActivity(intent);
         finish();
     }
@@ -109,10 +109,10 @@ public class SignupActivity extends BaseActivity {
                 progressDialog.dismiss();
                 if (response.getStatus() != 1) {
                     Intent intent = new Intent(SignupActivity.this, UserInfoActivity.class);
-                    intent.putExtra("email", email);
-                    intent.putExtra("password", password);
-                    intent.putExtra("firstName", firstName);
-                    intent.putExtra("lastName", lastName);
+                    intent.putExtra(getString(R.string.user_email_account), email);
+                    intent.putExtra(getString(R.string.user_register_password), password);
+                    intent.putExtra(getString(R.string.user_register_first_name), firstName);
+                    intent.putExtra(getString(R.string.user_register_last_name), lastName);
                     startActivity(intent);
                     finish();
                 }else{

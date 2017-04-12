@@ -5,12 +5,12 @@ import com.medcorp.lunar.cloud.med.MedOperation;
 import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
-import com.medcorp.lunar.network_new.listener.RequestResponseListener;
-import com.medcorp.lunar.network_new.modle.request.RegisterNewAccountRequest;
-import com.medcorp.lunar.network_new.modle.response.ObtainMoreSleepResponse;
-import com.medcorp.lunar.network_new.modle.response.ObtainMoreStepsResponse;
-import com.medcorp.lunar.network_new.modle.response.RegisterNewAccountResponse;
-import com.medcorp.lunar.network_new.modle.response.UserLoginResponse;
+import com.medcorp.lunar.network.listener.RequestResponseListener;
+import com.medcorp.lunar.network.modle.request.RegisterNewAccountRequest;
+import com.medcorp.lunar.network.modle.response.ObtainMoreSleepResponse;
+import com.medcorp.lunar.network.modle.response.ObtainMoreStepsResponse;
+import com.medcorp.lunar.network.modle.response.RegisterNewAccountResponse;
+import com.medcorp.lunar.network.modle.response.UserLoginResponse;
 import com.medcorp.lunar.util.Common;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -42,7 +42,6 @@ public class CloudSyncManager {
     private final String TAG = "CloudSyncManager";
     final long INTERVAL_DATE = 365 * 24 * 60 * 60 * 1000l;//user can get all data in a year
     //here select which one cloud server
-    final CloudServerProvider cloudServerProvider = CloudServerProvider.Med;
 
     private ApplicationModel context;
 
@@ -137,72 +136,62 @@ public class CloudSyncManager {
      */
     public void launchSyncAll(User user, List<Steps> stepsList, List<Sleep> sleepList) {
         for (Steps steps : stepsList) {
-            if ((cloudServerProvider.getRawValue() & CloudServerProvider.Med.getRawValue()) == CloudServerProvider.Med.getRawValue()) {
-                MedOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(steps.getDate()), null);
-            }
+            MedOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(steps.getDate()), null);
         }
         //calculate today 's last time: 23:59:59
         Date endDate = new Date(Common.removeTimeFromDate(new Date()).getTime() + 24 * 60 * 60 * 1000l - 1);
         Date startDate = new Date(endDate.getTime() - INTERVAL_DATE);
-        downloadSteps(user, startDate, endDate, 1, cloudServerProvider);
+        downloadSteps(user, startDate, endDate, 1);
         for (Sleep sleep : sleepList) {
-            if ((cloudServerProvider.getRawValue() & CloudServerProvider.Med.getRawValue()) == CloudServerProvider.Med.getRawValue()) {
-                MedOperation.getInstance(context).addMedSleepRecord(user, sleep, new Date(sleep.getDate()), null);
+            MedOperation.getInstance(context).addMedSleepRecord(user, sleep, new Date(sleep.getDate()), null);
+        }
+        downloadSleep(user, startDate, endDate, 1);
+    }
+
+    private void downloadSteps(final User user, final Date startDate, final Date endDate, final int page) {
+        MedOperation.getInstance(context).getMoreMedRoutineRecord(user, startDate, endDate, new RequestResponseListener<ObtainMoreStepsResponse>() {
+            @Override
+            public void onFailed() {
+
             }
-        }
-        downloadSleep(user, startDate, endDate, 1, cloudServerProvider);
-    }
 
-    private void downloadSteps(final User user, final Date startDate, final Date endDate, final int page, CloudServerProvider provider) {
-        if ((provider.getRawValue() & CloudServerProvider.Med.getRawValue()) == CloudServerProvider.Med.getRawValue()) {
-            MedOperation.getInstance(context).getMoreMedRoutineRecord(user, startDate, endDate, new RequestResponseListener<ObtainMoreStepsResponse>() {
-                @Override
-                public void onFailed() {
-
+            @Override
+            public void onSuccess(ObtainMoreStepsResponse response) {
+                if (response.getStatus() == 1 && response.getSteps() != null && response.getSteps().size() > 0) {
+                    Date endDate = new Date(startDate.getTime() - 24 * 60 * 60 * 1000l);
+                    Date startDate = new Date(endDate.getTime() - 30 * 24 * 60 * 60 * 1000l);
+                    //no page split
+                    downloadSteps(user, startDate, endDate, 0);
                 }
-
-                @Override
-                public void onSuccess(ObtainMoreStepsResponse response) {
-                    if (response.getStatus() == 1 && response.getSteps() != null && response.getSteps().size() > 0) {
-                        Date endDate = new Date(startDate.getTime() - 24 * 60 * 60 * 1000l);
-                        Date startDate = new Date(endDate.getTime() - 30 * 24 * 60 * 60 * 1000l);
-                        //no page split
-                        downloadSteps(user, startDate, endDate, 0, CloudServerProvider.Med);
-                    }
-                }
-            });
-        }
+            }
+        });
     }
 
 
-    private void downloadSleep(final User user, final Date startDate, final Date endDate, final int page, CloudServerProvider provider) {
-        if ((provider.getRawValue() & CloudServerProvider.Med.getRawValue()) == CloudServerProvider.Med.getRawValue()) {
-            MedOperation.getInstance(context).getMoreMedSleepRecord(user, startDate, endDate, new RequestResponseListener<ObtainMoreSleepResponse>() {
-                @Override
-                public void onFailed() {
+    private void downloadSleep(final User user, final Date startDate, final Date endDate, final int page) {
+        MedOperation.getInstance(context).getMoreMedSleepRecord(user, startDate, endDate, new RequestResponseListener<ObtainMoreSleepResponse>() {
+            @Override
+            public void onFailed() {
 
-                }
+            }
 
-                @Override
-                public void onSuccess(ObtainMoreSleepResponse response) {
-                    if (response.getStatus() == 1 && response.getSleep() != null && response.getSleep().size() > 0) {
-                        Date endDate = new Date(startDate.getTime() - 24 * 60 * 60 * 1000l);
-                        Date startDate = new Date(endDate.getTime() - 30 * 24 * 60 * 60 * 1000l);
-                        //no page split
-                        downloadSleep(user, startDate, endDate, 0, CloudServerProvider.Med);
-                    }
+            @Override
+            public void onSuccess(ObtainMoreSleepResponse response) {
+                if (response.getStatus() == 1 && response.getSleep() != null && response.getSleep().size() > 0) {
+                    Date endDate = new Date(startDate.getTime() - 24 * 60 * 60 * 1000l);
+                    Date startDate = new Date(endDate.getTime() - 30 * 24 * 60 * 60 * 1000l);
+                    //no page split
+                    downloadSleep(user, startDate, endDate, 0);
                 }
-            });
-        }
+            }
+        });
     }
 
     /**
      * when today's steps got change, invoke it
      */
     public void launchSyncDaily(User user, Steps steps) {
-        if ((cloudServerProvider.getRawValue() & CloudServerProvider.Med.getRawValue()) == CloudServerProvider.Med.getRawValue()) {
             MedOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(), null);
-        }
     }
 
     /**
@@ -210,15 +199,11 @@ public class CloudSyncManager {
      */
     public void launchSyncWeekly(User user, List<Steps> stepsList, List<Sleep> sleepList) {
         for (Steps steps : stepsList) {
-            if ((cloudServerProvider.getRawValue() & CloudServerProvider.Med.getRawValue()) == CloudServerProvider.Med.getRawValue()) {
                 MedOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(steps.getDate()), null);
-            }
         }
 
         for (Sleep sleep : sleepList) {
-            if ((cloudServerProvider.getRawValue() & CloudServerProvider.Med.getRawValue()) == CloudServerProvider.Med.getRawValue()) {
                 MedOperation.getInstance(context).addMedSleepRecord(user, sleep, new Date(sleep.getDate()), null);
-            }
         }
     }
 }

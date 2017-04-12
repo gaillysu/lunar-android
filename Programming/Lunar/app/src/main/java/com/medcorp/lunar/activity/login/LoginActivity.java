@@ -34,14 +34,14 @@ import com.medcorp.lunar.event.WeChatTokenEvent;
 import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
-import com.medcorp.lunar.network_new.listener.RequestResponseListener;
-import com.medcorp.lunar.network_new.modle.request.WeChatAccountCheckRequest;
-import com.medcorp.lunar.network_new.modle.request.WeChatAccountRegisterRequest;
-import com.medcorp.lunar.network_new.modle.request.WeChatLoginRequest;
-import com.medcorp.lunar.network_new.modle.response.CheckWeChatAccountResponse;
-import com.medcorp.lunar.network_new.modle.response.CreateWeChatAccountResponse;
-import com.medcorp.lunar.network_new.modle.response.WeChatLoginResponse;
-import com.medcorp.lunar.network_new.modle.response.WeChatUserInfoResponse;
+import com.medcorp.lunar.network.listener.RequestResponseListener;
+import com.medcorp.lunar.network.modle.request.WeChatAccountCheckRequest;
+import com.medcorp.lunar.network.modle.request.WeChatAccountRegisterRequest;
+import com.medcorp.lunar.network.modle.request.WeChatLoginRequest;
+import com.medcorp.lunar.network.modle.response.CheckWeChatAccountResponse;
+import com.medcorp.lunar.network.modle.response.CreateWeChatAccountResponse;
+import com.medcorp.lunar.network.modle.response.WeChatLoginResponse;
+import com.medcorp.lunar.network.modle.response.WeChatUserInfoResponse;
 import com.medcorp.lunar.util.Preferences;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPI;
@@ -64,7 +64,6 @@ import static com.medcorp.lunar.R.style.AppTheme_Dark_Dialog;
 
 public class LoginActivity extends BaseActivity {
 
-    private static final String TAG = "LoginActivity";
     private int errorSum = 0;
     private static final int REQUEST_SIGN_UP = 0;
     private ProgressDialog progressDialog;
@@ -111,7 +110,7 @@ public class LoginActivity extends BaseActivity {
     @OnClick(R.id.login_skip_bt)
     public void skipLogin() {
         Preferences.saveIsFirstLogin(this, false);
-        if (getIntent().getBooleanExtra("isTutorialPage", true) && !getModel().isWatchConnected()) {
+        if (getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) && !getModel().isWatchConnected()) {
             startActivity(TutorialPage1Activity.class);
         } else {
             startActivity(MainActivity.class);
@@ -222,7 +221,7 @@ public class LoginActivity extends BaseActivity {
         getModel().saveNevoUser(getModel().getNevoUser());
         setResult(RESULT_OK, null);
         Preferences.saveIsFirstLogin(this, false);
-        if ((getIntent().getBooleanExtra("isTutorialPage", true) &&
+        if ((getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) &&
                 getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, false)) | !getModel().isWatchConnected()) {
             startActivity(TutorialPage1Activity.class);
         } else {
@@ -242,7 +241,7 @@ public class LoginActivity extends BaseActivity {
                 @Override
                 public void onClick(MaterialDialog dialog, DialogAction which) {
                     Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
-                    intent.putExtra("email", email);
+                    intent.putExtra(getString(R.string.user_email_account), email);
                     startActivity(intent);
                     finish();
                 }
@@ -430,7 +429,6 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i("jason", "eventBus unregister");
         EventBus.getDefault().unregister(this);
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();

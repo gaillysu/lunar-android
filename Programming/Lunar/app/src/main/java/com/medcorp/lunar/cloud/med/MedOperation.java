@@ -9,40 +9,38 @@ import com.medcorp.lunar.event.SignUpEvent;
 import com.medcorp.lunar.event.med.MedAddRoutineRecordEvent;
 import com.medcorp.lunar.event.med.MedAddSleepRecordEvent;
 import com.medcorp.lunar.event.med.MedException;
-import com.medcorp.lunar.event.med.MedReadMoreRoutineRecordsModelEvent;
 import com.medcorp.lunar.event.med.MedReadMoreSleepRecordsModelEvent;
-import com.medcorp.lunar.event.med.UpdateUserInfoEvent;
 import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
-import com.medcorp.lunar.network_new.httpmanage.HttpManager;
-import com.medcorp.lunar.network_new.httpmanage.RequestResponse;
-import com.medcorp.lunar.network_new.httpmanage.SubscriberExtends;
-import com.medcorp.lunar.network_new.listener.RequestResponseListener;
-import com.medcorp.lunar.network_new.modle.request.ChangePasswordRequest;
-import com.medcorp.lunar.network_new.modle.request.CheckEmailRequest;
-import com.medcorp.lunar.network_new.modle.request.CreateStepsRequest;
-import com.medcorp.lunar.network_new.modle.request.RegisterNewAccountRequest;
-import com.medcorp.lunar.network_new.modle.request.RequestForgotPasswordTokenRequest;
-import com.medcorp.lunar.network_new.modle.request.SleepCreateRequest;
-import com.medcorp.lunar.network_new.modle.request.UpdateAccountInformationRequest;
-import com.medcorp.lunar.network_new.modle.request.UserLoginRequest;
-import com.medcorp.lunar.network_new.modle.request.WeChatAccountCheckRequest;
-import com.medcorp.lunar.network_new.modle.request.WeChatAccountRegisterRequest;
-import com.medcorp.lunar.network_new.modle.request.WeChatLoginRequest;
-import com.medcorp.lunar.network_new.modle.response.ChangePasswordResponse;
-import com.medcorp.lunar.network_new.modle.response.CheckEmailResponse;
-import com.medcorp.lunar.network_new.modle.response.CheckWeChatAccountResponse;
-import com.medcorp.lunar.network_new.modle.response.CreateStepsResponse;
-import com.medcorp.lunar.network_new.modle.response.CreateWeChatAccountResponse;
-import com.medcorp.lunar.network_new.modle.response.ObtainMoreSleepResponse;
-import com.medcorp.lunar.network_new.modle.response.ObtainMoreStepsResponse;
-import com.medcorp.lunar.network_new.modle.response.RegisterNewAccountResponse;
-import com.medcorp.lunar.network_new.modle.response.RequestForgotPasswordResponse;
-import com.medcorp.lunar.network_new.modle.response.SleepCreateResponse;
-import com.medcorp.lunar.network_new.modle.response.UpdateAccountInformationResponse;
-import com.medcorp.lunar.network_new.modle.response.UserLoginResponse;
-import com.medcorp.lunar.network_new.modle.response.WeChatLoginResponse;
+import com.medcorp.lunar.network.httpmanage.HttpManager;
+import com.medcorp.lunar.network.httpmanage.RequestResponse;
+import com.medcorp.lunar.network.httpmanage.SubscriberExtends;
+import com.medcorp.lunar.network.listener.RequestResponseListener;
+import com.medcorp.lunar.network.modle.request.ChangePasswordRequest;
+import com.medcorp.lunar.network.modle.request.CheckEmailRequest;
+import com.medcorp.lunar.network.modle.request.CreateStepsRequest;
+import com.medcorp.lunar.network.modle.request.RegisterNewAccountRequest;
+import com.medcorp.lunar.network.modle.request.RequestForgotPasswordTokenRequest;
+import com.medcorp.lunar.network.modle.request.SleepCreateRequest;
+import com.medcorp.lunar.network.modle.request.UpdateAccountInformationRequest;
+import com.medcorp.lunar.network.modle.request.UserLoginRequest;
+import com.medcorp.lunar.network.modle.request.WeChatAccountCheckRequest;
+import com.medcorp.lunar.network.modle.request.WeChatAccountRegisterRequest;
+import com.medcorp.lunar.network.modle.request.WeChatLoginRequest;
+import com.medcorp.lunar.network.modle.response.ChangePasswordResponse;
+import com.medcorp.lunar.network.modle.response.CheckEmailResponse;
+import com.medcorp.lunar.network.modle.response.CheckWeChatAccountResponse;
+import com.medcorp.lunar.network.modle.response.CreateStepsResponse;
+import com.medcorp.lunar.network.modle.response.CreateWeChatAccountResponse;
+import com.medcorp.lunar.network.modle.response.ObtainMoreSleepResponse;
+import com.medcorp.lunar.network.modle.response.ObtainMoreStepsResponse;
+import com.medcorp.lunar.network.modle.response.RegisterNewAccountResponse;
+import com.medcorp.lunar.network.modle.response.RequestForgotPasswordResponse;
+import com.medcorp.lunar.network.modle.response.SleepCreateResponse;
+import com.medcorp.lunar.network.modle.response.UpdateAccountInformationResponse;
+import com.medcorp.lunar.network.modle.response.UserLoginResponse;
+import com.medcorp.lunar.network.modle.response.WeChatLoginResponse;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import org.greenrobot.eventbus.EventBus;
@@ -171,7 +169,7 @@ public class MedOperation {
 
         Observable<ObtainMoreStepsResponse> moreStepsResponse = httpManager.createApiService().obtainMoreSteps(
                 user.getNevoUserID(), mContext.getString(R.string.network_token), startTimestamp, endTimeStamps);
-        httpManager.toSubscribe(mContext,moreStepsResponse,SubscriberExtends.getInstance().getSubscriber(new RequestResponse<ObtainMoreStepsResponse>() {
+        httpManager.toSubscribe(mContext, moreStepsResponse, SubscriberExtends.getInstance().getSubscriber(new RequestResponse<ObtainMoreStepsResponse>() {
             @Override
             public void onFailure(Throwable e) {
                 if (listener != null) {
@@ -236,27 +234,27 @@ public class MedOperation {
 
         Observable<ObtainMoreSleepResponse> obtainMoreSleepResponse = httpManager.createApiService()
                 .obtainMoreSleep(user.getNevoUserID(), mContext.getString(R.string.network_token),
-                startTimestamp, endTimeStamps);
+                        startTimestamp, endTimeStamps);
 
-        httpManager.toSubscribe(mContext,obtainMoreSleepResponse,SubscriberExtends.getInstance()
+        httpManager.toSubscribe(mContext, obtainMoreSleepResponse, SubscriberExtends.getInstance()
                 .getSubscriber(new RequestResponse<ObtainMoreSleepResponse>() {
-            @Override
-            public void onFailure(Throwable e) {
-                if (listener != null) {
-                    listener.onFailed();
-                }
-                e.printStackTrace();
-                EventBus.getDefault().post(new MedException(e));
-            }
+                    @Override
+                    public void onFailure(Throwable e) {
+                        if (listener != null) {
+                            listener.onFailed();
+                        }
+                        e.printStackTrace();
+                        EventBus.getDefault().post(new MedException(e));
+                    }
 
-            @Override
-            public void onSuccess(ObtainMoreSleepResponse o) {
-                if (listener != null) {
-                    listener.onSuccess(o);
-                }
-                EventBus.getDefault().post(new MedReadMoreSleepRecordsModelEvent(o));
-            }
-        }));
+                    @Override
+                    public void onSuccess(ObtainMoreSleepResponse o) {
+                        if (listener != null) {
+                            listener.onSuccess(o);
+                        }
+                        EventBus.getDefault().post(new MedReadMoreSleepRecordsModelEvent(o));
+                    }
+                }));
     }
 
     public void checkWeChat(final Activity context, WeChatAccountCheckRequest request, final RequestResponseListener<CheckWeChatAccountResponse> listener) {
@@ -323,8 +321,8 @@ public class MedOperation {
 
     public void weChatLogin(final Activity activity, WeChatLoginRequest request,
                             final RequestResponseListener<WeChatLoginResponse> listener) {
-        Observable<WeChatLoginResponse>response = httpManager.createApiService().weChatLogin(HttpManager.createRequestBody(
-                        mContext.getString(R.string.network_token), request));
+        Observable<WeChatLoginResponse> response = httpManager.createApiService().weChatLogin(HttpManager.createRequestBody(
+                mContext.getString(R.string.network_token), request));
         httpManager.toSubscribe(mContext, response, SubscriberExtends.getInstance().getSubscriber(new RequestResponse<WeChatLoginResponse>() {
             @Override
             public void onFailure(Throwable e) {
@@ -352,22 +350,28 @@ public class MedOperation {
         }));
     }
 
-    public void updateUserInformation(UpdateAccountInformationRequest request) {
+    public void updateUserInformation(UpdateAccountInformationRequest request, final RequestResponseListener<UpdateAccountInformationResponse> listener) {
         Observable<UpdateAccountInformationResponse> updateAccountInformationResponseObservable = httpManager.createApiService().updateInformation(HttpManager.createRequestBody(
                 mContext.getString(R.string.network_token), request));
         httpManager.toSubscribe(mContext, updateAccountInformationResponseObservable, SubscriberExtends.getInstance()
                 .getSubscriber(new RequestResponse<UpdateAccountInformationResponse>() {
                     @Override
                     public void onFailure(Throwable e) {
-                        EventBus.getDefault().post(new UpdateUserInfoEvent(false));
+                        if (listener != null) {
+                            listener.onFailed();
+                        }
                     }
 
                     @Override
                     public void onSuccess(UpdateAccountInformationResponse o) {
                         if (o.getStatus() == 1) {
-                            EventBus.getDefault().post(new UpdateUserInfoEvent(true));
+                            if (listener != null) {
+                                listener.onSuccess(o);
+                            }
                         } else {
-                            EventBus.getDefault().post(new UpdateUserInfoEvent(false));
+                            if (listener != null) {
+                                listener.onFailed();
+                            }
                         }
                     }
                 }));

@@ -10,11 +10,11 @@ import android.widget.EditText;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.cloud.med.MedOperation;
-import com.medcorp.lunar.network_new.listener.RequestResponseListener;
-import com.medcorp.lunar.network_new.modle.request.CheckEmailRequest;
-import com.medcorp.lunar.network_new.modle.request.RequestForgotPasswordTokenRequest;
-import com.medcorp.lunar.network_new.modle.response.CheckEmailResponse;
-import com.medcorp.lunar.network_new.modle.response.RequestForgotPasswordResponse;
+import com.medcorp.lunar.network.listener.RequestResponseListener;
+import com.medcorp.lunar.network.modle.request.CheckEmailRequest;
+import com.medcorp.lunar.network.modle.request.RequestForgotPasswordTokenRequest;
+import com.medcorp.lunar.network.modle.response.CheckEmailResponse;
+import com.medcorp.lunar.network.modle.response.RequestForgotPasswordResponse;
 import com.medcorp.lunar.util.EmailUtils;
 import com.medcorp.lunar.view.ToastHelper;
 
@@ -38,7 +38,7 @@ public class ForgetPasswordActivity extends BaseActivity {
         setContentView(R.layout.forget_passwor_activity_layout);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        editEmail.setText(intent.getStringExtra("email"));
+        editEmail.setText(intent.getStringExtra(getString(R.string.user_email_account)));
     }
 
     @OnClick(R.id.back_page_image_button)
@@ -94,9 +94,9 @@ public class ForgetPasswordActivity extends BaseActivity {
                 progressDialog.dismiss();
                 if (requestTokenResponse.getStatus() == 1) {
                     Intent intent = new Intent(ForgetPasswordActivity.this, ForgetPasswordResultActivity.class);
-                    intent.putExtra("token", requestTokenResponse.getUser().getPassword_token());
-                    intent.putExtra("email", email);
-                    intent.putExtra("id", requestTokenResponse.getUser().getId());
+                    intent.putExtra(getString(R.string.forget_password_token), requestTokenResponse.getUser().getPassword_token());
+                    intent.putExtra(getString(R.string.user_email_account), email);
+                    intent.putExtra(getString(R.string.user_id), requestTokenResponse.getUser().getId());
                     startActivity(intent);
                     finish();
                 } else {

@@ -10,9 +10,9 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.login.LoginActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.cloud.med.MedOperation;
-import com.medcorp.lunar.network_new.listener.RequestResponseListener;
-import com.medcorp.lunar.network_new.modle.request.ChangePasswordRequest;
-import com.medcorp.lunar.network_new.modle.response.ChangePasswordResponse;
+import com.medcorp.lunar.network.listener.RequestResponseListener;
+import com.medcorp.lunar.network.modle.request.ChangePasswordRequest;
+import com.medcorp.lunar.network.modle.response.ChangePasswordResponse;
 import com.medcorp.lunar.view.ToastHelper;
 
 import butterknife.Bind;
@@ -38,9 +38,9 @@ public class ForgetPasswordResultActivity extends BaseActivity {
         setContentView(R.layout.forget_password_result_page_layout);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        email = intent.getStringExtra("email");
-        passwordToken = intent.getStringExtra("token");
-        id = intent.getIntExtra("id", -1);
+        email = intent.getStringExtra(getString(R.string.user_email_account));
+        passwordToken = intent.getStringExtra(getString(R.string.forget_password_token));
+        id = intent.getIntExtra(getString(R.string.user_id), -1);
     }
 
     @OnClick(R.id.send_new_password)
@@ -82,7 +82,7 @@ public class ForgetPasswordResultActivity extends BaseActivity {
                     ToastHelper.showShortToast(ForgetPasswordResultActivity.this,
                             getString(R.string.password_change_success));
                     Intent intent = new Intent(ForgetPasswordResultActivity.this, LoginActivity.class);
-                    intent.putExtra("isTutorialPage", false);
+                    intent.putExtra(getString(R.string.open_activity_is_tutorial), false);
                     startActivity(intent);
                     finish();
                 }

@@ -51,7 +51,14 @@
     <string name="key_validic_organization_token" translatable="false">b85dcb3b85e925200f3fd4cafe6dce92295f449d9596b137941de7e9e2c3e7ae</string>
     <!-- Nevo API token -->
     <string name="token" translatable="false">Sfz1Nk9Qt3J0dt7jNOLX0x7VHaT83V8h</string>
-    <string name="is_edit_page">isEdit</string>
-    <string name="lamp_name">lamp_name</string>
-    <string name="lamp_color">lamp_color</string>
+    <string name="is_edit_page" translatable="false">isEdit</string>
+    <string name="lamp_name" translatable="false">lamp_name</string>
+    <string name="lamp_color" translatable="false">lamp_color</string>
+    <string name="user_email_account" translatable="false">email</string>
+    <string name="forget_password_token" translatable="false">token</string>
+    <string name="user_id" translatable="false">id</string>
+    <string name="open_activity_is_tutorial" translatable="false">isTutorial</string>
+    <string name="user_register_first_name" translatable="false">firstName</string>
+    <string name="user_register_last_name" translatable="false">lastName</string>
+    <string name="user_register_password" translatable="false">password</string>
 </resources>

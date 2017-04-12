@@ -30,15 +30,15 @@ import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.cloud.med.MedOperation;
-import com.medcorp.lunar.event.med.UpdateUserInfoEvent;
 import com.medcorp.lunar.model.User;
-import com.medcorp.lunar.network_new.modle.request.UpdateAccountInformationRequest;
+import com.medcorp.lunar.network.listener.RequestResponseListener;
+import com.medcorp.lunar.network.modle.request.UpdateAccountInformationRequest;
+import com.medcorp.lunar.network.modle.response.UpdateAccountInformationResponse;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.PublicUtils;
 import com.medcorp.lunar.view.ToastHelper;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.text.ParseException;
@@ -299,7 +299,34 @@ public class ProfileActivity extends BaseActivity {
                         new Integer(user.getNevoUserID()).intValue()
                         , user.getFirstName(), user.getNevoUserEmail(), user.getLastName(), format
                         , user.getHeight(), user.getWeight(), user.getSex());
-                MedOperation.getInstance(this).updateUserInformation(request);
+                MedOperation.getInstance(this).updateUserInformation(request,
+                        new RequestResponseListener<UpdateAccountInformationResponse>() {
+                            @Override
+                            public void onFailed() {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progressDialog.dismiss();
+                                        ToastHelper.showShortToast(ProfileActivity.this,
+                                                getString(R.string.save_update_user_info_failed));
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onSuccess(UpdateAccountInformationResponse response) {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progressDialog.dismiss();
+                                        getModel().saveNevoUser(user);
+                                        startActivity(MainActivity.class);
+                                        finish();
+                                        overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
+                                    }
+                                });
+                            }
+                        });
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -388,21 +415,11 @@ public class ProfileActivity extends BaseActivity {
         }
     }
 
-    @Subscribe
-    public void onEvent(final UpdateUserInfoEvent event) {
-        progressDialog.dismiss();
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                if (event.isStatus()) {
-                    getModel().saveNevoUser(user);
-                    startActivity(MainActivity.class);
-                    finish();
-                    overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
-                } else {
-                    ToastHelper.showShortToast(ProfileActivity.this, getString(R.string.save_update_user_info_failed));
-                }
-            }
-        });
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 }
