@@ -27,7 +27,7 @@
     <string name="key_sleep_hourly_deep" translatable="false">mergeHourlyDeepTime</string>
 
     <!-- preferences-->
-     <string name="key_prefs_nevo_shared_pref" translatable="false">Nevo_Shared_Preferences</string>
+    <string name="key_prefs_nevo_shared_pref" translatable="false">Nevo_Shared_Preferences</string>
     <string name="key_prefs_step_preset_id" translatable="false">steps_preset_id</string>
     <string name="key_prefs_link_loss" translatable="false">link_loss_enable</string>
     <string name="key_prefs_google_fit" translatable="false">google_fit_status</string>
@@ -61,4 +61,11 @@
     <string name="user_register_first_name" translatable="false">firstName</string>
     <string name="user_register_last_name" translatable="false">lastName</string>
     <string name="user_register_password" translatable="false">password</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fbAPP_ID</string>
+    <string name="user_gender" translatable="false">male</string>
+    <string name="facebook_public_profile" translatable="false">public_profile</string>
+    <string name="facebook_user_email" translatable="false">email</string>
+    <string name="facebook_user_birthday" translatable="false">user_birthday</string>
+    <string name="facebook_user_file" translatable="false">fields</string>
+    <string name="facebook_user_files" translatable="false">id,name,email,gender, birthday</string>
 </resources>

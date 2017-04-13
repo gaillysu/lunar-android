@@ -118,8 +118,9 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="40dp"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal"
                     >
@@ -128,20 +129,19 @@
                         android:id="@+id/wechat_login_button"
                         android:layout_width="45dp"
                         android:layout_height="45dp"
-                        android:layout_marginBottom="40dp"
                         android:background="@android:color/transparent"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_wechat_green"/>
 
-                    <ImageButton
-                        android:id="@+id/facebook_login_button"
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
-                        android:background="@color/transparent"
-                        android:scaleType="fitXY"
-                        android:layout_marginLeft="60dp"
-                        android:src="@drawable/ic_facebook_login"
-                        />
+                   <ImageButton
+                       android:id="@+id/facebook_login_button"
+                       android:layout_width="45dp"
+                       android:layout_height="45dp"
+                       android:background="@color/transparent"
+                       android:layout_marginLeft="40dp"
+                       android:scaleType="fitXY"
+                       android:src="@drawable/ic_facebook_login"
+                       />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

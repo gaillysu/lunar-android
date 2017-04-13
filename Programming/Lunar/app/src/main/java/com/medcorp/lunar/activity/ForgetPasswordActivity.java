@@ -11,10 +11,10 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.cloud.med.MedOperation;
 import com.medcorp.lunar.network.listener.RequestResponseListener;
-import com.medcorp.lunar.network.modle.request.CheckEmailRequest;
-import com.medcorp.lunar.network.modle.request.RequestForgotPasswordTokenRequest;
-import com.medcorp.lunar.network.modle.response.CheckEmailResponse;
-import com.medcorp.lunar.network.modle.response.RequestForgotPasswordResponse;
+import com.medcorp.lunar.network.model.request.CheckEmailRequest;
+import com.medcorp.lunar.network.model.request.RequestForgotPasswordTokenRequest;
+import com.medcorp.lunar.network.model.response.CheckEmailResponse;
+import com.medcorp.lunar.network.model.response.RequestForgotPasswordResponse;
 import com.medcorp.lunar.util.EmailUtils;
 import com.medcorp.lunar.view.ToastHelper;
 

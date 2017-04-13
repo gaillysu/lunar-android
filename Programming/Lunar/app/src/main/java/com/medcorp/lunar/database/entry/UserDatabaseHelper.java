@@ -100,7 +100,7 @@ public class UserDatabaseHelper {
 
     public void remove(String userId, Date date) {
         final User user = mRealm.where(User.class).equalTo("nevoUserID", userId)
-                .equalTo("createdDate", date).findFirst();
+                .equalTo("createdDate", date.getTime()).findFirst();
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {

@@ -9,38 +9,43 @@ import com.medcorp.lunar.event.SignUpEvent;
 import com.medcorp.lunar.event.med.MedAddRoutineRecordEvent;
 import com.medcorp.lunar.event.med.MedAddSleepRecordEvent;
 import com.medcorp.lunar.event.med.MedException;
+import com.medcorp.lunar.event.med.MedReadMoreRoutineRecordsModelEvent;
 import com.medcorp.lunar.event.med.MedReadMoreSleepRecordsModelEvent;
 import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
-import com.medcorp.lunar.network.httpmanage.HttpManager;
-import com.medcorp.lunar.network.httpmanage.RequestResponse;
-import com.medcorp.lunar.network.httpmanage.SubscriberExtends;
+import com.medcorp.lunar.network.httpmanager.HttpManager;
+import com.medcorp.lunar.network.httpmanager.RequestResponse;
+import com.medcorp.lunar.network.httpmanager.SubscriberExtends;
 import com.medcorp.lunar.network.listener.RequestResponseListener;
-import com.medcorp.lunar.network.modle.request.ChangePasswordRequest;
-import com.medcorp.lunar.network.modle.request.CheckEmailRequest;
-import com.medcorp.lunar.network.modle.request.CreateStepsRequest;
-import com.medcorp.lunar.network.modle.request.RegisterNewAccountRequest;
-import com.medcorp.lunar.network.modle.request.RequestForgotPasswordTokenRequest;
-import com.medcorp.lunar.network.modle.request.SleepCreateRequest;
-import com.medcorp.lunar.network.modle.request.UpdateAccountInformationRequest;
-import com.medcorp.lunar.network.modle.request.UserLoginRequest;
-import com.medcorp.lunar.network.modle.request.WeChatAccountCheckRequest;
-import com.medcorp.lunar.network.modle.request.WeChatAccountRegisterRequest;
-import com.medcorp.lunar.network.modle.request.WeChatLoginRequest;
-import com.medcorp.lunar.network.modle.response.ChangePasswordResponse;
-import com.medcorp.lunar.network.modle.response.CheckEmailResponse;
-import com.medcorp.lunar.network.modle.response.CheckWeChatAccountResponse;
-import com.medcorp.lunar.network.modle.response.CreateStepsResponse;
-import com.medcorp.lunar.network.modle.response.CreateWeChatAccountResponse;
-import com.medcorp.lunar.network.modle.response.ObtainMoreSleepResponse;
-import com.medcorp.lunar.network.modle.response.ObtainMoreStepsResponse;
-import com.medcorp.lunar.network.modle.response.RegisterNewAccountResponse;
-import com.medcorp.lunar.network.modle.response.RequestForgotPasswordResponse;
-import com.medcorp.lunar.network.modle.response.SleepCreateResponse;
-import com.medcorp.lunar.network.modle.response.UpdateAccountInformationResponse;
-import com.medcorp.lunar.network.modle.response.UserLoginResponse;
-import com.medcorp.lunar.network.modle.response.WeChatLoginResponse;
+import com.medcorp.lunar.network.model.request.ChangePasswordRequest;
+import com.medcorp.lunar.network.model.request.CheckEmailRequest;
+import com.medcorp.lunar.network.model.request.CreateFacebookAccountRequest;
+import com.medcorp.lunar.network.model.request.CreateStepsRequest;
+import com.medcorp.lunar.network.model.request.FaceBookAccountLoginRequest;
+import com.medcorp.lunar.network.model.request.RegisterNewAccountRequest;
+import com.medcorp.lunar.network.model.request.RequestForgotPasswordTokenRequest;
+import com.medcorp.lunar.network.model.request.SleepCreateRequest;
+import com.medcorp.lunar.network.model.request.UpdateAccountInformationRequest;
+import com.medcorp.lunar.network.model.request.UserLoginRequest;
+import com.medcorp.lunar.network.model.request.WeChatAccountCheckRequest;
+import com.medcorp.lunar.network.model.request.WeChatAccountRegisterRequest;
+import com.medcorp.lunar.network.model.request.WeChatLoginRequest;
+import com.medcorp.lunar.network.model.response.ChangePasswordResponse;
+import com.medcorp.lunar.network.model.response.CheckEmailResponse;
+import com.medcorp.lunar.network.model.response.CheckWeChatAccountResponse;
+import com.medcorp.lunar.network.model.response.CreateFacebookAccountResponse;
+import com.medcorp.lunar.network.model.response.CreateStepsResponse;
+import com.medcorp.lunar.network.model.response.CreateWeChatAccountResponse;
+import com.medcorp.lunar.network.model.response.FacebookLoginResponse;
+import com.medcorp.lunar.network.model.response.ObtainMoreSleepResponse;
+import com.medcorp.lunar.network.model.response.ObtainMoreStepsResponse;
+import com.medcorp.lunar.network.model.response.RegisterNewAccountResponse;
+import com.medcorp.lunar.network.model.response.RequestForgotPasswordResponse;
+import com.medcorp.lunar.network.model.response.SleepCreateResponse;
+import com.medcorp.lunar.network.model.response.UpdateAccountInformationResponse;
+import com.medcorp.lunar.network.model.response.UserLoginResponse;
+import com.medcorp.lunar.network.model.response.WeChatLoginResponse;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import org.greenrobot.eventbus.EventBus;
@@ -472,5 +477,48 @@ public class MedOperation {
                     }
                 }));
 
+    }
+
+    public void createFacebookUser(CreateFacebookAccountRequest request,
+                                   final RequestResponseListener<CreateFacebookAccountResponse> listener) {
+        Observable<CreateFacebookAccountResponse> response = httpManager.createApiService().createFacebookAccount(
+                HttpManager.createRequestBody(mContext.getString(R.string.network_token), request));
+        httpManager.toSubscribe(mContext, response, SubscriberExtends.getInstance().getSubscriber(
+                new RequestResponse<CreateFacebookAccountResponse>() {
+                    @Override
+                    public void onFailure(Throwable e) {
+                        if (listener != null) {
+                            listener.onFailed();
+                        }
+                    }
+
+                    @Override
+                    public void onSuccess(CreateFacebookAccountResponse o) {
+                        if (listener != null) {
+                            listener.onSuccess(o);
+                        }
+                    }
+                }));
+    }
+
+    public void facebookLogin(FaceBookAccountLoginRequest request, final RequestResponseListener<FacebookLoginResponse> listener){
+        Observable<FacebookLoginResponse> response = httpManager.createApiService().facebookLogin
+                (HttpManager.createRequestBody(mContext.getString(R.string.network_token), request));
+        httpManager.toSubscribe(mContext,response,SubscriberExtends.getInstance().getSubscriber
+                (new RequestResponse<FacebookLoginResponse>() {
+            @Override
+            public void onFailure(Throwable e) {
+                if(listener!=null){
+                    listener.onFailed();
+                }
+            }
+
+            @Override
+            public void onSuccess(FacebookLoginResponse o) {
+                if(listener!=null){
+                    listener.onSuccess(o);
+                }
+            }
+        }));
     }
 }

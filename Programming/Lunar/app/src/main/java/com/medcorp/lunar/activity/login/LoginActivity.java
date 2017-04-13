@@ -8,19 +8,22 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.gson.Gson;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.ForgetPasswordActivity;
 import com.medcorp.lunar.activity.MainActivity;
@@ -35,13 +38,20 @@ import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.network.listener.RequestResponseListener;
-import com.medcorp.lunar.network.modle.request.WeChatAccountCheckRequest;
-import com.medcorp.lunar.network.modle.request.WeChatAccountRegisterRequest;
-import com.medcorp.lunar.network.modle.request.WeChatLoginRequest;
-import com.medcorp.lunar.network.modle.response.CheckWeChatAccountResponse;
-import com.medcorp.lunar.network.modle.response.CreateWeChatAccountResponse;
-import com.medcorp.lunar.network.modle.response.WeChatLoginResponse;
-import com.medcorp.lunar.network.modle.response.WeChatUserInfoResponse;
+import com.medcorp.lunar.network.model.request.CheckEmailRequest;
+import com.medcorp.lunar.network.model.request.CreateFacebookAccountRequest;
+import com.medcorp.lunar.network.model.request.FaceBookAccountLoginRequest;
+import com.medcorp.lunar.network.model.request.WeChatAccountCheckRequest;
+import com.medcorp.lunar.network.model.request.WeChatAccountRegisterRequest;
+import com.medcorp.lunar.network.model.request.WeChatLoginRequest;
+import com.medcorp.lunar.network.model.response.CheckEmailResponse;
+import com.medcorp.lunar.network.model.response.CheckWeChatAccountResponse;
+import com.medcorp.lunar.network.model.response.CreateFacebookAccountResponse;
+import com.medcorp.lunar.network.model.response.CreateWeChatAccountResponse;
+import com.medcorp.lunar.network.model.response.FacebookLoginResponse;
+import com.medcorp.lunar.network.model.response.FacebookUserInfoResponse;
+import com.medcorp.lunar.network.model.response.WeChatLoginResponse;
+import com.medcorp.lunar.network.model.response.WeChatUserInfoResponse;
 import com.medcorp.lunar.util.Preferences;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPI;
@@ -50,7 +60,9 @@ import net.medcorp.library.ble.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -80,17 +92,18 @@ public class LoginActivity extends BaseActivity {
     TextView _signupLink;
     @Bind(R.id.login_activity_layout)
     CoordinatorLayout loginLayout;
+    @Bind(R.id.facebook_login_button)
+    ImageButton facebookLoginBt;
 
     private IWXAPI weChatApi;
     private String APP_ID;
-    private CallbackManager callbackManager;
+    private CallbackManager mCallbackManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         EventBus.getDefault().register(this);
-        Log.i("jason", "eventBus register");
         ButterKnife.bind(this);
         if (getModel().getNevoUser().getNevoUserEmail() != null) {
             _emailText.setText(getModel().getNevoUser().getNevoUserEmail());
@@ -99,7 +112,9 @@ public class LoginActivity extends BaseActivity {
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.setMessage(getString(R.string.log_in_popup_message));
+        registerFacebookCallBack();
     }
+
 
     @OnClick(R.id.link_signup)
     public void signUpAction() {
@@ -118,61 +133,12 @@ public class LoginActivity extends BaseActivity {
         finish();
     }
 
-    @OnClick(R.id.wechat_login_button)
-    public void weChatLogin() {
-        regToWx();
-        if (!weChatApi.isWXAppInstalled()) {
-            showSnackbar(R.string.wechat_uninstall);
-            return;
-        }
-        SendAuth.Req request = new SendAuth.Req();
-        request.scope = getString(R.string.weixin_scope);
-        request.state = getString(R.string.weixin_package_name);
-        weChatApi.sendReq(request);
-        Log.e("jason", "send weChat message");
-    }
-
-    @OnClick(R.id.facebook_login_button)
-    public void facebookLogin() {
-        if (callbackManager == null) {
-            callbackManager = CallbackManager.Factory.create();
-            LoginManager.getInstance().registerCallback(callbackManager,
-                    new FacebookCallback<LoginResult>() {
-                        @Override
-                        public void onSuccess(LoginResult loginResult) {
-                            // App code
-                            AccessToken accessToken = loginResult.getAccessToken();
-                            if (accessToken != null && !accessToken.isExpired()) {
-                                Log.i("jason", accessToken.getToken() + ":::::" + accessToken.getUserId());
-                            } else {
-                            }
-                        }
-
-                        @Override
-                        public void onCancel() {
-
-                        }
-
-                        @Override
-                        public void onError(FacebookException exception) {
-                        }
-                    });
-        }
-    }
-
-    private void regToWx() {
-        APP_ID = getString(R.string.we_chat_app_id);
-        weChatApi = getModel().getWXApi();
-        weChatApi.registerApp(APP_ID);
-    }
-
     @OnClick(R.id.btn_login)
     public void loginAction() {
         if (!validate()) {
             onLoginFailed();
             return;
         }
-
         _loginButton.setEnabled(false);
         progressDialog.show();
         email = _emailText.getText().toString();
@@ -200,6 +166,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_SIGN_UP) {
             if (resultCode == RESULT_OK) {
                 setResult(RESULT_OK, null);
@@ -272,7 +239,6 @@ public class LoginActivity extends BaseActivity {
         }, 1000);
     }
 
-
     public void showSnackbar(String msg) {
         if (snackbar != null) {
             if (snackbar.isShown()) {
@@ -307,13 +273,176 @@ public class LoginActivity extends BaseActivity {
             _emailText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4) {
+        if (password.isEmpty() || password.length() < 8) {
             _passwordText.setError(getString(R.string.register_password_error));
             valid = false;
         } else {
             _passwordText.setError(null);
         }
         return valid;
+    }
+
+    /**
+     * Facebook login start
+     */
+
+    private void registerFacebookCallBack() {
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                obtainFacebookProfile(loginResult);
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                showSnackbar(error.getMessage());
+            }
+        });
+    }
+
+    @OnClick(R.id.facebook_login_button)
+    public void facebookLoginButtonClick() {
+        LoginManager.getInstance().logInWithReadPermissions(this,
+                Arrays.asList(getString(R.string.facebook_public_profile)
+                        , getString(R.string.facebook_user_email), getString(R.string.facebook_user_birthday)));
+    }
+
+    private void obtainFacebookProfile(LoginResult loginResult) {
+        GraphRequest request = GraphRequest.newMeRequest(
+                loginResult.getAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        if (object != null) {
+                            Gson gson = new Gson();
+                            FacebookUserInfoResponse rsp = gson.fromJson
+                                    (object.toString(), FacebookUserInfoResponse.class);
+                            checkFacebookEmail(rsp);
+                        } else {
+                            showSnackbar(R.string.obtain_facebook_info_failed);
+                        }
+                    }
+                });
+        Bundle parameters = new Bundle();
+        parameters.putString(getString(R.string.facebook_user_file), getString(R.string.facebook_user_files));
+        request.setParameters(parameters);
+        request.executeAsync();
+    }
+
+    private void checkFacebookEmail(final FacebookUserInfoResponse userInfoResponse) {
+        progressDialog.show();
+        final CheckEmailRequest request = new CheckEmailRequest(userInfoResponse.getEmail());
+        MedOperation.getInstance(this).checkEmail(this, request, new RequestResponseListener<CheckEmailResponse>() {
+            @Override
+            public void onFailed() {
+            }
+
+            @Override
+            public void onSuccess(CheckEmailResponse response) {
+                if (response.getStatus() == 1) {
+                    FaceBookAccountLoginRequest loginRequest = new FaceBookAccountLoginRequest
+                            (userInfoResponse.getEmail(), userInfoResponse.getId());
+                    facebookLogin(loginRequest);
+                } else {
+                    createFacebookAccount(userInfoResponse);
+                }
+            }
+        });
+    }
+
+    private void createFacebookAccount(FacebookUserInfoResponse userInfoResponse) {
+        Profile currentProfile = Profile.getCurrentProfile();
+        int sex = 0;
+        if (userInfoResponse.getGender().equals(getString(R.string.user_gender))) {
+            sex = 1;
+        } else {
+            sex = 0;
+        }
+        final CreateFacebookAccountRequest request = new CreateFacebookAccountRequest(currentProfile.getFirstName()
+                , userInfoResponse.getEmail(), currentProfile.getId(), userInfoResponse.getBirthday(), 170, 55, sex);
+        MedOperation.getInstance(this).createFacebookUser(request,
+                new RequestResponseListener<CreateFacebookAccountResponse>() {
+                    @Override
+                    public void onFailed() {
+                    }
+
+                    @Override
+                    public void onSuccess(final CreateFacebookAccountResponse response) {
+                        if (response.getStatus() == 1) {
+                            FaceBookAccountLoginRequest request = new FaceBookAccountLoginRequest
+                                    (response.getUser().getEmail(), response.getUser().getFacebook_id());
+                            facebookLogin(request);
+                        } else {
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showSnackbar(response.getMessage());
+                                }
+                            });
+                        }
+                    }
+                });
+    }
+
+    private void facebookLogin(FaceBookAccountLoginRequest loginRequest) {
+        MedOperation.getInstance(this).facebookLogin(loginRequest,
+                new RequestResponseListener<FacebookLoginResponse>() {
+                    @Override
+                    public void onFailed() {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                showSnackbar(getString(R.string.log_in_failed));
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onSuccess(final FacebookLoginResponse response) {
+                        progressDialog.dismiss();
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (response.getStatus() == 1) {
+                                    onLoginSuccess();
+                                } else {
+                                    showSnackbar(getString(R.string.log_in_failed));
+                                }
+                            }
+                        });
+                    }
+                });
+    }
+    /**
+     * facebook end
+     */
+
+    /**
+     * wechat login start
+     */
+    @OnClick(R.id.wechat_login_button)
+    public void weChatLogin() {
+        regToWx();
+        if (!weChatApi.isWXAppInstalled()) {
+            showSnackbar(R.string.wechat_uninstall);
+            return;
+        }
+        SendAuth.Req request = new SendAuth.Req();
+        request.scope = getString(R.string.weixin_scope);
+        request.state = getString(R.string.weixin_package_name);
+        weChatApi.sendReq(request);
+    }
+
+    private void regToWx() {
+        APP_ID = getString(R.string.we_chat_app_id);
+        weChatApi = getModel().getWXApi();
+        weChatApi.registerApp(APP_ID);
     }
 
     @Subscribe
@@ -365,6 +494,27 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
+    private void createWeChatUser(final WeChatUserInfoResponse userInfo) {
+        WeChatAccountRegisterRequest request = new WeChatAccountRegisterRequest(userInfo.getNickname(), userInfo.getUnionid());
+        MedOperation.getInstance(this).createWeChatAccount(this, request, new RequestResponseListener<CreateWeChatAccountResponse>() {
+            @Override
+            public void onFailed() {
+                showSnackbar(getString(R.string.wechat_create_account_fail));
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onSuccess(CreateWeChatAccountResponse response) {
+                if (response.getStatus() == 1) {
+                    WeChatLoginRequest request = new WeChatLoginRequest(userInfo.getUnionid());
+                    weChatStartLogin(request);
+                } else {
+                    showSnackbar(response.getMessage());
+                }
+            }
+        });
+    }
+
     private void weChatStartLogin(WeChatLoginRequest request) {
         MedOperation.getInstance(this).weChatLogin(this, request, new RequestResponseListener<WeChatLoginResponse>() {
             @Override
@@ -400,27 +550,6 @@ public class LoginActivity extends BaseActivity {
                 } else {
                     onFailed();
                     showSnackbar(getString(R.string.wechat_login_fail));
-                }
-            }
-        });
-    }
-
-    private void createWeChatUser(final WeChatUserInfoResponse userInfo) {
-        WeChatAccountRegisterRequest request = new WeChatAccountRegisterRequest(userInfo.getNickname(), userInfo.getUnionid());
-        MedOperation.getInstance(this).createWeChatAccount(this, request, new RequestResponseListener<CreateWeChatAccountResponse>() {
-            @Override
-            public void onFailed() {
-                showSnackbar(getString(R.string.wechat_create_account_fail));
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onSuccess(CreateWeChatAccountResponse response) {
-                if (response.getStatus() == 1) {
-                    WeChatLoginRequest request = new WeChatLoginRequest(userInfo.getUnionid());
-                    weChatStartLogin(request);
-                } else {
-                    showSnackbar(response.getMessage());
                 }
             }
         });

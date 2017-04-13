@@ -19,7 +19,7 @@ import com.medcorp.lunar.activity.login.LoginActivity;
 import com.medcorp.lunar.activity.login.SignupActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.event.SignUpEvent;
-import com.medcorp.lunar.network.modle.request.RegisterNewAccountRequest;
+import com.medcorp.lunar.network.model.request.RegisterNewAccountRequest;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

@@ -471,4 +471,5 @@
     <string name="network_error">Network error!</string>
     <string name="save_update_user_info_failed">Save failed, please try again!</string>
     <string name="check_email_message">Email address already exists</string>
+    <string name="obtain_facebook_info_failed">Obtain face profile failed</string>
 </resources>

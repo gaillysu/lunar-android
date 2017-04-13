@@ -17,8 +17,8 @@ import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.cloud.med.MedOperation;
 import com.medcorp.lunar.event.SignUpEvent;
 import com.medcorp.lunar.network.listener.RequestResponseListener;
-import com.medcorp.lunar.network.modle.request.CheckEmailRequest;
-import com.medcorp.lunar.network.modle.response.CheckEmailResponse;
+import com.medcorp.lunar.network.model.request.CheckEmailRequest;
+import com.medcorp.lunar.network.model.response.CheckEmailResponse;
 import com.medcorp.lunar.view.ToastHelper;
 
 import org.greenrobot.eventbus.EventBus;

@@ -1,7 +1,7 @@
 package com.medcorp.lunar.event;
 
 
-import com.medcorp.lunar.network.modle.response.RegisterNewAccountResponse;
+import com.medcorp.lunar.network.model.response.RegisterNewAccountResponse;
 
 /**
  * Created by karl-john on 17/5/16.
