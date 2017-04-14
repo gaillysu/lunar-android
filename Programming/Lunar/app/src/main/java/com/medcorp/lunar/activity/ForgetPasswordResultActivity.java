@@ -9,12 +9,11 @@ import android.widget.EditText;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.login.LoginActivity;
 import com.medcorp.lunar.base.BaseActivity;
-import com.medcorp.lunar.network.listener.ResponseListener;
-import com.medcorp.lunar.network.med.model.LoginUserModel;
-import com.medcorp.lunar.network.validic.model.ForgetPasswordModel;
-import com.medcorp.lunar.network.validic.model.ForgetPasswordRequest;
+import com.medcorp.lunar.cloud.med.MedNetworkOperation;
+import com.medcorp.lunar.network.listener.RequestResponseListener;
+import com.medcorp.lunar.network.model.request.ChangePasswordRequest;
+import com.medcorp.lunar.network.model.response.ChangePasswordResponse;
 import com.medcorp.lunar.view.ToastHelper;
-import com.octo.android.robospice.persistence.exception.SpiceException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -22,12 +21,8 @@ import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2016/7/5.
- *
  */
 public class ForgetPasswordResultActivity extends BaseActivity {
-
-//    @Bind(R.id.forget_password_result_show_email_tx)
-//    TextView showUserEmailAccountText;
 
     @Bind(R.id.input_new_password_ed)
     EditText inputPasswordOne;
@@ -43,19 +38,9 @@ public class ForgetPasswordResultActivity extends BaseActivity {
         setContentView(R.layout.forget_password_result_page_layout);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        email = intent.getStringExtra("email");
-//        showUserEmailAccountText.setText(email);
-        passwordToken = intent.getStringExtra("token");
-        id = intent.getIntExtra("id", -1);
-        //        new Handler().postDelayed(new Runnable() {
-        //            @Override
-        //            public void run() {
-        //                Intent intent = new Intent(ForgetPasswordResultActivity.this, LoginActivity.class);
-        //                intent.putExtra("isTutorialPage", true);
-        //                startActivity(intent);
-        //                finish();
-        //            }
-        //        }, 1500);
+        email = intent.getStringExtra(getString(R.string.user_email_account));
+        passwordToken = intent.getStringExtra(getString(R.string.forget_password_token));
+        id = intent.getIntExtra(getString(R.string.user_id), -1);
     }
 
     @OnClick(R.id.send_new_password)
@@ -71,7 +56,7 @@ public class ForgetPasswordResultActivity extends BaseActivity {
         }
 
         if (!newPassword.equals(twoPassWord)) {
-           ToastHelper.showShortToast(this, getString(R.string.password_is_not_repeat));
+            ToastHelper.showShortToast(this, getString(R.string.password_is_not_repeat));
             return;
         }
 
@@ -81,25 +66,23 @@ public class ForgetPasswordResultActivity extends BaseActivity {
         progressDialog.setMessage(getString(R.string.network_wait_text));
         progressDialog.show();
 
-        ForgetPasswordModel requestModel = new ForgetPasswordModel(id, email, passwordToken, newPassword);
-        getModel().getNetworkManage().execute(new ForgetPasswordRequest(getModel().getNetworkManage()
-                .getAccessToken(), requestModel), new ResponseListener<LoginUserModel>() {
-
+        ChangePasswordRequest request = new ChangePasswordRequest(passwordToken, email, id + "", newPassword);
+        MedNetworkOperation.getInstance(this).changePassword(this,request, new RequestResponseListener<ChangePasswordResponse>() {
             @Override
-            public void onRequestFailure(SpiceException spiceException) {
+            public void onFailed() {
                 progressDialog.dismiss();
-               ToastHelper.showShortToast(ForgetPasswordResultActivity.this,
+                ToastHelper.showShortToast(ForgetPasswordResultActivity.this,
                         getString(R.string.password_change_failure));
             }
 
             @Override
-            public void onRequestSuccess(LoginUserModel loginUserModel) {
+            public void onSuccess(ChangePasswordResponse response) {
                 progressDialog.dismiss();
-                if (loginUserModel.getStatus() == 1 && loginUserModel.getMessage().equals("OK")) {
-                   ToastHelper.showShortToast(ForgetPasswordResultActivity.this,
+                if (response.getStatus() == 1 && response.getMessage().equals("OK")) {
+                    ToastHelper.showShortToast(ForgetPasswordResultActivity.this,
                             getString(R.string.password_change_success));
-                    Intent intent = new Intent(ForgetPasswordResultActivity.this,LoginActivity.class);
-                    intent.putExtra("isTutorialPage", false );
+                    Intent intent = new Intent(ForgetPasswordResultActivity.this, LoginActivity.class);
+                    intent.putExtra(getString(R.string.open_activity_is_tutorial), false);
                     startActivity(intent);
                     finish();
                 }

@@ -443,4 +443,6 @@
     <string name="wednesday">星期三</string>
     <string name="lunar_home_clock_solar_harvest_charge">充電中</string>
     <string name="lunar_home_clock_solar_harvest_idle">空閑</string>
+    <string name="check_email_message">邮箱已经存在!!!</string>
+    <string name="check_wechat_fail">检查失败</string>
 </resources>

@@ -1,23 +1,21 @@
 package com.medcorp.lunar.event.med;
 
-import com.octo.android.robospice.persistence.exception.SpiceException;
-
 /**
  * Created by karl-john on 17/5/16.
  */
 public class MedException {
 
-    private SpiceException exception;
+    private Throwable exception;
 
-    public MedException(SpiceException exception) {
+    public MedException(Throwable exception) {
         this.exception = exception;
     }
 
-    public SpiceException getException() {
+    public Throwable getException() {
         return exception;
     }
 
-    public void setException(SpiceException exception) {
+    public void setException(Throwable exception) {
         this.exception = exception;
     }
 }

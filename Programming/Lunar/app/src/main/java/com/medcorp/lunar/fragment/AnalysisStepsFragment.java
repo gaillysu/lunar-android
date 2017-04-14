@@ -52,6 +52,10 @@ public class AnalysisStepsFragment extends BaseFragment {
     private View thisWeekView;
     private View lastWeekView;
     private View lastMonthView;
+    private AnalysisStepsLineChart thisWeekChart;
+    private AnalysisStepsLineChart lastWeekChart;
+    private AnalysisStepsLineChart lastMonthChart;
+    private Goal activeGoal;
     private List<Steps> thisWeekData = new ArrayList<>();
     private List<Steps> lastWeekData = new ArrayList<>();
     private List<Steps> lastMonthData = new ArrayList<>();
@@ -74,11 +78,6 @@ public class AnalysisStepsFragment extends BaseFragment {
         initData(userSelectDate);
         return stepsView;
     }
-
-    AnalysisStepsLineChart thisWeekChart;
-    AnalysisStepsLineChart lastWeekChart;
-    AnalysisStepsLineChart lastMonthChart;
-    Goal activeGoal;
 
     private void initData(Date userSelectDate) {
         thisWeekChart = (AnalysisStepsLineChart) thisWeekView.findViewById(R.id.analysis_step_chart);

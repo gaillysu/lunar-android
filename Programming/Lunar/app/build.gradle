@@ -44,6 +44,7 @@ android {
         exclude 'META-INF/ASL2.0'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
+        exclude 'META-INF/rxjava.properties'
     }
     buildTypes {
         release {
@@ -56,6 +57,7 @@ android {
 }
 
 dependencies {
+    final REACT_VERSION = '2.0.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:preference-v7:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
@@ -89,11 +91,15 @@ dependencies {
     compile 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
     compile 'com.yanzhenjie:recyclerview-swipe:1.0.2'
     compile project(path: ':multi-image-selector')
-
     compile 'com.github.QuadFlask:colorpicker:0.0.12'
     compile files('libs/libammsdk.jar')
-    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile "io.reactivex.rxjava2:rxandroid:$REACT_VERSION"
+    compile "io.reactivex.rxjava2:rxjava:$REACT_VERSION"
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.21.1'
 }
 
 repositories {

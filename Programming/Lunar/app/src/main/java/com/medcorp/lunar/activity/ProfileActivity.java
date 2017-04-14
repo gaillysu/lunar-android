@@ -1,6 +1,7 @@
 package com.medcorp.lunar.activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,6 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -26,10 +29,16 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.base.BaseActivity;
+import com.medcorp.lunar.cloud.med.MedNetworkOperation;
+import com.medcorp.lunar.model.User;
+import com.medcorp.lunar.network.listener.RequestResponseListener;
+import com.medcorp.lunar.network.model.request.UpdateAccountInformationRequest;
+import com.medcorp.lunar.network.model.response.UpdateAccountInformationResponse;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.PublicUtils;
+import com.medcorp.lunar.view.ToastHelper;
 
-import com.medcorp.lunar.model.User;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.text.ParseException;
@@ -44,6 +53,8 @@ import butterknife.OnClick;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import me.nereo.multi_image_selector.MultiImageSelectorFragment;
+
+import static com.medcorp.lunar.R.style.AppTheme_Dark_Dialog;
 
 /**
  * Created by med on 16/4/6.
@@ -71,6 +82,7 @@ public class ProfileActivity extends BaseActivity {
     private static final int REQUEST_IMAGE = 2;
     protected static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
     private ArrayList<String> mSelectPath;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +93,7 @@ public class ProfileActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        EventBus.getDefault().register(this);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.profile_title);
         user = getModel().getNevoUser();
@@ -149,7 +162,6 @@ public class ProfileActivity extends BaseActivity {
             }
         });
     }
-
 
     @Override
     public void onBackPressed() {
@@ -265,10 +277,44 @@ public class ProfileActivity extends BaseActivity {
                 overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
                 break;
             case R.id.done_menu:
-                getModel().saveNevoUser(user);
-                startActivity(MainActivity.class);
-                finish();
-                overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
+                progressDialog = new ProgressDialog(this, AppTheme_Dark_Dialog);
+                progressDialog.setIndeterminate(false);
+                progressDialog.setCancelable(false);
+                progressDialog.setMessage(getString(R.string.network_wait_text));
+                progressDialog.show();
+                String format = new SimpleDateFormat("yyyy-MM-dd").format(user.getBirthday());
+                UpdateAccountInformationRequest request = new UpdateAccountInformationRequest(
+                        new Integer(user.getNevoUserID()).intValue()
+                        , user.getFirstName(), user.getNevoUserEmail(), user.getLastName(), format
+                        , user.getHeight(), user.getWeight(), user.getSex());
+                MedNetworkOperation.getInstance(this).updateUserInformation(request,
+                        new RequestResponseListener<UpdateAccountInformationResponse>() {
+                            @Override
+                            public void onFailed() {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progressDialog.dismiss();
+                                        ToastHelper.showShortToast(ProfileActivity.this,
+                                                getString(R.string.save_update_user_info_failed));
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onSuccess(UpdateAccountInformationResponse response) {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progressDialog.dismiss();
+                                        getModel().saveNevoUser(user);
+                                        startActivity(MainActivity.class);
+                                        finish();
+                                        overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
+                                    }
+                                });
+                            }
+                        });
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -355,5 +401,14 @@ public class ProfileActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        EventBus.getDefault().unregister(this);
     }
 }

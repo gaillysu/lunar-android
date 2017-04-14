@@ -11,6 +11,8 @@
         android:layout_height="match_parent"
         android:listSelector="?android:attr/selectableItemBackground"
         android:scrollbars="none"
-        android:divider="@null"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:divider="@color/my_device_right_show_version_text_color"
         android:dividerHeight="1dp"/>
 </LinearLayout>
