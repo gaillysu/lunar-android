@@ -32,13 +32,15 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static com.medcorp.lunar.R.id.all_lunar_notification_lamp_list;
+
 /**
  * Created by Jason on 2016/12/8.
  */
 
 public class EditNotificationLampActivity extends BaseActivity {
 
-    @Bind(R.id.all_lunar_notification_lamp_list)
+    @Bind(all_lunar_notification_lamp_list)
     SwipeMenuRecyclerView allNotificationLampList;
 
     @Bind(R.id.main_toolbar)
@@ -123,10 +125,10 @@ public class EditNotificationLampActivity extends BaseActivity {
     private EditLunarNotificationAdapter.OnItemClickListener onItemClickListener = new EditLunarNotificationAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            Preferences.saveNotificationColor(EditNotificationLampActivity.this, notification, userSettingAllLamp.get(position).getColor());
             //show current selected color
             mEditItemAdapter.setColor(userSettingAllLamp.get(position).getColor());
             mEditItemAdapter.notifyDataSetChanged();
+            Preferences.saveNotificationColor(EditNotificationLampActivity.this, notification,userSettingAllLamp.get(position).getColor());
         }
     };
 

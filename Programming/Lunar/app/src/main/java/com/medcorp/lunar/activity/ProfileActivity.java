@@ -97,7 +97,7 @@ public class ProfileActivity extends BaseActivity {
         if (getModel().getNevoUser().isLogin()) {
             userEmail = user.getNevoUserEmail();
         } else {
-            userEmail = "watch_med_profile";
+            userEmail = getString(R.string.watch_med_profile);
         }
         Bitmap bt = BitmapFactory.decodeFile(Preferences.getUserHeardPicturePath(this, userEmail));//从Sd中找头像，转换成Bitmap
         if (bt != null) {

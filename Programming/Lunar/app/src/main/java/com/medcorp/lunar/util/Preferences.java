@@ -145,22 +145,6 @@ public class Preferences {
         return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()), model);
     }
 
-    public static NevoLed getNotificationColor(Context context, Notification notification) {
-        init(context);
-        return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()));
-    }
-
-    public static void setProfileUnit(Context context, int unit) {
-        init(context);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("profile_unit", unit).apply();
-    }
-
-    public static int getProfileUnit(Context context) {
-        init(context);
-        return preferences.getInt("profile_unit", 0);
-    }
-
     public static void setWatchId(Context context, int id) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();

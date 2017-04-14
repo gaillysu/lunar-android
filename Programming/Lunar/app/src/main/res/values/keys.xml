@@ -67,5 +67,12 @@
     <string name="facebook_user_email" translatable="false">email</string>
     <string name="facebook_user_birthday" translatable="false">user_birthday</string>
     <string name="facebook_user_file" translatable="false">fields</string>
+    <string name="watch_med_profile" translatable="false">watch_med_profile</string>
     <string name="facebook_user_files" translatable="false">id,name,email,gender, birthday</string>
+    <string name="led_lamp_color_red" translatable="false">Rde</string>
+    <string name="led_lamp_color_blue" translatable="false">Blue</string>
+    <string name="led_lamp_color_light_green" translatable="false">Light green</string>
+    <string name="led_lamp_color_orange" translatable="false">Orange</string>
+    <string name="led_lamp_color_yellow" translatable="false">Yellow</string>
+    <string name="led_lamp_color_green" translatable="false">Green</string>
 </resources>
