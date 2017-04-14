@@ -29,7 +29,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.base.BaseActivity;
-import com.medcorp.lunar.cloud.med.MedOperation;
+import com.medcorp.lunar.cloud.med.MedNetworkOperation;
 import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.network.listener.RequestResponseListener;
 import com.medcorp.lunar.network.model.request.UpdateAccountInformationRequest;
@@ -93,6 +93,7 @@ public class ProfileActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        EventBus.getDefault().register(this);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.profile_title);
         user = getModel().getNevoUser();
@@ -160,19 +161,6 @@ public class ProfileActivity extends BaseActivity {
                 editUserWeight(userWeight);
             }
         });
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -299,7 +287,7 @@ public class ProfileActivity extends BaseActivity {
                         new Integer(user.getNevoUserID()).intValue()
                         , user.getFirstName(), user.getNevoUserEmail(), user.getLastName(), format
                         , user.getHeight(), user.getWeight(), user.getSex());
-                MedOperation.getInstance(this).updateUserInformation(request,
+                MedNetworkOperation.getInstance(this).updateUserInformation(request,
                         new RequestResponseListener<UpdateAccountInformationResponse>() {
                             @Override
                             public void onFailed() {
@@ -421,5 +409,6 @@ public class ProfileActivity extends BaseActivity {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+        EventBus.getDefault().unregister(this);
     }
 }

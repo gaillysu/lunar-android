@@ -12,6 +12,7 @@
     <string name="weixin_package_name" translatable="false">net.med_corp.lunar_wechat</string>
     <string name="weixin_scope" translatable="false">snsapi_userinfo</string>
     <string name="network_base_url" translatable="false">https://cloud.lunar-watch.com/</string>
+    <string name="network_test_base_url" translatable="false">https://dev.lunar-watch.com/</string>
     <string name="network_authenticator_password" translatable="false" >med_app_development</string>
     <string name="network_authenticator_name" translatable="false">apps</string>
     <string name="network_token" translatable="false">Sfz1Nk9Qt3J0dt7jNOLX0x7VHaT83V8h</string>

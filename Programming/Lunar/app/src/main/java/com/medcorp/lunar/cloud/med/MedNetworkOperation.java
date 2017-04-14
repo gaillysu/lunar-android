@@ -59,21 +59,21 @@ import rx.Observable;
  * Created by med on 16/8/22.
  */
 @SuppressWarnings("unchecked")
-public class MedOperation {
-    private static MedOperation medOperationInstance = null;
+public class MedNetworkOperation {
+    private static MedNetworkOperation medNetworkOperationInstance = null;
     private HttpManager httpManager;
     private Context mContext;
 
-    private MedOperation(Context context) {
+    private MedNetworkOperation(Context context) {
         httpManager = HttpManager.getInstance(context);
         mContext = context;
     }
 
-    public static MedOperation getInstance(Context context) {
-        if (null == medOperationInstance) {
-            medOperationInstance = new MedOperation(context);
+    public static MedNetworkOperation getInstance(Context context) {
+        if (null == medNetworkOperationInstance) {
+            medNetworkOperationInstance = new MedNetworkOperation(context);
         }
-        return medOperationInstance;
+        return medNetworkOperationInstance;
     }
 
     public void createMedUser(RegisterNewAccountRequest createUser, final RequestListener<RegisterNewAccountResponse> listener) {

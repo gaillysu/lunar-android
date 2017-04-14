@@ -1,7 +1,7 @@
 package com.medcorp.lunar.cloud;
 
 import com.medcorp.lunar.application.ApplicationModel;
-import com.medcorp.lunar.cloud.med.MedOperation;
+import com.medcorp.lunar.cloud.med.MedNetworkOperation;
 import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
@@ -56,7 +56,7 @@ public class CloudSyncManager {
     public void createUser(RegisterNewAccountRequest createUser) {
         //TODO if enable validic, here open it
         //ValidicOperation.getInstance(context).createValidicUser(...);
-        MedOperation.getInstance(context).createMedUser(createUser, new RequestListener<RegisterNewAccountResponse>() {
+        MedNetworkOperation.getInstance(context).createMedUser(createUser, new RequestListener<RegisterNewAccountResponse>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 //DO NOTHING
@@ -88,7 +88,7 @@ public class CloudSyncManager {
 
     public void userLogin(String email, String password) {
         //TODO if enable validic, here call ValidicOperation function
-        MedOperation.getInstance(context).userMedLogin(email, password, new RequestListener<UserLoginResponse>() {
+        MedNetworkOperation.getInstance(context).userMedLogin(email, password, new RequestListener<UserLoginResponse>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
 
@@ -136,20 +136,20 @@ public class CloudSyncManager {
      */
     public void launchSyncAll(User user, List<Steps> stepsList, List<Sleep> sleepList) {
         for (Steps steps : stepsList) {
-            MedOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(steps.getDate()), null);
+            MedNetworkOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(steps.getDate()), null);
         }
         //calculate today 's last time: 23:59:59
         Date endDate = new Date(Common.removeTimeFromDate(new Date()).getTime() + 24 * 60 * 60 * 1000l - 1);
         Date startDate = new Date(endDate.getTime() - INTERVAL_DATE);
         downloadSteps(user, startDate, endDate, 1);
         for (Sleep sleep : sleepList) {
-            MedOperation.getInstance(context).addMedSleepRecord(user, sleep, new Date(sleep.getDate()), null);
+            MedNetworkOperation.getInstance(context).addMedSleepRecord(user, sleep, new Date(sleep.getDate()), null);
         }
         downloadSleep(user, startDate, endDate, 1);
     }
 
     private void downloadSteps(final User user, final Date startDate, final Date endDate, final int page) {
-        MedOperation.getInstance(context).getMoreMedRoutineRecord(user, startDate, endDate, new RequestResponseListener<ObtainMoreStepsResponse>() {
+        MedNetworkOperation.getInstance(context).getMoreMedRoutineRecord(user, startDate, endDate, new RequestResponseListener<ObtainMoreStepsResponse>() {
             @Override
             public void onFailed() {
 
@@ -169,7 +169,7 @@ public class CloudSyncManager {
 
 
     private void downloadSleep(final User user, final Date startDate, final Date endDate, final int page) {
-        MedOperation.getInstance(context).getMoreMedSleepRecord(user, startDate, endDate, new RequestResponseListener<ObtainMoreSleepResponse>() {
+        MedNetworkOperation.getInstance(context).getMoreMedSleepRecord(user, startDate, endDate, new RequestResponseListener<ObtainMoreSleepResponse>() {
             @Override
             public void onFailed() {
 
@@ -191,7 +191,7 @@ public class CloudSyncManager {
      * when today's steps got change, invoke it
      */
     public void launchSyncDaily(User user, Steps steps) {
-            MedOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(), null);
+            MedNetworkOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(), null);
     }
 
     /**
@@ -199,11 +199,11 @@ public class CloudSyncManager {
      */
     public void launchSyncWeekly(User user, List<Steps> stepsList, List<Sleep> sleepList) {
         for (Steps steps : stepsList) {
-                MedOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(steps.getDate()), null);
+                MedNetworkOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(steps.getDate()), null);
         }
 
         for (Sleep sleep : sleepList) {
-                MedOperation.getInstance(context).addMedSleepRecord(user, sleep, new Date(sleep.getDate()), null);
+                MedNetworkOperation.getInstance(context).addMedSleepRecord(user, sleep, new Date(sleep.getDate()), null);
         }
     }
 }

@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.UserInfoActivity;
 import com.medcorp.lunar.base.BaseActivity;
-import com.medcorp.lunar.cloud.med.MedOperation;
+import com.medcorp.lunar.cloud.med.MedNetworkOperation;
 import com.medcorp.lunar.event.SignUpEvent;
 import com.medcorp.lunar.network.listener.RequestResponseListener;
 import com.medcorp.lunar.network.model.request.CheckEmailRequest;
@@ -97,7 +97,7 @@ public class SignupActivity extends BaseActivity {
         progressDialog.setCancelable(false);
         progressDialog.setMessage(getString(R.string.network_wait_text));
         CheckEmailRequest request = new CheckEmailRequest(email);
-        MedOperation.getInstance(this).checkEmail(this, request, new RequestResponseListener<CheckEmailResponse>() {
+        MedNetworkOperation.getInstance(this).checkEmail(this, request, new RequestResponseListener<CheckEmailResponse>() {
             @Override
             public void onFailed() {
                 progressDialog.dismiss();

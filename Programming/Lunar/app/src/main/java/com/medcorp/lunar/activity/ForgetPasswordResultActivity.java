@@ -9,7 +9,7 @@ import android.widget.EditText;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.login.LoginActivity;
 import com.medcorp.lunar.base.BaseActivity;
-import com.medcorp.lunar.cloud.med.MedOperation;
+import com.medcorp.lunar.cloud.med.MedNetworkOperation;
 import com.medcorp.lunar.network.listener.RequestResponseListener;
 import com.medcorp.lunar.network.model.request.ChangePasswordRequest;
 import com.medcorp.lunar.network.model.response.ChangePasswordResponse;
@@ -67,7 +67,7 @@ public class ForgetPasswordResultActivity extends BaseActivity {
         progressDialog.show();
 
         ChangePasswordRequest request = new ChangePasswordRequest(passwordToken, email, id + "", newPassword);
-        MedOperation.getInstance(this).changePassword(this,request, new RequestResponseListener<ChangePasswordResponse>() {
+        MedNetworkOperation.getInstance(this).changePassword(this,request, new RequestResponseListener<ChangePasswordResponse>() {
             @Override
             public void onFailed() {
                 progressDialog.dismiss();

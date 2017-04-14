@@ -58,7 +58,7 @@ public class HttpManager {
                 .build();
 
         apiRetrofit = new Retrofit.Builder()
-                .baseUrl(mContext.getString(R.string.network_base_url))
+                .baseUrl(mContext.getString(R.string.network_test_base_url))
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())

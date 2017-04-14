@@ -9,7 +9,7 @@ import android.widget.EditText;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.base.BaseActivity;
-import com.medcorp.lunar.cloud.med.MedOperation;
+import com.medcorp.lunar.cloud.med.MedNetworkOperation;
 import com.medcorp.lunar.network.listener.RequestResponseListener;
 import com.medcorp.lunar.network.model.request.CheckEmailRequest;
 import com.medcorp.lunar.network.model.request.RequestForgotPasswordTokenRequest;
@@ -57,7 +57,7 @@ public class ForgetPasswordActivity extends BaseActivity {
                 progressDialog.setMessage(getString(R.string.network_wait_text));
                 progressDialog.show();
                 final CheckEmailRequest request = new CheckEmailRequest(email);
-                MedOperation.getInstance(this).checkEmail(this, request, new RequestResponseListener<CheckEmailResponse>() {
+                MedNetworkOperation.getInstance(this).checkEmail(this, request, new RequestResponseListener<CheckEmailResponse>() {
                     @Override
                     public void onFailed() {
                         ToastHelper.showShortToast(ForgetPasswordActivity.this, getString(R.string.network_error));
@@ -82,7 +82,7 @@ public class ForgetPasswordActivity extends BaseActivity {
 
     public void obtainPasswordToken(final String email) {
         RequestForgotPasswordTokenRequest request = new RequestForgotPasswordTokenRequest(email);
-        MedOperation.getInstance(this).obtainPasswordToken(this, request, new RequestResponseListener<RequestForgotPasswordResponse>() {
+        MedNetworkOperation.getInstance(this).obtainPasswordToken(this, request, new RequestResponseListener<RequestForgotPasswordResponse>() {
             @Override
             public void onFailed() {
                 ToastHelper.showShortToast(ForgetPasswordActivity.this, getString(R.string.user_email_is_error));

@@ -29,7 +29,7 @@ import com.medcorp.lunar.activity.ForgetPasswordActivity;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.lunar.base.BaseActivity;
-import com.medcorp.lunar.cloud.med.MedOperation;
+import com.medcorp.lunar.cloud.med.MedNetworkOperation;
 import com.medcorp.lunar.event.LoginEvent;
 import com.medcorp.lunar.event.ReturnUserInfoEvent;
 import com.medcorp.lunar.event.WeChatEvent;
@@ -338,7 +338,7 @@ public class LoginActivity extends BaseActivity {
     private void checkFacebookEmail(final FacebookUserInfoResponse userInfoResponse) {
         progressDialog.show();
         final CheckEmailRequest request = new CheckEmailRequest(userInfoResponse.getEmail());
-        MedOperation.getInstance(this).checkEmail(this, request, new RequestResponseListener<CheckEmailResponse>() {
+        MedNetworkOperation.getInstance(this).checkEmail(this, request, new RequestResponseListener<CheckEmailResponse>() {
             @Override
             public void onFailed() {
             }
@@ -366,7 +366,7 @@ public class LoginActivity extends BaseActivity {
         }
         final CreateFacebookAccountRequest request = new CreateFacebookAccountRequest(currentProfile.getFirstName()
                 , userInfoResponse.getEmail(), currentProfile.getId(), userInfoResponse.getBirthday(), 170, 55, sex);
-        MedOperation.getInstance(this).createFacebookUser(request,
+        MedNetworkOperation.getInstance(this).createFacebookUser(request,
                 new RequestResponseListener<CreateFacebookAccountResponse>() {
                     @Override
                     public void onFailed() {
@@ -391,7 +391,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void facebookLogin(FaceBookAccountLoginRequest loginRequest) {
-        MedOperation.getInstance(this).facebookLogin(loginRequest,
+        MedNetworkOperation.getInstance(this).facebookLogin(loginRequest,
                 new RequestResponseListener<FacebookLoginResponse>() {
                     @Override
                     public void onFailed() {
@@ -410,6 +410,30 @@ public class LoginActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 if (response.getStatus() == 1) {
+                                    FacebookLoginResponse.UserBean user = response.getUser();
+                                    final User lunarUser = getModel().getNevoUser();
+                                    lunarUser.setFirstName(user.getFirst_name());
+                                    lunarUser.setNevoUserID("" + user.getId());
+                                    lunarUser.setNevoUserEmail(user.getEmail());
+                                    lunarUser.setIsLogin(true);
+                                    lunarUser.setCreatedDate(new Date().getTime());
+                                    //save it and sync with watch and cloud server
+                                    getModel().saveNevoUser(lunarUser);
+                                    getModel().getSyncController().getDailyTrackerInfo(true);
+                                    getModel().getNeedSyncSteps(lunarUser.getNevoUserID())
+                                            .subscribe(new Consumer<List<Steps>>() {
+                                        @Override
+                                        public void accept(final List<Steps> stepses) throws Exception {
+                                            getModel().getNeedSyncSleep(lunarUser.getNevoUserID())
+                                                    .subscribe(new Consumer<List<Sleep>>() {
+                                                @Override
+                                                public void accept(List<Sleep> sleeps) throws Exception {
+                                                    getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses
+                                                            , sleeps);
+                                                }
+                                            });
+                                        }
+                                    });
                                     onLoginSuccess();
                                 } else {
                                     showSnackbar(getString(R.string.log_in_failed));
@@ -471,7 +495,7 @@ public class LoginActivity extends BaseActivity {
         if (event != null) {
             final WeChatUserInfoResponse userInfo = event.getUserInfo();
             WeChatAccountCheckRequest request = new WeChatAccountCheckRequest(userInfo.getNickname(), userInfo.getUnionid());
-            MedOperation.getInstance(this).checkWeChat(this, request, new RequestResponseListener<CheckWeChatAccountResponse>() {
+            MedNetworkOperation.getInstance(this).checkWeChat(this, request, new RequestResponseListener<CheckWeChatAccountResponse>() {
                 @Override
                 public void onFailed() {
                     showSnackbar(getString(R.string.check_wechat_fail));
@@ -496,7 +520,7 @@ public class LoginActivity extends BaseActivity {
 
     private void createWeChatUser(final WeChatUserInfoResponse userInfo) {
         WeChatAccountRegisterRequest request = new WeChatAccountRegisterRequest(userInfo.getNickname(), userInfo.getUnionid());
-        MedOperation.getInstance(this).createWeChatAccount(this, request, new RequestResponseListener<CreateWeChatAccountResponse>() {
+        MedNetworkOperation.getInstance(this).createWeChatAccount(this, request, new RequestResponseListener<CreateWeChatAccountResponse>() {
             @Override
             public void onFailed() {
                 showSnackbar(getString(R.string.wechat_create_account_fail));
@@ -516,7 +540,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void weChatStartLogin(WeChatLoginRequest request) {
-        MedOperation.getInstance(this).weChatLogin(this, request, new RequestResponseListener<WeChatLoginResponse>() {
+        MedNetworkOperation.getInstance(this).weChatLogin(this, request, new RequestResponseListener<WeChatLoginResponse>() {
             @Override
             public void onFailed() {
                 showSnackbar(getString(R.string.wechat_login_fail));
