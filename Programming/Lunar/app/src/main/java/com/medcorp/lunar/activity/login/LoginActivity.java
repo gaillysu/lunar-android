@@ -364,8 +364,10 @@ public class LoginActivity extends BaseActivity {
         } else {
             sex = 0;
         }
+        String[] birthday = userInfoResponse.getBirthday().split("/");
         final CreateFacebookAccountRequest request = new CreateFacebookAccountRequest(currentProfile.getFirstName()
-                , userInfoResponse.getEmail(), currentProfile.getId(), userInfoResponse.getBirthday(), 170, 55, sex);
+                , userInfoResponse.getEmail(), currentProfile.getId(),birthday[2] + "-" +
+                birthday[0] + "-" + birthday[1], 170, 55, sex);
         MedNetworkOperation.getInstance(this).createFacebookUser(request,
                 new RequestResponseListener<CreateFacebookAccountResponse>() {
                     @Override
@@ -422,18 +424,18 @@ public class LoginActivity extends BaseActivity {
                                     getModel().getSyncController().getDailyTrackerInfo(true);
                                     getModel().getNeedSyncSteps(lunarUser.getNevoUserID())
                                             .subscribe(new Consumer<List<Steps>>() {
-                                        @Override
-                                        public void accept(final List<Steps> stepses) throws Exception {
-                                            getModel().getNeedSyncSleep(lunarUser.getNevoUserID())
-                                                    .subscribe(new Consumer<List<Sleep>>() {
                                                 @Override
-                                                public void accept(List<Sleep> sleeps) throws Exception {
-                                                    getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses
-                                                            , sleeps);
+                                                public void accept(final List<Steps> stepses) throws Exception {
+                                                    getModel().getNeedSyncSleep(lunarUser.getNevoUserID())
+                                                            .subscribe(new Consumer<List<Sleep>>() {
+                                                                @Override
+                                                                public void accept(List<Sleep> sleeps) throws Exception {
+                                                                    getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses
+                                                                            , sleeps);
+                                                                }
+                                                            });
                                                 }
                                             });
-                                        }
-                                    });
                                     onLoginSuccess();
                                 } else {
                                     showSnackbar(getString(R.string.log_in_failed));

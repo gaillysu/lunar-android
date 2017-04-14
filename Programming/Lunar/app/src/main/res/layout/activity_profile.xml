@@ -21,7 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="30dp"
-        android:layout_marginLeft="28dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="30dp"
         android:gravity="center_vertical"
         android:orientation="vertical"
@@ -47,10 +48,10 @@
                     android:id="@+id/profile_fragment_user_first_name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/profile_fragment_text_color"
                     android:layout_alignParentRight="true"
                     android:gravity="center_vertical"
                     android:text="@string/edit_user_first_name"
+                    android:textColor="@color/profile_fragment_text_color"
                     android:textSize="16sp"
                     />
 
@@ -58,9 +59,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textColor="@color/profile_fragment_text_value_color"
                     android:layout_gravity="center_vertical"
                     android:text="@string/profile_fragment_first_name_text"
+                    android:textColor="@color/profile_fragment_text_value_color"
                     android:textSize="18sp"
                     />
 
@@ -79,11 +80,11 @@
                 <TextView
                     android:id="@+id/profile_fragment_user_last_name_tv"
                     android:layout_width="wrap_content"
-                    android:textColor="@color/profile_fragment_text_color"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:gravity="center_vertical"
                     android:text="@string/edit_user_last_name"
+                    android:textColor="@color/profile_fragment_text_color"
                     android:textSize="16sp"
                     />
 
@@ -109,9 +110,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:gravity="center_vertical"
-            android:layout_weight="3"
             android:layout_marginTop="20dp"
+            android:layout_weight="3"
+            android:gravity="center_vertical"
             android:orientation="vertical"
             >
 
@@ -132,17 +133,17 @@
                     android:layout_alignParentRight="true"
                     android:gravity="center_vertical"
                     android:text="sdcfsa"
-                    android:textSize="16sp"
                     android:textColor="@color/profile_fragment_text_color"
+                    android:textSize="16sp"
                     />
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:textColor="@color/profile_fragment_text_value_color"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:text="@string/profile_fragment_user_birthday_text"
+                    android:textColor="@color/profile_fragment_text_value_color"
                     android:textSize="18sp"
                     />
             </LinearLayout>
@@ -174,8 +175,8 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:text="@string/profile_fragment_user_height_text"
-                    android:textSize="18sp"
                     android:textColor="@color/profile_fragment_text_value_color"
+                    android:textSize="18sp"
                     />
             </LinearLayout>
 
@@ -194,9 +195,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:textColor="@color/profile_fragment_text_color"
                     android:gravity="center_vertical"
                     android:text="sdcfsa"
+                    android:textColor="@color/profile_fragment_text_color"
                     android:textSize="16sp"
                     />
 

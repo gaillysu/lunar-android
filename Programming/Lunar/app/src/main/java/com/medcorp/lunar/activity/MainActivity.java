@@ -71,7 +71,6 @@ import static com.medcorp.lunar.util.Preferences.saveSelectDate;
 
 /**
  * Created by Karl on 12/10/15.
- *
  */
 public class MainActivity extends BaseActivity implements DrawerLayout.DrawerListener,
         NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener, DatePickerDialog.OnDateSetListener {
@@ -169,7 +168,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         userImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,  ProfileActivity.class));
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 finish();
             }
         });
@@ -249,9 +248,11 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     @Override
     public void onDrawerOpened(View drawerView) {
-        userView.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getNevoUserEmail() : "");
+        userView.setText(getModel().getNevoUser().getNevoUserEmail());
         showUserFirstNameText.setText(getModel().getNevoUser().isLogin() ?
-                getModel().getNevoUser().getFirstName() + " " + getModel().getNevoUser().getLastName() : "");
+                (getModel().getNevoUser().getFirstName() != null ? getModel().getNevoUser().getFirstName() : "") +
+                        " " + (getModel().getNevoUser().getLastName() != null ?
+                        getModel().getNevoUser().getLastName() : "") : "");
     }
 
 
@@ -382,7 +383,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         EventBus.getDefault().register(this);
         mCalendar = Calendar.getInstance();
         String strDate = mCalendar.get(Calendar.YEAR) + "-" +
-                (mCalendar.get(Calendar.MONTH) + 1) + "-" + mCalendar.get(Calendar.DAY_OF_MONTH) ;
+                (mCalendar.get(Calendar.MONTH) + 1) + "-" + mCalendar.get(Calendar.DAY_OF_MONTH);
         saveSelectDate(this, strDate);
     }
 

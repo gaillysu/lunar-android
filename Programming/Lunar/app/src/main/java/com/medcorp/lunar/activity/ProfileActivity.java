@@ -38,8 +38,6 @@ import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.PublicUtils;
 import com.medcorp.lunar.view.ToastHelper;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -93,7 +91,6 @@ public class ProfileActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        EventBus.getDefault().register(this);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.profile_title);
         user = getModel().getNevoUser();
@@ -409,6 +406,5 @@ public class ProfileActivity extends BaseActivity {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
-        EventBus.getDefault().unregister(this);
     }
 }
