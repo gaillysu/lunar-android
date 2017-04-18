@@ -105,8 +105,8 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         EventBus.getDefault().register(this);
         ButterKnife.bind(this);
-        if (getModel().getNevoUser().getNevoUserEmail() != null) {
-            _emailText.setText(getModel().getNevoUser().getNevoUserEmail());
+        if (getModel().getUser().getNevoUserEmail() != null) {
+            _emailText.setText(getModel().getUser().getNevoUserEmail());
         }
         progressDialog = new ProgressDialog(LoginActivity.this, AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -184,8 +184,8 @@ public class LoginActivity extends BaseActivity {
     public void onLoginSuccess() {
         showSnackbar(R.string.log_in_success);
         _loginButton.setEnabled(true);
-        getModel().getNevoUser().setNevoUserEmail(_emailText.getText().toString());
-        getModel().saveNevoUser(getModel().getNevoUser());
+        getModel().getUser().setNevoUserEmail(_emailText.getText().toString());
+        getModel().saveNevoUser(getModel().getUser());
         setResult(RESULT_OK, null);
         Preferences.saveIsFirstLogin(this, false);
         if ((getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) &&
@@ -413,7 +413,7 @@ public class LoginActivity extends BaseActivity {
                             public void run() {
                                 if (response.getStatus() == 1) {
                                     FacebookLoginResponse.UserBean user = response.getUser();
-                                    final User lunarUser = getModel().getNevoUser();
+                                    final User lunarUser = getModel().getUser();
                                     lunarUser.setFirstName(user.getFirst_name());
                                     lunarUser.setNevoUserID("" + user.getId());
                                     lunarUser.setNevoUserEmail(user.getEmail());
@@ -552,7 +552,7 @@ public class LoginActivity extends BaseActivity {
             public void onSuccess(WeChatLoginResponse response) {
                 if (response.getStatus() == 1) {
                     WeChatLoginResponse.UserBean user = response.getUser();
-                    final User lunarUser = getModel().getNevoUser();
+                    final User lunarUser = getModel().getUser();
                     lunarUser.setFirstName(user.getFirst_name());
                     lunarUser.setNevoUserID("" + user.getId());
                     lunarUser.setWechat(user.getWechat());

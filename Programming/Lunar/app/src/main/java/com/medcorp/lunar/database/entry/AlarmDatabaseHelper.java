@@ -45,6 +45,8 @@ public class AlarmDatabaseHelper {
                             e.onComplete();
                         }
                     }
+
+
                 });
             }
         }).subscribeOn(AndroidSchedulers.mainThread());

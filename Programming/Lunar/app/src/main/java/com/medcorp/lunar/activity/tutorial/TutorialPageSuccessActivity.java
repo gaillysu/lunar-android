@@ -2,6 +2,7 @@ package com.medcorp.lunar.activity.tutorial;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.medcorp.lunar.R;
@@ -44,11 +45,17 @@ public class TutorialPageSuccessActivity extends BaseActivity {
             getModel().addAlarm(new Alarm(21, 0, (byte) (0), getString(R.string.def_alarm_one), (byte) 0, (byte) 7)).subscribe(new Consumer<Boolean>() {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception {
+                    if(aBoolean){
+                        Log.i("jason","save def alarm success");
+                    }
                 }
             });
             getModel().addAlarm(new Alarm(8, 0, (byte) (0), getString(R.string.def_alarm_two), (byte) 1, (byte) 0)).subscribe(new Consumer<Boolean>() {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception {
+                    if(aBoolean){
+                        Log.i("jason","save def alarm success");
+                    }
                 }
             });
             sharedPreferences.putBoolean(getString(R.string.key_preset), true);

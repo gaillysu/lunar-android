@@ -66,7 +66,7 @@ public class CloudSyncManager {
             public void onRequestSuccess(RegisterNewAccountResponse createUserModel) {
                 if (createUserModel.getStatus() == 1 && createUserModel.getUser() != null) {
                     //save user ID and other profile infomation to local database
-                    User nevoUser = getModel().getNevoUser();
+                    User nevoUser = getModel().getUser();
                     RegisterNewAccountResponse.UserBean user = createUserModel.getUser();
                     try {
                         nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd")
@@ -98,7 +98,7 @@ public class CloudSyncManager {
             public void onRequestSuccess(UserLoginResponse loginUserModel) {
                 if (loginUserModel.getStatus() == 1) {
                     UserLoginResponse.UserBean user = loginUserModel.getUser();
-                    final User nevoUser = getModel().getNevoUser();
+                    final User nevoUser = getModel().getUser();
                     try {
                         nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday().getDate()).getTime());
                     } catch (ParseException e) {

@@ -7,7 +7,7 @@ import io.realm.RealmObject;
  */
 public class Alarm extends RealmObject{
 
-    private int id;
+    private int id =  (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
     private int hour;
     private int minute;
     private byte weekDay;

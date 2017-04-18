@@ -24,12 +24,11 @@
             android:id="@+id/fragment_alarmm_list_view_item_alarm_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:focusable="false"
             android:shadowColor="@color/colorPrimary"
             android:theme="@style/my_switch_color"
-            />
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"/>
     </RelativeLayout>
 
 

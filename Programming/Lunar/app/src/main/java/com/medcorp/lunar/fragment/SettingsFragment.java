@@ -68,8 +68,8 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
-        //listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getNevoUser().isLogin()));
-        if (getModel().getNevoUser().isLogin()) {
+        //listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getUser().isLogin()));
+        if (getModel().getUser().isLogin()) {
             listMenu.add(new SettingsMenuItem(getString(R.string.google_fit_log_out), R.drawable.logout_icon));
         } else {
 
@@ -142,8 +142,8 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                     .show();
 
         } else if (position == 8) {
-            if (!getModel().getNevoUser().isLogin()) {
-                getModel().removeUser(getModel().getNevoUser());
+            if (!getModel().getUser().isLogin()) {
+                getModel().removeUser(getModel().getUser());
                 Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
                 intent.putExtra("isTutorialPage", false);
                 SettingsFragment.this.getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, true);
@@ -151,8 +151,8 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             } else {
                 Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
                 intent.putExtra("isTutorialPage", false);
-                getModel().getNevoUser().setIsLogin(false);
-                getModel().saveNevoUser(getModel().getNevoUser());
+                getModel().getUser().setIsLogin(false);
+                getModel().saveNevoUser(getModel().getUser());
                 startActivity(intent);
             }
             SettingsFragment.this.getActivity().finish();

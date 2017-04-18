@@ -93,8 +93,8 @@ public class ProfileActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.profile_title);
-        user = getModel().getNevoUser();
-        if (getModel().getNevoUser().isLogin()) {
+        user = getModel().getUser();
+        if (getModel().getUser().isLogin()) {
             userEmail = user.getNevoUserEmail();
         } else {
             userEmail = getString(R.string.watch_med_profile);

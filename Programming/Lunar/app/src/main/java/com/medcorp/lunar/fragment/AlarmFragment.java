@@ -41,7 +41,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TreeMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -62,7 +61,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     private LayoutInflater inflater;
     private Boolean isMondayChecked = false;
 
-    private TreeMap<Integer, String> mMap;
     private byte alarmSelectStyle = 0;
     private Button monday;
     private byte weekDay = 0;
@@ -81,6 +79,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
         ButterKnife.bind(this, view);
         this.inflater = inflater;
+        setHasOptionsMenu(true);
         initData();
         return view;
     }
@@ -94,9 +93,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 alarmListView.setAdapter(alarmArrayAdapter);
                 alarmListView.setOnItemClickListener(AlarmFragment.this);
                 isMondayChecked = true;
-                mMap = new TreeMap<>();
-                refreshListView();
-                setHasOptionsMenu(true);
             }
         });
     }
@@ -105,6 +101,12 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         initAlarmDialog((byte) 2);
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.add_menu).setVisible(true);
+        menu.findItem(R.id.choose_goal_menu).setVisible(false);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -121,14 +123,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.add_menu).setVisible(true);
-        menu.findItem(R.id.choose_goal_menu).setVisible(false);
-    }
-
 
     @Override
     public void onTimeSet(TimePicker view, final int hourOfDay, final int minute) {
@@ -174,16 +168,16 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 dialog.dismiss();
             }
         });
-
         saveNewAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getModel().getAllAlarm(new SyncControllerImpl.SyncAlarmToWatchListener() {
+                dialog.dismiss();
+                getModel().getAlarmDatabaseHelper().getAll().subscribe(new Consumer<List<Alarm>>() {
                     @Override
-                    public void syncAlarmToWatch(List<Alarm> allAlarm) {
+                    public void accept(List<Alarm> allAlarm) throws Exception {
                         final Alarm newAlarm = new Alarm(hourOfDay, minute, (byte) 0, "", (byte) 0, (byte) 0);
                         if (TextUtils.isEmpty(alarmName.getText().toString())) {
-                            newAlarm.setLabel(getString(R.string.menu_drawer_alarm) + " " + (alarmList.size() + 1));
+                            newAlarm.setLabel(getString(R.string.menu_drawer_alarm) + " " + (allAlarm.size() + 1));
                         } else {
                             newAlarm.setLabel(alarmName.getText().toString());
                         }
@@ -199,6 +193,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                             }
 
                         }
+
                         for (int i = 0; i < allAlarm.size(); i++) {
                             byte repeatDay = allAlarm.get(i).getWeekDay();
                             byte alarmType = allAlarm.get(i).getAlarmType();
@@ -209,6 +204,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                                 isRepeat = false;
                             }
                         }
+
                         if ((alarmSelectStyle == 0 && num <= 13) || (alarmSelectStyle == 1 && num <= 6)) {
                             if (!isRepeat) {
                                 newAlarm.setWeekDay((byte) (0x80 | weekDay));
@@ -218,8 +214,8 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                                     @Override
                                     public void accept(Boolean aBoolean) throws Exception {
                                         if (aBoolean) {
-                                            refreshListView();
                                             showSyncAlarm = true;
+                                            refreshListView();
                                             getModel().getSyncController().setAlarm(newAlarm);
                                             ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
                                         }
@@ -238,7 +234,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                         } else {
                             ToastHelper.showShortToast(getContext(), getResources().getString(R.string.add_alarm_index_out));
                         }
-                        dialog.dismiss();
                     }
                 });
             }
@@ -263,7 +258,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         prefs.putString(getString(R.string.alarm_label), alarmList.get(position).getLabel());
         prefs.commit();
         editAlarm = alarmList.get(position);
-        getAppCompatActivity().startActivityForResult(i, 0);
+        startActivityForResult(i, 0);
     }
 
     @Override
@@ -277,22 +272,14 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        refreshListView();
-
-    }
-
     private void refreshListView() {
         if (alarmArrayAdapter != null && alarmListView != null) {
-            getModel().getAllAlarm(new SyncControllerImpl.SyncAlarmToWatchListener() {
+            getModel().getAlarmDatabaseHelper().getAll().subscribe(new Consumer<List<Alarm>>() {
                 @Override
-                public void syncAlarmToWatch(List<Alarm> alarms) {
-                    alarmArrayAdapter.clear();
-                    alarmArrayAdapter.addAll(alarms);
-                    alarmArrayAdapter.notifyDataSetChanged();
-                    alarmListView.invalidate();
+                public void accept(List<Alarm> alarms) throws Exception {
+                    alarmList = alarms;
+                    alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarms, AlarmFragment.this);
+                    alarmListView.setAdapter(alarmArrayAdapter);
                 }
             });
         }

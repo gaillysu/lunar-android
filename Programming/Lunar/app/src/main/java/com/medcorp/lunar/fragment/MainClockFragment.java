@@ -110,7 +110,7 @@ public class MainClockFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        user = getModel().getNevoUser();
+        user = getModel().getUser();
         String selectDate = Preferences.getSelectDate(this.getContext());
         if (selectDate == null) {
             userSelectDate = new Date();
@@ -284,7 +284,7 @@ public class MainClockFragment extends BaseFragment {
     @Subscribe
     public void onEvent(LittleSyncEvent event) {
         if (event.isSuccess()) {
-            Steps steps = getModel().getDailySteps(getModel().getNevoUser().getNevoUserID(), Common.removeTimeFromDate(userSelectDate));
+            Steps steps = getModel().getDailySteps(getModel().getUser().getNevoUserID(), Common.removeTimeFromDate(userSelectDate));
             if (steps == null) {
                 return;
             }

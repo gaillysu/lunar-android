@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -70,16 +71,17 @@ public class MainSleepFragment extends BaseFragment {
                 e.printStackTrace();
             }
         }
+        setHasOptionsMenu(true);
         initData(userSelectDate);
         return sleepView;
     }
 
     public void initData(final Date date) {
-        User user = getModel().getNevoUser();
+        User user = getModel().getUser();
         getModel().getDailySleep(user.getNevoUserID(), date, new TodaySleepListener() {
             @Override
             public void todaySleep(Sleep[] sleepArray) {
-                Log.e("jason","yesterday Sleep : "+sleepArray[0].toString());
+                Log.e("jason", "yesterday Sleep : " + sleepArray[0].toString());
                 SleepDataHandler handler = new SleepDataHandler(Arrays.asList(sleepArray));
                 List<SleepData> sleepDataList = handler.getSleepData(date);
 
@@ -105,6 +107,13 @@ public class MainSleepFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.add_menu).setVisible(false);
+        menu.findItem(R.id.choose_goal_menu).setVisible(false);
     }
 
     @Override

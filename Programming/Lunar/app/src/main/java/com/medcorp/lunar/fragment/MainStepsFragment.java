@@ -73,7 +73,7 @@ public class MainStepsFragment extends BaseFragment {
     }
 
     private void initData(Date date) {
-        final User user = getModel().getNevoUser();
+        final User user = getModel().getUser();
         getModel().getStepsHelper().get(user.getNevoUserID(),date).subscribe(new Consumer<Steps>() {
             @Override
             public void accept(Steps steps) throws Exception {

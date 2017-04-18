@@ -630,7 +630,7 @@ public class ApplicationModel extends Application {
         sleep.setTotalDeepTime(deepSleep);
         sleep.setStart(0);
         sleep.setEnd(0);
-        sleep.setNevoUserID(getNevoUser().getNevoUserID());
+        sleep.setNevoUserID(getUser().getNevoUserID());
         //we must set CloudRecordID here, avoid doing sync repeatly
         sleep.setCloudRecordID(dailySleep.getId() + "");
         try {
@@ -675,6 +675,10 @@ public class ApplicationModel extends Application {
         return alarmDatabaseHelper.remove(alarm.getId());
     }
 
+    public AlarmDatabaseHelper getAlarmDatabaseHelper() {
+        return alarmDatabaseHelper;
+    }
+
     public void getAllGoal(final MainFragment.ObtainGoalListener listener) {
         goalDatabaseHelper.getAll().subscribe(new Consumer<List<Goal>>() {
             @Override
@@ -715,10 +719,6 @@ public class ApplicationModel extends Application {
             }
         });
         return goal;
-    }
-
-    public void deleteAlarm(Goal goal) {
-        goalDatabaseHelper.remove(goal.getId());
     }
 
     /**
@@ -878,7 +878,7 @@ public class ApplicationModel extends Application {
         return ledDataBase;
     }
 
-    public User getNevoUser() {
+    public User getUser() {
         return nevoUser;
     }
 

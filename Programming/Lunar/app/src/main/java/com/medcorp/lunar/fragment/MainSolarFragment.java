@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -72,10 +73,17 @@ public class MainSolarFragment extends BaseFragment {
                 e.printStackTrace();
             }
         }
-
+        setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
         initData(userSelectDate);
         return view;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.add_menu).setVisible(false);
+        menu.findItem(R.id.choose_goal_menu).setVisible(false);
     }
 
     private void initData(Date userSelectDate) {
@@ -83,7 +91,7 @@ public class MainSolarFragment extends BaseFragment {
         if (Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime()) {
             powOnBatteryMinutes = new DateTime().getMinuteOfDay();
         }
-        getModel().getSolarDatabaseHelper().get(getModel().getNevoUser().getId(), userSelectDate)
+        getModel().getSolarDatabaseHelper().get(getModel().getUser().getId(), userSelectDate)
                 .subscribe(new Consumer<Solar>() {
             @Override
             public void accept(Solar solar) throws Exception {

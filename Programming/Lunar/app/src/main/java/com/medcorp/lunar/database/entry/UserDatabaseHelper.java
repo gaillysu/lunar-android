@@ -125,23 +125,18 @@ public class UserDatabaseHelper {
 
     public Observable<User> getLoginUser() {
         return Observable.create(new ObservableOnSubscribe<User>() {
-
             @Override
             public void subscribe(ObservableEmitter<User> e) throws Exception {
-                RealmResults<User> allUser = mRealm.where(User.class).findAll();
                 User loginUser = null;
-                for (User user : allUser) {
-                    if (user.isLogin()) {
-                        loginUser = mRealm.copyFromRealm(user);
-                    }
-                }
-                if (loginUser == null) {
+                User user = mRealm.where(User.class).equalTo("isLogin", true).findFirst();
+                if (user == null) {
                     loginUser = new User(0);
                     loginUser.setNevoUserID("0");
+                } else {
+                    loginUser = mRealm.copyFromRealm(user);
                 }
                 e.onNext(loginUser);
                 e.onComplete();
-
             }
         }).subscribeOn(AndroidSchedulers.mainThread());
     }
