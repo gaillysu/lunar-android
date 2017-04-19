@@ -80,7 +80,7 @@ public class CloudSyncManager {
                     nevoUser.setWeight(user.getWeight());
                     nevoUser.setNevoUserID("" + user.getId());
                     nevoUser.setNevoUserEmail(user.getEmail());
-                    getModel().saveNevoUser(nevoUser);
+                    getModel().saveUser(nevoUser);
                 }
             }
         });
@@ -113,7 +113,7 @@ public class CloudSyncManager {
                     nevoUser.setIsLogin(true);
                     nevoUser.setCreatedDate(new Date().getTime());
                     //save it and sync with watch and cloud server
-                    getModel().saveNevoUser(nevoUser);
+                    getModel().saveUser(nevoUser);
                     getModel().getSyncController().getDailyTrackerInfo(true);
                     getModel().getNeedSyncSteps(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
                         @Override

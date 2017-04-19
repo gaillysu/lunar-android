@@ -185,7 +185,7 @@ public class LoginActivity extends BaseActivity {
         showSnackbar(R.string.log_in_success);
         _loginButton.setEnabled(true);
         getModel().getUser().setNevoUserEmail(_emailText.getText().toString());
-        getModel().saveNevoUser(getModel().getUser());
+        getModel().saveUser(getModel().getUser());
         setResult(RESULT_OK, null);
         Preferences.saveIsFirstLogin(this, false);
         if ((getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) &&
@@ -420,7 +420,7 @@ public class LoginActivity extends BaseActivity {
                                     lunarUser.setIsLogin(true);
                                     lunarUser.setCreatedDate(new Date().getTime());
                                     //save it and sync with watch and cloud server
-                                    getModel().saveNevoUser(lunarUser);
+                                    getModel().saveUser(lunarUser);
                                     getModel().getSyncController().getDailyTrackerInfo(true);
                                     getModel().getNeedSyncSteps(lunarUser.getNevoUserID())
                                             .subscribe(new Consumer<List<Steps>>() {
@@ -559,7 +559,7 @@ public class LoginActivity extends BaseActivity {
                     lunarUser.setIsLogin(true);
                     lunarUser.setCreatedDate(new Date().getTime());
                     //save it and sync with watch and cloud server
-                    getModel().saveNevoUser(lunarUser);
+                    getModel().saveUser(lunarUser);
                     getModel().getSyncController().getDailyTrackerInfo(true);
                     getModel().getNeedSyncSteps(lunarUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
                         @Override

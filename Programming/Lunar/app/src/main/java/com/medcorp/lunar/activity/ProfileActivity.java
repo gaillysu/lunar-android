@@ -304,7 +304,7 @@ public class ProfileActivity extends BaseActivity {
                                     @Override
                                     public void run() {
                                         progressDialog.dismiss();
-                                        getModel().saveNevoUser(user);
+                                        getModel().saveUser(user);
                                         startActivity(MainActivity.class);
                                         finish();
                                         overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);

@@ -89,7 +89,9 @@ public class AlarmDatabaseHelper {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        alarm.deleteFromRealm();
+                        if (alarm != null) {
+                            alarm.deleteFromRealm();
+                        }
                         e.onNext(true);
                         e.onComplete();
                     }

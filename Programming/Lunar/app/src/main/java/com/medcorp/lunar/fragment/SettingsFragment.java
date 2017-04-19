@@ -152,7 +152,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                 Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
                 intent.putExtra("isTutorialPage", false);
                 getModel().getUser().setIsLogin(false);
-                getModel().saveNevoUser(getModel().getUser());
+                getModel().saveUser(getModel().getUser());
                 startActivity(intent);
             }
             SettingsFragment.this.getActivity().finish();

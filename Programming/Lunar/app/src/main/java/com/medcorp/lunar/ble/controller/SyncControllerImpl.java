@@ -53,7 +53,7 @@ import com.medcorp.lunar.ble.model.request.SetSunriseAndSunsetTimeRequest;
 import com.medcorp.lunar.ble.model.request.SetWorldTimeOffsetRequest;
 import com.medcorp.lunar.ble.model.request.TestModeRequest;
 import com.medcorp.lunar.ble.model.request.WriteSettingRequest;
-import com.medcorp.lunar.ble.notification.NevoNotificationListener;
+import com.medcorp.lunar.ble.notification.LunarNotificationListener;
 import com.medcorp.lunar.database.dao.IDailyHistory;
 import com.medcorp.lunar.event.LocationChangedEvent;
 import com.medcorp.lunar.event.SetSunriseAndSunsetTimeRequestEvent;
@@ -174,7 +174,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         connectionController = ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context));
         Intent intent = new Intent(mContext, LocalService.class);
         mContext.getApplicationContext().bindService(intent, mCurrentServiceConnection, Activity.BIND_AUTO_CREATE);
-        //force android Notification Manager Service to start NevoNotificationListener
+        //force android Notification Manager Service to start LunarNotificationListener
         startNotificationListener();
         EventBus.getDefault().register(this);
         startTimer();
@@ -731,9 +731,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         //force android NotificationManagerService to rebind user NotificationListenerService
         // http://www.zhihu.com/question/33540416/answer/113706620
         PackageManager pm = mContext.getPackageManager();
-        pm.setComponentEnabledSetting(new ComponentName(mContext, NevoNotificationListener.class),
+        pm.setComponentEnabledSetting(new ComponentName(mContext, LunarNotificationListener.class),
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-        pm.setComponentEnabledSetting(new ComponentName(mContext, NevoNotificationListener.class),
+        pm.setComponentEnabledSetting(new ComponentName(mContext, LunarNotificationListener.class),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 
     }

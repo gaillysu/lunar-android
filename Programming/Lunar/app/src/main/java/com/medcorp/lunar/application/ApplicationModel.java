@@ -324,7 +324,7 @@ public class ApplicationModel extends Application {
         });
     }
 
-    public void saveNevoUser(final User user) {
+    public void saveUser(final User user) {
         userDatabaseHelper.update(user).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
@@ -649,15 +649,8 @@ public class ApplicationModel extends Application {
         return alarmDatabaseHelper.add(alarm);
     }
 
-    public boolean updateAlarm(Alarm alarm) {
-
-        alarmDatabaseHelper.update(alarm).subscribe(new Consumer<Boolean>() {
-            @Override
-            public void accept(Boolean response) throws Exception {
-                responseCode = response;
-            }
-        });
-        return responseCode;
+    public Observable<Boolean> updateAlarm(Alarm alarm) {
+        return alarmDatabaseHelper.update(alarm);
     }
 
     public void getAlarmById(int id, final EditAlarmActivity.ObtainAlarmListener listener) {
@@ -914,7 +907,7 @@ public class ApplicationModel extends Application {
 
     @Subscribe
     public void onValidicCreateUserEvent(ValidicCreateUserEvent validicCreateUserEvent) {
-        saveNevoUser(validicCreateUserEvent.getUser());
+        saveUser(validicCreateUserEvent.getUser());
         getSyncController().getDailyTrackerInfo(true);
         getNeedSyncSteps(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
             @Override

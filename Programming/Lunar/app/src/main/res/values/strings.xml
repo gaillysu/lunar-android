@@ -362,6 +362,7 @@
     <string name="sunday">Sun</string>
     <string name="disable">Disable</string>
     <string name="every_day">Every </string>
+    <string name="Edit_alarm_type">Edit Alarm type</string>
     <string name="edit_alarm_sleep">Sleep Alarm</string>
     <string name="edit_alarm_wake">Wake Alarm</string>
     <string name="edit_profile">Edit Profile</string>
@@ -471,5 +472,7 @@
     <string name="network_error">Network error!</string>
     <string name="save_update_user_info_failed">Save failed, please try again!</string>
     <string name="check_email_message">Email address already exists</string>
-    <string name="obtain_facebook_info_failed">Obtain face profile failed</string>
+    <string name="obtain_facebook_info_failed">Obtain facebook profile failed</string>
+    <string name="seek_failed">Seek failed</string>
+    <string name="def_sleep_text">0 min</string>
 </resources>

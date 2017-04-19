@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -215,6 +216,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                                     public void accept(Boolean aBoolean) throws Exception {
                                         if (aBoolean) {
                                             showSyncAlarm = true;
+                                            Log.i("jason", "new alarm save complete");
                                             refreshListView();
                                             getModel().getSyncController().setAlarm(newAlarm);
                                             ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
@@ -276,9 +278,10 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         if (alarmArrayAdapter != null && alarmListView != null) {
             getModel().getAlarmDatabaseHelper().getAll().subscribe(new Consumer<List<Alarm>>() {
                 @Override
-                public void accept(List<Alarm> alarms) throws Exception {
+                public void accept(final List<Alarm> alarms) throws Exception {
+                    alarmList.clear();
                     alarmList = alarms;
-                    alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarms, AlarmFragment.this);
+                    alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarmList, AlarmFragment.this);
                     alarmListView.setAdapter(alarmArrayAdapter);
                 }
             });
