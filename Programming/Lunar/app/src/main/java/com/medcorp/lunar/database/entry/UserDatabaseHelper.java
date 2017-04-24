@@ -1,5 +1,8 @@
 package com.medcorp.lunar.database.entry;
 
+import android.content.Context;
+
+import com.medcorp.lunar.R;
 import com.medcorp.lunar.model.User;
 
 import java.util.Date;
@@ -18,8 +21,10 @@ import io.realm.RealmResults;
 public class UserDatabaseHelper {
 
     private Realm mRealm;
+    private Context mContext;
 
-    public UserDatabaseHelper() {
+    public UserDatabaseHelper(Context mContext) {
+        this.mContext = mContext;
         mRealm = Realm.getDefaultInstance();
     }
 
@@ -64,8 +69,8 @@ public class UserDatabaseHelper {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        User user = mRealm.where(User.class).equalTo("nevoUserID", object.getUserID())
-                                .equalTo("createdDate", object.getCreatedDate()).findFirst();
+                        User user = mRealm.where(User.class).equalTo(mContext.getString(R.string.database_user_id),
+                                object.getUserID()).equalTo(mContext.getString(R.string.create_date), object.getCreatedDate()).findFirst();
                         if (user != null) {
                             user.setId(object.getId());
                             user.setWechat(object.getWechat());
@@ -99,8 +104,8 @@ public class UserDatabaseHelper {
     }
 
     public void remove(String userId, Date date) {
-        final User user = mRealm.where(User.class).equalTo("nevoUserID", userId)
-                .equalTo("createdDate", date.getTime()).findFirst();
+        final User user = mRealm.where(User.class).equalTo(mContext.getString(R.string.database_user_id), userId)
+                .equalTo(mContext.getString(R.string.create_date), date.getTime()).findFirst();
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -110,12 +115,13 @@ public class UserDatabaseHelper {
     }
 
     public List<User> get(String userId) {
-        RealmResults<User> nevoUser = mRealm.where(User.class).equalTo("nevoUserID", userId).findAll();
+        RealmResults<User> nevoUser = mRealm.where(User.class).equalTo(mContext.getString(R.string.database_user_id), userId).findAll();
         return nevoUser;
     }
 
     public User get(String userId, Date date) {
-        User user = mRealm.where(User.class).equalTo("nevoUserID", userId).equalTo("createdDate", date).findFirst();
+        User user = mRealm.where(User.class).equalTo(mContext.getString(R.string.database_user_id)
+                , userId).equalTo(mContext.getString(R.string.create_date), date).findFirst();
         return user == null ? new User(System.currentTimeMillis()) : user;
     }
 
@@ -128,7 +134,7 @@ public class UserDatabaseHelper {
             @Override
             public void subscribe(ObservableEmitter<User> e) throws Exception {
                 User loginUser = null;
-                User user = mRealm.where(User.class).equalTo("isLogin", true).findFirst();
+                User user = mRealm.where(User.class).equalTo(mContext.getString(R.string.user_is_login), true).findFirst();
                 if (user == null) {
                     loginUser = new User(0);
                     loginUser.setUserID("0");

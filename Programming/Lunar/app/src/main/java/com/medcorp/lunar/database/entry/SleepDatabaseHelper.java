@@ -1,5 +1,8 @@
 package com.medcorp.lunar.database.entry;
 
+import android.content.Context;
+
+import com.medcorp.lunar.R;
 import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.SleepData;
 
@@ -19,8 +22,10 @@ import io.realm.Realm;
 public class SleepDatabaseHelper {
 
     private Realm mRealm;
+    private Context mContext;
 
-    public SleepDatabaseHelper() {
+    public SleepDatabaseHelper(Context context) {
+        mContext = context;
         mRealm = Realm.getDefaultInstance();
     }
 
@@ -63,8 +68,9 @@ public class SleepDatabaseHelper {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        Sleep sleep = mRealm.where(Sleep.class).equalTo("createdDate", object.getCreatedDate())
-                                .equalTo("start", object.getStart()).findFirst();
+                        Sleep sleep = mRealm.where(Sleep.class).equalTo(mContext.getString(R.string.create_date)
+                                , object.getCreatedDate())
+                                .equalTo(mContext.getString(R.string.sleep_start), object.getStart()).findFirst();
                         if (sleep != null) {
                             sleep.setId(object.getId());
                             sleep.setTotalDeepTime(object.getTotalDeepTime());
@@ -98,8 +104,9 @@ public class SleepDatabaseHelper {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(final ObservableEmitter<Boolean> e) throws Exception {
-                final Sleep sleep = mRealm.where(Sleep.class).equalTo("nevoUserID", userId)
-                        .equalTo("date", date.getTime()).findFirst();
+                final Sleep sleep = mRealm.where(Sleep.class).equalTo(mContext.getString(R.string.database_user_id)
+                        , userId)
+                        .equalTo(mContext.getString(R.string.date), date.getTime()).findFirst();
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -117,7 +124,7 @@ public class SleepDatabaseHelper {
             @Override
             public void subscribe(ObservableEmitter<Sleep> e) throws Exception {
                 Sleep dailySteps = null;
-                Sleep sleep = mRealm.where(Sleep.class).equalTo("nevoUserID", userId).findFirst();
+                Sleep sleep = mRealm.where(Sleep.class).equalTo(mContext.getString(R.string.database_user_id), userId).findFirst();
                 if (sleep != null) {
                     dailySteps = mRealm.copyFromRealm(sleep);
                 } else {
@@ -134,8 +141,8 @@ public class SleepDatabaseHelper {
             @Override
             public void subscribe(ObservableEmitter<Sleep> e) throws Exception {
                 Sleep dailySteps = null;
-                Sleep sleep = mRealm.where(Sleep.class).equalTo("nevoUserID", userId)
-                        .equalTo("date", date.getTime()).findFirst();
+                Sleep sleep = mRealm.where(Sleep.class).equalTo(mContext.getString(R.string.database_user_id), userId)
+                        .equalTo(mContext.getString(R.string.date), date.getTime()).findFirst();
                 if (sleep != null) {
                     dailySteps = mRealm.copyFromRealm(sleep);
                 } else {
@@ -154,8 +161,8 @@ public class SleepDatabaseHelper {
                 List<SleepData> sleepLists = new ArrayList<>();
                 SleepData sleepData = null;
                 for (Date date : dateList) {
-                    Sleep sleep = mRealm.where(Sleep.class).equalTo("nevoUserID", userId)
-                            .equalTo("date", date.getTime()).findFirst();
+                    Sleep sleep = mRealm.where(Sleep.class).equalTo(mContext.getString(R.string.database_user_id), userId)
+                            .equalTo(mContext.getString(R.string.date), date.getTime()).findFirst();
                     if (null != sleep) {
                         Sleep dailySleep = mRealm.copyFromRealm(sleep);
                         sleepData = new SleepData(dailySleep.getTotalDeepTime()
@@ -180,7 +187,7 @@ public class SleepDatabaseHelper {
             public void subscribe(ObservableEmitter<List<Sleep>> e) throws Exception {
                 List<Sleep> allSleeps = null;
                 List<Sleep> allSleep = mRealm.where(Sleep.class).
-                        equalTo("nevoUserID", userId).findAll();
+                        equalTo(mContext.getString(R.string.database_user_id), userId).findAll();
                 if (allSleep != null) {
                     allSleeps = mRealm.copyFromRealm(allSleep);
                 } else {
@@ -197,7 +204,7 @@ public class SleepDatabaseHelper {
             @Override
             public void subscribe(ObservableEmitter<List<Sleep>> e) throws Exception {
                 List<Sleep> sleepDAOList = mRealm.where(Sleep.class)
-                        .equalTo("nevoUserID", userId).findAll();
+                        .equalTo(mContext.getString(R.string.database_user_id), userId).findAll();
                 if (sleepDAOList != null) {
                     e.onNext(mRealm.copyFromRealm(sleepDAOList));
                     e.onComplete();
@@ -214,7 +221,7 @@ public class SleepDatabaseHelper {
             @Override
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 List<Sleep> sleepList = mRealm.where(Sleep.class)
-                        .equalTo("id", activity_id).findAll();
+                        .equalTo(mContext.getString(R.string.database_id), activity_id).findAll();
                 if (sleepList != null) {
                     e.onNext(true);
                     e.onComplete();

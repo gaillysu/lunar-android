@@ -1,5 +1,8 @@
 package com.medcorp.lunar.database.entry;
 
+import android.content.Context;
+
+import com.medcorp.lunar.R;
 import com.medcorp.lunar.ble.model.color.LedLamp;
 import com.medcorp.lunar.database.dao.LedLampDAO;
 
@@ -17,9 +20,11 @@ public class LedLampDatabase {
 
     private Realm mRealm;
     private boolean isSuccess;
+    private Context mContext;
 
-    public LedLampDatabase() {
+    public LedLampDatabase(Context context) {
         mRealm = Realm.getDefaultInstance();
+        mContext = context;
     }
 
     public boolean add(final LedLamp object) {
@@ -38,7 +43,8 @@ public class LedLampDatabase {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                LedLampDAO led = mRealm.where(LedLampDAO.class).equalTo("id", object.getId()).findFirst();
+                LedLampDAO led = mRealm.where(LedLampDAO.class).equalTo(mContext.getString(R.string.database_id)
+                        , object.getId()).findFirst();
                 led.setColor(object.getColor());
                 led.setName(object.getName());
                 isSuccess = true;
@@ -49,7 +55,8 @@ public class LedLampDatabase {
 
     public boolean remove(final String name, final int color) {
         final LedLampDAO ledLamp = mRealm.where(LedLampDAO.class)
-                .equalTo("name", name).equalTo("color", color).findFirst();
+                .equalTo(mContext.getString(R.string.led_lamp_name), name)
+                .equalTo(mContext.getString(R.string.led_lamp_color), color).findFirst();
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -65,7 +72,8 @@ public class LedLampDatabase {
 
     public LedLamp get(String name, int color) {
         LedLamp led = convertToNormal(mRealm.where(LedLampDAO.class)
-                .equalTo("name", name).equalTo("color", color).findFirst());
+                .equalTo(mContext.getString(R.string.led_lamp_name), name)
+                .equalTo(mContext.getString(R.string.led_lamp_color), color).findFirst());
         return led;
     }
 

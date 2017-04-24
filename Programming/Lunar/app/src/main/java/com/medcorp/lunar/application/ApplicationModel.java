@@ -174,14 +174,14 @@ public class ApplicationModel extends Application {
         Realm.setDefaultConfiguration(lunarConfig);
         syncController = new SyncControllerImpl(this);
         otaController = new OtaControllerImpl(this);
-        stepsDatabaseHelper = new StepsDatabaseHelper();
-        sleepDatabaseHelper = new SleepDatabaseHelper();
-        alarmDatabaseHelper = new AlarmDatabaseHelper();
-        goalDatabaseHelper = new GoalDatabaseHelper();
-        userDatabaseHelper = new UserDatabaseHelper();
-        solarDatabaseHelper = new SolarDatabaseHelper();
+        stepsDatabaseHelper = new StepsDatabaseHelper(this);
+        sleepDatabaseHelper = new SleepDatabaseHelper(this);
+        alarmDatabaseHelper = new AlarmDatabaseHelper(this);
+        goalDatabaseHelper = new GoalDatabaseHelper(this);
+        userDatabaseHelper = new UserDatabaseHelper(this);
+        solarDatabaseHelper = new SolarDatabaseHelper(this);
         cloudSyncManager = new CloudSyncManager(this);
-        ledDataBase = new LedLampDatabase();
+        ledDataBase = new LedLampDatabase(this);
         locationController = new LocationController(this);
         mIWXAPI = WXAPIFactory.createWXAPI(this, getString(R.string.we_chat_app_id), true);
         userDatabaseHelper.getLoginUser().subscribe(new Consumer<User>() {

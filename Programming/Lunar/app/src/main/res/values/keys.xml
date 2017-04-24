@@ -75,4 +75,15 @@
     <string name="led_lamp_color_orange" translatable="false">Orange</string>
     <string name="led_lamp_color_yellow" translatable="false">Yellow</string>
     <string name="led_lamp_color_green" translatable="false">Green</string>
+    <string name="alarm_number" translatable="false">alarmNumber</string>
+    <string name="database_id" translatable="false">id</string>
+    <string name="database_goal_label" translatable="false">label</string>
+    <string name="led_lamp_name" translatable="false">name</string>
+    <string name="led_lamp_color" translatable="false">color</string>
+    <string name="create_date" translatable="false">createdDate</string>
+    <string name="sleep_start" translatable="false">start</string>
+    <string name="database_user_id" translatable="false">nevoUserID</string>
+    <string name="date" translatable="false">date</string>
+    <string name="userId" translatable="false">userId</string>
+    <string name="user_is_login" translatable="false">isLogin</string>
 </resources>
