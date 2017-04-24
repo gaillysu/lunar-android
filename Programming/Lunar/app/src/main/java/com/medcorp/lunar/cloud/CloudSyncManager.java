@@ -78,8 +78,8 @@ public class CloudSyncManager {
                     nevoUser.setHeight(user.getLength());
                     nevoUser.setLastName(user.getLast_name());
                     nevoUser.setWeight(user.getWeight());
-                    nevoUser.setNevoUserID("" + user.getId());
-                    nevoUser.setNevoUserEmail(user.getEmail());
+                    nevoUser.setUserID("" + user.getId());
+                    nevoUser.setUserEmail(user.getEmail());
                     getModel().saveUser(nevoUser);
                 }
             }
@@ -108,17 +108,17 @@ public class CloudSyncManager {
                     nevoUser.setHeight(user.getLength());
                     nevoUser.setLastName(user.getLast_name());
                     nevoUser.setWeight(user.getWeight());
-                    nevoUser.setNevoUserID("" + user.getId());
-                    nevoUser.setNevoUserEmail(user.getEmail());
+                    nevoUser.setUserID("" + user.getId());
+                    nevoUser.setUserEmail(user.getEmail());
                     nevoUser.setIsLogin(true);
                     nevoUser.setCreatedDate(new Date().getTime());
                     //save it and sync with watch and cloud server
                     getModel().saveUser(nevoUser);
                     getModel().getSyncController().getDailyTrackerInfo(true);
-                    getModel().getNeedSyncSteps(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
+                    getModel().getNeedSyncSteps(nevoUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
                         @Override
                         public void accept(final List<Steps> stepses) throws Exception {
-                            getModel().getNeedSyncSleep(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Sleep>>() {
+                            getModel().getNeedSyncSleep(nevoUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
                                 @Override
                                 public void accept(List<Sleep> sleeps) throws Exception {
                                     launchSyncAll(nevoUser, stepses, sleeps);

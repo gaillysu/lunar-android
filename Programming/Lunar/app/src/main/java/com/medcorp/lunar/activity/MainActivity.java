@@ -154,7 +154,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
         String userEmail = null;
         if (getModel().getUser().isLogin()) {
-            userEmail = getModel().getUser().getNevoUserEmail();
+            userEmail = getModel().getUser().getUserEmail();
         } else {
             userEmail = getString(R.string.watch_med_profile);
         }
@@ -248,7 +248,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     @Override
     public void onDrawerOpened(View drawerView) {
-        userView.setText(getModel().getUser().getNevoUserEmail());
+        userView.setText(getModel().getUser().getUserEmail());
         showUserFirstNameText.setText(getModel().getUser().isLogin() ?
                 (getModel().getUser().getFirstName() != null ? getModel().getUser().getFirstName() : "") +
                         " " + (getModel().getUser().getLastName() != null ?

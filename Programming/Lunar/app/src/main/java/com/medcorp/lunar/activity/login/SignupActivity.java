@@ -134,7 +134,7 @@ public class SignupActivity extends BaseActivity {
                     case SUCCESS:
                         Toast.makeText(getBaseContext(), R.string.register_success, Toast.LENGTH_SHORT).show();
                         _signupButton.setEnabled(true);
-                        getModel().getUser().setNevoUserEmail(_emailText.getText().toString());
+                        getModel().getUser().setUserEmail(_emailText.getText().toString());
                         getModel().saveUser(getModel().getUser());
                         setResult(RESULT_OK, null);
                         finish();

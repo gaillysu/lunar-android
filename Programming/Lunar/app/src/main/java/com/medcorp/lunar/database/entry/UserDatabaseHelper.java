@@ -42,13 +42,13 @@ public class UserDatabaseHelper {
                         user.setIsConnectValidic(object.isConnectValidic());
                         user.setLastName(object.getLastName());
                         user.setIsLogin(object.isLogin());
-                        user.setNevoUserEmail(object.getNevoUserEmail());
-                        user.setNevoUserID(object.getNevoUserID());
+                        user.setUserEmail(object.getUserEmail());
+                        user.setUserID(object.getUserID());
                         user.setSex(object.getSex());
                         user.setValidicUserToken(object.getValidicUserToken());
                         user.setRemarks(object.getRemarks());
                         user.setValidicUserID(object.getValidicUserID());
-                        user.setNevoUserToken(object.getNevoUserToken());
+                        user.setUserToken(object.getUserToken());
                         e.onNext(true);
                         e.onComplete();
                     }
@@ -64,7 +64,7 @@ public class UserDatabaseHelper {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        User user = mRealm.where(User.class).equalTo("nevoUserID", object.getNevoUserID())
+                        User user = mRealm.where(User.class).equalTo("nevoUserID", object.getUserID())
                                 .equalTo("createdDate", object.getCreatedDate()).findFirst();
                         if (user != null) {
                             user.setId(object.getId());
@@ -78,13 +78,13 @@ public class UserDatabaseHelper {
                             user.setIsConnectValidic(object.isConnectValidic());
                             user.setLastName(object.getLastName());
                             user.setIsLogin(object.isLogin());
-                            user.setNevoUserEmail(object.getNevoUserEmail());
-                            user.setNevoUserID(object.getNevoUserID());
+                            user.setUserEmail(object.getUserEmail());
+                            user.setUserID(object.getUserID());
                             user.setSex(object.getSex());
                             user.setValidicUserToken(object.getValidicUserToken());
                             user.setRemarks(object.getRemarks());
                             user.setValidicUserID(object.getValidicUserID());
-                            user.setNevoUserToken(object.getNevoUserToken());
+                            user.setUserToken(object.getUserToken());
                             e.onNext(true);
                             e.onComplete();
                         } else {
@@ -131,7 +131,7 @@ public class UserDatabaseHelper {
                 User user = mRealm.where(User.class).equalTo("isLogin", true).findFirst();
                 if (user == null) {
                     loginUser = new User(0);
-                    loginUser.setNevoUserID("0");
+                    loginUser.setUserID("0");
                 } else {
                     loginUser = mRealm.copyFromRealm(user);
                 }

@@ -135,7 +135,7 @@ public class MedNetworkOperation {
         if (steps.getCreatedDate() == 0) {
             return;
         }
-        CreateStepsRequest request = new CreateStepsRequest(user.getNevoUserID(), steps.getHourlySteps()
+        CreateStepsRequest request = new CreateStepsRequest(user.getUserID(), steps.getHourlySteps()
                 , new SimpleDateFormat("yyyy-MM-dd").format(date), steps.getCalories(), steps.getRunDuration()
                 + steps.getWalkDuration(), steps.getDistance());
         Observable<CreateStepsResponse> createResponse = httpManager.createApiService().createSteps(HttpManager.createRequestBody
@@ -173,7 +173,7 @@ public class MedNetworkOperation {
         long endTimeStamps = endDate.getTime() / 1000;
 
         Observable<ObtainMoreStepsResponse> moreStepsResponse = httpManager.createApiService().obtainMoreSteps(
-                user.getNevoUserID(), mContext.getString(R.string.network_token), startTimestamp, endTimeStamps);
+                user.getUserID(), mContext.getString(R.string.network_token), startTimestamp, endTimeStamps);
         httpManager.toSubscribe(mContext, moreStepsResponse, SubscriberExtends.getInstance().getSubscriber(new RequestResponse<ObtainMoreStepsResponse>() {
             @Override
             public void onFailure(Throwable e) {
@@ -200,7 +200,7 @@ public class MedNetworkOperation {
         if (!user.isLogin()) {
             return;
         }
-        SleepCreateRequest request = new SleepCreateRequest(user.getNevoUserID(), sleep.getHourlyDeep()
+        SleepCreateRequest request = new SleepCreateRequest(user.getUserID(), sleep.getHourlyDeep()
                 , sleep.getHourlyLight(), sleep.getHourlyWake(), new SimpleDateFormat("yyyy-MM-dd").format(date));
         Observable<SleepCreateResponse> response = httpManager.createApiService().createSleep(
                 HttpManager.createRequestBody(mContext.getString(R.string.network_token), request));
@@ -238,7 +238,7 @@ public class MedNetworkOperation {
         long endTimeStamps = endDate.getTime() / 1000;
 
         Observable<ObtainMoreSleepResponse> obtainMoreSleepResponse = httpManager.createApiService()
-                .obtainMoreSleep(user.getNevoUserID(), mContext.getString(R.string.network_token),
+                .obtainMoreSleep(user.getUserID(), mContext.getString(R.string.network_token),
                         startTimestamp, endTimeStamps);
 
         httpManager.toSubscribe(mContext, obtainMoreSleepResponse, SubscriberExtends.getInstance()

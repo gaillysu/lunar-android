@@ -95,7 +95,7 @@ public class ProfileActivity extends BaseActivity {
         title.setText(R.string.profile_title);
         user = getModel().getUser();
         if (getModel().getUser().isLogin()) {
-            userEmail = user.getNevoUserEmail();
+            userEmail = user.getUserEmail();
         } else {
             userEmail = getString(R.string.watch_med_profile);
         }
@@ -281,8 +281,8 @@ public class ProfileActivity extends BaseActivity {
                 progressDialog.show();
                 String format = new SimpleDateFormat("yyyy-MM-dd").format(user.getBirthday());
                 UpdateAccountInformationRequest request = new UpdateAccountInformationRequest(
-                        new Integer(user.getNevoUserID()).intValue()
-                        , user.getFirstName(), user.getNevoUserEmail(), user.getLastName(), format
+                        new Integer(user.getUserID()).intValue()
+                        , user.getFirstName(), user.getUserEmail(), user.getLastName(), format
                         , user.getHeight(), user.getWeight(), user.getSex());
                 MedNetworkOperation.getInstance(this).updateUserInformation(request,
                         new RequestResponseListener<UpdateAccountInformationResponse>() {

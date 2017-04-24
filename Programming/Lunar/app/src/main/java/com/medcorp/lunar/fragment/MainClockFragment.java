@@ -133,7 +133,7 @@ public class MainClockFragment extends BaseFragment {
     }
 
     private void initData(final Date date) {
-        getModel().getStepsHelper().get(user.getNevoUserID(), date).subscribe(new Consumer<Steps>() {
+        getModel().getStepsHelper().get(user.getUserID(), date).subscribe(new Consumer<Steps>() {
             @Override
             public void accept(Steps dailySteps) throws Exception {
                 if (dailySteps != null) {
@@ -235,7 +235,7 @@ public class MainClockFragment extends BaseFragment {
     }
 
     private void countSleepTime(final Date date) {
-        getModel().getDailySleep(user.getNevoUserID(), date, new MainSleepFragment.TodaySleepListener() {
+        getModel().getDailySleep(user.getUserID(), date, new MainSleepFragment.TodaySleepListener() {
             @Override
             public void todaySleep(Sleep[] sleepArray) {
                 SleepDataHandler handler = new SleepDataHandler(Arrays.asList(sleepArray));
@@ -294,7 +294,7 @@ public class MainClockFragment extends BaseFragment {
     @Subscribe
     public void onEvent(LittleSyncEvent event) {
         if (event.isSuccess()) {
-            Steps steps = getModel().getDailySteps(getModel().getUser().getNevoUserID(), Common.removeTimeFromDate(userSelectDate));
+            Steps steps = getModel().getDailySteps(getModel().getUser().getUserID(), Common.removeTimeFromDate(userSelectDate));
             if (steps == null) {
                 return;
             }

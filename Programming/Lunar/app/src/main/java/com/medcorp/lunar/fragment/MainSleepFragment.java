@@ -78,7 +78,7 @@ public class MainSleepFragment extends BaseFragment {
 
     public void initData(final Date date) {
         User user = getModel().getUser();
-        getModel().getDailySleep(user.getNevoUserID(), date, new TodaySleepListener() {
+        getModel().getDailySleep(user.getUserID(), date, new TodaySleepListener() {
             @Override
             public void todaySleep(Sleep[] sleepArray) {
                 Log.e("jason", "yesterday Sleep : " + sleepArray[0].toString());

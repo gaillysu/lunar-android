@@ -112,7 +112,7 @@ public class AnalysisStepsFragment extends BaseFragment {
 
         setDesText(0);
 
-        getModel().getSteps(getModel().getUser().getNevoUserID(), userSelectDate
+        getModel().getSteps(getModel().getUser().getUserID(), userSelectDate
                 ,WeekData.TISHWEEK, new OnStepsGetListener() {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
@@ -123,7 +123,7 @@ public class AnalysisStepsFragment extends BaseFragment {
                     }
                 });
 
-        getModel().getSteps(getModel().getUser().getNevoUserID(), userSelectDate,WeekData.LASTWEEK,
+        getModel().getSteps(getModel().getUser().getUserID(), userSelectDate,WeekData.LASTWEEK,
                 new OnStepsGetListener() {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
@@ -134,7 +134,7 @@ public class AnalysisStepsFragment extends BaseFragment {
                     }
                 });
 
-        getModel().getSteps(getModel().getUser().getNevoUserID(), userSelectDate, WeekData.LASTMONTH,
+        getModel().getSteps(getModel().getUser().getUserID(), userSelectDate, WeekData.LASTMONTH,
                 new OnStepsGetListener() {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {

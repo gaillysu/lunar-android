@@ -350,7 +350,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //update steps/sleep tables
                     Steps steps = new Steps(history.getCreated());
                     steps.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
-                    steps.setNevoUserID(((ApplicationModel) mContext).getUser().getNevoUserID());
+                    steps.setNevoUserID(((ApplicationModel) mContext).getUser().getUserID());
                     steps.setSteps(history.getSteps());
                     steps.setCalories((int) history.getCalories());
                     steps.setDistance((int) history.getDistance());
@@ -394,7 +394,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
                     sleep.setStart(0);
                     sleep.setEnd(0);
-                    sleep.setNevoUserID(((ApplicationModel) mContext).getUser().getNevoUserID());
+                    sleep.setNevoUserID(((ApplicationModel) mContext).getUser().getUserID());
                     try {
                         sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
                     } catch (JSONException e) {
@@ -409,7 +409,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     if (getWatchInfomation().getWatchID() > 1) {
                         Solar solar = new Solar(new Date(history.getCreated()));
                         solar.setDate((Common.removeTimeFromDate(solar.getCreatedDate())).getTime());
-                        solar.setUserId(Integer.parseInt(((ApplicationModel) mContext).getUser().getNevoUserID()));
+                        solar.setUserId(Integer.parseInt(((ApplicationModel) mContext).getUser().getUserID()));
                         solar.setTotalHarvestingTime(thispacket.getSolarHarvestingTime());
                         solar.setHourlyHarvestingTime(thispacket.getHourlyHarvestTime().toString());
                         Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "hourly solar time:" + solar.getHourlyHarvestingTime());
@@ -442,12 +442,12 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     final DailyStepsPacket stepPacket = new DailyStepsPacket(packet.getPackets());
                     Log.i(TAG, "little sync,Date:" + stepPacket.getDailyDate().toString() + ",steps:" + stepPacket.getDailySteps() + ",goal:" + stepPacket.getDailyStepsGoal());
                     Steps steps = ((ApplicationModel) mContext).getDailySteps(((ApplicationModel) mContext)
-                            .getUser().getNevoUserID(), Common.removeTimeFromDate(new Date()));
+                            .getUser().getUserID(), Common.removeTimeFromDate(new Date()));
                     steps.setCreatedDate(new Date().getTime());
                     steps.setDate(Common.removeTimeFromDate(new Date()).getTime());
                     steps.setSteps(stepPacket.getDailySteps());
                     steps.setGoal(stepPacket.getDailyStepsGoal());
-                    steps.setNevoUserID(((ApplicationModel) mContext).getUser().getNevoUserID());
+                    steps.setNevoUserID(((ApplicationModel) mContext).getUser().getUserID());
                     //I can't calculator these value from this packet, they should come from CMD 0x25 cmd
                     ((ApplicationModel) mContext).saveDailySteps(steps);
                     //end save

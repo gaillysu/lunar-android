@@ -120,7 +120,7 @@ public class AnalysisSleepFragment extends BaseFragment {
 
     private void initData(Date userSelectDate) {
         final TipsView mv = new TipsView(AnalysisSleepFragment.this.getContext(), R.layout.custom_marker_view);
-        getModel().getSleep(getModel().getUser().getNevoUserID(), userSelectDate, WeekData.TISHWEEK,
+        getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.TISHWEEK,
                 new ObtainSleepDataListener() {
                     @Override
                     public void obtainSleepData(List<SleepData> thisWeekSleepData) {
@@ -130,7 +130,7 @@ public class AnalysisSleepFragment extends BaseFragment {
                         setThisWeekData(thisWeekSleepData);
                     }
                 });
-        getModel().getSleep(getModel().getUser().getNevoUserID(), userSelectDate, WeekData.LASTWEEK,
+        getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.LASTWEEK,
                 new ObtainSleepDataListener() {
                     @Override
                     public void obtainSleepData(List<SleepData> lastWeekSleepData) {
@@ -141,7 +141,7 @@ public class AnalysisSleepFragment extends BaseFragment {
                     }
                 });
 
-        getModel().getSleep(getModel().getUser().getNevoUserID(), userSelectDate, WeekData.LASTMONTH
+        getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.LASTMONTH
                 , new ObtainSleepDataListener() {
                     @Override
                     public void obtainSleepData(List<SleepData> lastMonthSleepData) {

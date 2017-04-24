@@ -105,8 +105,8 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         EventBus.getDefault().register(this);
         ButterKnife.bind(this);
-        if (getModel().getUser().getNevoUserEmail() != null) {
-            _emailText.setText(getModel().getUser().getNevoUserEmail());
+        if (getModel().getUser().getUserEmail() != null) {
+            _emailText.setText(getModel().getUser().getUserEmail());
         }
         progressDialog = new ProgressDialog(LoginActivity.this, AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -184,7 +184,7 @@ public class LoginActivity extends BaseActivity {
     public void onLoginSuccess() {
         showSnackbar(R.string.log_in_success);
         _loginButton.setEnabled(true);
-        getModel().getUser().setNevoUserEmail(_emailText.getText().toString());
+        getModel().getUser().setUserEmail(_emailText.getText().toString());
         getModel().saveUser(getModel().getUser());
         setResult(RESULT_OK, null);
         Preferences.saveIsFirstLogin(this, false);
@@ -415,18 +415,18 @@ public class LoginActivity extends BaseActivity {
                                     FacebookLoginResponse.UserBean user = response.getUser();
                                     final User lunarUser = getModel().getUser();
                                     lunarUser.setFirstName(user.getFirst_name());
-                                    lunarUser.setNevoUserID("" + user.getId());
-                                    lunarUser.setNevoUserEmail(user.getEmail());
+                                    lunarUser.setUserID("" + user.getId());
+                                    lunarUser.setUserEmail(user.getEmail());
                                     lunarUser.setIsLogin(true);
                                     lunarUser.setCreatedDate(new Date().getTime());
                                     //save it and sync with watch and cloud server
                                     getModel().saveUser(lunarUser);
                                     getModel().getSyncController().getDailyTrackerInfo(true);
-                                    getModel().getNeedSyncSteps(lunarUser.getNevoUserID())
+                                    getModel().getNeedSyncSteps(lunarUser.getUserID())
                                             .subscribe(new Consumer<List<Steps>>() {
                                                 @Override
                                                 public void accept(final List<Steps> stepses) throws Exception {
-                                                    getModel().getNeedSyncSleep(lunarUser.getNevoUserID())
+                                                    getModel().getNeedSyncSleep(lunarUser.getUserID())
                                                             .subscribe(new Consumer<List<Sleep>>() {
                                                                 @Override
                                                                 public void accept(List<Sleep> sleeps) throws Exception {
@@ -554,17 +554,17 @@ public class LoginActivity extends BaseActivity {
                     WeChatLoginResponse.UserBean user = response.getUser();
                     final User lunarUser = getModel().getUser();
                     lunarUser.setFirstName(user.getFirst_name());
-                    lunarUser.setNevoUserID("" + user.getId());
+                    lunarUser.setUserID("" + user.getId());
                     lunarUser.setWechat(user.getWechat());
                     lunarUser.setIsLogin(true);
                     lunarUser.setCreatedDate(new Date().getTime());
                     //save it and sync with watch and cloud server
                     getModel().saveUser(lunarUser);
                     getModel().getSyncController().getDailyTrackerInfo(true);
-                    getModel().getNeedSyncSteps(lunarUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
+                    getModel().getNeedSyncSteps(lunarUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
                         @Override
                         public void accept(final List<Steps> stepses) throws Exception {
-                            getModel().getNeedSyncSleep(lunarUser.getNevoUserID()).subscribe(new Consumer<List<Sleep>>() {
+                            getModel().getNeedSyncSleep(lunarUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
                                 @Override
                                 public void accept(List<Sleep> sleeps) throws Exception {
                                     getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses, sleeps);
