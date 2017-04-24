@@ -1,5 +1,8 @@
 package com.medcorp.lunar.database.entry;
 
+import android.content.Context;
+
+import com.medcorp.lunar.R;
 import com.medcorp.lunar.model.Solar;
 
 import java.util.ArrayList;
@@ -18,8 +21,10 @@ import io.realm.Realm;
 public class SolarDatabaseHelper {
 
     private Realm mRealm;
+    private Context mContext;
 
-    public SolarDatabaseHelper() {
+    public SolarDatabaseHelper(Context context) {
+        mContext = context;
         mRealm = Realm.getDefaultInstance();
     }
 
@@ -52,8 +57,9 @@ public class SolarDatabaseHelper {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        Solar solar = mRealm.where(Solar.class).equalTo("id", object.getId())
-                                .equalTo("date", object.getDate()).findFirst();
+                        Solar solar = mRealm.where(Solar.class).equalTo(mContext.getString(R.string.database_id)
+                                , object.getId())
+                                .equalTo(mContext.getString(R.string.date), object.getDate()).findFirst();
                         if (solar != null) {
                             solar.setId(object.getId());
                             solar.setTotalHarvestingTime(object.getTotalHarvestingTime());
@@ -78,8 +84,8 @@ public class SolarDatabaseHelper {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(final ObservableEmitter<Boolean> e) throws Exception {
-                final Solar solar = mRealm.where(Solar.class).equalTo("userId", userId)
-                        .equalTo("createdDate", date).findFirst();
+                final Solar solar = mRealm.where(Solar.class).equalTo(mContext.getString(R.string.userId), userId)
+                        .equalTo(mContext.getString(R.string.create_date), date).findFirst();
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -100,8 +106,8 @@ public class SolarDatabaseHelper {
         return Observable.create(new ObservableOnSubscribe<Solar>() {
             @Override
             public void subscribe(ObservableEmitter<Solar> e) throws Exception {
-                Solar solar = mRealm.where(Solar.class).equalTo("id", userId)
-                        .equalTo("date", date.getTime()).findFirst();
+                Solar solar = mRealm.where(Solar.class).equalTo(mContext.getString(R.string.database_id), userId)
+                        .equalTo(mContext.getString(R.string.date), date.getTime()).findFirst();
                 if (solar != null) {
                     e.onNext(mRealm.copyFromRealm(solar));
                     e.onComplete();
@@ -118,7 +124,7 @@ public class SolarDatabaseHelper {
             @Override
             public void subscribe(ObservableEmitter<List<Solar>> e) throws Exception {
                 List<Solar> solarList = mRealm.where(Solar.class)
-                        .equalTo("id", userId).findAll();
+                        .equalTo(mContext.getString(R.string.database_id), userId).findAll();
                 if (solarList != null) {
                     e.onNext(mRealm.copyFromRealm(solarList));
                     e.onComplete();
@@ -136,8 +142,8 @@ public class SolarDatabaseHelper {
             public void subscribe(ObservableEmitter<List<Solar>> e) throws Exception {
                 List<Solar> solars = new ArrayList<>();
                 for(Date date:dates){
-                    Solar solar = mRealm.where(Solar.class).equalTo("id", userId)
-                            .equalTo("date", date.getTime()).findFirst();
+                    Solar solar = mRealm.where(Solar.class).equalTo(mContext.getString(R.string.database_id), userId)
+                            .equalTo(mContext.getString(R.string.date), date.getTime()).findFirst();
                     if(solar!=null){
                         solars.add(mRealm.copyFromRealm(solar));
                     }else{

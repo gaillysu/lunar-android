@@ -45,7 +45,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class NevoNotificationListener extends NotificationBaseListenerService implements NotificationCallback {
+public class LunarNotificationListener extends NotificationBaseListenerService implements NotificationCallback {
 
     static Optional<Date> lastNotification = new Optional<Date>();
 
@@ -53,7 +53,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
 
     final static int LIGHTTIMES = 3;
 
-    final String TAG = NevoNotificationListener.class.getName();
+    final String TAG = LunarNotificationListener.class.getName();
 
     private TelephonyManager mTm;
 
@@ -69,9 +69,9 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         public void onCallStateChanged(int state, String incomingNumber) {
             switch (state){
                 case TelephonyManager.CALL_STATE_RINGING:
-                    NotificationDataHelper helper = new NotificationDataHelper(NevoNotificationListener.this);
+                    NotificationDataHelper helper = new NotificationDataHelper(LunarNotificationListener.this);
                     if(helper.getState(new TelephoneNotification()).isOn()) {
-                        sendNotification(Preferences.getNotificationColor(NevoNotificationListener.this, new TelephoneNotification(),mApplicationModel).getHexColor());
+                        sendNotification(Preferences.getNotificationColor(LunarNotificationListener.this, new TelephoneNotification(),mApplicationModel).getHexColor());
                     }
                     break;
             }
@@ -118,7 +118,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         if (notification != null) {
             if(getAppListbyType(R.array.CALL_APPS).contains(statusBarNotification.getPackageName())) {
                 if(helper.getState(new TelephoneNotification()).isOn()) {
-                    sendNotification(Preferences.getNotificationColor(NevoNotificationListener.this, new TelephoneNotification(),mApplicationModel).getHexColor());
+                    sendNotification(Preferences.getNotificationColor(LunarNotificationListener.this, new TelephoneNotification(),mApplicationModel).getHexColor());
                 }
             }
             else if(getAppListbyType(R.array.SMS_APPS).contains(statusBarNotification.getPackageName())) {
@@ -179,7 +179,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                ConnectionController.Singleton.getInstance(NevoNotificationListener.this, new GattAttributesDataSourceImpl(NevoNotificationListener.this))
+                ConnectionController.Singleton.getInstance(LunarNotificationListener.this, new GattAttributesDataSourceImpl(LunarNotificationListener.this))
                         .sendRequest(new LedLightOnOffRequest(getApplicationContext(), count%2==0?ledColor:0, count%2==0));
                 showNotification(count-1,ledColor);
             }

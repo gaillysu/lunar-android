@@ -82,19 +82,45 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.done_menu:
-                if (getModel().updateAlarm(mAlarm) && !isRepeat) {
-                    ToastHelper.showShortToast(this, R.string.alarm_saved);
-                    setResult(1);
-                    finish();
-                } else {
-                    ToastHelper.showShortToast(this, R.string.alarm_could_not_save);
-                }
+                updateAlarm();
                 return true;
             default:
                 setResult(0);
                 finish();
         }
         return false;
+    }
+
+    private void updateAlarm() {
+        getModel().getAllAlarm(new SyncControllerImpl.SyncAlarmToWatchListener() {
+            @Override
+            public void syncAlarmToWatch(List<Alarm> alarms) {
+                for (Alarm olderAlarm : alarms) {
+                    byte weekDay = olderAlarm.getWeekDay();
+                    if ((weekDay== mAlarm.getWeekDay() && olderAlarm.getAlarmType() == mAlarm.getAlarmType())
+                            && olderAlarm.getAlarmNumber() != mAlarm.getAlarmNumber()) {
+                        String[] weekDays = getResources().getStringArray(R.array.week_day);
+                        ToastHelper.showShortToast(EditAlarmActivity.this, mAlarm.getAlarmType() == (byte) 0 ?
+                                getString(R.string.prompt_user_alarm_no_repeat)+weekDays[(int)mAlarm.getWeekDay()]
+                                : getString(R.string.prompt_user_alarm_no_repeat_two)+weekDays[(int)mAlarm.getWeekDay()]);
+                        break;
+                    } else {
+                        getModel().updateAlarm(mAlarm).subscribe(new Consumer<Boolean>() {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception {
+                                if (aBoolean) {
+                                    ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_saved);
+                                    setResult(1);
+                                    finish();
+                                } else {
+                                    ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_could_not_save);
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -104,7 +130,8 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
 
     private void heightVersion(int position) {
         if (position == 0) {
-            Dialog alarmDialog = new TimePickerDialog(this, R.style.NevoDialogStyle, timeSetListener, mAlarm.getHour(), mAlarm.getMinute(), true);
+            Dialog alarmDialog = new TimePickerDialog(this, R.style.NevoDialogStyle,
+                    timeSetListener, mAlarm.getHour(), mAlarm.getMinute(), true);
             alarmDialog.setTitle(R.string.alarm_edit);
             alarmDialog.show();
         } else if (position == 1) {
@@ -135,24 +162,8 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                             getModel().getAllAlarm(new SyncControllerImpl.SyncAlarmToWatchListener() {
                                 @Override
                                 public void syncAlarmToWatch(List<Alarm> alarms) {
-                                    String[] weekDayArray = getResources().getStringArray(R.array.week_day);
-                                    for (Alarm olderAlarm : alarms) {
-                                        byte weekDay = olderAlarm.getWeekDay();
-                                        if ((weekDay & 0x0F) == (which + 1) && olderAlarm.getAlarmNumber() == mAlarm.getAlarmNumber()) {
-                                            isRepeat = true;
-                                            break;
-                                        } else {
-                                            isRepeat = false;
-                                        }
-                                    }
-                                    if (isRepeat) {
-                                        ToastHelper.showShortToast(EditAlarmActivity.this, mAlarm.getAlarmType() == (byte) 0 ?
-                                                getString(R.string.prompt_user_alarm_no_repeat) + " " + weekDayArray[which + 1]
-                                                : getString(R.string.prompt_user_alarm_no_repeat_two) + " " + weekDayArray[which + 1]);
-                                    } else {
-                                        mAlarm.setWeekDay(((mAlarm.getWeekDay() & 0x80) == 0x80) ? (byte) (0x80 | (which + 1)) : (byte) (which + 1));
-                                        listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, mAlarm));
-                                    }
+                                    mAlarm.setWeekDay(((mAlarm.getWeekDay() & 0x80) == 0x80) ? (byte) (0x80 | (which + 1)) : (byte) (which + 1));
+                                    listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, mAlarm));
 
                                 }
                             });
@@ -163,6 +174,23 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                     .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
                     .show();
         } else if (position == 3) {
+            String[] alarmType = {getString(R.string.edit_alarm_sleep), getString(R.string.edit_alarm_wake)};
+            new MaterialDialog.Builder(EditAlarmActivity.this)
+                    .title(R.string.alarm_edit)
+                    .content(getString(R.string.alarm_set_week_day_dialog_text))
+                    .items(alarmType).itemsCallbackSingleChoice((int) mAlarm.getAlarmType(),
+                    new MaterialDialog.ListCallbackSingleChoice() {
+                        @Override
+                        public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                            mAlarm.setAlarmType((byte) which);
+                            listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, mAlarm));
+                            return true;
+                        }
+                    })
+                    .positiveText(R.string.goal_ok)
+                    .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
+                    .show();
+        } else if (position == 4) {
             getModel().deleteAlarm(mAlarm).subscribe(new Consumer<Boolean>() {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception {
@@ -181,11 +209,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             mAlarm.setHour(hourOfDay);
             mAlarm.setMinute(minute);
-            if (!getModel().updateAlarm(mAlarm)) {
-                ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_could_not_change);
-            } else {
-                listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, mAlarm));
-            }
+            listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, mAlarm));
         }
     };
 

@@ -67,5 +67,23 @@
     <string name="facebook_user_email" translatable="false">email</string>
     <string name="facebook_user_birthday" translatable="false">user_birthday</string>
     <string name="facebook_user_file" translatable="false">fields</string>
+    <string name="watch_med_profile" translatable="false">watch_med_profile</string>
     <string name="facebook_user_files" translatable="false">id,name,email,gender, birthday</string>
+    <string name="led_lamp_color_red" translatable="false">Red</string>
+    <string name="led_lamp_color_blue" translatable="false">Blue</string>
+    <string name="led_lamp_color_light_green" translatable="false">Light green</string>
+    <string name="led_lamp_color_orange" translatable="false">Orange</string>
+    <string name="led_lamp_color_yellow" translatable="false">Yellow</string>
+    <string name="led_lamp_color_green" translatable="false">Green</string>
+    <string name="alarm_number" translatable="false">alarmNumber</string>
+    <string name="database_id" translatable="false">id</string>
+    <string name="database_goal_label" translatable="false">label</string>
+    <string name="led_lamp_name" translatable="false">name</string>
+    <string name="led_lamp_color" translatable="false">color</string>
+    <string name="create_date" translatable="false">createdDate</string>
+    <string name="sleep_start" translatable="false">start</string>
+    <string name="database_user_id" translatable="false">userID</string>
+    <string name="date" translatable="false">date</string>
+    <string name="userId" translatable="false">userId</string>
+    <string name="user_is_login" translatable="false">isLogin</string>
 </resources>

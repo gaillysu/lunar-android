@@ -112,7 +112,7 @@ public class AnalysisStepsFragment extends BaseFragment {
 
         setDesText(0);
 
-        getModel().getSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate
+        getModel().getSteps(getModel().getUser().getUserID(), userSelectDate
                 ,WeekData.TISHWEEK, new OnStepsGetListener() {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
@@ -123,7 +123,7 @@ public class AnalysisStepsFragment extends BaseFragment {
                     }
                 });
 
-        getModel().getSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate,WeekData.LASTWEEK,
+        getModel().getSteps(getModel().getUser().getUserID(), userSelectDate,WeekData.LASTWEEK,
                 new OnStepsGetListener() {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
@@ -134,7 +134,7 @@ public class AnalysisStepsFragment extends BaseFragment {
                     }
                 });
 
-        getModel().getSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate, WeekData.LASTMONTH,
+        getModel().getSteps(getModel().getUser().getUserID(), userSelectDate, WeekData.LASTMONTH,
                 new OnStepsGetListener() {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
@@ -214,7 +214,7 @@ public class AnalysisStepsFragment extends BaseFragment {
     }
 
     private String getWeekCalories(List<Steps> thisWeekData, int weekCountDay) {
-        int userWeight = getModel().getNevoUser().getWeight();
+        int userWeight = getModel().getUser().getWeight();
         if (weekCountDay == 30) {
             return (int) ((2.0 * userWeight * 3.5) / 200 * getAvgDurationTime(thisWeekData)) / weekCountDay / 1000 + "";
         } else {

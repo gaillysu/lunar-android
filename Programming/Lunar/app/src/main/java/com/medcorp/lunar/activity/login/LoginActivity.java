@@ -105,8 +105,8 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         EventBus.getDefault().register(this);
         ButterKnife.bind(this);
-        if (getModel().getNevoUser().getNevoUserEmail() != null) {
-            _emailText.setText(getModel().getNevoUser().getNevoUserEmail());
+        if (getModel().getUser().getUserEmail() != null) {
+            _emailText.setText(getModel().getUser().getUserEmail());
         }
         progressDialog = new ProgressDialog(LoginActivity.this, AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -184,8 +184,8 @@ public class LoginActivity extends BaseActivity {
     public void onLoginSuccess() {
         showSnackbar(R.string.log_in_success);
         _loginButton.setEnabled(true);
-        getModel().getNevoUser().setNevoUserEmail(_emailText.getText().toString());
-        getModel().saveNevoUser(getModel().getNevoUser());
+        getModel().getUser().setUserEmail(_emailText.getText().toString());
+        getModel().saveUser(getModel().getUser());
         setResult(RESULT_OK, null);
         Preferences.saveIsFirstLogin(this, false);
         if ((getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) &&
@@ -364,8 +364,10 @@ public class LoginActivity extends BaseActivity {
         } else {
             sex = 0;
         }
+        String[] birthday = userInfoResponse.getBirthday().split("/");
         final CreateFacebookAccountRequest request = new CreateFacebookAccountRequest(currentProfile.getFirstName()
-                , userInfoResponse.getEmail(), currentProfile.getId(), userInfoResponse.getBirthday(), 170, 55, sex);
+                , userInfoResponse.getEmail(), currentProfile.getId(),birthday[2] + "-" +
+                birthday[0] + "-" + birthday[1], 170, 55, sex);
         MedNetworkOperation.getInstance(this).createFacebookUser(request,
                 new RequestResponseListener<CreateFacebookAccountResponse>() {
                     @Override
@@ -411,29 +413,29 @@ public class LoginActivity extends BaseActivity {
                             public void run() {
                                 if (response.getStatus() == 1) {
                                     FacebookLoginResponse.UserBean user = response.getUser();
-                                    final User lunarUser = getModel().getNevoUser();
+                                    final User lunarUser = getModel().getUser();
                                     lunarUser.setFirstName(user.getFirst_name());
-                                    lunarUser.setNevoUserID("" + user.getId());
-                                    lunarUser.setNevoUserEmail(user.getEmail());
+                                    lunarUser.setUserID("" + user.getId());
+                                    lunarUser.setUserEmail(user.getEmail());
                                     lunarUser.setIsLogin(true);
                                     lunarUser.setCreatedDate(new Date().getTime());
                                     //save it and sync with watch and cloud server
-                                    getModel().saveNevoUser(lunarUser);
+                                    getModel().saveUser(lunarUser);
                                     getModel().getSyncController().getDailyTrackerInfo(true);
-                                    getModel().getNeedSyncSteps(lunarUser.getNevoUserID())
+                                    getModel().getNeedSyncSteps(lunarUser.getUserID())
                                             .subscribe(new Consumer<List<Steps>>() {
-                                        @Override
-                                        public void accept(final List<Steps> stepses) throws Exception {
-                                            getModel().getNeedSyncSleep(lunarUser.getNevoUserID())
-                                                    .subscribe(new Consumer<List<Sleep>>() {
                                                 @Override
-                                                public void accept(List<Sleep> sleeps) throws Exception {
-                                                    getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses
-                                                            , sleeps);
+                                                public void accept(final List<Steps> stepses) throws Exception {
+                                                    getModel().getNeedSyncSleep(lunarUser.getUserID())
+                                                            .subscribe(new Consumer<List<Sleep>>() {
+                                                                @Override
+                                                                public void accept(List<Sleep> sleeps) throws Exception {
+                                                                    getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses
+                                                                            , sleeps);
+                                                                }
+                                                            });
                                                 }
                                             });
-                                        }
-                                    });
                                     onLoginSuccess();
                                 } else {
                                     showSnackbar(getString(R.string.log_in_failed));
@@ -550,19 +552,19 @@ public class LoginActivity extends BaseActivity {
             public void onSuccess(WeChatLoginResponse response) {
                 if (response.getStatus() == 1) {
                     WeChatLoginResponse.UserBean user = response.getUser();
-                    final User lunarUser = getModel().getNevoUser();
+                    final User lunarUser = getModel().getUser();
                     lunarUser.setFirstName(user.getFirst_name());
-                    lunarUser.setNevoUserID("" + user.getId());
+                    lunarUser.setUserID("" + user.getId());
                     lunarUser.setWechat(user.getWechat());
                     lunarUser.setIsLogin(true);
                     lunarUser.setCreatedDate(new Date().getTime());
                     //save it and sync with watch and cloud server
-                    getModel().saveNevoUser(lunarUser);
+                    getModel().saveUser(lunarUser);
                     getModel().getSyncController().getDailyTrackerInfo(true);
-                    getModel().getNeedSyncSteps(lunarUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
+                    getModel().getNeedSyncSteps(lunarUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
                         @Override
                         public void accept(final List<Steps> stepses) throws Exception {
-                            getModel().getNeedSyncSleep(lunarUser.getNevoUserID()).subscribe(new Consumer<List<Sleep>>() {
+                            getModel().getNeedSyncSleep(lunarUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
                                 @Override
                                 public void accept(List<Sleep> sleeps) throws Exception {
                                     getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses, sleeps);

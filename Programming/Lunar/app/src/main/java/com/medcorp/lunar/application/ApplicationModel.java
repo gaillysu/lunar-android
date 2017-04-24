@@ -174,14 +174,14 @@ public class ApplicationModel extends Application {
         Realm.setDefaultConfiguration(lunarConfig);
         syncController = new SyncControllerImpl(this);
         otaController = new OtaControllerImpl(this);
-        stepsDatabaseHelper = new StepsDatabaseHelper();
-        sleepDatabaseHelper = new SleepDatabaseHelper();
-        alarmDatabaseHelper = new AlarmDatabaseHelper();
-        goalDatabaseHelper = new GoalDatabaseHelper();
-        userDatabaseHelper = new UserDatabaseHelper();
-        solarDatabaseHelper = new SolarDatabaseHelper();
+        stepsDatabaseHelper = new StepsDatabaseHelper(this);
+        sleepDatabaseHelper = new SleepDatabaseHelper(this);
+        alarmDatabaseHelper = new AlarmDatabaseHelper(this);
+        goalDatabaseHelper = new GoalDatabaseHelper(this);
+        userDatabaseHelper = new UserDatabaseHelper(this);
+        solarDatabaseHelper = new SolarDatabaseHelper(this);
         cloudSyncManager = new CloudSyncManager(this);
-        ledDataBase = new LedLampDatabase();
+        ledDataBase = new LedLampDatabase(this);
         locationController = new LocationController(this);
         mIWXAPI = WXAPIFactory.createWXAPI(this, getString(R.string.we_chat_app_id), true);
         userDatabaseHelper.getLoginUser().subscribe(new Consumer<User>() {
@@ -197,11 +197,11 @@ public class ApplicationModel extends Application {
     public void onEvent(OnSyncEvent event) {
         if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
             updateGoogleFit();
-            getNeedSyncSteps(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
+            getNeedSyncSteps(nevoUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
                 @Override
                 public void accept(final List<Steps> stepses) throws Exception {
                     if (stepses.size() > 0) {
-                        getNeedSyncSleep(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Sleep>>() {
+                        getNeedSyncSleep(nevoUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
                             @Override
                             public void accept(List<Sleep> sleeps) throws Exception {
                                 getCloudSyncManager().launchSyncWeekly(nevoUser, stepses, sleeps);
@@ -216,7 +216,7 @@ public class ApplicationModel extends Application {
     @Subscribe
     public void onEvent(LittleSyncEvent event) {
         if (event.isSuccess()) {
-            Steps steps = getDailySteps(nevoUser.getNevoUserID(), Common.removeTimeFromDate(new Date()));
+            Steps steps = getDailySteps(nevoUser.getUserID(), Common.removeTimeFromDate(new Date()));
             getCloudSyncManager().launchSyncDaily(nevoUser, steps);
 
         }
@@ -304,7 +304,7 @@ public class ApplicationModel extends Application {
     }
 
     public List<Steps> getAllSteps() {
-        stepsDatabaseHelper.getAll(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
+        stepsDatabaseHelper.getAll(nevoUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
             @Override
             public void accept(List<Steps> stepses) throws Exception {
                 allSteps = stepses;
@@ -324,7 +324,7 @@ public class ApplicationModel extends Application {
         });
     }
 
-    public void saveNevoUser(final User user) {
+    public void saveUser(final User user) {
         userDatabaseHelper.update(user).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
@@ -360,7 +360,7 @@ public class ApplicationModel extends Application {
     }
 
     public void removeUser(User user) {
-        userDatabaseHelper.remove(user.getNevoUserID(), new Date(user.getCreatedDate()));
+        userDatabaseHelper.remove(user.getUserID(), new Date(user.getCreatedDate()));
     }
 
     public void getSolarData(int userId, Date date, WeekData weekData, final AnalysisSolarFragment.ObtainSolarListener listener) {
@@ -630,7 +630,7 @@ public class ApplicationModel extends Application {
         sleep.setTotalDeepTime(deepSleep);
         sleep.setStart(0);
         sleep.setEnd(0);
-        sleep.setNevoUserID(getNevoUser().getNevoUserID());
+        sleep.setNevoUserID(getUser().getUserID());
         //we must set CloudRecordID here, avoid doing sync repeatly
         sleep.setCloudRecordID(dailySleep.getId() + "");
         try {
@@ -649,15 +649,8 @@ public class ApplicationModel extends Application {
         return alarmDatabaseHelper.add(alarm);
     }
 
-    public boolean updateAlarm(Alarm alarm) {
-
-        alarmDatabaseHelper.update(alarm).subscribe(new Consumer<Boolean>() {
-            @Override
-            public void accept(Boolean response) throws Exception {
-                responseCode = response;
-            }
-        });
-        return responseCode;
+    public Observable<Boolean> updateAlarm(Alarm alarm) {
+        return alarmDatabaseHelper.update(alarm);
     }
 
     public void getAlarmById(int id, final EditAlarmActivity.ObtainAlarmListener listener) {
@@ -673,6 +666,10 @@ public class ApplicationModel extends Application {
 
     public Observable<Boolean> deleteAlarm(Alarm alarm) {
         return alarmDatabaseHelper.remove(alarm.getId());
+    }
+
+    public AlarmDatabaseHelper getAlarmDatabaseHelper() {
+        return alarmDatabaseHelper;
     }
 
     public void getAllGoal(final MainFragment.ObtainGoalListener listener) {
@@ -715,10 +712,6 @@ public class ApplicationModel extends Application {
             }
         });
         return goal;
-    }
-
-    public void deleteAlarm(Goal goal) {
-        goalDatabaseHelper.remove(goal.getId());
     }
 
     /**
@@ -878,7 +871,7 @@ public class ApplicationModel extends Application {
         return ledDataBase;
     }
 
-    public User getNevoUser() {
+    public User getUser() {
         return nevoUser;
     }
 
@@ -914,12 +907,12 @@ public class ApplicationModel extends Application {
 
     @Subscribe
     public void onValidicCreateUserEvent(ValidicCreateUserEvent validicCreateUserEvent) {
-        saveNevoUser(validicCreateUserEvent.getUser());
+        saveUser(validicCreateUserEvent.getUser());
         getSyncController().getDailyTrackerInfo(true);
-        getNeedSyncSteps(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Steps>>() {
+        getNeedSyncSteps(nevoUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
             @Override
             public void accept(final List<Steps> stepses) throws Exception {
-                getNeedSyncSleep(nevoUser.getNevoUserID()).subscribe(new Consumer<List<Sleep>>() {
+                getNeedSyncSleep(nevoUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
                     @Override
                     public void accept(List<Sleep> sleeps) throws Exception {
                         getCloudSyncManager().launchSyncAll(nevoUser, stepses, sleeps);

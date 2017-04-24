@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.medcorp.lunar.R;
+import com.medcorp.lunar.view.customfontview.RobotoTextView;
 
 
 /**
@@ -24,7 +25,7 @@ public class AlarmEditAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return 5;
     }
 
     @Override
@@ -43,9 +44,9 @@ public class AlarmEditAdapter extends BaseAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.activity_alarm_edit_list_view_item, parent, false);
 
-        com.medcorp.lunar.view.customfontview.RobotoTextView title = (com.medcorp.lunar.view.customfontview.RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_title_label);
-        com.medcorp.lunar.view.customfontview.RobotoTextView summary = (com.medcorp.lunar.view.customfontview.RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_summary_label);
-        com.medcorp.lunar.view.customfontview.RobotoTextView delete = (com.medcorp.lunar.view.customfontview.RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_delete_label);
+        RobotoTextView title = (RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_title_label);
+        RobotoTextView summary = (RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_summary_label);
+        RobotoTextView delete = (RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_delete_label);
 
         if (position == 0) {
             title.setText(alarm.toString());
@@ -59,6 +60,9 @@ public class AlarmEditAdapter extends BaseAdapter {
             title.setText(weekDay);
             summary.setText(context.getString(R.string.alarm_set_week_day));
         } else if (position == 3) {
+            title.setText(alarm.getAlarmType()==0?context.getString(R.string.edit_alarm_sleep):context.getString(R.string.edit_alarm_wake));
+            summary.setText(context.getString(R.string.Edit_alarm_type));
+        } else if (position == 4) {
             summary.setVisibility(View.GONE);
             title.setVisibility(View.GONE);
             delete.setVisibility(View.VISIBLE);

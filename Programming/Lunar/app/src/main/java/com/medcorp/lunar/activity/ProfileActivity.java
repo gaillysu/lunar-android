@@ -38,8 +38,6 @@ import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.PublicUtils;
 import com.medcorp.lunar.view.ToastHelper;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -93,14 +91,13 @@ public class ProfileActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        EventBus.getDefault().register(this);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.profile_title);
-        user = getModel().getNevoUser();
-        if (getModel().getNevoUser().isLogin()) {
-            userEmail = user.getNevoUserEmail();
+        user = getModel().getUser();
+        if (getModel().getUser().isLogin()) {
+            userEmail = user.getUserEmail();
         } else {
-            userEmail = "watch_med_profile";
+            userEmail = getString(R.string.watch_med_profile);
         }
         Bitmap bt = BitmapFactory.decodeFile(Preferences.getUserHeardPicturePath(this, userEmail));//从Sd中找头像，转换成Bitmap
         if (bt != null) {
@@ -284,8 +281,8 @@ public class ProfileActivity extends BaseActivity {
                 progressDialog.show();
                 String format = new SimpleDateFormat("yyyy-MM-dd").format(user.getBirthday());
                 UpdateAccountInformationRequest request = new UpdateAccountInformationRequest(
-                        new Integer(user.getNevoUserID()).intValue()
-                        , user.getFirstName(), user.getNevoUserEmail(), user.getLastName(), format
+                        new Integer(user.getUserID()).intValue()
+                        , user.getFirstName(), user.getUserEmail(), user.getLastName(), format
                         , user.getHeight(), user.getWeight(), user.getSex());
                 MedNetworkOperation.getInstance(this).updateUserInformation(request,
                         new RequestResponseListener<UpdateAccountInformationResponse>() {
@@ -307,7 +304,7 @@ public class ProfileActivity extends BaseActivity {
                                     @Override
                                     public void run() {
                                         progressDialog.dismiss();
-                                        getModel().saveNevoUser(user);
+                                        getModel().saveUser(user);
                                         startActivity(MainActivity.class);
                                         finish();
                                         overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
@@ -409,6 +406,5 @@ public class ProfileActivity extends BaseActivity {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
-        EventBus.getDefault().unregister(this);
     }
 }

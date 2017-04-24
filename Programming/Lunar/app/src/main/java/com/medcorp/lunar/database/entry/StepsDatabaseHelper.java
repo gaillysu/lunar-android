@@ -1,5 +1,8 @@
 package com.medcorp.lunar.database.entry;
 
+import android.content.Context;
+
+import com.medcorp.lunar.R;
 import com.medcorp.lunar.model.Steps;
 
 import java.util.ArrayList;
@@ -21,10 +24,11 @@ public class StepsDatabaseHelper {
 
     private Realm mRealm;
     private boolean isNull;
+    private Context mContext;
 
-
-    public StepsDatabaseHelper() {
+    public StepsDatabaseHelper(Context context) {
         mRealm = Realm.getDefaultInstance();
+        mContext = context;
     }
 
     public Observable<Boolean> addSteps(final Steps object) {
@@ -76,8 +80,8 @@ public class StepsDatabaseHelper {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        Steps steps = mRealm.where(Steps.class).equalTo("date", object.getDate())
-                                .equalTo("id", object.getId()).findFirst();
+                        Steps steps = mRealm.where(Steps.class).equalTo(mContext.getString(R.string.date), object.getDate())
+                                .equalTo(mContext.getString(R.string.database_id), object.getId()).findFirst();
                         if (steps != null) {
                             steps.setId(object.getId());
                             steps.setSteps(object.getSteps());
@@ -118,8 +122,8 @@ public class StepsDatabaseHelper {
     }
 
     public void remove(String userId, Date date) {
-        final Steps steps = mRealm.where(Steps.class).equalTo("nevoUserID", userId)
-                .equalTo("date", date.getTime()).findFirst();
+        final Steps steps = mRealm.where(Steps.class).equalTo(mContext.getString(R.string.database_user_id), userId)
+                .equalTo(mContext.getString(R.string.date), date.getTime()).findFirst();
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -137,8 +141,8 @@ public class StepsDatabaseHelper {
         return Observable.create(new ObservableOnSubscribe<Steps>() {
             @Override
             public void subscribe(ObservableEmitter<Steps> e) throws Exception {
-                Steps steps = mRealm.where(Steps.class).equalTo("nevoUserID", userId)
-                        .equalTo("date", date.getTime()).findFirst();
+                Steps steps = mRealm.where(Steps.class).equalTo(mContext.getString(R.string.database_user_id), userId)
+                        .equalTo(mContext.getString(R.string.date), date.getTime()).findFirst();
                 if (steps != null) {
                     e.onNext(mRealm.copyFromRealm(steps));
                     e.onComplete();
@@ -157,8 +161,8 @@ public class StepsDatabaseHelper {
             public void subscribe(ObservableEmitter<List<Steps>> e) throws Exception {
                 List<Steps> stepLists = new ArrayList<>();
                 for (Date date : dates) {
-                    Steps steps = mRealm.where(Steps.class).equalTo("nevoUserID", userId)
-                            .equalTo("date", date.getTime()).findFirst();
+                    Steps steps = mRealm.where(Steps.class).equalTo(mContext.getString(R.string.database_user_id), userId)
+                            .equalTo(mContext.getString(R.string.date), date.getTime()).findFirst();
                     if (null != steps) {
                         stepLists.add(mRealm.copyFromRealm(steps));
                     } else {
@@ -183,7 +187,8 @@ public class StepsDatabaseHelper {
             @Override
             public void subscribe(ObservableEmitter<List<Steps>> e) throws Exception {
                 List<Steps> allSteps = null;
-                List<Steps> stepses = mRealm.where(Steps.class).equalTo("nevoUserID", userId).findAll();
+                List<Steps> stepses = mRealm.where(Steps.class).equalTo(mContext.getString(R.string.database_user_id),
+                        userId).findAll();
                 if(stepses!=null){
                     allSteps = mRealm.copyFromRealm(stepses);
                 }else{
@@ -205,7 +210,7 @@ public class StepsDatabaseHelper {
             @Override
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 RealmResults<Steps> steps = Realm.getDefaultInstance().where(Steps.class)
-                        .equalTo("id", activity_id).findAll();
+                        .equalTo(mContext.getString(R.string.database_id), activity_id).findAll();
 
                 if (steps != null) {
                     e.onNext(true);

@@ -3,7 +3,6 @@ package com.medcorp.lunar.model;
 import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 public class User extends RealmObject {
 
@@ -37,14 +36,14 @@ public class User extends RealmObject {
     @SerializedName("remarks")
     private String remarks;
 
-    @SerializedName("nevoUserID")
-    private String nevoUserID;
+    @SerializedName("userID")
+    private String userID;
 
-    @SerializedName("nevoUserToken")
-    private String nevoUserToken;
+    @SerializedName("userToken")
+    private String userToken;
 
-    @SerializedName("nevoUserEmail")
-    private String nevoUserEmail;
+    @SerializedName("userEmail")
+    private String userEmail;
 
     @SerializedName("validicUserID")
     private String validicUserID;
@@ -163,28 +162,28 @@ public class User extends RealmObject {
         this.birthday = birthday;
     }
 
-    public String getNevoUserID() {
-        return nevoUserID;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setNevoUserID(String nevoUserID) {
-        this.nevoUserID = nevoUserID;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
-    public String getNevoUserToken() {
-        return nevoUserToken;
+    public String getUserToken() {
+        return userToken;
     }
 
-    public void setNevoUserToken(String nevoUserToken) {
-        this.nevoUserToken = nevoUserToken;
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 
-    public String getNevoUserEmail() {
-        return nevoUserEmail;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setNevoUserEmail(String nevoUserEmail) {
-        this.nevoUserEmail = nevoUserEmail;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public String getValidicUserID() {

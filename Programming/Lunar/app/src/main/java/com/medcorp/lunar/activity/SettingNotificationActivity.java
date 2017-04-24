@@ -23,7 +23,7 @@ import com.medcorp.lunar.ble.model.notification.SmsNotification;
 import com.medcorp.lunar.ble.model.notification.TelephoneNotification;
 import com.medcorp.lunar.ble.model.notification.WeChatNotification;
 import com.medcorp.lunar.ble.model.notification.WhatsappNotification;
-import com.medcorp.lunar.ble.notification.NevoNotificationListener;
+import com.medcorp.lunar.ble.notification.LunarNotificationListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -64,12 +64,11 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        LunarNotificationListener.getNotificationAccessPermission(this);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.title_notifications);
-
-       NevoNotificationListener.getNotificationAccessPermission(this);
     }
 
     @Override

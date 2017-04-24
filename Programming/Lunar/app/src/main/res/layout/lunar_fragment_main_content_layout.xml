@@ -96,6 +96,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:maxLines="1"
+                android:text="@string/def_sleep_text"
                 android:textColor="@color/text_color"
                 android:textSize="12sp"
                 />
@@ -226,7 +227,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:maxLines="1"
-                android:text="Charging"
                 android:textColor="@color/text_color"
                 android:textSize="12sp"
                 />
@@ -240,7 +240,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:maxLines="1"
-                android:text="kmskld"
                 android:textAllCaps="false"
                 android:textColor="@color/text_color"
                 android:textSize="12sp"
@@ -293,6 +292,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:textColor="@color/text_color"
+                android:text="@string/seek_failed"
                 android:textSize="12sp"
                 />
 

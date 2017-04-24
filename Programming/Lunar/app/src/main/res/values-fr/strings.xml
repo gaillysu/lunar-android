@@ -447,4 +447,11 @@
     <string name="edit_alarm_name">Alarm Name</string>
     <string name="check_email_message">Email address already exists</string>
     <string name="check_wechat_fail">Check wechat account fail</string>
+    <string name="obtain_facebook_info_failed">Obtain facebook profile failed</string>
+    <string name="save_update_user_info_failed">Save failed, please try again!</string>
+    <string name="seek_failed">Seek failed</string>
+    <string name="wechat_create_account_fail">Create account fail</string>
+    <string name="wechat_login_fail">WeChat login fail</string>
+    <string name="wechat_uninstall">WeChat is not installed</string>
+    <string name="Edit_alarm_type">Edit Alarm type</string>
 </resources>

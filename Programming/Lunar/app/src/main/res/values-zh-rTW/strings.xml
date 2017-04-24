@@ -445,4 +445,11 @@
     <string name="lunar_home_clock_solar_harvest_idle">空閑</string>
     <string name="check_email_message">邮箱已经存在!!!</string>
     <string name="check_wechat_fail">检查失败</string>
+    <string name="obtain_facebook_info_failed">獲取個人信息失敗</string>
+    <string name="save_update_user_info_failed">保存失敗,再試壹次</string>
+    <string name="seek_failed">定位失敗</string>
+    <string name="wechat_create_account_fail">創建帳號失敗</string>
+    <string name="wechat_login_fail">微信登錄失敗</string>
+    <string name="wechat_uninstall">沒有安裝微信應用</string>
+    <string name="Edit_alarm_type">編輯鬧鐘類型</string>
 </resources>

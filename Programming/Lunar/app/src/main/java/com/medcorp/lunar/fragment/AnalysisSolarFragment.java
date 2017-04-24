@@ -103,7 +103,7 @@ public class AnalysisSolarFragment extends BaseFragment {
         lastMonthChart = (AnalysisSolarLineChart) lastMonthView.findViewById(R.id.analysis_solar_chart);
         final TipsView marker = new TipsView(AnalysisSolarFragment.this.getContext(),R.layout.custom_marker_view);
 
-        getModel().getSolarData(getModel().getNevoUser().getId(), userSelectDate,WeekData.TISHWEEK,
+        getModel().getSolarData(getModel().getUser().getId(), userSelectDate,WeekData.TISHWEEK,
                 new ObtainSolarListener() {
                     @Override
                     public void obtainSolarData(List<Solar> thisWeek) {
@@ -114,7 +114,7 @@ public class AnalysisSolarFragment extends BaseFragment {
                         averageTimeOnBattery.setText(TimeUtil.formatTime(24*60-getAverageTimeOnBattery(thisWeek)));
                     }
                 });
-        getModel().getSolarData(getModel().getNevoUser().getId(), userSelectDate, WeekData.LASTWEEK,
+        getModel().getSolarData(getModel().getUser().getId(), userSelectDate, WeekData.LASTWEEK,
                 new ObtainSolarListener() {
             @Override
             public void obtainSolarData(List<Solar> lastWeek) {
@@ -125,7 +125,7 @@ public class AnalysisSolarFragment extends BaseFragment {
                 averageTimeOnBattery.setText(TimeUtil.formatTime(24*60-getAverageTimeOnBattery(lastWeek)));
             }
         });
-        getModel().getSolarData(getModel().getNevoUser().getId(), userSelectDate, WeekData.LASTMONTH,
+        getModel().getSolarData(getModel().getUser().getId(), userSelectDate, WeekData.LASTMONTH,
                 new ObtainSolarListener() {
                     @Override
                     public void obtainSolarData(List<Solar> lastMonth) {

@@ -73,8 +73,8 @@ public class MainStepsFragment extends BaseFragment {
     }
 
     private void initData(Date date) {
-        final User user = getModel().getNevoUser();
-        getModel().getStepsHelper().get(user.getNevoUserID(),date).subscribe(new Consumer<Steps>() {
+        final User user = getModel().getUser();
+        getModel().getStepsHelper().get(user.getUserID(),date).subscribe(new Consumer<Steps>() {
             @Override
             public void accept(Steps steps) throws Exception {
                 showUserActivityTime.setText(TimeUtil.formatTime(steps.getWalkDuration() + steps.getRunDuration()));

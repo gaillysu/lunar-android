@@ -1,5 +1,8 @@
 package com.medcorp.lunar.database.entry;
 
+import android.content.Context;
+
+import com.medcorp.lunar.R;
 import com.medcorp.lunar.model.Goal;
 
 import java.util.List;
@@ -17,9 +20,11 @@ import io.realm.RealmResults;
 public class GoalDatabaseHelper {
 
     private Realm mRealm;
+    private Context mContext;
 
-    public GoalDatabaseHelper() {
+    public GoalDatabaseHelper(Context context) {
         mRealm = Realm.getDefaultInstance();
+        mContext = context;
     }
 
     public Observable<Boolean> add(final Goal object) {
@@ -49,8 +54,9 @@ public class GoalDatabaseHelper {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        Goal goal = mRealm.where(Goal.class).equalTo("is", object.getId())
-                                .equalTo("label", object.getLabel()).findFirst();
+                        Goal goal = mRealm.where(Goal.class).equalTo(mContext.getString(R.string.database_id)
+                                , object.getId())
+                                .equalTo(mContext.getString(R.string.database_goal_label), object.getLabel()).findFirst();
                         if (goal != null) {
                             goal.setSteps(object.getSteps());
                             goal.setId(object.getId());
@@ -72,7 +78,8 @@ public class GoalDatabaseHelper {
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
-                final Goal goal = mRealm.where(Goal.class).equalTo("id", presetId).findFirst();
+                final Goal goal = mRealm.where(Goal.class).equalTo(mContext.getString(R.string.database_id)
+                        , presetId).findFirst();
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -88,7 +95,8 @@ public class GoalDatabaseHelper {
         return Observable.create(new ObservableOnSubscribe<Goal>() {
             @Override
             public void subscribe(ObservableEmitter<Goal> e) throws Exception {
-                Goal goal = mRealm.where(Goal.class).equalTo("id", presetId).findFirst();
+                Goal goal = mRealm.where(Goal.class).equalTo(mContext.getString(R.string.database_id)
+                        , presetId).findFirst();
                 if (goal != null) {
                     e.onNext(mRealm.copyFromRealm(goal));
                     e.onComplete();

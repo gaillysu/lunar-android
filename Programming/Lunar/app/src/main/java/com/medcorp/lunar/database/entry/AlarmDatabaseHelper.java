@@ -1,5 +1,8 @@
 package com.medcorp.lunar.database.entry;
 
+import android.content.Context;
+
+import com.medcorp.lunar.R;
 import com.medcorp.lunar.model.Alarm;
 
 import java.util.ArrayList;
@@ -17,9 +20,10 @@ import io.realm.Realm;
 public class AlarmDatabaseHelper {
 
     private Realm mRealm;
-
-    public AlarmDatabaseHelper() {
+    private Context mContext;
+    public AlarmDatabaseHelper(Context context) {
         mRealm = Realm.getDefaultInstance();
+        mContext = context;
     }
 
     public Observable<Boolean> add(final Alarm object) {
@@ -45,6 +49,8 @@ public class AlarmDatabaseHelper {
                             e.onComplete();
                         }
                     }
+
+
                 });
             }
         }).subscribeOn(AndroidSchedulers.mainThread());
@@ -57,7 +63,7 @@ public class AlarmDatabaseHelper {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        Alarm alarm = mRealm.where(Alarm.class).equalTo("alarmNumber",
+                        Alarm alarm = mRealm.where(Alarm.class).equalTo(mContext.getString(R.string.alarm_number),
                                 object.getAlarmNumber()).findFirst();
                         if (alarm != null) {
                             alarm.setId(object.getId());
@@ -83,11 +89,14 @@ public class AlarmDatabaseHelper {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(final ObservableEmitter<Boolean> e) throws Exception {
-                final Alarm alarm = mRealm.where(Alarm.class).equalTo("id", alarmId).findFirst();
+                final Alarm alarm = mRealm.where(Alarm.class).equalTo(mContext.getString(R.string.database_id)
+                        , alarmId).findFirst();
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        alarm.deleteFromRealm();
+                        if (alarm != null) {
+                            alarm.deleteFromRealm();
+                        }
                         e.onNext(true);
                         e.onComplete();
                     }
@@ -101,7 +110,7 @@ public class AlarmDatabaseHelper {
             @Override
             public void subscribe(ObservableEmitter<Alarm> e) throws Exception {
                 Alarm obtainAlarm = null;
-                Alarm alarm = mRealm.where(Alarm.class).equalTo("id", alarmId).findFirst();
+                Alarm alarm = mRealm.where(Alarm.class).equalTo(mContext.getString(R.string.database_id), alarmId).findFirst();
                 if (alarm != null) {
                     obtainAlarm = mRealm.copyFromRealm(alarm);
                 } else {

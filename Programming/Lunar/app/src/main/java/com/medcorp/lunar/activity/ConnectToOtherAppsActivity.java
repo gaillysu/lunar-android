@@ -57,7 +57,6 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         ButterKnife.bind(this);
         List<SettingsMenuItem> menuList = new ArrayList<>();
         menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_google_fit), R.drawable.google_fit_small, Preferences.isGoogleFitSet(this)));
-//        menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_validic), R.drawable.google_fit_small, getModel().getNevoUser().isConnectValidic()));
         settingsAdapter = new   SettingMenuAdapter(this, menuList, this);
         otherAppsListView.setAdapter(settingsAdapter);
         setSupportActionBar(toolbar);

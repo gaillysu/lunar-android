@@ -36,22 +36,26 @@ public class TutorialPageSuccessActivity extends BaseActivity {
             getModel().addGoal(new Goal(getString(R.string.startup_goal_light), true, 7000));
             getModel().addGoal(new Goal(getString(R.string.startup_goal_moderate), true, 10000));
             getModel().addGoal(new Goal(getString(R.string.startup_goal_heavy), true, 20000));
-            getModel().addLedLamp(new LedLamp("Rde", getResources().getColor(R.color.red_normal)));
-            getModel().addLedLamp(new LedLamp("Blue", getResources().getColor(R.color.blue_normal)));
-            getModel().addLedLamp(new LedLamp("Light green", getResources().getColor(R.color.light_green_normal)));
-            getModel().addLedLamp(new LedLamp("Orange", getResources().getColor(R.color.orange_normal)));
-            getModel().addLedLamp(new LedLamp("Yellow", getResources().getColor(R.color.yellow_normal)));
-            getModel().addLedLamp(new LedLamp("Green", getResources().getColor(R.color.green_normal)));
+            getModel().addLedLamp(new LedLamp(getString(R.string.led_lamp_color_red), getResources().getColor(R.color.red_normal)));
+            getModel().addLedLamp(new LedLamp(getString(R.string.led_lamp_color_blue), getResources().getColor(R.color.blue_normal)));
+            getModel().addLedLamp(new LedLamp(getString(R.string.led_lamp_color_light_green), getResources().getColor(R.color.light_green_normal)));
+            getModel().addLedLamp(new LedLamp(getString(R.string.led_lamp_color_orange), getResources().getColor(R.color.orange_normal)));
+            getModel().addLedLamp(new LedLamp(getString(R.string.led_lamp_color_yellow), getResources().getColor(R.color.yellow_normal)));
+            getModel().addLedLamp(new LedLamp(getString(R.string.led_lamp_color_green), getResources().getColor(R.color.green_normal)));
             getModel().addAlarm(new Alarm(21, 0, (byte) (0), getString(R.string.def_alarm_one), (byte) 0, (byte) 7)).subscribe(new Consumer<Boolean>() {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception {
-                    Log.e("jason", "闹钟默认" + aBoolean);
+                    if(aBoolean){
+                        Log.i("jason","save def alarm success");
+                    }
                 }
             });
             getModel().addAlarm(new Alarm(8, 0, (byte) (0), getString(R.string.def_alarm_two), (byte) 1, (byte) 0)).subscribe(new Consumer<Boolean>() {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception {
-                    Log.e("jaosn", "闹钟默认" + aBoolean);
+                    if(aBoolean){
+                        Log.i("jason","save def alarm success");
+                    }
                 }
             });
             sharedPreferences.putBoolean(getString(R.string.key_preset), true);

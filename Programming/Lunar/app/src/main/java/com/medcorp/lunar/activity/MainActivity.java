@@ -71,7 +71,6 @@ import static com.medcorp.lunar.util.Preferences.saveSelectDate;
 
 /**
  * Created by Karl on 12/10/15.
- *
  */
 public class MainActivity extends BaseActivity implements DrawerLayout.DrawerListener,
         NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener, DatePickerDialog.OnDateSetListener {
@@ -154,10 +153,10 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         ImageButton userImageView = (ImageButton) headerView.findViewById(navigation_header_imageview);
 
         String userEmail = null;
-        if (getModel().getNevoUser().isLogin()) {
-            userEmail = getModel().getNevoUser().getNevoUserEmail();
+        if (getModel().getUser().isLogin()) {
+            userEmail = getModel().getUser().getUserEmail();
         } else {
-            userEmail = "watch_med_profile";
+            userEmail = getString(R.string.watch_med_profile);
         }
         Bitmap bt = BitmapFactory.decodeFile(getUserHeardPicturePath(this, userEmail));
         //从Sd中找头像，转换成Bitmap
@@ -169,12 +168,12 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         userImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,  ProfileActivity.class));
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 finish();
             }
         });
         FloatingActionButton floatingActionButton = (FloatingActionButton) headerView.findViewById(R.id.navigation_header_spinner);
-        if (getModel().getNevoUser().isLogin()) {
+        if (getModel().getUser().isLogin()) {
             floatingActionButton.setVisibility(View.GONE);
         } else {
             floatingActionButton.setVisibility(View.VISIBLE);
@@ -183,7 +182,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                intent.putExtra("isTutorialPage", false);
+                intent.putExtra(getString(R.string.open_activity_is_tutorial), false);
                 startActivity(intent);
                 finish();
             }
@@ -249,9 +248,11 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     @Override
     public void onDrawerOpened(View drawerView) {
-        userView.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getNevoUserEmail() : "");
-        showUserFirstNameText.setText(getModel().getNevoUser().isLogin() ?
-                getModel().getNevoUser().getFirstName() + " " + getModel().getNevoUser().getLastName() : "");
+        userView.setText(getModel().getUser().getUserEmail());
+        showUserFirstNameText.setText(getModel().getUser().isLogin() ?
+                (getModel().getUser().getFirstName() != null ? getModel().getUser().getFirstName() : "") +
+                        " " + (getModel().getUser().getLastName() != null ?
+                        getModel().getUser().getLastName() : "") : "");
     }
 
 
@@ -382,7 +383,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         EventBus.getDefault().register(this);
         mCalendar = Calendar.getInstance();
         String strDate = mCalendar.get(Calendar.YEAR) + "-" +
-                (mCalendar.get(Calendar.MONTH) + 1) + "-" + mCalendar.get(Calendar.DAY_OF_MONTH) ;
+                (mCalendar.get(Calendar.MONTH) + 1) + "-" + mCalendar.get(Calendar.DAY_OF_MONTH);
         saveSelectDate(this, strDate);
     }
 

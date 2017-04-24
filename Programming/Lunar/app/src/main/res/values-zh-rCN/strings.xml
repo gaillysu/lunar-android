@@ -442,4 +442,11 @@
     <string name="lunar_home_clock_solar_harvest_idle">空闲</string>
     <string name="check_email_message">邮箱已经存在!!!</string>
     <string name="check_wechat_fail">检查失败</string>
+    <string name="obtain_facebook_info_failed">获取个人信息失败</string>
+    <string name="save_update_user_info_failed">保存失败,再试一次</string>
+    <string name="seek_failed">定位失败</string>
+    <string name="wechat_create_account_fail">创建帐号失败</string>
+    <string name="wechat_login_fail">微信登录失败</string>
+    <string name="wechat_uninstall">没有安装微信应用</string>
+    <string name="Edit_alarm_type">编辑闹钟类型</string>
 </resources>
