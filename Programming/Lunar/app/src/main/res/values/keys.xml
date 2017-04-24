@@ -82,7 +82,7 @@
     <string name="led_lamp_color" translatable="false">color</string>
     <string name="create_date" translatable="false">createdDate</string>
     <string name="sleep_start" translatable="false">start</string>
-    <string name="database_user_id" translatable="false">nevoUserID</string>
+    <string name="database_user_id" translatable="false">userID</string>
     <string name="date" translatable="false">date</string>
     <string name="userId" translatable="false">userId</string>
     <string name="user_is_login" translatable="false">isLogin</string>
