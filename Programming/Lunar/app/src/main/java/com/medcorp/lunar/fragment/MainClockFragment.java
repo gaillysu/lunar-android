@@ -57,34 +57,51 @@ import io.realm.Realm;
 
 public class MainClockFragment extends BaseFragment {
 
-    @Bind(R.id.HomeClockHour)
+    @Bind(R.id.lunar_main_clock_home_hour)
     ImageView hourImage;
-    @Bind(R.id.HomeClockMinute)
+
+    @Bind(R.id.lunar_main_clock_home_minute)
     ImageView minImage;
+
     @Bind(R.id.lunar_main_clock_sleep_time_count)
     TextView lunarSleepTotal;
+
     @Bind(R.id.lunar_main_clock_home_city_time)
     TextView lunarHomeCityTime;
+
     @Bind(R.id.lunar_main_clock_home_city_name)
     TextView homeCityName;
+
     @Bind(R.id.lunar_main_clock_home_country)
     TextView countryName;
+
     @Bind(R.id.lunar_main_clock_home_city_sunrise_time_tv)
     TextView sunriseOfSunsetTime;
+
     @Bind(R.id.lunar_main_clock_home_city_name_tv)
     TextView sunriseCityName;
+
     @Bind(R.id.lunar_main_clock_steps_goal_analysis)
     RoundProgressBar goalProgress;
+
     @Bind(R.id.lunar_main_clock_steps_count)
     TextView stepsCount;
+
     @Bind(R.id.steps_of_goal_percentage)
     TextView goalPercentage;
+
     @Bind(R.id.lunar_main_clock_home_city_sunrise_icon)
     ImageView sunriseOrSunsetIv;
+
     @Bind(R.id.lunar_main_clock_home_city_sunrise)
     TextView sunriseTv;
+
     @Bind(R.id.lunar_main_clock_battery_status)
-    TextView solar_harvest_status;
+    TextView solarHarvestStatus;
+
+    @Bind(R.id.lunar_main_clock_battery_status_title)
+    TextView solarHarvestTitle;
+
     private Date userSelectDate;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
     private User user;
@@ -353,15 +370,16 @@ public class MainClockFragment extends BaseFragment {
 
     @Subscribe
     public void onEvent(final SolarConvertEvent event) {
-        solar_harvest_status.post(new Runnable() {
+        solarHarvestStatus.post(new Runnable() {
             @Override
             public void run() {
                 //NOTICE: nevo solar adc threshold is 200，but lunar is 170
                 if (event.getPv_adc() >= 170) {
-                    solar_harvest_status.setText(R.string.lunar_home_clock_solar_harvest_charge);
+                    solarHarvestStatus.setText(R.string.lunar_home_clock_solar_harvest_charge);
                 } else {
-                    solar_harvest_status.setText(R.string.lunar_home_clock_solar_harvest_idle);
+                    solarHarvestStatus.setText(R.string.lunar_home_clock_solar_harvest_idle);
                 }
+                //solarHarvestTitle.setText("ADC = " + event.getPv_adc());
             }
         });
     }

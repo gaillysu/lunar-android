@@ -43,7 +43,7 @@
             android:layout_width="262dp"
             android:layout_height="262dp"
             android:layout_centerInParent = "true"
-            android:id="@+id/HomeClockHour"
+            android:id="@+id/lunar_main_clock_home_hour"
             android:src="@drawable/lunar_clockview_hour"
             android:visibility="visible"/>
 
@@ -51,7 +51,7 @@
             android:layout_width="262dp"
             android:layout_height="262dp"
             android:layout_centerInParent = "true"
-            android:id="@+id/HomeClockMinute"
+            android:id="@+id/lunar_main_clock_home_minute"
             android:src="@drawable/lunar_clockview_minute"
             android:visibility="visible"/>
 

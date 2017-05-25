@@ -55,7 +55,7 @@ public class StepsDatabaseHelper {
                         steps.setHourlyCalories(object.getHourlyCalories());
                         steps.setHourlySteps(object.getHourlySteps());
                         steps.setInZoneTime(object.getInZoneTime());
-                        steps.setNevoUserID(object.getNevoUserID());
+                        steps.setUserID(object.getUserID());
                         steps.setNoActivityTime(object.getNoActivityTime());
                         steps.setHourlyDistance(object.getHourlyDistance());
                         steps.setDate(object.getDate());
@@ -99,7 +99,7 @@ public class StepsDatabaseHelper {
                             steps.setHourlyCalories(object.getHourlyCalories());
                             steps.setHourlySteps(object.getHourlySteps());
                             steps.setInZoneTime(object.getInZoneTime());
-                            steps.setNevoUserID(object.getNevoUserID());
+                            steps.setUserID(object.getUserID());
                             steps.setNoActivityTime(object.getNoActivityTime());
                             steps.setHourlyDistance(object.getHourlyDistance());
                             steps.setDate(object.getDate());
