@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:background="@color/tool_bar_bg_color"
+        android:text="@string/scan_duration_title_title"
+        android:textColor="@color/white"
+        android:textSize="18dp"/>
+
+    <ListView
+        android:id="@+id/setting_scan_duration_item"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@color/alarm_repeat_text_color"
+        android:dividerHeight="0.5dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:scrollbars="none"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="@color/tool_bar_bg_color"
+        android:text="@string/scan_duration_describe"
+        android:textColor="@color/white"
+        android:layout_marginBottom="10dp"
+        android:textSize="16sp"/>
+
+</LinearLayout>

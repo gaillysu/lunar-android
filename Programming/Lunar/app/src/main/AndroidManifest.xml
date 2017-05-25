@@ -137,7 +137,8 @@
         <activity
             android:name=".activity.NotificationActivity"
             android:label="Dfu"/>
-
+        <activity android:name=".activity.ScanDurationActivity"
+                  android:screenOrientation="portrait"/>
         <service
             android:name="net.medcorp.library.ble.ble.MEDBTService"
             android:enabled="true"/>
