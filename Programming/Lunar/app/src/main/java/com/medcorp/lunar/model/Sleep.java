@@ -12,7 +12,7 @@ public class Sleep extends RealmObject implements Comparable<Sleep> {
     //IMPORTANT,HERE MUST NOT set cloudRecordID any value, pls use default value null,when we sync with cloud, it will be filled by the cloud record ID
     private String cloudRecordID;
 
-    private String nevoUserID;
+    private String userID;
 
     private long createdDate;
     private long date;
@@ -194,12 +194,12 @@ public class Sleep extends RealmObject implements Comparable<Sleep> {
         this.cloudRecordID = cloudRecordID;
     }
 
-    public String getNevoUserID() {
-        return nevoUserID;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setNevoUserID(String nevoUserID) {
-        this.nevoUserID = nevoUserID;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     @Override
@@ -217,7 +217,7 @@ public class Sleep extends RealmObject implements Comparable<Sleep> {
         return "Sleep{" +
                 "id=" + id +
                 ", cloudRecordID='" + cloudRecordID + '\'' +
-                ", nevoUserID='" + nevoUserID + '\'' +
+                ", userID='" + userID + '\'' +
                 ", createdDate=" + createdDate +
                 ", date=" + date +
                 ", totalSleepTime=" + totalSleepTime +

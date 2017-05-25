@@ -51,10 +51,10 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
     @Bind(R.id.clock_imageView)
     ImageView clockImage;
 
-    @Bind(R.id.HomeClockHour)
+    @Bind(R.id.lunar_main_clock_home_hour)
     ImageView hourImage;
 
-    @Bind(R.id.HomeClockMinute)
+    @Bind(R.id.lunar_main_clock_home_minute)
     ImageView minImage;
 
     @Bind(R.id.roundProgressBar)

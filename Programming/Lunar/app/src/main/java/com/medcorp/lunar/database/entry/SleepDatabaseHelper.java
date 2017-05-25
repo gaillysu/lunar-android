@@ -47,7 +47,7 @@ public class SleepDatabaseHelper {
                         sleep.setHourlyDeep(object.getHourlyDeep());
                         sleep.setHourlyLight(object.getHourlyLight());
                         sleep.setHourlySleep(object.getHourlySleep());
-                        sleep.setNevoUserID(object.getNevoUserID());
+                        sleep.setUserID(object.getUserID());
                         sleep.setHourlyWake(object.getHourlyWake());
                         sleep.setRemarks(object.getRemarks());
                         sleep.setTotalDeepTime(object.getTotalDeepTime());
@@ -82,7 +82,7 @@ public class SleepDatabaseHelper {
                             sleep.setHourlyDeep(object.getHourlyDeep());
                             sleep.setHourlyLight(object.getHourlyLight());
                             sleep.setHourlySleep(object.getHourlySleep());
-                            sleep.setNevoUserID(object.getNevoUserID());
+                            sleep.setUserID(object.getUserID());
                             sleep.setHourlyWake(object.getHourlyWake());
                             sleep.setRemarks(object.getRemarks());
                             sleep.setTotalDeepTime(object.getTotalDeepTime());

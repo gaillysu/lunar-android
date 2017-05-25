@@ -33,14 +33,14 @@
             android:src="@drawable/lunar_watch_icon"
             />
         <ImageView
-            android:id="@+id/HomeClockHour"
+            android:id="@+id/lunar_main_clock_home_hour"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="15dp"
             android:src="@drawable/lunar_clockview_hour"/>
 
         <ImageView
-            android:id="@+id/HomeClockMinute"
+            android:id="@+id/lunar_main_clock_home_minute"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="15dp"
