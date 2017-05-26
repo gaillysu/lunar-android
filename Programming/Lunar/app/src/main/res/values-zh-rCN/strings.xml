@@ -449,4 +449,12 @@
     <string name="wechat_login_fail">微信登录失败</string>
     <string name="wechat_uninstall">没有安装微信应用</string>
     <string name="Edit_alarm_type">编辑闹钟类型</string>
+    <string name="def_sleep_text">0 min</string>
+    <string name="network_error">网络错误!</string>
+    <string name="prompt_user_have_new_version">更新你的手表后才可以使用该功能</string>
+    <string name="scan_duration_describe">当手表断开，它会扫描选定的持续时间。注意，手表将耗尽更多的电池，扫描更长。我们建议不要让它扫描更长的时间，然后15分钟。</string>
+    <string name="scan_duration_item_select_one_hour">1 小时</string>
+    <string name="scan_duration_time_unit">分钟</string>
+    <string name="scan_duration_title_title">LUNAR 蓝牙扫描</string>
+    <string name="settings_bluetooth_scan">扫描时间</string>
 </resources>
