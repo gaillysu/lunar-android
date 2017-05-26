@@ -3,7 +3,6 @@ package com.medcorp.lunar.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -59,7 +58,6 @@ public class ScanDurationActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Preferences.saveScanDuration(ScanDurationActivity.this, mTime[position]);
-                Log.i("jason","jskdbbkbk");
                 list.clear();
                 initData();
                 mAdapter.notifyDataSetChanged();
