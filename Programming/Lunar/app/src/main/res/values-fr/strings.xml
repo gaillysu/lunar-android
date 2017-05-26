@@ -31,7 +31,7 @@
     <string name="activity_user_info_title_above_text">Your information</string>
     <string name="add_new_notification_dialog_hint_content">Input name</string>
     <string name="add_new_notification_dialog_title">Add name</string>
-    <string name="add_alarm_index_out">The same type of alarm clock can only add 7!</string>
+    <string name="add_alarm_index_out">The same type of alarm clock can only add %1$d!</string>
     <string name="alarm_set_week_day">Set weekday for alarm</string>
     <string name="alarm_set_week_day_dialog_text">Set the alarm clock to repeat time</string>
     <string name="analysis_fragment_des_avg_wake">Avg Wake</string>
@@ -79,7 +79,7 @@
     <string name="help_track_sleep_goodmorning">Good morning</string>
     <string name="help_track_sleep_message">To activate sleeping-mode, push and hold the first button, until the white LED blinks.</string>
     <string name="help_track_sleep_title">Track your sleep</string>
-    <string name="in_app_notification_max_fourteen_alarm">Lunar supports only fourteen alarms.</string>
+    <string name="in_app_notification_max_alarms">Lunar supports only 20 alarms.</string>
     <string name="in_app_notification_no_goal">Please select your target.</string>
     <string name="info_company_height">Cm</string>
     <string name="info_company_weight">Kg</string>
