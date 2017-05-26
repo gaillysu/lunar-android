@@ -17,7 +17,7 @@ android {
         config {
             keyAlias 'lunar_key'
             keyPassword 'Gh[2}86.*{&46#R='
-            storeFile file('D:/pocketKey/med_keystore.jks')
+            storeFile file('./keystore/med_keystore.jks')
             storePassword 'n,@4^(Z+492,$926$q97){2'
         }
     }

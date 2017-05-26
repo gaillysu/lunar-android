@@ -583,7 +583,7 @@ public class ApplicationModel extends Application {
         steps.setDistance((int) routine.getDistance());
         steps.setCalories(routine.getCalories());
         steps.setWalkDuration(routine.getActive_time());
-        steps.setNevoUserID(routine.getUid() + "");
+        steps.setUserID(routine.getUid() + "");
         steps.setCloudRecordID(routine.getId() + "");
         steps.setGoal(10000);
         saveDailySteps(steps);
@@ -630,7 +630,7 @@ public class ApplicationModel extends Application {
         sleep.setTotalDeepTime(deepSleep);
         sleep.setStart(0);
         sleep.setEnd(0);
-        sleep.setNevoUserID(getUser().getUserID());
+        sleep.setUserID(getUser().getUserID());
         //we must set CloudRecordID here, avoid doing sync repeatly
         sleep.setCloudRecordID(dailySleep.getId() + "");
         try {

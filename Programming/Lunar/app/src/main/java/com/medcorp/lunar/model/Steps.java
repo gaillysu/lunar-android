@@ -9,7 +9,7 @@ public class Steps extends RealmObject implements Comparable<Steps> {
     //IMPORTANT,HERE MUST NOT set cloudRecordID any value, pls use default value null,when we sync with cloud, it will be filled by the cloud record ID
     private String cloudRecordID;
 
-    private String nevoUserID;
+    private String userID;
 
     private long createdDate;
 
@@ -257,12 +257,12 @@ public class Steps extends RealmObject implements Comparable<Steps> {
         this.cloudRecordID = cloudRecordID;
     }
 
-    public String getNevoUserID() {
-        return nevoUserID;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setNevoUserID(String nevoUserID) {
-        this.nevoUserID = nevoUserID;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
 
@@ -313,7 +313,7 @@ public class Steps extends RealmObject implements Comparable<Steps> {
         return "Steps{" +
                 "id=" + id +
                 ", cloudRecordID='" + cloudRecordID + '\'' +
-                ", nevoUserID='" + nevoUserID + '\'' +
+                ", userID='" + userID + '\'' +
                 ", createdDate=" + createdDate +
                 ", date=" + date +
                 ", steps=" + steps +
