@@ -96,9 +96,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (position == 1) {
-
             startActivity(SettingNotificationActivity.class);
-
         } else if (position == 2) {
 
             if (getModel().isWatchConnected()) {
@@ -118,13 +116,17 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             }
 
         } else if (position == 4) {
-            int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
-            if (currentFirmwareVersion >= 14) {
-                startActivity(ScanDurationActivity.class);
+            if (getModel().isWatchConnected()) {
+                int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
+                if (currentFirmwareVersion >= 14) {
+                    startActivity(ScanDurationActivity.class);
+                } else {
+                    askUserIsUpdate();
+                }
             } else {
-                askUserIsUpdate();
+                ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
             }
-        }  else if (position == 5) {
+        } else if (position == 5) {
             startActivity(MoreSettingActivity.class);
 
         } else if (position == 6) {
@@ -176,11 +178,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog dialog, DialogAction which) {
-                        if (getModel().isWatchConnected()) {
-                            startActivity(MyWatchActivity.class);
-                        } else {
-                            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-                        }
+                        startActivity(MyWatchActivity.class);
                     }
                 })
                 .cancelable(false)
