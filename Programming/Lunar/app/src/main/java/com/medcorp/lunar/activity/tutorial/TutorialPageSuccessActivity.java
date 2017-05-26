@@ -42,7 +42,7 @@ public class TutorialPageSuccessActivity extends BaseActivity {
             getModel().addLedLamp(new LedLamp(getString(R.string.led_lamp_color_orange), getResources().getColor(R.color.orange_normal)));
             getModel().addLedLamp(new LedLamp(getString(R.string.led_lamp_color_yellow), getResources().getColor(R.color.yellow_normal)));
             getModel().addLedLamp(new LedLamp(getString(R.string.led_lamp_color_green), getResources().getColor(R.color.green_normal)));
-            getModel().addAlarm(new Alarm(21, 0, (byte) (0), getString(R.string.def_alarm_one), (byte) 0, (byte) 7)).subscribe(new Consumer<Boolean>() {
+            getModel().addAlarm(new Alarm(21, 0, (byte) (0), getString(R.string.def_alarm_one), (byte) 0, (byte) 13)).subscribe(new Consumer<Boolean>() {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception {
                     if(aBoolean){

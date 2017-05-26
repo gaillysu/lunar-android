@@ -195,14 +195,13 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
 
                         }
 
+                        isRepeat = false;
                         for (int i = 0; i < allAlarm.size(); i++) {
                             byte repeatDay = allAlarm.get(i).getWeekDay();
                             byte alarmType = allAlarm.get(i).getAlarmType();
-                            if ((repeatDay & 0x0F) == weekDay && alarmType == alarmSelectStyle) {
+                            if ((repeatDay & 0x0F) == weekDay && alarmSelectStyle == 0) {
                                 isRepeat = true;
                                 break;
-                            } else {
-                                isRepeat = false;
                             }
                         }
 
@@ -270,7 +269,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         //resultCode == 0 ,do nothing
         refreshListView();
         if (resultCode != 0) {
-            syncAlarmByEditor(resultCode);
+            syncAlarmByEditor(resultCode==-1);
         }
     }
 
@@ -320,24 +319,28 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         return count;
     }
 
-    private void syncAlarmByEditor(int deleteOrUpdate) {
+    private void syncAlarmByEditor(boolean delete) {
         if (!getModel().isWatchConnected()) {
             ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
             return;
         }
-        if (deleteOrUpdate == -1) {
+        if (delete) {
             editAlarm.setWeekDay((byte) 0);
-        } else if (deleteOrUpdate == 1) {
+            showSyncAlarm = true;
+            getModel().getSyncController().setAlarm(editAlarm);
+            ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
+
+        } else{
             getModel().getAlarmById(editAlarm.getId(), new EditAlarmActivity.ObtainAlarmListener() {
                 @Override
                 public void obtainAlarm(Alarm alarm) {
                     editAlarm = alarm;
+                    showSyncAlarm = true;
+                    getModel().getSyncController().setAlarm(editAlarm);
+                    ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
                 }
             });
         }
-        showSyncAlarm = true;
-        getModel().getSyncController().setAlarm(editAlarm);
-        ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
     }
 
 
