@@ -3,6 +3,7 @@ package com.medcorp.lunar.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
  * Created by Jason on 2017/5/25.
  */
 
-public class ScanDurationActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class ScanDurationActivity extends BaseActivity {
     @Bind(R.id.main_toolbar)
     Toolbar mToolbar;
     @Bind(R.id.setting_scan_duration_item)
@@ -54,7 +55,16 @@ public class ScanDurationActivity extends BaseActivity implements AdapterView.On
     private void settingData() {
         mAdapter = new ScanDurationAdapter(this, list);
         allDurationList.setAdapter(mAdapter);
-        allDurationList.setOnItemClickListener(this);
+        allDurationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Preferences.saveScanDuration(ScanDurationActivity.this, mTime[position]);
+                Log.i("jason","jskdbbkbk");
+                list.clear();
+                initData();
+                mAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void initData() {
@@ -88,13 +98,5 @@ public class ScanDurationActivity extends BaseActivity implements AdapterView.On
             finish();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Preferences.saveScanDuration(this, mTime[position]);
-        list.clear();
-        initData();
-        mAdapter.notifyDataSetChanged();
     }
 }

@@ -178,7 +178,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog dialog, DialogAction which) {
-                        startActivity(MyWatchActivity.class);
+                            startActivity(MyWatchActivity.class);
                     }
                 })
                 .cancelable(false)

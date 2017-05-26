@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:divider="@color/alarm_repeat_text_color"
+        android:divider="@null"
         android:dividerHeight="0.5dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
@@ -36,7 +36,8 @@
         android:background="@color/tool_bar_bg_color"
         android:text="@string/scan_duration_describe"
         android:textColor="@color/white"
-        android:layout_marginBottom="10dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
         android:textSize="16sp"/>
 
 </LinearLayout>
