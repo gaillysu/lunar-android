@@ -201,6 +201,12 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                 tv_pickerRight.setTextSize(viewTextSize);
                 tv_pickerRight.setText("kg");
                 break;
+            case 4:
+                leftLoopView.setVisibility(View.GONE);
+                rightLoopView.setVisibility(View.GONE);
+                tv_pickerRight.setVisibility(View.VISIBLE);
+                tv_pickerRight.setTextSize(viewTextSize);
+                tv_pickerRight.setText("minute");
         }
 
         //do not loop,default can loop
@@ -297,6 +303,12 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                 middleLoopView.setArrayList((ArrayList) weightListPoint);
                 middleLoopView.setInitPosition(middlePos);
                 break;
+            case 4:
+                for (int i = 30; i <= 720; i += 30) {
+                    heightList.add(format2LenStr(i));
+                }
+                middleLoopView.setArrayList((ArrayList) heightList);
+                middleLoopView.setInitPosition(middlePos);
         }
 
     }
@@ -343,10 +355,13 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                     }
                     break;
                 case 2:
-                    middlePos = new Integer(dateStr).intValue()-120;
+                    middlePos = new Integer(dateStr).intValue() - 120;
                     break;
                 case 3:
-                    leftPos = new Integer(dateStr).intValue()-25;
+                    leftPos = new Integer(dateStr).intValue() - 25;
+                    break;
+                case 4:
+                    middlePos = new Integer(dateStr).intValue();
                     break;
             }
         }
@@ -409,7 +424,7 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (v == contentView   ) {
+        if (v == contentView) {
             dismissPopWin();
         }
         if (null != mListener) {
@@ -428,12 +443,16 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                     break;
                 case 2:
                     int height = middlePos;
-                    mListener.onDatePickCompleted(0, height, 0, height + 120 +"");
+                    mListener.onDatePickCompleted(0, height, 0, height + 120 + "");
                     break;
                 case 3:
                     int weight = leftPos;
                     int porint = middlePos;
-                    mListener.onDatePickCompleted(weight, porint, 0, (weight + 25)+"");
+                    mListener.onDatePickCompleted(weight, porint, 0, (weight + 25) + "");
+                    break;
+                case 4:
+                    int time = new Integer(heightList.get(middlePos)).intValue();
+                    mListener.onDatePickCompleted(0, time, 0, time + "");
                     break;
                 default:
                     dismissPopWin();

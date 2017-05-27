@@ -11,18 +11,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:orientation="vertical"
-        >
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
 
         <RelativeLayout
             android:id="@+id/more_setting_go_setting_goal"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="20dp"
+            android:layout_height="54dp"
             android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
             >
 
             <TextView
@@ -31,10 +30,9 @@
                 android:layout_height="wrap_content"
 
                 android:layout_centerVertical="true"
-                android:text="@string/def_goal_name"
+                android:text="@string/more_settings_steps_goal"
                 android:textColor="@color/text_color"
-                android:textSize="20dp"/>
-
+                android:textSize="16sp"/>
 
             <ImageView
                 android:id="@+id/imageView2"
@@ -53,13 +51,82 @@
                 />
         </RelativeLayout>
 
+        //set sleep goal
+
+        <RelativeLayout
+            android:id="@+id/more_setting_sleep_goal"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/more_settings_sleep_goal_describe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/more_settings_sleep_goal"
+                android:textColor="@color/text_color"
+                android:textSize="16sp"/>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignBottom="@+id/more_settings_sleep_goal_describe"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_right"
+                android:tint="@color/colorPrimary"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/my_device_right_show_version_text_color"
+                />
+        </RelativeLayout>
+
+        //set sleep goal
+
+        <RelativeLayout
+            android:id="@+id/more_setting_solar_goal"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            >
+
+            <TextView
+                android:id="@+id/more_settings_solar_goal_describe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/more_settings_solar_goal"
+                android:textColor="@color/text_color"
+                android:textSize="16sp"/>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignBottom="@+id/more_settings_solar_goal_describe"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_right"
+                android:tint="@color/colorPrimary"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/my_device_right_show_version_text_color"
+                />
+        </RelativeLayout>
+
         <!--select Unit-->
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="20dp"
+            android:layout_height="54dp"
             android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
             android:orientation="vertical"
             >
 
@@ -69,7 +136,7 @@
                 android:layout_centerVertical="true"
                 android:text="@string/more_setting_unit"
                 android:textColor="@color/text_color"
-                android:textSize="20dp"
+                android:textSize="16sp"
                 />
 
             <Spinner
@@ -90,9 +157,9 @@
         <!--select sync home time or local time-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="20dp"
+            android:layout_height="54dp"
             android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
             android:orientation="vertical"
             >
 
@@ -102,7 +169,7 @@
                 android:layout_centerVertical="true"
                 android:text="@string/more_setting_place_time"
                 android:textColor="@color/text_color"
-                android:textSize="20dp"
+                android:textSize="16sp"
                 />
 
             <Spinner

@@ -461,5 +461,8 @@
     <string name="scan_duration_time_unit">minutes</string>
     <string name="scan_duration_title_title">LUNAR SCAN DURATION</string>
     <string name="settings_bluetooth_scan">Scan duration</string>
+    <string name="more_settings_sleep_goal">Sleep Goal</string>
+    <string name="more_settings_solar_goal">Solar Goal</string>
+    <string name="more_settings_steps_goal">Steps Goal</string>
 
 </resources>

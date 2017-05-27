@@ -133,10 +133,20 @@
     <string name="sleep_today_no_sleep_message">You didn\'t sleep with your lunar.</string>
     <string name="sleep_select_date">select a date</string>
 
-    <string name="steps_goal_title">Goal</string>
+    <string name="steps_goal_title">Steps Goal</string>
     <string name="steps_goal">goal</string>
     <string name="steps_progress">progress</string>
     <string name="steps_steps">steps</string>
+
+
+    <string name="sleep_goal_def_long">Long sleep</string>
+    <string name="sleep_goal_def_noon">Siesta</string>
+    <string name="sleep_goal_def_short">Short Sleep</string>
+    <string name="sleep_unit_hour"> hour</string>
+    <string name="sleep_unit_minute"> minute</string>
+
+    <string name="solar_goal_def_long">Long Time</string>
+    <string name="solar_goal_def_short">Short Time</string>
 
     <string name="startup_goal_light">Light</string>
     <string name="startup_goal_moderate">Moderate</string>
@@ -450,6 +460,7 @@
     <string name="def_alarm_one">Alarm 1</string>
     <string name="def_alarm_two">Alarm 2</string>
     <string name="def_goal_name">Goal </string>
+    <string name="def_goal_sleep_name">Sleep goal</string>
     <string name="more_setting_unit">Unit</string>
     <string name="more_setting_place_time">Watch digital time</string>
     <string name="more_setting_place_local">Local Time</string>
@@ -481,4 +492,7 @@
     <string name="prompt_user_have_new_version">Update your Lunar to use this feature</string>
     <string name="scan_duration_title_title">LUNAR SCAN DURATION</string>
     <string name="scan_duration_describe">When the watch gets disconnected it will scan for the selected duration. Note that the watch will drain more battery it scans longer. we suggest not to let it scan for longer then 15 minutes.</string>
+    <string name="more_settings_steps_goal">Steps Goal</string>
+    <string name="more_settings_sleep_goal">Sleep Goal</string>
+    <string name="more_settings_solar_goal">Solar Goal</string>
 </resources>

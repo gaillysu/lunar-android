@@ -460,4 +460,7 @@
     <string name="scan_duration_time_unit">分鐘</string>
     <string name="scan_duration_title_title">LUNAR 藍牙掃描</string>
     <string name="settings_bluetooth_scan">掃描時間</string>
+    <string name="more_settings_sleep_goal">睡眠目標</string>
+    <string name="more_settings_solar_goal">太陽能目標</string>
+    <string name="more_settings_steps_goal">步行目標</string>
 </resources>

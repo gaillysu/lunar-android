@@ -29,7 +29,9 @@ import com.medcorp.lunar.database.entry.AlarmDatabaseHelper;
 import com.medcorp.lunar.database.entry.GoalDatabaseHelper;
 import com.medcorp.lunar.database.entry.LedLampDatabase;
 import com.medcorp.lunar.database.entry.SleepDatabaseHelper;
+import com.medcorp.lunar.database.entry.SleepGoalDatabaseHelper;
 import com.medcorp.lunar.database.entry.SolarDatabaseHelper;
+import com.medcorp.lunar.database.entry.SolarGoalDatabaseHelper;
 import com.medcorp.lunar.database.entry.StepsDatabaseHelper;
 import com.medcorp.lunar.database.entry.UserDatabaseHelper;
 import com.medcorp.lunar.event.LocationChangedEvent;
@@ -144,6 +146,8 @@ public class ApplicationModel extends Application {
     private CloudSyncManager cloudSyncManager;
     private User nevoUser;
     private WorldClockDatabaseHelper worldClockDatabaseHelper;
+    private SleepGoalDatabaseHelper sleepGoalDatabaeHelper;
+    private SolarGoalDatabaseHelper solargoalDatabaseHelper;
     private LedLampDatabase ledDataBase;
     private LocationController locationController;
     private IWXAPI mIWXAPI;
@@ -180,6 +184,8 @@ public class ApplicationModel extends Application {
         goalDatabaseHelper = new GoalDatabaseHelper(this);
         userDatabaseHelper = new UserDatabaseHelper(this);
         solarDatabaseHelper = new SolarDatabaseHelper(this);
+        sleepGoalDatabaeHelper = new SleepGoalDatabaseHelper(this);
+        solargoalDatabaseHelper = new SolarGoalDatabaseHelper(this);
         cloudSyncManager = new CloudSyncManager(this);
         ledDataBase = new LedLampDatabase(this);
         locationController = new LocationController(this);
@@ -1064,5 +1070,13 @@ public class ApplicationModel extends Application {
                         }
                     }
                 });
+    }
+
+    public SolarGoalDatabaseHelper getSolarGoalDatabaseHelper(){
+        return solargoalDatabaseHelper;
+    }
+
+    public SleepGoalDatabaseHelper getSleepDatabseHelper(){
+        return sleepGoalDatabaeHelper;
     }
 }
