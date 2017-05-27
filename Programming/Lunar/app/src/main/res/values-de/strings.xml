@@ -453,5 +453,13 @@
     <string name="wechat_login_fail">WeChat login fail</string>
     <string name="wechat_uninstall">WeChat is not installed</string>
     <string name="Edit_alarm_type">Edit Alarm type</string>
+    <string name="def_sleep_text">0 min</string>
+    <string name="network_error">Network error!</string>
+    <string name="prompt_user_have_new_version">Update your Lunar to use this feature</string>
+    <string name="scan_duration_describe">When the watch gets disconnected it will scan for the selected duration. Note that the watch will drain more battery it scans longer. we suggest not to let it scan for longer then 15 minutes.</string>
+    <string name="scan_duration_item_select_one_hour">1 hour</string>
+    <string name="scan_duration_time_unit">minutes</string>
+    <string name="scan_duration_title_title">LUNAR SCAN DURATION</string>
+    <string name="settings_bluetooth_scan">Scan duration</string>
 
 </resources>

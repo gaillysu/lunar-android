@@ -402,6 +402,7 @@
     <string name="location_access_content">Please grant location access so it can detect lunaR.</string>
     <string name="title_steps">Dashboard</string>
     <string name="settings_my_nevo">My LunaR</string>
+    <string name="settings_bluetooth_scan">Scan duration</string>
     <string name="my_nevo_notice_message"> To save battery power, Bluetooth disconnects automatically when away from the phone for more than 1 hour. You will not receive notifications on LunaR when disconnected.</string>
     <string name="notification_access_message">Do you want to enable notifications for LunaR ?</string>
 
@@ -475,4 +476,9 @@
     <string name="obtain_facebook_info_failed">Obtain facebook profile failed</string>
     <string name="seek_failed">Seek failed</string>
     <string name="def_sleep_text">0 min</string>
+    <string name="scan_duration_item_select_one_hour">1 hour</string>
+    <string name="scan_duration_time_unit"> minutes</string>
+    <string name="prompt_user_have_new_version">Update your Lunar to use this feature</string>
+    <string name="scan_duration_title_title">LUNAR SCAN DURATION</string>
+    <string name="scan_duration_describe">When the watch gets disconnected it will scan for the selected duration. Note that the watch will drain more battery it scans longer. we suggest not to let it scan for longer then 15 minutes.</string>
 </resources>

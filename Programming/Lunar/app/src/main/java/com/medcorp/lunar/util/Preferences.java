@@ -237,4 +237,15 @@ public class Preferences {
         String location = preferences.getString(context.getString(R.string.key_prefs_location_city), null);
         return new Gson().fromJson(location, Address.class);
     }
+
+    public static void saveScanDuration(Context context, int time) {
+        init(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(context.getString(R.string.key_prefs_scan_duration_time), time).apply();
+    }
+
+    public static int getScanDuration(Context context) {
+        init(context);
+        return preferences.getInt(context.getString(R.string.key_prefs_scan_duration_time), -1);
+    }
 }
