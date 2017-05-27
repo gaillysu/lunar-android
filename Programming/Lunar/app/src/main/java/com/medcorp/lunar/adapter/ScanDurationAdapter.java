@@ -19,11 +19,11 @@ import java.util.List;
 
 public class ScanDurationAdapter extends BaseAdapter {
 
-    private Context mContext;
+    private Context context;
     private List<ScanDurationItemModel> listData;
 
     public ScanDurationAdapter(Context context, List<ScanDurationItemModel> listData) {
-        mContext = context;
+        this.context = context;
         this.listData = listData;
     }
 
@@ -46,7 +46,7 @@ public class ScanDurationAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.scan_duration_adapter_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.scan_duration_adapter_item, parent, false);
             holder = new ViewHolder();
             convertView.setTag(holder);
             holder.duration = (TextView) convertView.findViewById(R.id.scan_duration_item_time);
@@ -59,15 +59,15 @@ public class ScanDurationAdapter extends BaseAdapter {
         if (scanDurationItemModel != null) {
             if (scanDurationItemModel.isSelect()) {
                 holder.select.setChecked(true);
-                holder.duration.setTextColor(mContext.getResources().getColor(R.color.tutorial_next_text_color));
+                holder.duration.setTextColor(context.getResources().getColor(R.color.tutorial_next_text_color));
             } else {
                 holder.select.setChecked(false);
-                holder.duration.setTextColor(mContext.getResources().getColor(R.color.white));
+                holder.duration.setTextColor(context.getResources().getColor(R.color.white));
             }
             if (scanDurationItemModel.getTime() == 60) {
-                holder.duration.setText(" "+mContext.getString(R.string.scan_duration_item_select_one_hour));
+                holder.duration.setText(" "+ context.getString(R.string.scan_duration_item_select_one_hour));
             } else {
-                holder.duration.setText(scanDurationItemModel.getTime()+" "+ mContext.getString(R.string.scan_duration_time_unit));
+                holder.duration.setText(scanDurationItemModel.getTime()+" "+ context.getString(R.string.scan_duration_time_unit));
             }
         }
         return convertView;
