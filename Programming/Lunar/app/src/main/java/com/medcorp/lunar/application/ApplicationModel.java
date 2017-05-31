@@ -71,6 +71,7 @@ import com.medcorp.lunar.model.SleepData;
 import com.medcorp.lunar.model.Solar;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
+import com.medcorp.lunar.network.WeatherManager;
 import com.medcorp.lunar.network.model.request.RequestWeChatToken;
 import com.medcorp.lunar.network.model.response.ObtainMoreSleepResponse;
 import com.medcorp.lunar.network.model.response.ObtainMoreStepsResponse;
@@ -142,6 +143,7 @@ public class ApplicationModel extends Application {
     private GoogleFitManager googleFitManager;
     private GoogleFitTaskCounter googleFitTaskCounter;
     private CloudSyncManager cloudSyncManager;
+    private WeatherManager weatherManager;
     private User nevoUser;
     private WorldClockDatabaseHelper worldClockDatabaseHelper;
     private LedLampDatabase ledDataBase;
@@ -181,6 +183,7 @@ public class ApplicationModel extends Application {
         userDatabaseHelper = new UserDatabaseHelper(this);
         solarDatabaseHelper = new SolarDatabaseHelper(this);
         cloudSyncManager = new CloudSyncManager(this);
+        weatherManager = new WeatherManager(this);
         ledDataBase = new LedLampDatabase(this);
         locationController = new LocationController(this);
         mIWXAPI = WXAPIFactory.createWXAPI(this, getString(R.string.we_chat_app_id), true);
@@ -861,6 +864,10 @@ public class ApplicationModel extends Application {
 
     public CloudSyncManager getCloudSyncManager() {
         return cloudSyncManager;
+    }
+
+    public WeatherManager getWeatherManager() {
+        return weatherManager;
     }
 
     public LedLampDatabase getLedDataBase() {

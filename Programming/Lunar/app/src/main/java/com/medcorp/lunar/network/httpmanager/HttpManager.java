@@ -32,10 +32,12 @@ public class HttpManager {
     private static volatile HttpManager httpManager = null;
     private static Retrofit apiRetrofit;
     private Context mContext;
+    private WeatherApi weatherApi;
 
     private HttpManager(Context mContext) {
         this.mContext = mContext;
         initRetrofit();
+        initWeatherApi();
     }
 
 
@@ -68,6 +70,24 @@ public class HttpManager {
 
     public HttpApi createApiService() {
         return apiRetrofit.create(HttpApi.class);
+    }
+
+    private void initWeatherApi() {
+        weatherApi = new Retrofit.Builder()
+                .baseUrl(mContext.getString(R.string.weather_api_url))
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build().create(WeatherApi.class);
+    }
+    public WeatherApi getWeatherApi() {
+        return weatherApi;
+    }
+
+    public <T> void getWeatherForecast(Observable<T> o, Subscriber<T> s) {
+        o.subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe(s);
     }
 
     public <T> void toSubscribe(Context context, Observable<T> o, Subscriber<T> s) {
