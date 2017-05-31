@@ -23,4 +23,12 @@ public class BatteryLevelPacket extends Packet {
         return getPackets().get(0).getRawData()[2];
     }
 
+    /**
+     *
+     * @return 0~100, 0xff: not ready
+     */
+    public byte getBatteryCapacity()
+    {
+        return getPackets().get(0).getRawData()[3];
+    }
 }

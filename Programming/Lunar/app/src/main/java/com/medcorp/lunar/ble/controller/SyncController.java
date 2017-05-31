@@ -53,11 +53,7 @@ public interface SyncController {
     inputL goal =  new NumberOfStepsGoal(XXXX)
      */
 	public void setGoal( GoalBase goal);
-    /*
-    input @list: MAX 3 Alarm array
-          @init: if true means by syncController invoked to do init sync, false means invoked by application to set value
-     */
-	public void setAlarm(List<Alarm> list, boolean init);
+
     public void setAlarm( Alarm alarm);
     /*
       return Nevo 's current daily step count and step Goal, refresh mainhome's Clock screen.
@@ -114,4 +110,5 @@ public interface SyncController {
     public void setHoldRequest(boolean holdRequest);
 
     public int getBluetoothStatus();
+    public void setBleConnectTimeout(int timeoutInminutes);
 }

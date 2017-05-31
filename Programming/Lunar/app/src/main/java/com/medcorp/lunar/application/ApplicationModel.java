@@ -295,10 +295,6 @@ public class ApplicationModel extends Application {
         syncController.setGoal(new NumberOfStepsGoal(goal.getSteps()));
     }
 
-    public void setAlarm(List<Alarm> list) {
-        syncController.setAlarm(list, false);
-    }
-
     public void forgetDevice() {
         syncController.forgetDevice();
     }

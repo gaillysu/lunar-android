@@ -111,7 +111,7 @@ public class Common {
         if(watchID == 3)
         {
             //NOTICE: don't forget fixing firmwares.xml
-            return  R.raw.lunar_20170112_v7;
+            return  R.raw.lunar_20170505_v14;
         }
         return  0;
     }
