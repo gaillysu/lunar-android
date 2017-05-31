@@ -10,7 +10,7 @@ import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.ble.model.color.LedLamp;
 import com.medcorp.lunar.model.Alarm;
-import com.medcorp.lunar.model.Goal;
+import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.SolarGoal;
 
@@ -36,9 +36,9 @@ public class TutorialPageSuccessActivity extends BaseActivity {
         sharedPreferences.commit();
         if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(getString(R.string.key_preset), false)) {
             //default steps goal
-            getModel().addGoal(new Goal(getString(R.string.startup_goal_light), true, 7000));
-            getModel().addGoal(new Goal(getString(R.string.startup_goal_moderate), true, 10000));
-            getModel().addGoal(new Goal(getString(R.string.startup_goal_heavy), true, 20000));
+            getModel().addGoal(new StepsGoal(getString(R.string.startup_goal_light), true, 7000));
+            getModel().addGoal(new StepsGoal(getString(R.string.startup_goal_moderate), true, 10000));
+            getModel().addGoal(new StepsGoal(getString(R.string.startup_goal_heavy), true, 20000));
             //default Sleep goal
            addSleepDefGoal();
             //default solar goal

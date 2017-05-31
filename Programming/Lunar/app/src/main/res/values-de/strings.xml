@@ -370,7 +370,7 @@
     <string name="goal_synced">Ziel synchronisiert</string>
     <string name="goal_error_sync">Fehler bei der Synchronisierung des Ziels</string>
 
-    <string name="goal">Ziel</string>
+    <string name="stepsGoal">Ziel</string>
     <string name="goal_ok">OK</string>
     <string name="goal_cancel">Abbrechen</string>
     <string name="goal_add">Ziel hinzufügen</string>
@@ -464,5 +464,14 @@
     <string name="more_settings_sleep_goal">Sleep Goal</string>
     <string name="more_settings_solar_goal">Solar Goal</string>
     <string name="more_settings_steps_goal">Steps Goal</string>
+    <string name="def_goal_sleep_name">Sleep stepsGoal</string>
+    <string name="sleep_goal_def_long">Long sleep</string>
+    <string name="sleep_goal_def_noon">Siesta</string>
+    <string name="sleep_goal_def_short">Short Sleep</string>
+    <string name="sleep_goal_id" translatable="false"></string>
+    <string name="sleep_unit_hour">h</string>
+    <string name="sleep_unit_minute">min</string>
+    <string name="solar_goal_def_long">Long</string>
+    <string name="solar_goal_def_short">short</string>
 
 </resources>

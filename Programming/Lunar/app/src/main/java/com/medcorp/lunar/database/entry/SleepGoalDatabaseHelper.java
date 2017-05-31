@@ -71,10 +71,10 @@ public class SleepGoalDatabaseHelper {
         }).subscribeOn(AndroidSchedulers.mainThread());
     }
 
-    public void remove(final int presetId) {
-        Observable.create(new ObservableOnSubscribe<String>() {
+    public Observable<Boolean> remove(final int presetId) {
+       return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
-            public void subscribe(ObservableEmitter<String> e) throws Exception {
+            public void subscribe(final ObservableEmitter<Boolean> e) throws Exception {
                 final SleepGoal goal = mRealm.where(SleepGoal.class).equalTo(mContext.getString(R.string.sleep_goal_id)
                         , presetId).findFirst();
                 mRealm.executeTransaction(new Realm.Transaction() {
@@ -82,7 +82,11 @@ public class SleepGoalDatabaseHelper {
                     public void execute(Realm realm) {
                         if (goal != null) {
                             goal.deleteFromRealm();
+                            e.onNext(true);
+                        }else{
+                            e.onNext(false);
                         }
+                        e.onComplete();
                     }
                 });
             }

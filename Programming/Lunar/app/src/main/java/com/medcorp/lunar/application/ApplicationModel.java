@@ -26,7 +26,7 @@ import com.medcorp.lunar.ble.model.goal.NumberOfStepsGoal;
 import com.medcorp.lunar.cloud.CloudSyncManager;
 import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.entry.AlarmDatabaseHelper;
-import com.medcorp.lunar.database.entry.GoalDatabaseHelper;
+import com.medcorp.lunar.database.entry.StepsGoalDatabaseHelper;
 import com.medcorp.lunar.database.entry.LedLampDatabase;
 import com.medcorp.lunar.database.entry.SleepDatabaseHelper;
 import com.medcorp.lunar.database.entry.SleepGoalDatabaseHelper;
@@ -67,7 +67,7 @@ import com.medcorp.lunar.googlefit.GoogleFitTaskCounter;
 import com.medcorp.lunar.googlefit.GoogleHistoryUpdateTask;
 import com.medcorp.lunar.location.LocationController;
 import com.medcorp.lunar.model.Alarm;
-import com.medcorp.lunar.model.Goal;
+import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.SleepData;
 import com.medcorp.lunar.model.Solar;
@@ -134,7 +134,7 @@ public class ApplicationModel extends Application {
     private StepsDatabaseHelper stepsDatabaseHelper;
     private SleepDatabaseHelper sleepDatabaseHelper;
     private AlarmDatabaseHelper alarmDatabaseHelper;
-    private GoalDatabaseHelper goalDatabaseHelper;
+    private StepsGoalDatabaseHelper mStepsGoalDatabaseHelper;
     private UserDatabaseHelper userDatabaseHelper;
     private SolarDatabaseHelper solarDatabaseHelper;
     private boolean firmwareUpdateAlertDailog = false;
@@ -157,7 +157,7 @@ public class ApplicationModel extends Application {
     private final String REALM_NAME = "med_lunar.realm";
     private Sleep mSleep;
     private boolean upDateIsSuccess;
-    private Goal goal;
+    private StepsGoal mStepsGoal;
     private Sleep mYesterdaySleep;
     private Sleep[] todaySleep;
     private static ApplicationModel mModel;
@@ -181,7 +181,7 @@ public class ApplicationModel extends Application {
         stepsDatabaseHelper = new StepsDatabaseHelper(this);
         sleepDatabaseHelper = new SleepDatabaseHelper(this);
         alarmDatabaseHelper = new AlarmDatabaseHelper(this);
-        goalDatabaseHelper = new GoalDatabaseHelper(this);
+        mStepsGoalDatabaseHelper = new StepsGoalDatabaseHelper(this);
         userDatabaseHelper = new UserDatabaseHelper(this);
         solarDatabaseHelper = new SolarDatabaseHelper(this);
         sleepGoalDatabaeHelper = new SleepGoalDatabaseHelper(this);
@@ -297,8 +297,8 @@ public class ApplicationModel extends Application {
         return syncController.getFirmwareVersion();
     }
 
-    public void setGoal(Goal goal) {
-        syncController.setGoal(new NumberOfStepsGoal(goal.getSteps()));
+    public void setStepsGoal(StepsGoal stepsGoal) {
+        syncController.setGoal(new NumberOfStepsGoal(stepsGoal.getSteps()));
     }
 
     public void setAlarm(List<Alarm> list) {
@@ -679,18 +679,18 @@ public class ApplicationModel extends Application {
     }
 
     public void getAllGoal(final MainFragment.ObtainGoalListener listener) {
-        goalDatabaseHelper.getAll().subscribe(new Consumer<List<Goal>>() {
+        mStepsGoalDatabaseHelper.getAll().subscribe(new Consumer<List<StepsGoal>>() {
             @Override
-            public void accept(List<Goal> goals) throws Exception {
+            public void accept(List<StepsGoal> stepsGoals) throws Exception {
                 if (listener != null) {
-                    listener.obtainGoal(goals);
+                    listener.obtainGoal(stepsGoals);
                 }
             }
         });
     }
 
-    public void addGoal(Goal goal) {
-        goalDatabaseHelper.add(goal).subscribe(new Consumer<Boolean>() {
+    public void addGoal(StepsGoal stepsGoal) {
+        mStepsGoalDatabaseHelper.add(stepsGoal).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
@@ -700,8 +700,8 @@ public class ApplicationModel extends Application {
         });
     }
 
-    public boolean updateGoal(Goal goal) {
-        goalDatabaseHelper.update(goal).subscribe(new Consumer<Boolean>() {
+    public boolean updateGoal(StepsGoal stepsGoal) {
+        mStepsGoalDatabaseHelper.update(stepsGoal).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 upDateIsSuccess = aBoolean;
@@ -710,14 +710,18 @@ public class ApplicationModel extends Application {
         return upDateIsSuccess;
     }
 
-    public Goal getGoalById(int id) {
-        goalDatabaseHelper.get(id).subscribe(new Consumer<Goal>() {
+    public StepsGoal getGoalById(int id) {
+        mStepsGoalDatabaseHelper.get(id).subscribe(new Consumer<StepsGoal>() {
             @Override
-            public void accept(Goal g) throws Exception {
-                goal = g;
+            public void accept(StepsGoal g) throws Exception {
+                mStepsGoal = g;
             }
         });
-        return goal;
+        return mStepsGoal;
+    }
+
+    public StepsGoalDatabaseHelper getStepsGoalDatabaseHelper(){
+        return mStepsGoalDatabaseHelper;
     }
 
     /**

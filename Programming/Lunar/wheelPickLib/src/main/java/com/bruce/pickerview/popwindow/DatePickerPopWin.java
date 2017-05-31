@@ -207,6 +207,12 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                 tv_pickerRight.setVisibility(View.VISIBLE);
                 tv_pickerRight.setTextSize(viewTextSize);
                 tv_pickerRight.setText("minute");
+            case 5:
+                leftLoopView.setVisibility(View.GONE);
+                rightLoopView.setVisibility(View.GONE);
+                tv_pickerRight.setVisibility(View.VISIBLE);
+                tv_pickerRight.setTextSize(viewTextSize);
+                tv_pickerRight.setText("minute");
         }
 
         //do not loop,default can loop
@@ -309,6 +315,13 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                 }
                 middleLoopView.setArrayList((ArrayList) heightList);
                 middleLoopView.setInitPosition(middlePos);
+            case 5:
+                for (int i = 30; i <= 240; i += 30) {
+                    heightList.add(format2LenStr(i));
+                }
+                middleLoopView.setArrayList((ArrayList) heightList);
+                middleLoopView.setInitPosition(middlePos);
+
         }
 
     }
@@ -363,6 +376,8 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                 case 4:
                     middlePos = new Integer(dateStr).intValue();
                     break;
+                case 5:
+                    middlePos = new Integer(dateStr).intValue();
             }
         }
     }
@@ -453,6 +468,10 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                 case 4:
                     int time = new Integer(heightList.get(middlePos)).intValue();
                     mListener.onDatePickCompleted(0, time, 0, time + "");
+                    break;
+                case 5:
+                    int duration = new Integer(heightList.get(middlePos)).intValue();
+                    mListener.onDatePickCompleted(0, duration, 0, duration + "");
                     break;
                 default:
                     dismissPopWin();

@@ -10,7 +10,7 @@ import android.widget.CompoundButton;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.application.ApplicationModel;
-import com.medcorp.lunar.model.Goal;
+import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.view.customfontview.RobotoTextView;
 
 import java.util.List;
@@ -18,27 +18,27 @@ import java.util.List;
 /**
  * Created by gaillysu on 15/12/23.
  */
-public class PresetArrayAdapter extends ArrayAdapter<Goal> {
+public class PresetArrayAdapter extends ArrayAdapter<StepsGoal> {
     private Context context;
     private ApplicationModel model;
-    private List<Goal> listGoal;
+    private List<StepsGoal> mListStepsGoal;
 
-    public PresetArrayAdapter(Context context, ApplicationModel model, List<Goal> listGoal)
+    public PresetArrayAdapter(Context context, ApplicationModel model, List<StepsGoal> listStepsGoal)
     {
-        super(context,0, listGoal);
+        super(context,0, listStepsGoal);
         this.context = context;
         this.model = model;
-        this.listGoal = listGoal;
+        this.mListStepsGoal = listStepsGoal;
     }
 
-    public void setDataset(List<Goal> listGoal)
+    public void setDataset(List<StepsGoal> listStepsGoal)
     {
-        this.listGoal = listGoal;
+        this.mListStepsGoal = listStepsGoal;
     }
 
     @Override
     public int getCount() {
-        return listGoal ==null?0: listGoal.size();
+        return mListStepsGoal ==null?0: mListStepsGoal.size();
     }
 
     @Override
@@ -49,17 +49,17 @@ public class PresetArrayAdapter extends ArrayAdapter<Goal> {
         RobotoTextView presetLabel = (RobotoTextView)itemView.findViewById(R.id.activity_goals_list_view_item_goals_label);
         RobotoTextView presetValue = (RobotoTextView)itemView.findViewById(R.id.activity_goals_list_view_item_goal_steps);
         SwitchCompat presetOnOff = (SwitchCompat) itemView.findViewById(R.id.activity_goals_list_view_item_goals_switch);
-        final Goal goal = listGoal.get(position);
-        presetLabel.setText(goal.getLabel());
-        presetValue.setText(goal.getSteps() + " " + context.getString(R.string.steps_steps));
+        final StepsGoal stepsGoal = mListStepsGoal.get(position);
+        presetLabel.setText(stepsGoal.getLabel());
+        presetValue.setText(stepsGoal.getSteps() + " " + context.getString(R.string.steps_steps));
         presetOnOff.setOnCheckedChangeListener(null);
-        presetOnOff.setChecked(goal.isStatus());
+        presetOnOff.setChecked(stepsGoal.isStatus());
         presetOnOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Goal goal = listGoal.get(position);
-                goal.setStatus(isChecked);
-                model.updateGoal(goal);
+                StepsGoal stepsGoal = mListStepsGoal.get(position);
+                stepsGoal.setStatus(isChecked);
+                model.updateGoal(stepsGoal);
             }
         });
         return itemView;

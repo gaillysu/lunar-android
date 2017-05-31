@@ -143,7 +143,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     private boolean setSunriseAndSunsetSuccess = false;
     //IMPORT!!!!, every get connected, will do sync profile data and activity data with Nevo
     //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
-    //so before sync finished, disable setGoal/setAlarm/getGoalSteps
+    //so before sync finished, disable setStepsGoal/setAlarm/getGoalSteps
     //make sure  the whole received packets
     private Realm realm;
     //start a timer to do little sync, refresh dashboard @LittleSyncEvent

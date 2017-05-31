@@ -18,7 +18,7 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.PresetArrayAdapter;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.fragment.MainFragment;
-import com.medcorp.lunar.model.Goal;
+import com.medcorp.lunar.model.StepsGoal;
 
 import java.util.List;
 
@@ -36,11 +36,13 @@ public class StepsGoalsActivity extends BaseActivity implements AdapterView.OnIt
     @Bind(R.id.activity_goals_list_view)
     ListView presetListView;
 
-    List<Goal> goalList;
+    List<StepsGoal> mStepsGoalList;
     PresetArrayAdapter presetArrayAdapter;
-    Goal goal;
+    StepsGoal mStepsGoal;
     private int steps = 0;
     private String lableGoal;
+    private static final int STEPS_FLAG = 0X01;
+    private static final int STEPS_REQUEST_CODE = 0X01<<3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,9 +58,9 @@ public class StepsGoalsActivity extends BaseActivity implements AdapterView.OnIt
         presetListView.setVisibility(View.VISIBLE);
         getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
             @Override
-            public void obtainGoal(List<Goal> list) {
-                goalList = list;
-                presetArrayAdapter = new PresetArrayAdapter(StepsGoalsActivity.this, getModel(), goalList);
+            public void obtainGoal(List<StepsGoal> list) {
+                mStepsGoalList = list;
+                presetArrayAdapter = new PresetArrayAdapter(StepsGoalsActivity.this, getModel(), mStepsGoalList);
                 presetListView.setAdapter(presetArrayAdapter);
                 presetListView.setOnItemClickListener(StepsGoalsActivity.this);
 
@@ -77,25 +79,21 @@ public class StepsGoalsActivity extends BaseActivity implements AdapterView.OnIt
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this, EditGoalsActivity.class);
-        goal = goalList.get(position);
-        Bundle bundle = new Bundle();
-        bundle.putInt(getString(R.string.key_preset_id), goal.getId());
-        bundle.putString(getString(R.string.key_preset_label), goal.getLabel());
-        bundle.putInt(getString(R.string.key_preset_steps), goal.getSteps());
-        intent.putExtras(bundle);
-        startActivityForResult(intent, 0);
+        intent.putExtra(getString(R.string.launch_edit_goal_activity_flag),STEPS_FLAG);
+        intent.putExtra(getString(R.string.key_preset_id), mStepsGoalList.get(position).getId());
+        startActivityForResult(intent, STEPS_REQUEST_CODE);
         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //delete or update the goal, refresh list
+        //delete or update the mStepsGoal, refresh list
         if (resultCode != 0) {
             getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
                 @Override
-                public void obtainGoal(List<Goal> goalList) {
-                    presetArrayAdapter.setDataset(goalList);
+                public void obtainGoal(List<StepsGoal> stepsGoalList) {
+                    presetArrayAdapter.setDataset(stepsGoalList);
                     presetArrayAdapter.notifyDataSetChanged();
                 }
             });
@@ -138,17 +136,17 @@ public class StepsGoalsActivity extends BaseActivity implements AdapterView.OnIt
                                                             @Override
                                                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                                                 if (input.length() == 0) {
-                                                                    lableGoal = getString(R.string.def_goal_name) + " " + (goalList.size() + 1);
+                                                                    lableGoal = getString(R.string.def_goal_name) + " " + (mStepsGoalList.size() + 1);
                                                                 } else {
                                                                     lableGoal = input.toString();
                                                                 }
 
-                                                                goal = new Goal(lableGoal, true, steps);
-                                                                getModel().addGoal(goal);
+                                                                mStepsGoal = new StepsGoal(lableGoal, true, steps);
+                                                                getModel().addGoal(mStepsGoal);
                                                                 getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
                                                                     @Override
-                                                                    public void obtainGoal(List<Goal> goalList) {
-                                                                        presetArrayAdapter.setDataset(goalList);
+                                                                    public void obtainGoal(List<StepsGoal> stepsGoalList) {
+                                                                        presetArrayAdapter.setDataset(stepsGoalList);
                                                                         presetArrayAdapter.notifyDataSetChanged();
                                                                     }
                                                                 });

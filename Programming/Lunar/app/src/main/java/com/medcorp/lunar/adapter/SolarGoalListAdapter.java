@@ -74,9 +74,11 @@ public class SolarGoalListAdapter extends ArrayAdapter<SolarGoal> {
     private String countTime(SolarGoal goal) {
         StringBuffer sb = new StringBuffer();
         int goalDuration = goal.getTime();
+
         if (goalDuration > 60) {
-            sb.append(goalDuration / 60 + context.getString(R.string.sleep_unit_hour)
-                    + (goalDuration % 60 != 0 ? context.getString(R.string.sleep_unit_minute) : ""));
+            sb.append(goalDuration / 60 + context.getString(R.string.sleep_unit_hour));
+            int minutes = goalDuration % 60;
+            sb.append(minutes != 0 ? minutes + context.getString(R.string.sleep_unit_minute) : "");
         } else if (goalDuration == 60) {
             sb.append(goalDuration / 60 + context.getString(R.string.sleep_unit_hour));
         } else {

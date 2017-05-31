@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.lunar.fragment.base.BaseFragment;
-import com.medcorp.lunar.model.Goal;
+import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.TimeUtil;
@@ -55,7 +55,7 @@ public class AnalysisStepsFragment extends BaseFragment {
     private AnalysisStepsLineChart thisWeekChart;
     private AnalysisStepsLineChart lastWeekChart;
     private AnalysisStepsLineChart lastMonthChart;
-    private Goal activeGoal;
+    private StepsGoal mActiveStepsGoal;
     private List<Steps> thisWeekData = new ArrayList<>();
     private List<Steps> lastWeekData = new ArrayList<>();
     private List<Steps> lastMonthData = new ArrayList<>();
@@ -92,22 +92,22 @@ public class AnalysisStepsFragment extends BaseFragment {
          * In this month this is 30 (or 31) because there are 30 days in a month.
          *
          */
-        activeGoal = null;
+        mActiveStepsGoal = null;
         getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
             @Override
-            public void obtainGoal(List<Goal> list) {
+            public void obtainGoal(List<StepsGoal> list) {
                 if (list != null) {
-                    for (Goal goal : list) {
-                        if (goal.isStatus()) {
-                            activeGoal = goal;
+                    for (StepsGoal stepsGoal : list) {
+                        if (stepsGoal.isStatus()) {
+                            mActiveStepsGoal = stepsGoal;
                             break;
                         }
                     }
                 }
             }
         });
-        if (activeGoal == null) {
-            activeGoal = new Goal("Unknown", true, 1000);
+        if (mActiveStepsGoal == null) {
+            mActiveStepsGoal = new StepsGoal("Unknown", true, 1000);
         }
 
         setDesText(0);
@@ -117,7 +117,7 @@ public class AnalysisStepsFragment extends BaseFragment {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
                         thisWeekData = stepsList;
-                        thisWeekChart.addData(thisWeekData, activeGoal, 7);
+                        thisWeekChart.addData(thisWeekData, mActiveStepsGoal, 7);
                         thisWeekChart.setMarkerView(marker);
                         thisWeekChart.animateY(3000);
                     }
@@ -128,7 +128,7 @@ public class AnalysisStepsFragment extends BaseFragment {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
                         lastWeekData = stepsList;
-                        lastWeekChart.addData(lastWeekData, activeGoal, 7);
+                        lastWeekChart.addData(lastWeekData, mActiveStepsGoal, 7);
                         lastWeekChart.setMarkerView(marker);
                         lastWeekChart.animateY(3000);
                     }
@@ -139,7 +139,7 @@ public class AnalysisStepsFragment extends BaseFragment {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
                         lastMonthData = stepsList;
-                        lastMonthChart.addData(lastMonthData, activeGoal, 30);
+                        lastMonthChart.addData(lastMonthData, mActiveStepsGoal, 30);
                         lastMonthChart.setMarkerView(marker);
                         lastMonthChart.animateY(3000);
                     }

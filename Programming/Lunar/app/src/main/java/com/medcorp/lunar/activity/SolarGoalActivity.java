@@ -1,11 +1,14 @@
 package com.medcorp.lunar.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,7 +29,7 @@ import io.reactivex.functions.Consumer;
  * Created by Jason on 2017/5/27.
  */
 
-public class SolarGoalActivity extends BaseActivity {
+public class SolarGoalActivity extends BaseActivity implements AdapterView.OnItemClickListener {
     @Bind(R.id.main_toolbar)
     Toolbar myToolbar;
     @Bind(R.id.activity_solar_goals_list_view)
@@ -34,6 +37,9 @@ public class SolarGoalActivity extends BaseActivity {
     private SolarGoalListAdapter adapter;
     private String lableGoal;
     private List<SolarGoal> all;
+    private static final int SOLAR_FLAG = 0X02;
+    private static final int SOLAR_REQUEST_CODE = 0X01 << 2;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,7 +59,7 @@ public class SolarGoalActivity extends BaseActivity {
                 all = solarGoals;
             }
         });
-
+        allSolarGoal.setOnItemClickListener(this);
     }
 
     private void initToolbar() {
@@ -108,30 +114,55 @@ public class SolarGoalActivity extends BaseActivity {
     }
 
     private void startSettingGoalTime() {
-        final DatePickerPopWin pickerPopWin3 = new DatePickerPopWin.Builder(this,
+        DatePickerPopWin pickerPopWin = new DatePickerPopWin.Builder(this,
                 new DatePickerPopWin.OnDatePickedListener() {
                     @Override
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
                         getModel().getSolarGoalDatabaseHelper().add(new SolarGoal(lableGoal, month, false))
                                 .subscribe(new Consumer<Boolean>() {
-                            @Override
-                            public void accept(Boolean aBoolean) throws Exception {
-                                if(aBoolean){
-                                    SolarGoalActivity.this.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            initData();
+                                    @Override
+                                    public void accept(Boolean aBoolean) throws Exception {
+                                        if (aBoolean) {
+                                            SolarGoalActivity.this.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    initData();
+                                                }
+                                            });
                                         }
-                                    });
-                                }
-                            }
-                        });
+                                    }
+                                });
                     }
                 }).viewStyle(4)
                 .viewTextSize(18)
                 .dateChose("0")
                 .build();
-        pickerPopWin3.showPopWin(this);
+        pickerPopWin.showPopWin(this);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(this, EditGoalsActivity.class);
+        SolarGoal solarGoal = all.get(position);
+        intent.putExtra(getString(R.string.launch_edit_goal_activity_flag), SOLAR_FLAG);
+        intent.putExtra(getString(R.string.key_preset_id),solarGoal.getSolarGoalId());
+        startActivityForResult(intent, SOLAR_REQUEST_CODE);
+        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != 0) {
+            getModel().getSolarGoalDatabaseHelper().getAll().subscribe(new Consumer<List<SolarGoal>>() {
+                @Override
+                public void accept(List<SolarGoal> solarGoals) throws Exception {
+                    adapter = new SolarGoalListAdapter(SolarGoalActivity.this, getModel(), solarGoals);
+                    allSolarGoal.setAdapter(adapter);
+                    all = solarGoals;
+                }
+            });
+        }
     }
 }

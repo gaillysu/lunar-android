@@ -21,7 +21,7 @@ import java.util.List;
  *
  *  step1: sync.startConnect(true,this); // step1 should be called when the app start or user press "connect"
  *                                       //only step1 connected, can do step2, otherwise, step2 will return without sending request.
- *  step2: sync.setGoal(new NumberOfStepsGoal(10000))
+ *  step2: sync.setStepsGoal(new NumberOfStepsGoal(10000))
  *
  *
  * @author Gaillysu
@@ -49,7 +49,7 @@ public interface SyncController {
 	public boolean isConnected();
 
     /*
-    set Steps Goal
+    set Steps StepsGoal
     inputL goal =  new NumberOfStepsGoal(XXXX)
      */
 	public void setGoal( GoalBase goal);
@@ -60,7 +60,7 @@ public interface SyncController {
 	public void setAlarm(List<Alarm> list, boolean init);
     public void setAlarm( Alarm alarm);
     /*
-      return Nevo 's current daily step count and step Goal, refresh mainhome's Clock screen.
+      return Nevo 's current daily step count and step StepsGoal, refresh mainhome's Clock screen.
      */
     public void getStepsAndGoal();
 

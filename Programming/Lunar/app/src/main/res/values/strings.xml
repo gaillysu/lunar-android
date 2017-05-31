@@ -1,5 +1,5 @@
 <resources>
-<!-- for better translation, remove all strings into every flavor: nevo,lunar-->
+    <!-- for better translation, remove all strings into every flavor: nevo,lunar-->
     <string name="profile_gender" translatable="false">profile_gender</string>
     <string name="profile_gender_values" translatable="false">profile_gender_values</string>
     <string name="edit_notification_item_name">Edit</string>
@@ -9,10 +9,10 @@
     <string name="new_nt_def_name">name</string>
     <string name="new_nt_select_color">Choose color</string>
     <string name="notification_def_name">Red</string>
-    <string name="unit_length" >mi</string>
+    <string name="unit_length">mi</string>
     <string name="unit_cal">kcal</string>
     <string name="lunar_steps_percentage">OF GOAL</string>
-    <string name="home_time_home_city_name"  translatable="false">Getting location.. </string>
+    <string name="home_time_home_city_name" translatable="false">Getting location.. </string>
     <string name="permission_location_message">We need your location to search for your LunaR and to determine the sunset and sunrise time</string>
     <string name="my_watch_firmwer_version">Version </string>
     <string name="def_alarm_name">Alarm</string>
@@ -134,7 +134,7 @@
     <string name="sleep_select_date">select a date</string>
 
     <string name="steps_goal_title">Steps Goal</string>
-    <string name="steps_goal">goal</string>
+    <string name="steps_goal">stepsGoal</string>
     <string name="steps_progress">progress</string>
     <string name="steps_steps">steps</string>
 
@@ -142,10 +142,10 @@
     <string name="sleep_goal_def_long">Long sleep</string>
     <string name="sleep_goal_def_noon">Siesta</string>
     <string name="sleep_goal_def_short">Short Sleep</string>
-    <string name="sleep_unit_hour"> hour</string>
-    <string name="sleep_unit_minute"> minute</string>
+    <string name="sleep_unit_hour">h</string>
+    <string name="sleep_unit_minute">min</string>
 
-    <string name="solar_goal_def_long">Long Time</string>
+    <string name="solar_goal_def_long">Long</string>
     <string name="solar_goal_def_short">Short Time</string>
 
     <string name="startup_goal_light">Light</string>
@@ -177,21 +177,21 @@
     <string name="goal_synced">Goal Synced</string>
     <string name="goal_error_sync">Error Syncing Goal</string>
 
-    <string name="goal">Goal</string>
+    <string name="stepsGoal">Goal</string>
     <string name="goal_ok">OK</string>
     <string name="goal_cancel">Cancel</string>
     <string name="goal_add">Add Goal</string>
-    <string name="goal_saved">Saved goal!</string>
-    <string name="goal_step_goal">step goal</string>
-    <string name="goal_name_goal">goal name</string>
-    <string name="goal_could_not_save">Could not save goal!</string>
+    <string name="goal_saved">Saved stepsGoal!</string>
+    <string name="goal_step_goal">step stepsGoal</string>
+    <string name="goal_name_goal">stepsGoal name</string>
+    <string name="goal_could_not_save">Could not save stepsGoal!</string>
     <string name="goal_edit">Edit Goal</string>
-    <string name="goal_input">Set your goal</string>
-    <string name="goal_label_goal">Label your goal</string>
+    <string name="goal_input">Set your stepsGoal</string>
+    <string name="goal_label_goal">Label your stepsGoal</string>
     <string name="goal_label">label name</string>
-    <string name="goal_deleted">Deleted goal!</string>
-    <string name="goal_could_not_delete">Failed to delete goal</string>
-    <string name="goal_could_not_change">Failed to change goal</string>
+    <string name="goal_deleted">Deleted stepsGoal!</string>
+    <string name="goal_could_not_delete">Failed to delete stepsGoal</string>
+    <string name="goal_could_not_change">Failed to change stepsGoal</string>
     <string name="goal_delete">Delete Goal</string>
 
 
@@ -460,7 +460,7 @@
     <string name="def_alarm_one">Alarm 1</string>
     <string name="def_alarm_two">Alarm 2</string>
     <string name="def_goal_name">Goal </string>
-    <string name="def_goal_sleep_name">Sleep goal</string>
+    <string name="def_goal_sleep_name">Sleep stepsGoal</string>
     <string name="more_setting_unit">Unit</string>
     <string name="more_setting_place_time">Watch digital time</string>
     <string name="more_setting_place_local">Local Time</string>
