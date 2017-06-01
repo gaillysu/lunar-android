@@ -8,9 +8,9 @@ import android.widget.BaseAdapter;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.application.ApplicationModel;
-import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.SolarGoal;
+import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.view.customfontview.RobotoTextView;
 
 import io.reactivex.functions.Consumer;
@@ -109,30 +109,36 @@ public class PresetEditAdapter extends BaseAdapter {
         switch (flag) {
             case 0x01:
                 title.setText(mStepsGoal.getLabel());
+                summary.setText(R.string.goal_label_goal);
                 break;
             case 0x02:
                 title.setText(solarGoal.getName());
+
+                summary.setText(R.string.goal_label_solar);
                 break;
             case 0x03:
                 title.setText(sleepGoal.getGoalName());
+                summary.setText(R.string.goal_label_sleep);
                 break;
         }
-        summary.setText(R.string.goal_label_goal);
     }
 
     private void setGoal(RobotoTextView title, RobotoTextView summary) {
         switch (flag) {
             case 0x01:
                 title.setText(mStepsGoal.getSteps() + "");
+                summary.setText(R.string.goal_input);
                 break;
             case 0x02:
-                title.setText( countTime(solarGoal.getTime()));
+                title.setText(countTime(solarGoal.getTime()));
+                summary.setText(R.string.goal_input_solar);
                 break;
             case 0x03:
-                title.setText( countTime(sleepGoal.getGoalDuration()));
+                title.setText(countTime(sleepGoal.getGoalDuration()));
+                summary.setText(R.string.goal_input_sleep);
                 break;
         }
-        summary.setText(R.string.goal_input);
+
     }
 
     private String countTime(int goalDuration) {

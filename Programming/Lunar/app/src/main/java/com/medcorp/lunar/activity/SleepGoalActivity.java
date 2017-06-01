@@ -105,9 +105,9 @@ public class SleepGoalActivity extends BaseActivity implements AdapterView.OnIte
             case R.id.add_menu:
                 new MaterialDialog.Builder(this)
                         .title(R.string.goal_add)
-                        .content(R.string.goal_label_goal)
+                        .content(R.string.goal_label_sleep)
                         .inputType(InputType.TYPE_CLASS_TEXT)
-                        .input(getString(R.string.goal_name_goal), "",
+                        .input(getString(R.string.goal_name_goal_sleep), "",
                                 new MaterialDialog.InputCallback() {
                                     @Override
                                     public void onInput(MaterialDialog dialog, CharSequence input) {

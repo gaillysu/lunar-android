@@ -187,7 +187,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
         } else if (position == 1) {
             new MaterialDialog.Builder(EditGoalsActivity.this)
                     .title(R.string.goal_edit)
-                    .content(R.string.goal_label_goal)
+                    .content(R.string.goal_label_sleep)
                     .inputType(InputType.TYPE_CLASS_TEXT)
                     .input(getString(R.string.goal_label), solarGoal.getName(), new MaterialDialog.InputCallback() {
                         @Override
@@ -235,7 +235,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
         } else if (position == 1) {
             new MaterialDialog.Builder(EditGoalsActivity.this)
                     .title(R.string.goal_edit)
-                    .content(R.string.goal_label_goal)
+                    .content(R.string.goal_label_sleep)
                     .inputType(InputType.TYPE_CLASS_TEXT)
                     .input(getString(R.string.goal_label), sleepGoal.getGoalName(), new MaterialDialog.InputCallback() {
                         @Override

@@ -473,4 +473,11 @@
     <string name="solar_goal_def_long">大目標</string>
     <string name="solar_goal_def_short">短時目標</string>
     <string name="setting_goal_title">選擇目標</string>
+    <string name="def_goal_solar_name">太阳能目標</string>
+    <string name="goal_label_sleep">給目標壹個名字.</string>
+    <string name="goal_label_solar">給目標壹個名字.</string>
+    <string name="goal_name_goal_sleep">目標名字</string>
+    <string name="goal_name_goal_solar">目標名字</string>
+    <string name="goal_input_sleep">設置您的目標</string>
+    <string name="goal_input_solar">設置您的目標</string>
 </resources>

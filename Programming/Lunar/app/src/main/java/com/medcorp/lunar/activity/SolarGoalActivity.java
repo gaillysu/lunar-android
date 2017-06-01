@@ -100,14 +100,14 @@ public class SolarGoalActivity extends BaseActivity implements AdapterView.OnIte
             case R.id.add_menu:
                 new MaterialDialog.Builder(this)
                         .title(R.string.goal_add)
-                        .content(R.string.goal_label_goal)
+                        .content(R.string.goal_label_solar)
                         .inputType(InputType.TYPE_CLASS_TEXT)
-                        .input(getString(R.string.goal_name_goal), "",
+                        .input(getString(R.string.goal_name_goal_solar), "",
                                 new MaterialDialog.InputCallback() {
                                     @Override
                                     public void onInput(MaterialDialog dialog, CharSequence input) {
                                         if (input.length() == 0) {
-                                            lableGoal = getString(R.string.def_goal_sleep_name) + " " + (all.size() + 1);
+                                            lableGoal = getString(R.string.def_goal_solar_name) + " " + (all.size() + 1);
                                         } else {
                                             lableGoal = input.toString();
                                         }
