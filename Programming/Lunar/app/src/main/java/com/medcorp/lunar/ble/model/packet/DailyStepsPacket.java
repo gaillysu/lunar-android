@@ -33,7 +33,7 @@ public class DailyStepsPacket extends Packet {
         return dailySteps;
     }
     /**
-     return the Daily steps Goal
+     return the Daily steps StepsGoal
      */
     public int getDailyStepsGoal()
     {

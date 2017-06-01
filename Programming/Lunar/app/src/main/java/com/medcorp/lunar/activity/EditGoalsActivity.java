@@ -1,24 +1,36 @@
 package com.medcorp.lunar.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.PresetEditAdapter;
 import com.medcorp.lunar.base.BaseActivity;
-import com.medcorp.lunar.model.Goal;
+import com.medcorp.lunar.model.SleepGoal;
+import com.medcorp.lunar.model.SolarGoal;
+import com.medcorp.lunar.model.StepsGoal;
+import com.medcorp.lunar.view.PickerView;
 import com.medcorp.lunar.view.ToastHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by gaillysu on 15/12/23.
@@ -31,28 +43,68 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
     @Bind(R.id.activity_goals_list_view)
     ListView presetListView;
 
-    private Goal goal;
+    private StepsGoal stepsGoal;
+    private SolarGoal solarGoal;
+    private SleepGoal sleepGoal;
+    private int mFlag;
+    private int selectHour = 0;
+    private int selectMinutes = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goals);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        setTitle(R.string.goal_edit);
-        Bundle bundle = getIntent().getExtras();
-        goal = getModel().getGoalById(bundle.getInt("Preset_ID"));
-        presetListView.setVisibility(View.VISIBLE);
-        presetListView.setOnItemClickListener(this);
-        presetListView.setAdapter(new PresetEditAdapter(this, goal));
+        initToolbar();
+        initData();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_done, menu);
-        return super.onCreateOptionsMenu(menu);
+    private void initToolbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
+        toolbarTitle.setText(getString(R.string.goal_edit));
+    }
+
+    private void initData() {
+        Intent intent = getIntent();
+        mFlag = intent.getIntExtra(getString(R.string.launch_edit_goal_activity_flag), -1);
+        switch (mFlag) {
+            case 0x01:
+                stepsGoal = getModel().getGoalById(intent.getIntExtra(getString(R.string.key_preset_id), -1));
+                presetListView.setVisibility(View.VISIBLE);
+                presetListView.setOnItemClickListener(this);
+                presetListView.setAdapter(new PresetEditAdapter(this, getModel(), mFlag, stepsGoal.getId()));
+                break;
+            case 0x02:
+                getModel().getSolarGoalDatabaseHelper().get(intent.getIntExtra(getString(R.string.key_preset_id), -1)).
+                        subscribe(new Consumer<SolarGoal>() {
+                            @Override
+                            public void accept(SolarGoal goal) throws Exception {
+                                solarGoal = goal;
+                                presetListView.setVisibility(View.VISIBLE);
+                                presetListView.setOnItemClickListener(EditGoalsActivity.this);
+                                presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this
+                                        , getModel(), mFlag, goal.getSolarGoalId()));
+                            }
+                        });
+                break;
+            case 0x03:
+                getModel().getSleepDatabseHelper().get(intent.getIntExtra(getString(R.string.key_preset_id), -1)).
+                        subscribe(new Consumer<SleepGoal>() {
+                            @Override
+                            public void accept(SleepGoal goal) throws Exception {
+                                sleepGoal = goal;
+                                presetListView.setVisibility(View.VISIBLE);
+                                presetListView.setOnItemClickListener(EditGoalsActivity.this);
+                                presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this
+                                        , getModel(), mFlag, goal.getSleepGoalId()));
+                            }
+                        });
+                break;
+        }
+
     }
 
     @Override
@@ -62,19 +114,35 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        switch (mFlag) {
+            case 0x01:
+                editStepsGoal(position);
+                break;
+            case 0x02:
+                editSolarGoal(position);
+                break;
+            case 0x03:
+                editSleepGoal(position);
+                break;
+        }
+
+    }
+
+
+    private void editStepsGoal(int position) {
         if (position == 0) {
             new MaterialDialog.Builder(EditGoalsActivity.this)
                     .title(R.string.goal_edit)
                     .content(R.string.goal_input)
                     .inputType(InputType.TYPE_CLASS_NUMBER)
-                    .input("", "" + goal.getSteps(), new MaterialDialog.InputCallback() {
+                    .input("", "" + stepsGoal.getSteps(), new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
                             if (input.length() == 0)
                                 return;
-                            goal.setSteps(Integer.parseInt(input.toString()));
-                            getModel().updateGoal(goal);
-                            presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this, goal));
+                            stepsGoal.setSteps(Integer.parseInt(input.toString()));
+                            getModel().updateGoal(stepsGoal);
+                            presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this, getModel(), 0x01, stepsGoal.getId()));
                         }
                     }).negativeText(R.string.goal_cancel).show();
         } else if (position == 1) {
@@ -82,36 +150,129 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                     .title(R.string.goal_edit)
                     .content(R.string.goal_label_goal)
                     .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input(getString(R.string.goal_label), goal.getLabel(), new MaterialDialog.InputCallback() {
+                    .input(getString(R.string.goal_label), stepsGoal.getLabel(), new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
                             if (input.length() == 0)
                                 return;
-                            goal.setLabel(input.toString());
-                            getModel().updateGoal(goal);
-                            presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this, goal));
+                            stepsGoal.setLabel(input.toString());
+                            getModel().updateGoal(stepsGoal);
+                            presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this, getModel(), 0x01, stepsGoal.getId()));
                         }
                     }).negativeText(R.string.goal_cancel)
                     .show();
         } else if (position == 2) {
-            ToastHelper.showShortToast(this, R.string.goal_deleted);
-            setResult(-1);
-            finish();
+            getModel().getStepsGoalDatabaseHelper().remove(stepsGoal.getId()).subscribe(new Consumer<Boolean>() {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception {
+                    ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_deleted);
+                    setResult(-1);
+                    finish();
+                }
+            });
         }
     }
+
+
+    private void editSolarGoal(int position) {
+        if (position == 0) {
+            List<String> hourList = new ArrayList<>();
+            List<String> minutes = new ArrayList<>();
+            minutes.add(0 + "");
+            minutes.add(30 + "");
+            for (int i = 0; i <= 4; i++) {
+                hourList.add(i + "");
+            }
+            startSettingGoalTime(hourList, minutes);
+        } else if (position == 1) {
+            new MaterialDialog.Builder(EditGoalsActivity.this)
+                    .title(R.string.goal_edit)
+                    .content(R.string.goal_label_sleep)
+                    .inputType(InputType.TYPE_CLASS_TEXT)
+                    .input(getString(R.string.goal_label), solarGoal.getName(), new MaterialDialog.InputCallback() {
+                        @Override
+                        public void onInput(MaterialDialog dialog, CharSequence input) {
+                            if (input.length() == 0)
+                                return;
+                            solarGoal.setName(input.toString());
+                            getModel().getSolarGoalDatabaseHelper().update(solarGoal).subscribe(new Consumer<Boolean>() {
+                                @Override
+                                public void accept(Boolean aBoolean) throws Exception {
+                                    if (aBoolean) {
+                                        presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this,
+                                                getModel(), 0x02, solarGoal.getSolarGoalId()));
+                                    }
+                                }
+                            });
+                        }
+                    }).negativeText(R.string.goal_cancel)
+                    .show();
+        } else if (position == 2) {
+            getModel().getSolarGoalDatabaseHelper().remove(solarGoal.getSolarGoalId())
+                    .subscribe(new Consumer<Boolean>() {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception {
+                            if (aBoolean) {
+                                ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_deleted);
+                                setResult(-1);
+                                finish();
+                            }
+                        }
+                    });
+        }
+    }
+
+    private void editSleepGoal(int position) {
+        if (position == 0) {
+            List<String> hourList = new ArrayList<>();
+            List<String> minutes = new ArrayList<>();
+            minutes.add(0 + "");
+            minutes.add(30 + "");
+            for (int i = 5; i <= 12; i++) {
+                hourList.add(i + "");
+            }
+            startSettingGoalTime(hourList,minutes);
+        } else if (position == 1) {
+            new MaterialDialog.Builder(EditGoalsActivity.this)
+                    .title(R.string.goal_edit)
+                    .content(R.string.goal_label_sleep)
+                    .inputType(InputType.TYPE_CLASS_TEXT)
+                    .input(getString(R.string.goal_label), sleepGoal.getGoalName(), new MaterialDialog.InputCallback() {
+                        @Override
+                        public void onInput(MaterialDialog dialog, CharSequence input) {
+                            if (input.length() == 0)
+                                return;
+                            sleepGoal.setGoalName(input.toString());
+                            getModel().getSleepDatabseHelper().update(sleepGoal).subscribe(new Consumer<Boolean>() {
+                                @Override
+                                public void accept(Boolean aBoolean) throws Exception {
+                                    if (aBoolean) {
+                                        presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this,
+                                                getModel(), 0x03, sleepGoal.getSleepGoalId()));
+                                    }
+                                }
+                            });
+                        }
+                    }).negativeText(R.string.goal_cancel)
+                    .show();
+        } else if (position == 2) {
+            getModel().getSleepDatabseHelper().remove(sleepGoal.getSleepGoalId()).subscribe(new Consumer<Boolean>() {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception {
+                    if (aBoolean) {
+                        ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_deleted);
+                        setResult(-1);
+                        finish();
+                    }
+                }
+            });
+        }
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.done_menu:
-                if (getModel().updateGoal(goal)) {
-                    ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_saved);
-                    EditGoalsActivity.this.setResult(1);
-                    EditGoalsActivity.this.finish();
-                } else {
-                    ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_could_not_save);
-                }
-                return true;
             case android.R.id.home:
                 EditGoalsActivity.this.setResult(0);
                 EditGoalsActivity.this.finish();
@@ -121,4 +282,66 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
         }
     }
 
+    private void startSettingGoalTime(List<String> hourList, List<String> minutes) {
+        View selectTimeDialog = LayoutInflater.from(this).inflate(R.layout.select_time_dialog_layou, null);
+        final Dialog dialog = new AlertDialog.Builder(this).create();
+
+        PickerView hourPickerView = (PickerView) selectTimeDialog.findViewById(R.id.hour_pv);
+        hourPickerView.setData(hourList);
+        PickerView minutePickerView = (PickerView) selectTimeDialog.findViewById(R.id.minute_pv);
+        minutePickerView.setData(minutes);
+        Button cancelButton = (Button) selectTimeDialog.findViewById(R.id.select_time_cancel_bt);
+        Button selectButton = (Button) selectTimeDialog.findViewById(R.id.select_time_select_bt);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(selectTimeDialog);
+        hourPickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                selectHour = new Integer(text).intValue();
+            }
+        });
+
+        minutePickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                selectMinutes = new Integer(text).intValue();
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        selectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                if (mFlag == 0x02) {
+                    solarGoal.setTime(selectHour*60+selectMinutes);
+                    getModel().getSolarGoalDatabaseHelper().update(solarGoal).subscribe(new Consumer<Boolean>() {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception {
+                            if (aBoolean) {
+                                presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this,
+                                        getModel(), 0x02, solarGoal.getSolarGoalId()));
+                            }
+                        }
+                    });
+                } else if (mFlag == 0x03) {
+                    sleepGoal.setGoalDuration(selectHour*60+selectMinutes);
+                    getModel().getSleepDatabseHelper().update(sleepGoal).subscribe(new Consumer<Boolean>() {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception {
+                            if (aBoolean) {
+                                presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this,
+                                        getModel(), 0x03, sleepGoal.getSleepGoalId()));
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
 }

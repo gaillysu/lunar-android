@@ -208,7 +208,7 @@
     <string name="goal_synced">目標已同步</string>
     <string name="goal_error_sync">同步目標錯誤</string>
 
-    <string name="goal">目標</string>
+    <string name="stepsGoal">目標</string>
     <string name="goal_ok">確定</string>
     <string name="goal_cancel">取消</string>
     <string name="goal_add">添加目標</string>
@@ -460,4 +460,24 @@
     <string name="scan_duration_time_unit">分鐘</string>
     <string name="scan_duration_title_title">LUNAR 藍牙掃描</string>
     <string name="settings_bluetooth_scan">掃描時間</string>
+    <string name="more_settings_sleep_goal">睡眠目標</string>
+    <string name="more_settings_solar_goal">太陽能目標</string>
+    <string name="more_settings_steps_goal">步行目標</string>
+    <string name="def_goal_sleep_name">睡眠目標</string>
+    <string name="sleep_goal_def_long">長睡</string>
+    <string name="sleep_goal_def_noon">午睡</string>
+    <string name="sleep_goal_def_short">短睡</string>
+    <string name="sleep_goal_id" translatable="false"></string>
+    <string name="sleep_unit_hour">小時</string>
+    <string name="sleep_unit_minute">分鐘</string>
+    <string name="solar_goal_def_long">大目標</string>
+    <string name="solar_goal_def_short">短時目標</string>
+    <string name="setting_goal_title">選擇目標</string>
+    <string name="def_goal_solar_name">太阳能目標</string>
+    <string name="goal_label_sleep">給目標壹個名字.</string>
+    <string name="goal_label_solar">給目標壹個名字.</string>
+    <string name="goal_name_goal_sleep">目標名字</string>
+    <string name="goal_name_goal_solar">目標名字</string>
+    <string name="goal_input_sleep">設置您的目標</string>
+    <string name="goal_input_solar">設置您的目標</string>
 </resources>
