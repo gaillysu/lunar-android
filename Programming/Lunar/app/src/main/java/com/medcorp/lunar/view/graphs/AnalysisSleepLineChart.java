@@ -97,7 +97,7 @@ public class AnalysisSleepLineChart extends LineChart {
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
     }
 
-    public void addData(List<SleepData> sleepList, int maxDayInGraph) {
+    public void addData(List<SleepData> sleepList,int maxDayInGraph) {
         this.sleepList = sleepList;
         this.maxDayInGraph = maxDayInGraph;
         List<Entry> wakeEntries = new ArrayList<>();

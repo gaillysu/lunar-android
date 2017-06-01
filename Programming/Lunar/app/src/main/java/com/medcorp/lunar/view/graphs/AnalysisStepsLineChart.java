@@ -131,11 +131,11 @@ public class AnalysisStepsLineChart extends LineChart {
             //            maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo));
         }
         //        "Goal: " + goal.getSteps()
-        LimitLine limitLine = new LimitLine(0f, "");
-        limitLine.setLineWidth(0.0f);
+        LimitLine limitLine = new LimitLine(goal.getSteps(), "Goal");
+        limitLine.setLineWidth(1.50f);
         limitLine.setLineColor(getResources().getColor(R.color.colorPrimary));
         limitLine.setTextSize(18f);
-        limitLine.setTextColor(Color.BLACK);
+        limitLine.setTextColor(getResources().getColor(R.color.colorPrimary));
 
         if (putTop) {
             limitLine.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_TOP);

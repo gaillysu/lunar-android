@@ -59,6 +59,7 @@ public class AnalysisStepsFragment extends BaseFragment {
     private List<Steps> thisWeekData = new ArrayList<>();
     private List<Steps> lastWeekData = new ArrayList<>();
     private List<Steps> lastMonthData = new ArrayList<>();
+    private Date mUserSelectDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,16 +67,16 @@ public class AnalysisStepsFragment extends BaseFragment {
         ButterKnife.bind(this, stepsView);
 
         String selectDate = Preferences.getSelectDate(this.getContext());
-        Date userSelectDate = new Date();
+        mUserSelectDate = new Date();
         if (selectDate != null) {
             try {
-                userSelectDate = new SimpleDateFormat("yy-MM-dd").parse(selectDate);
+                mUserSelectDate = new SimpleDateFormat("yy-MM-dd").parse(selectDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
         initView(inflater);
-        initData(userSelectDate);
+        initData(mUserSelectDate);
         return stepsView;
     }
 
@@ -85,13 +86,6 @@ public class AnalysisStepsFragment extends BaseFragment {
         lastMonthChart = (AnalysisStepsLineChart) lastMonthView.findViewById(R.id.analysis_step_chart);
 
         final TipsView marker = new TipsView(AnalysisStepsFragment.this.getContext(), R.layout.custom_marker_view);
-
-        /**
-         * Added max in 'addData', max is the time spam in days, in 'this week' and
-         * 'last week' this is 7 because 7 days is equal to a week.
-         * In this month this is 30 (or 31) because there are 30 days in a month.
-         *
-         */
         activeGoal = null;
         getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
             @Override
