@@ -18,7 +18,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.medcorp.lunar.R;
-import com.medcorp.lunar.model.Goal;
+import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.model.Steps;
 
 import org.joda.time.DateTime;
@@ -33,7 +33,7 @@ import java.util.List;
 public class AnalysisStepsLineChart extends LineChart {
 
     private List<Steps> stepsList;
-    private Goal goal;
+    private StepsGoal mStepsGoal;
     private int maxDays;
 
     public AnalysisStepsLineChart(Context context) {
@@ -91,9 +91,9 @@ public class AnalysisStepsLineChart extends LineChart {
 
     }
 
-    public void addData(List<Steps> stepsList, Goal goal, int maxDays) {
+    public void addData(List<Steps> stepsList, StepsGoal stepsGoal, int maxDays) {
         this.stepsList = stepsList;
-        this.goal = goal;
+        this.mStepsGoal = stepsGoal;
         this.maxDays = maxDays;
         List<Entry> yValue = new ArrayList<>();
         int maxValue = 0;
@@ -113,8 +113,8 @@ public class AnalysisStepsLineChart extends LineChart {
 
         //Log.w("Karl", "Max vlaue = " + maxValue);
         boolean putTop = false;
-        if (maxValue == 0 || maxValue < goal.getSteps()) {
-            maxValue = goal.getSteps() + stepsModulo;
+        if (maxValue == 0 || maxValue < stepsGoal.getSteps()) {
+            maxValue = stepsGoal.getSteps() + stepsModulo;
         } else {
             putTop = true;
             String formatValue = maxValue + "";
@@ -131,7 +131,7 @@ public class AnalysisStepsLineChart extends LineChart {
             //            maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo));
         }
         //        "Goal: " + goal.getSteps()
-        LimitLine limitLine = new LimitLine(goal.getSteps(), "Goal");
+        LimitLine limitLine = new LimitLine(stepsGoal.getSteps(), "Goal");
         limitLine.setLineWidth(1.50f);
         limitLine.setLineColor(getResources().getColor(R.color.colorPrimary));
         limitLine.setTextSize(18f);

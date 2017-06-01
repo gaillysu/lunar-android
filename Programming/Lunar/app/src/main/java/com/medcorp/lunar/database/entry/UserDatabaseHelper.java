@@ -109,7 +109,9 @@ public class UserDatabaseHelper {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                user.deleteFromRealm();
+                if (user != null) {
+                    user.deleteFromRealm();
+                }
             }
         });
     }

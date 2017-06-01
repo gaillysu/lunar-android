@@ -15,7 +15,7 @@ import com.medcorp.lunar.ble.model.color.OrangeLed;
 import com.medcorp.lunar.ble.model.color.RedLed;
 import com.medcorp.lunar.ble.model.color.YellowLed;
 import com.medcorp.lunar.ble.model.notification.Notification;
-import com.medcorp.lunar.model.Goal;
+import com.medcorp.lunar.model.StepsGoal;
 
 import java.util.TimeZone;
 
@@ -100,10 +100,10 @@ public class Preferences {
         return preferences.getBoolean(context.getString(R.string.key_prefs_is_first_login), true);
     }
 
-    public static void savePreset(Context context, Goal goal) {
+    public static void savePreset(Context context, StepsGoal stepsGoal) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(context.getString(R.string.key_prefs_step_preset_id), goal.getId()).apply();
+        editor.putInt(context.getString(R.string.key_prefs_step_preset_id), stepsGoal.getId()).apply();
     }
 
     public static int getPresetId(Context context) {

@@ -5,18 +5,18 @@ import io.realm.RealmObject;
 /**
  * Created by Karl on 11/25/15.
  */
-public class Goal extends RealmObject {
+public class StepsGoal extends RealmObject {
 
     private int id = (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
     private String label;
     private boolean status;
     private int steps = 10000;
 
-    public Goal() {
+    public StepsGoal() {
 
     }
 
-    public Goal(String label, boolean status, int steps) {
+    public StepsGoal(String label, boolean status, int steps) {
         this.label = label;
         this.status = status;
         this.steps = steps;

@@ -20,7 +20,7 @@ import com.medcorp.lunar.event.ChangeGoalEvent;
 import com.medcorp.lunar.event.bluetooth.GetWatchInfoChangedEvent;
 import com.medcorp.lunar.event.bluetooth.RequestResponseEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
-import com.medcorp.lunar.model.Goal;
+import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.util.Common;
 import com.medcorp.lunar.util.Preferences;
 
@@ -141,29 +141,29 @@ public class MainFragment extends BaseObservableFragment {
         }
         getModel().getAllGoal(new ObtainGoalListener() {
             @Override
-            public void obtainGoal(List<Goal> goalList) {
+            public void obtainGoal(List<StepsGoal> stepsGoalList) {
                 List<String> stringList = new ArrayList<>();
-                final List<Goal> goalEnableList = new ArrayList<>();
+                final List<StepsGoal> stepsGoalEnableList = new ArrayList<>();
                 boolean status = false;
-                for (Goal goal : goalList) {
-                    if(goal.isStatus()){
+                for (StepsGoal stepsGoal : stepsGoalList) {
+                    if(stepsGoal.isStatus()){
                         status = true;
                     }
-                    stringList.add(goal.toString());
-                    goalEnableList.add(goal);
+                    stringList.add(stepsGoal.toString());
+                    stepsGoalEnableList.add(stepsGoal);
                 }
                 CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
 
-                if (goalList.size() != 0) {
+                if (stepsGoalList.size() != 0) {
                     new MaterialDialog.Builder(getContext())
-                            .title(R.string.goal).itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
+                            .title(R.string.steps_goal_title).itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
                             .items(cs)
                             .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
                                 @Override
                                 public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                                     if (which >= 0) {
-                                        getModel().setGoal(goalEnableList.get(which));
-                                        Preferences.savePreset(getContext(), goalEnableList.get(which));
+                                        getModel().setStepsGoal(stepsGoalEnableList.get(which));
+                                        Preferences.savePreset(getContext(), stepsGoalEnableList.get(which));
                                         showSyncGoal = true;
                                         ((MainActivity) getActivity()).showStateString(R.string.goal_syncing_message, false);
                                         EventBus.getDefault().post(new ChangeGoalEvent(true));
@@ -220,7 +220,7 @@ public class MainFragment extends BaseObservableFragment {
     }
 
     public interface ObtainGoalListener {
-        void obtainGoal(List<Goal> list);
+        void obtainGoal(List<StepsGoal> list);
     }
 }
 

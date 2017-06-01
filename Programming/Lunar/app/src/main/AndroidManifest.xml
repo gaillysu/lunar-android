@@ -83,7 +83,7 @@
             android:screenOrientation="portrait"
             />
         <activity
-            android:name=".activity.GoalsActivity"
+            android:name=".activity.StepsGoalsActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.EditGoalsActivity"
@@ -220,6 +220,15 @@
             />
         <activity
             android:name=".activity.MoreSettingActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.SolarGoalActivity"
+            android:screenOrientation="portrait"
+            />
+
+        <activity
+            android:name=".activity.SleepGoalActivity"
             android:screenOrientation="portrait"
             />
         <activity

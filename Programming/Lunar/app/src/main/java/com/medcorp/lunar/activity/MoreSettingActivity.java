@@ -39,7 +39,6 @@ public class MoreSettingActivity extends BaseActivity {
     @Bind(R.id.lunar_tool_bar_title)
     TextView title;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +109,17 @@ public class MoreSettingActivity extends BaseActivity {
     }
 
     @OnClick(R.id.more_setting_go_setting_goal)
-    public void openSettingGoal() {
-        startActivity(GoalsActivity.class);
+    public void openSettingStepsGoal() {
+        startActivity(StepsGoalsActivity.class);
+    }
+
+    @OnClick(R.id.more_setting_sleep_goal)
+    public void openSettingSleepGoal() {
+        startActivity(SleepGoalActivity.class);
+    }
+
+    @OnClick(R.id.more_setting_solar_goal)
+    public void openSettingSolarGoal() {
+        startActivity(SolarGoalActivity.class);
     }
 }

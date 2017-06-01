@@ -87,4 +87,7 @@
     <string name="date" translatable="false">date</string>
     <string name="userId" translatable="false">userId</string>
     <string name="user_is_login" translatable="false">isLogin</string>
+    <string name="sleep_goal_id" translatable="false">sleepGoalId</string>
+    <string name="solar_goal_id" translatable="false">solarGoalId</string>
+    <string name="launch_edit_goal_activity_flag" translatable="false">launch_flag</string>
 </resources>

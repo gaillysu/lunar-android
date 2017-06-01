@@ -10,7 +10,9 @@ import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.ble.model.color.LedLamp;
 import com.medcorp.lunar.model.Alarm;
-import com.medcorp.lunar.model.Goal;
+import com.medcorp.lunar.model.StepsGoal;
+import com.medcorp.lunar.model.SleepGoal;
+import com.medcorp.lunar.model.SolarGoal;
 
 import net.medcorp.library.ble.util.Constants;
 
@@ -33,9 +35,16 @@ public class TutorialPageSuccessActivity extends BaseActivity {
         sharedPreferences.putBoolean(Constants.FIRST_FLAG, false);
         sharedPreferences.commit();
         if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(getString(R.string.key_preset), false)) {
-            getModel().addGoal(new Goal(getString(R.string.startup_goal_light), true, 7000));
-            getModel().addGoal(new Goal(getString(R.string.startup_goal_moderate), true, 10000));
-            getModel().addGoal(new Goal(getString(R.string.startup_goal_heavy), true, 20000));
+            //default steps goal
+            getModel().addGoal(new StepsGoal(getString(R.string.startup_goal_light), true, 7000));
+            getModel().addGoal(new StepsGoal(getString(R.string.startup_goal_moderate), true, 10000));
+            getModel().addGoal(new StepsGoal(getString(R.string.startup_goal_heavy), true, 20000));
+            //default Sleep goal
+           addSleepDefGoal();
+            //default solar goal
+            addSolarDefGoal();
+
+            //notification default color
             getModel().addLedLamp(new LedLamp(getString(R.string.led_lamp_color_red), getResources().getColor(R.color.red_normal)));
             getModel().addLedLamp(new LedLamp(getString(R.string.led_lamp_color_blue), getResources().getColor(R.color.blue_normal)));
             getModel().addLedLamp(new LedLamp(getString(R.string.led_lamp_color_light_green), getResources().getColor(R.color.light_green_normal)));
@@ -62,6 +71,52 @@ public class TutorialPageSuccessActivity extends BaseActivity {
             sharedPreferences.commit();
         }
 
+    }
+
+    private void addSolarDefGoal() {
+        getModel().getSolarGoalDatabaseHelper().add(new SolarGoal(getString(R.string.solar_goal_def_long),480,true)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if(aBoolean){
+                    Log.i("jason","add def solar goal success");
+                }
+            }
+        });
+        getModel().getSolarGoalDatabaseHelper().add(new SolarGoal(getString(R.string.solar_goal_def_short),30,false)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if(aBoolean){
+                    Log.i("jason","add def sleep goal success");
+                }
+            }
+        });
+    }
+
+    private void addSleepDefGoal() {
+        getModel().getSleepDatabseHelper().add(new SleepGoal(getString(R.string.sleep_goal_def_long),480,true)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if(aBoolean){
+                    Log.i("jason","add def sleep success");
+                }
+            }
+        });
+        getModel().getSleepDatabseHelper().add(new SleepGoal(getString(R.string.sleep_goal_def_noon),90,false)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if(aBoolean){
+                    Log.i("jason","add def sleep success");
+                }
+            }
+        });
+        getModel().getSleepDatabseHelper().add(new SleepGoal(getString(R.string.sleep_goal_def_short),30,false)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if(aBoolean){
+                    Log.i("jason","add def sleep success");
+                }
+            }
+        });
     }
 
     @OnClick(R.id.activity_tutorial_success_next_button)
