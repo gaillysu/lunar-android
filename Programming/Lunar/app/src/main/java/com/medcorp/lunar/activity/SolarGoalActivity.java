@@ -1,24 +1,30 @@
 package com.medcorp.lunar.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.SolarGoalListAdapter;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.model.SolarGoal;
+import com.medcorp.lunar.view.PickerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -39,6 +45,8 @@ public class SolarGoalActivity extends BaseActivity implements AdapterView.OnIte
     private List<SolarGoal> all;
     private static final int SOLAR_FLAG = 0X02;
     private static final int SOLAR_REQUEST_CODE = 0X01 << 2;
+    private int selectHour = 0;
+    private int selectMinutes = 0;
 
 
     @Override
@@ -114,31 +122,56 @@ public class SolarGoalActivity extends BaseActivity implements AdapterView.OnIte
     }
 
     private void startSettingGoalTime() {
-        DatePickerPopWin pickerPopWin = new DatePickerPopWin.Builder(this,
-                new DatePickerPopWin.OnDatePickedListener() {
+        View selectTimeDialog = LayoutInflater.from(this).inflate(R.layout.select_time_dialog_layou, null);
+        final Dialog dialog = new AlertDialog.Builder(this).create();
+        List<String> hourList = new ArrayList<>();
+        List<String> minutes = new ArrayList<>();
+        minutes.add(0 + "");
+        minutes.add(30 + "");
+        for (int i = 0; i <= 4; i++) {
+            hourList.add(i + "");
+        }
+        PickerView hourPickerView = (PickerView) selectTimeDialog.findViewById(R.id.hour_pv);
+        hourPickerView.setData(hourList);
+        PickerView minutePickerView = (PickerView) selectTimeDialog.findViewById(R.id.minute_pv);
+        minutePickerView.setData(minutes);
+        Button cancelButton = (Button) selectTimeDialog.findViewById(R.id.select_time_cancel_bt);
+        Button selectButton = (Button) selectTimeDialog.findViewById(R.id.select_time_select_bt);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(selectTimeDialog);
+        hourPickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                selectHour = new Integer(text).intValue();
+            }
+        });
+
+        minutePickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                selectMinutes = new Integer(text).intValue();
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        selectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                getModel().getSolarGoalDatabaseHelper().add(new SolarGoal(lableGoal,
+                        selectHour * 60 + selectMinutes, false)).subscribe(new Consumer<Boolean>() {
                     @Override
-                    public void onDatePickCompleted(int year, int month,
-                                                    int day, String dateDesc) {
-                        getModel().getSolarGoalDatabaseHelper().add(new SolarGoal(lableGoal, month, false))
-                                .subscribe(new Consumer<Boolean>() {
-                                    @Override
-                                    public void accept(Boolean aBoolean) throws Exception {
-                                        if (aBoolean) {
-                                            SolarGoalActivity.this.runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    initData();
-                                                }
-                                            });
-                                        }
-                                    }
-                                });
+                    public void accept(Boolean aBoolean) throws Exception {
+                        initData();
                     }
-                }).viewStyle(4)
-                .viewTextSize(18)
-                .dateChose("0")
-                .build();
-        pickerPopWin.showPopWin(this);
+                });
+            }
+        });
     }
 
     @Override
@@ -146,7 +179,7 @@ public class SolarGoalActivity extends BaseActivity implements AdapterView.OnIte
         Intent intent = new Intent(this, EditGoalsActivity.class);
         SolarGoal solarGoal = all.get(position);
         intent.putExtra(getString(R.string.launch_edit_goal_activity_flag), SOLAR_FLAG);
-        intent.putExtra(getString(R.string.key_preset_id),solarGoal.getSolarGoalId());
+        intent.putExtra(getString(R.string.key_preset_id), solarGoal.getSolarGoalId());
         startActivityForResult(intent, SOLAR_REQUEST_CODE);
         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }

@@ -1,25 +1,31 @@
 package com.medcorp.lunar.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.SleepGoalListAdapter;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.database.entry.SleepGoalDatabaseHelper;
 import com.medcorp.lunar.model.SleepGoal;
+import com.medcorp.lunar.view.PickerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -44,6 +50,8 @@ public class SleepGoalActivity extends BaseActivity implements AdapterView.OnIte
 
     private static final int SLEEP_FLAG = 0X03;
     private static final int SOLAR_REQUEST_CODE = 0X01 << 3;
+    private int selectHour = 0;
+    private int selectMinutes = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +67,7 @@ public class SleepGoalActivity extends BaseActivity implements AdapterView.OnIte
         sleepDatabaseHelper.getAll().subscribe(new Consumer<List<SleepGoal>>() {
             @Override
             public void accept(List<SleepGoal> sleepGoals) throws Exception {
-                adapter = new SleepGoalListAdapter(SleepGoalActivity.this,getModel(),sleepGoals);
+                adapter = new SleepGoalListAdapter(SleepGoalActivity.this, getModel(), sleepGoals);
                 allSleepGoal.setAdapter(adapter);
                 all = sleepGoals;
             }
@@ -90,7 +98,7 @@ public class SleepGoalActivity extends BaseActivity implements AdapterView.OnIte
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
@@ -124,39 +132,72 @@ public class SleepGoalActivity extends BaseActivity implements AdapterView.OnIte
             getModel().getSleepDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
                 @Override
                 public void accept(List<SleepGoal> sleepGoals) throws Exception {
-                    adapter = new SleepGoalListAdapter(SleepGoalActivity.this,getModel(),sleepGoals);
+                    adapter = new SleepGoalListAdapter(SleepGoalActivity.this, getModel(), sleepGoals);
                     allSleepGoal.setAdapter(adapter);
                     all = sleepGoals;
                 }
             });
         }
     }
+
     private void startSettingGoalTime() {
-        DatePickerPopWin pickerPopWin = new DatePickerPopWin.Builder(this,
-                new DatePickerPopWin.OnDatePickedListener() {
-                    @Override
-                    public void onDatePickCompleted(int year, int month,
-                                                    int day, String dateDesc) {
-                        sleepDatabaseHelper.add(new SleepGoal(lableGoal, month, false))
-                                .subscribe(new Consumer<Boolean>() {
-                                    @Override
-                                    public void accept(Boolean aBoolean) throws Exception {
-                                        if (aBoolean) {
-                                            SleepGoalActivity.this.runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    initData();
-                                                }
-                                            });
+        View selectTimeDialog = LayoutInflater.from(this).inflate(R.layout.select_time_dialog_layou, null);
+        final Dialog dialog = new AlertDialog.Builder(this).create();
+        List<String> hourList = new ArrayList<>();
+        List<String> minutes = new ArrayList<>();
+        minutes.add(0 + "");
+        minutes.add(30 + "");
+        for (int i = 5; i <= 12; i++) {
+            hourList.add(i + "");
+        }
+        PickerView hourPickerView = (PickerView) selectTimeDialog.findViewById(R.id.hour_pv);
+        hourPickerView.setData(hourList);
+        PickerView minutePickerView = (PickerView) selectTimeDialog.findViewById(R.id.minute_pv);
+        minutePickerView.setData(minutes);
+        Button cancelButton = (Button) selectTimeDialog.findViewById(R.id.select_time_cancel_bt);
+        Button selectButton = (Button) selectTimeDialog.findViewById(R.id.select_time_select_bt);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(selectTimeDialog);
+        hourPickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                selectHour = new Integer(text).intValue();
+            }
+        });
+
+        minutePickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                selectMinutes = new Integer(text).intValue();
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        selectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                sleepDatabaseHelper.add(new SleepGoal(lableGoal, selectHour * 60 + selectMinutes, false))
+                        .subscribe(new Consumer<Boolean>() {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception {
+                                if (aBoolean) {
+                                    SleepGoalActivity.this.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            initData();
                                         }
-                                    }
-                                });
-                    }
-                }).viewStyle(5)
-                .viewTextSize(18)
-                .dateChose("0")
-                .build();
-        pickerPopWin.showPopWin(this);
+                                    });
+                                }
+                            }
+                        });
+            }
+        });
     }
 
 
@@ -165,9 +206,8 @@ public class SleepGoalActivity extends BaseActivity implements AdapterView.OnIte
         Intent intent = new Intent(this, EditGoalsActivity.class);
         SleepGoal solarGoal = all.get(position);
         intent.putExtra(getString(R.string.launch_edit_goal_activity_flag), SLEEP_FLAG);
-        intent.putExtra(getString(R.string.key_preset_id),solarGoal.getSleepGoalId());
+        intent.putExtra(getString(R.string.key_preset_id), solarGoal.getSleepGoalId());
         startActivityForResult(intent, SOLAR_REQUEST_CODE);
         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }
-
 }

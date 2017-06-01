@@ -202,17 +202,19 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                 tv_pickerRight.setText("kg");
                 break;
             case 4:
-                leftLoopView.setVisibility(View.GONE);
-                rightLoopView.setVisibility(View.GONE);
+                leftLoopView.setVisibility(View.INVISIBLE);
+                rightLoopView.setVisibility(View.INVISIBLE);
                 tv_pickerRight.setVisibility(View.VISIBLE);
                 tv_pickerRight.setTextSize(viewTextSize);
                 tv_pickerRight.setText("minute");
+                break;
             case 5:
-                leftLoopView.setVisibility(View.GONE);
-                rightLoopView.setVisibility(View.GONE);
+                leftLoopView.setVisibility(View.INVISIBLE);
+                rightLoopView.setVisibility(View.INVISIBLE);
                 tv_pickerRight.setVisibility(View.VISIBLE);
                 tv_pickerRight.setTextSize(viewTextSize);
                 tv_pickerRight.setText("minute");
+                break;
         }
 
         //do not loop,default can loop
@@ -315,12 +317,14 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                 }
                 middleLoopView.setArrayList((ArrayList) heightList);
                 middleLoopView.setInitPosition(middlePos);
+                break;
             case 5:
                 for (int i = 30; i <= 240; i += 30) {
                     heightList.add(format2LenStr(i));
                 }
                 middleLoopView.setArrayList((ArrayList) heightList);
                 middleLoopView.setInitPosition(middlePos);
+                break;
 
         }
 
@@ -378,6 +382,7 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                     break;
                 case 5:
                     middlePos = new Integer(dateStr).intValue();
+                    break;
             }
         }
     }
@@ -400,7 +405,6 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                     0, 0);
             trans.setDuration(200);
             trans.setInterpolator(new AccelerateDecelerateInterpolator());
-
             pickerContainerV.startAnimation(trans);
         }
     }

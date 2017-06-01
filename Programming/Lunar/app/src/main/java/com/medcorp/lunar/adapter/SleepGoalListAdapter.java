@@ -75,10 +75,10 @@ public class SleepGoalListAdapter extends ArrayAdapter<SleepGoal> {
         StringBuffer sb = new StringBuffer();
         int goalDuration = goal.getGoalDuration();
         if (goalDuration > 60) {
-            sb.append(goalDuration/60 + context.getString(R.string.sleep_unit_hour)
-                    + (goalDuration%60 != 0 ? context.getString(R.string.sleep_unit_minute) : ""));
+            sb.append(goalDuration / 60 + context.getString(R.string.sleep_unit_hour)
+                    + (goalDuration % 60 != 0 ? goalDuration % 60 + context.getString(R.string.sleep_unit_minute) : ""));
         } else if (goalDuration == 60) {
-            sb.append(goalDuration/60 + context.getString(R.string.sleep_unit_hour));
+            sb.append(goalDuration / 60 + context.getString(R.string.sleep_unit_hour));
         } else {
             sb.append(goalDuration + context.getString(R.string.sleep_unit_minute));
         }

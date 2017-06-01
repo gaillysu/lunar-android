@@ -1,24 +1,32 @@
 package com.medcorp.lunar.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.PresetEditAdapter;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.model.StepsGoal;
+import com.medcorp.lunar.view.PickerView;
 import com.medcorp.lunar.view.ToastHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,6 +47,8 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
     private SolarGoal solarGoal;
     private SleepGoal sleepGoal;
     private int mFlag;
+    private int selectHour = 0;
+    private int selectMinutes = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -166,28 +176,14 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
 
     private void editSolarGoal(int position) {
         if (position == 0) {
-            DatePickerPopWin pickerPopWin3 = new DatePickerPopWin.Builder(this,
-                    new DatePickerPopWin.OnDatePickedListener() {
-                        @Override
-                        public void onDatePickCompleted(int year, int month,
-                                                        int day, String dateDesc) {
-                            solarGoal.setTime(month);
-                            getModel().getSolarGoalDatabaseHelper().update(solarGoal)
-                                    .subscribe(new Consumer<Boolean>() {
-                                        @Override
-                                        public void accept(Boolean aBoolean) throws Exception {
-                                            if (aBoolean) {
-                                                presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this,
-                                                        getModel(), 0x02, solarGoal.getSolarGoalId()));
-                                            }
-                                        }
-                                    });
-                        }
-                    }).viewStyle(4)
-                    .viewTextSize(18)
-                    .dateChose("0")
-                    .build();
-            pickerPopWin3.showPopWin(this);
+            List<String> hourList = new ArrayList<>();
+            List<String> minutes = new ArrayList<>();
+            minutes.add(0 + "");
+            minutes.add(30 + "");
+            for (int i = 0; i <= 4; i++) {
+                hourList.add(i + "");
+            }
+            startSettingGoalTime(hourList, minutes);
         } else if (position == 1) {
             new MaterialDialog.Builder(EditGoalsActivity.this)
                     .title(R.string.goal_edit)
@@ -228,28 +224,14 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
 
     private void editSleepGoal(int position) {
         if (position == 0) {
-            DatePickerPopWin pickerPopWin3 = new DatePickerPopWin.Builder(this,
-                    new DatePickerPopWin.OnDatePickedListener() {
-                        @Override
-                        public void onDatePickCompleted(int year, int month,
-                                                        int day, String dateDesc) {
-                            sleepGoal.setGoalDuration(month);
-                            getModel().getSleepDatabseHelper().update(sleepGoal)
-                                    .subscribe(new Consumer<Boolean>() {
-                                        @Override
-                                        public void accept(Boolean aBoolean) throws Exception {
-                                            if (aBoolean) {
-                                                presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this,
-                                                        getModel(), 0x03, sleepGoal.getSleepGoalId()));
-                                            }
-                                        }
-                                    });
-                        }
-                    }).viewStyle(5)
-                    .viewTextSize(18)
-                    .dateChose("0")
-                    .build();
-            pickerPopWin3.showPopWin(this);
+            List<String> hourList = new ArrayList<>();
+            List<String> minutes = new ArrayList<>();
+            minutes.add(0 + "");
+            minutes.add(30 + "");
+            for (int i = 5; i <= 12; i++) {
+                hourList.add(i + "");
+            }
+            startSettingGoalTime(hourList,minutes);
         } else if (position == 1) {
             new MaterialDialog.Builder(EditGoalsActivity.this)
                     .title(R.string.goal_edit)
@@ -260,8 +242,8 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                         public void onInput(MaterialDialog dialog, CharSequence input) {
                             if (input.length() == 0)
                                 return;
-                            solarGoal.setName(input.toString());
-                            getModel().getSolarGoalDatabaseHelper().update(solarGoal).subscribe(new Consumer<Boolean>() {
+                            sleepGoal.setGoalName(input.toString());
+                            getModel().getSleepDatabseHelper().update(sleepGoal).subscribe(new Consumer<Boolean>() {
                                 @Override
                                 public void accept(Boolean aBoolean) throws Exception {
                                     if (aBoolean) {
@@ -298,5 +280,68 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void startSettingGoalTime(List<String> hourList, List<String> minutes) {
+        View selectTimeDialog = LayoutInflater.from(this).inflate(R.layout.select_time_dialog_layou, null);
+        final Dialog dialog = new AlertDialog.Builder(this).create();
+
+        PickerView hourPickerView = (PickerView) selectTimeDialog.findViewById(R.id.hour_pv);
+        hourPickerView.setData(hourList);
+        PickerView minutePickerView = (PickerView) selectTimeDialog.findViewById(R.id.minute_pv);
+        minutePickerView.setData(minutes);
+        Button cancelButton = (Button) selectTimeDialog.findViewById(R.id.select_time_cancel_bt);
+        Button selectButton = (Button) selectTimeDialog.findViewById(R.id.select_time_select_bt);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(selectTimeDialog);
+        hourPickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                selectHour = new Integer(text).intValue();
+            }
+        });
+
+        minutePickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                selectMinutes = new Integer(text).intValue();
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        selectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                if (mFlag == 0x02) {
+                    solarGoal.setTime(selectHour*60+selectMinutes);
+                    getModel().getSolarGoalDatabaseHelper().update(solarGoal).subscribe(new Consumer<Boolean>() {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception {
+                            if (aBoolean) {
+                                presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this,
+                                        getModel(), 0x02, solarGoal.getSolarGoalId()));
+                            }
+                        }
+                    });
+                } else if (mFlag == 0x03) {
+                    sleepGoal.setGoalDuration(selectHour*60+selectMinutes);
+                    getModel().getSleepDatabseHelper().update(sleepGoal).subscribe(new Consumer<Boolean>() {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception {
+                            if (aBoolean) {
+                                presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this,
+                                        getModel(), 0x03, sleepGoal.getSleepGoalId()));
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 }
