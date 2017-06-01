@@ -61,6 +61,7 @@ public class ScanDurationActivity extends BaseActivity {
                 list.clear();
                 initData();
                 mAdapter.notifyDataSetChanged();
+                getModel().getSyncController().setBleConnectTimeout(mTime[position]);
             }
         });
     }

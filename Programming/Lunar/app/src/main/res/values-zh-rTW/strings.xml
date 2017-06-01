@@ -281,7 +281,7 @@
     <string name="activity_user_info_text_our_text">檢查我們的私有策略</string>
     <string name="activity_user_info_title_above_text">妳的信息</string>
     <string name="activity_user_info_weight">體重</string>
-    <string name="add_alarm_index_out">最多支持7個同類型的鬧鐘</string>
+    <string name="add_alarm_index_out">最多支持%1$d個同類型的鬧鐘</string>
     <string name="alarm_set_week_day">設置鬧鐘的星期日期</string>
     <string name="alarm_set_week_day_dialog_text">設置重復鬧鐘</string>
     <string name="analysis_fragment_des_avg_sleep">平均睡眠</string>
@@ -325,7 +325,7 @@
     <string name="help_track_sleep_goodmorning">早上好</string>
     <string name="help_track_sleep_message">激活睡眠模式，按住第壹個按鈕，直到LED閃爍</string>
     <string name="help_track_sleep_title">跟蹤妳的睡眠</string>
-    <string name="in_app_notification_max_fourteen_alarm">手表最多支持14個鬧鐘</string>
+    <string name="in_app_notification_max_alarms">手表最多支持20個鬧鐘</string>
     <string name="info_company_height">厘米</string>
     <string name="info_company_weight">千克</string>
     <string name="input_legitimate_value">請輸入1到7的合法數字</string>

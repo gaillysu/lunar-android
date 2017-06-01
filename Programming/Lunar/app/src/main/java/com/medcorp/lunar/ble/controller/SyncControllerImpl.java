@@ -45,6 +45,7 @@ import com.medcorp.lunar.ble.model.request.ReadDailyTrackerInfoRequest;
 import com.medcorp.lunar.ble.model.request.ReadDailyTrackerRequest;
 import com.medcorp.lunar.ble.model.request.ReadWatchInfoRequest;
 import com.medcorp.lunar.ble.model.request.SetAlarmWithTypeRequest;
+import com.medcorp.lunar.ble.model.request.SetBleConnectTimeoutRequest;
 import com.medcorp.lunar.ble.model.request.SetGoalRequest;
 import com.medcorp.lunar.ble.model.request.SetNotificationRequest;
 import com.medcorp.lunar.ble.model.request.SetProfileRequest;
@@ -254,9 +255,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     setNotification(true);
                     //step5:sync alarms, app-->watch
                     //firstly clean all alarms
-                    for (int i = 0; i < 14; i++) {
-                        setAlarm(new Alarm(0, 0, (byte) 0, "", (byte) (i < 7 ? 0 : 1), (byte) i));
-                    }
+                    resetAllAlarms();
                     ((ApplicationModel) mContext).getAllAlarm(new SyncAlarmToWatchListener() {
                         @Override
                         public void syncAlarmToWatch(List<Alarm> alarms) {
@@ -265,7 +264,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                             for (Alarm alarm : alarms) {
                                 if ((alarm.getWeekDay() & 0x80) == 0x80) {
                                     //NOTICE: here we only disable it in the watch, but keep its status(on or off) in the app.
-                                    if (alarm.getAlarmNumber() >= 7) {
+                                    if (alarm.getAlarmNumber() >= 13) {
                                         //discard today 's sleep alarm when it comes in active mode (BT connected)
                                         if ((alarm.getWeekDay() & 0x0F) == calendar.get(Calendar.DAY_OF_WEEK)
                                                 && (alarm.getHour() < calendar.get(Calendar.HOUR_OF_DAY) || (alarm.getHour() == calendar.get(Calendar.HOUR_OF_DAY) && alarm.getMinute() < calendar.get(Calendar.MINUTE)))) {
@@ -462,7 +461,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 if (packet.getHeader() == (byte) GetStepsGoalRequest.HEADER) {
                     EventBus.getDefault().post(new LittleSyncEvent(true));
                 } else if ((byte) GetBatteryLevelRequest.HEADER == packet.getHeader()) {
-                    EventBus.getDefault().post(new BatteryEvent(new Battery(new BatteryLevelPacket(packet.getPackets()).getBatteryLevel())));
+                    EventBus.getDefault().post(new BatteryEvent(new Battery(new BatteryLevelPacket(packet.getPackets()).getBatteryLevel(),new BatteryLevelPacket(packet.getPackets()).getBatteryCapacity())));
                 } else if ((byte) FindWatchRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new FindWatchEvent(true));
                 } else if ((byte) SetAlarmWithTypeRequest.HEADER == packet.getHeader()
@@ -655,18 +654,15 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     }
 
     @Override
-    public void setAlarm(List<Alarm> list, boolean init) {
-
-        for (Alarm alarm : list) {
-            setAlarm(alarm);
-        }
-    }
-
-    @Override
     public void setAlarm(Alarm alarm) {
         sendRequest(new SetAlarmWithTypeRequest(mContext, alarm));
     }
 
+    private void resetAllAlarms() {
+        //pls refer to R12 command 0x41, use 0x225588bb to reset all alarms
+        Alarm resetAlarm = new Alarm(0xbb, 0x88, (byte)0x22, "", (byte)0, (byte)0x55);
+        setAlarm(resetAlarm);
+    }
     @Override
     public void getStepsAndGoal() {
         sendRequest(new GetStepsGoalRequest(mContext));
@@ -979,6 +975,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     @Override
     public int getBluetoothStatus() {
         return connectionController.getBluetoothStatus();
+    }
+
+    @Override
+    public void setBleConnectTimeout(int timeoutInminutes) {
+        sendRequest(new SetBleConnectTimeoutRequest(mContext,timeoutInminutes));
     }
 
     public interface SyncAlarmToWatchListener {

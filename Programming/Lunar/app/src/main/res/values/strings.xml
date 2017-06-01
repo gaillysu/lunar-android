@@ -207,7 +207,7 @@
     <string name="in_app_notification_syncing_alarm">Syncing Alarm&#8230;</string>
     <string name="in_app_notification_synced">Syncing data finished!</string>
     <string name="in_app_notification_no_watch">No watch connected.</string>
-    <string name="in_app_notification_max_fourteen_alarm">Lunar supports only fourteen alarms.</string>
+    <string name="in_app_notification_max_alarms">Lunar supports only 20 alarms.</string>
     <string name="title_alarm">Alarm</string>
     <string name="title_my_nevo">My Lunar</string>
     <string name="title_about">About</string>
@@ -299,7 +299,7 @@
     <string name="register_failed">Register up failed</string>
     <string name="network_wait_text">Please wait ...</string>
     <string name="user_email_is_error">Please check your account..Please check your email....</string>
-    <string name="add_alarm_index_out">The same type of alarm clock can only add 7!</string>
+    <string name="add_alarm_index_out">The same type of alarm clock can only add %1$d!</string>
     <string name="lunar_adapter_clock">Clock</string>
     <string name="lunar_adapter_chart">Chart</string>
     <string name="lunar_adapter_solar">Solar</string>

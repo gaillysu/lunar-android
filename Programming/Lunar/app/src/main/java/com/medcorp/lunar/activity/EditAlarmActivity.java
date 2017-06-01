@@ -92,32 +92,15 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
     }
 
     private void updateAlarm() {
-        getModel().getAllAlarm(new SyncControllerImpl.SyncAlarmToWatchListener() {
+        getModel().updateAlarm(mAlarm).subscribe(new Consumer<Boolean>() {
             @Override
-            public void syncAlarmToWatch(List<Alarm> alarms) {
-                for (Alarm olderAlarm : alarms) {
-                    byte weekDay = olderAlarm.getWeekDay();
-                    if ((weekDay== mAlarm.getWeekDay() && olderAlarm.getAlarmType() == mAlarm.getAlarmType())
-                            && olderAlarm.getAlarmNumber() != mAlarm.getAlarmNumber()) {
-                        String[] weekDays = getResources().getStringArray(R.array.week_day);
-                        ToastHelper.showShortToast(EditAlarmActivity.this, mAlarm.getAlarmType() == (byte) 0 ?
-                                getString(R.string.prompt_user_alarm_no_repeat)+weekDays[(int)mAlarm.getWeekDay()]
-                                : getString(R.string.prompt_user_alarm_no_repeat_two)+weekDays[(int)mAlarm.getWeekDay()]);
-                        break;
-                    } else {
-                        getModel().updateAlarm(mAlarm).subscribe(new Consumer<Boolean>() {
-                            @Override
-                            public void accept(Boolean aBoolean) throws Exception {
-                                if (aBoolean) {
-                                    ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_saved);
-                                    setResult(1);
-                                    finish();
-                                } else {
-                                    ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_could_not_save);
-                                }
-                            }
-                        });
-                    }
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_saved);
+                    setResult(1);
+                    finish();
+                } else {
+                    ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_could_not_save);
                 }
             }
         });
