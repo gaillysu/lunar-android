@@ -469,4 +469,5 @@
     <string name="sleep_unit_minute">分钟</string>
     <string name="solar_goal_def_long">大目标</string>
     <string name="solar_goal_def_short">短时目标</string>
+    <string name="setting_goal_title">选择目标</string>
 </resources>

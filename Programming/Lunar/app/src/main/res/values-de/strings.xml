@@ -473,5 +473,6 @@
     <string name="sleep_unit_minute">min</string>
     <string name="solar_goal_def_long">Long</string>
     <string name="solar_goal_def_short">short</string>
+    <string name="setting_goal_title">Select Goal</string>
 
 </resources>

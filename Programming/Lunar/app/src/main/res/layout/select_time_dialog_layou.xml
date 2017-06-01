@@ -9,15 +9,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="20dp"
-        android:paddingTop="5dp"
-        android:paddingLeft="16dp"
+        android:textSize="18sp"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="24dp"
         android:text="@string/setting_goal_title"/>
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
         android:background="@color/white">
 
         <com.medcorp.lunar.view.PickerView
@@ -36,7 +37,7 @@
             android:text="@string/sleep_unit_hour"
             android:background="@color/white"
             android:textColor="@color/user_sex_text_normal_color"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold"/>
 
         <com.medcorp.lunar.view.PickerView
@@ -55,37 +56,39 @@
             android:layout_toRightOf="@id/minute_pv"
             android:text="@string/sleep_unit_minute"
             android:textColor="@color/user_sex_text_normal_color"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold"/>
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
         android:orientation="horizontal"
-        android:layout_marginRight="16dp">
+        android:layout_gravity="right"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp">
 
         <Button
             android:id="@+id/select_time_cancel_bt"
-            android:layout_width="wrap_content"
+            android:layout_width="64dp"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:text="@string/cancel_update"
             android:textColor="@color/colorAccent"
-            android:textAllCaps="false"
-            android:textSize="20dp"
-            />
+            android:textAllCaps="true"
+            android:textSize="14sp"/>
 
         <Button
             android:id="@+id/select_time_select_bt"
-            android:layout_width="wrap_content"
+            android:layout_width="64dp"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:text="@string/notification_ok"
+            android:layout_marginLeft="8dp"
             android:textColor="@color/colorAccent"
-            android:textAllCaps="false"
-            android:textSize="20dp"
-            />
+            android:textAllCaps="true"
+            android:textSize="14sp"/>
     </LinearLayout>
 </LinearLayout>
