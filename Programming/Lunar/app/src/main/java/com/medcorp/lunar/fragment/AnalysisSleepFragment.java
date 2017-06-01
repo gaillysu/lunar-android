@@ -13,6 +13,7 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.lunar.fragment.base.BaseFragment;
 import com.medcorp.lunar.model.SleepData;
+import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.TipsView;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by Administrator on 2016/7/21.
@@ -65,6 +67,7 @@ public class AnalysisSleepFragment extends BaseFragment {
     private View lastMonthView;
     private AnalysisSleepLineChart thisWeekChart, lastWeekChart, lastMonthChart;
     private TipsView mMv;
+    private SleepGoal mActiveSleepGoal;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -121,11 +124,28 @@ public class AnalysisSleepFragment extends BaseFragment {
 
     private void initData(final Date userSelectDate) {
         mMv = new TipsView(AnalysisSleepFragment.this.getContext(), R.layout.custom_marker_view);
+        getModel().getSleepDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
+            @Override
+            public void accept(List<SleepGoal> sleepGoals) throws Exception {
+                if (sleepGoals.size() > 0) {
+                    for (SleepGoal sleepGoal : sleepGoals) {
+                        if (sleepGoal.isStatus()) {
+                            mActiveSleepGoal = sleepGoal;
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+        if (mActiveSleepGoal == null) {
+            mActiveSleepGoal = new SleepGoal("Unknown",360,true);
+        }
+
         getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.TISHWEEK,
                 new ObtainSleepDataListener() {
                     @Override
                     public void obtainSleepData(List<SleepData> thisWeekSleepData) {
-                        thisWeekChart.addData(thisWeekSleepData, 7);
+                        thisWeekChart.addData(thisWeekSleepData,mActiveSleepGoal, 7);
                         thisWeekChart.setMarkerView(mMv);
                         thisWeekChart.animateY(3000);
                         setThisWeekData(thisWeekSleepData);
@@ -250,7 +270,7 @@ public class AnalysisSleepFragment extends BaseFragment {
                         new ObtainSleepDataListener() {
                             @Override
                             public void obtainSleepData(List<SleepData> thisWeekSleepData) {
-                                thisWeekChart.addData(thisWeekSleepData, 7);
+                                thisWeekChart.addData(thisWeekSleepData,mActiveSleepGoal, 7);
                                 thisWeekChart.setMarkerView(mMv);
                                 thisWeekChart.animateY(3000);
                                 setThisWeekData(thisWeekSleepData);
@@ -262,7 +282,7 @@ public class AnalysisSleepFragment extends BaseFragment {
                         new ObtainSleepDataListener() {
                             @Override
                             public void obtainSleepData(List<SleepData> lastWeekSleepData) {
-                                lastWeekChart.addData(lastWeekSleepData, 7);
+                                lastWeekChart.addData(lastWeekSleepData,mActiveSleepGoal, 7);
                                 lastWeekChart.setMarkerView(mMv);
                                 lastWeekChart.animateY(3000);
                                 setLastWeekData(lastWeekSleepData);
@@ -275,7 +295,7 @@ public class AnalysisSleepFragment extends BaseFragment {
                         , new ObtainSleepDataListener() {
                             @Override
                             public void obtainSleepData(List<SleepData> lastMonthSleepData) {
-                                lastMonthChart.addData(lastMonthSleepData, 30);
+                                lastMonthChart.addData(lastMonthSleepData, mActiveSleepGoal,30);
                                 lastMonthChart.setMarkerView(mMv);
                                 lastMonthChart.animateY(3000);
                                 setLastMonthData(lastMonthSleepData);

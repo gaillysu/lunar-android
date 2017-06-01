@@ -92,7 +92,6 @@ public class AnalysisStepsFragment extends BaseFragment {
          * In this month this is 30 (or 31) because there are 30 days in a month.
          *
          */
-        mActiveStepsGoal = null;
         getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
             @Override
             public void obtainGoal(List<StepsGoal> list) {
@@ -107,7 +106,7 @@ public class AnalysisStepsFragment extends BaseFragment {
             }
         });
         if (mActiveStepsGoal == null) {
-            mActiveStepsGoal = new StepsGoal("Unknown", true, 1000);
+            mActiveStepsGoal = new StepsGoal("Unknown", true, 10000);
         }
 
         setDesText(0);

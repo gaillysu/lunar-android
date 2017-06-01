@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -18,6 +19,7 @@ import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.model.Solar;
+import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.util.TimeUtil;
 
 import org.joda.time.DateTime;
@@ -72,6 +74,7 @@ public class AnalysisSolarLineChart extends LineChart {
         leftAxis.setAxisLineColor(getResources().getColor(R.color.colorPrimary));
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawLabels(true);
+        leftAxis.setDrawLimitLinesBehindData(true);
         leftAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         leftAxis.setAxisMinValue(0.0f);
 
@@ -92,7 +95,7 @@ public class AnalysisSolarLineChart extends LineChart {
 
     }
 
-    public void addData(List<Solar> solarList, int maxDays) {
+    public void addData(List<Solar> solarList, SolarGoal solarGoal, int maxDays) {
         this.solarList = solarList;
         this.maxDays = maxDays;
         List<Entry> yValue = new ArrayList<Entry>();
@@ -113,7 +116,7 @@ public class AnalysisSolarLineChart extends LineChart {
 
         //Log.w("Karl", "Max vlaue = " + maxValue);
         if (maxValue == 0) {
-            maxValue = stepsModulo;
+            maxValue = stepsModulo+solarGoal.getTime();
         } else {
             maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo));
         }
@@ -139,10 +142,17 @@ public class AnalysisSolarLineChart extends LineChart {
         getXAxis().setValueFormatter(new XValueFormatter());
         dataSets.add(set);
 
+        LimitLine limitLine = new LimitLine(solarGoal.getTime(), "Goal");
+        limitLine.setLineWidth(1.50f);
+        limitLine.setLineColor(getResources().getColor(R.color.colorPrimary));
+        limitLine.setTextSize(18f);
+        limitLine.setTextColor(getResources().getColor(R.color.colorPrimary));
+
         YAxis leftAxis = getAxisLeft();
         leftAxis.setValueFormatter(new YValueFormatter());
         leftAxis.setAxisMaxValue(maxValue * 1.0f);
         leftAxis.setLabelCount(maxValue / 30);
+        leftAxis.addLimitLine(limitLine);
         LineData data = new LineData(dataSets);
         setData(data);
 
