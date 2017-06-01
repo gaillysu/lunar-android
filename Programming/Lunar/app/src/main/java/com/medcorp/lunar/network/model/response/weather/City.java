@@ -7,7 +7,14 @@ package com.medcorp.lunar.network.model.response.weather;
 public class City {
     int id;
     String name;
-
+    private Coordinate coord;
+    private String country;
+    public Coordinate getCoord() {
+        return coord;
+    }
+    public String getCountry() {
+        return country;
+    }
     public String getName() {
         return name;
     }

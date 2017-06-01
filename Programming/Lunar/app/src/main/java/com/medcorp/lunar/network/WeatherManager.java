@@ -9,6 +9,7 @@ import com.medcorp.lunar.event.CityForecastChangedEvent;
 import com.medcorp.lunar.network.httpmanager.HttpManager;
 import com.medcorp.lunar.network.model.response.weather.Forecast;
 import com.medcorp.lunar.network.model.response.weather.GetForecastResponse;
+import com.medcorp.lunar.util.WeatherUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.joda.time.DateTime;
@@ -56,13 +57,11 @@ public class WeatherManager {
                     }
                     @Override
                     public void onNext(GetForecastResponse getForecastResponse) {
-                        //TODO save weather data to local file
-                        //send weather data to subscriber
                         int currentHour = new DateTime().getHourOfDay();
                         int today = new DateTime().getDayOfMonth();
                         int index = 0;
                         int totalDataOfToday =0;
-                        Set<String> todayData = new LinkedHashSet<>();
+                        Set<String> weatherData = new LinkedHashSet<>();
                         Calendar calendar = new GregorianCalendar();
                         long offset = calendar.getTimeZone().getRawOffset();
                         for(Forecast forecast:getForecastResponse.getList())
@@ -70,14 +69,19 @@ public class WeatherManager {
                             int day  = new DateTime(forecast.getDt()*1000-offset).getDayOfMonth();
                             if(day == today) {
                                 totalDataOfToday++;
-                                todayData.add(new Gson().toJson(forecast));
                             }
+                            weatherData.add(new Gson().toJson(forecast));
                         }
+                        //save weather data for next 5 days (include today),weather data start with 0,3,6,9,12,15,18,21 hour of a day,
+                        //so MAX 40 records need save, for today records, perhaps is less than 8 records
+                        WeatherUtils.saveCityWeather(context,cityName,weatherData);
+
                         int forecastStartTime = new DateTime(getForecastResponse.getList()[0].getDt()*1000-offset).getHourOfDay();
                         index = ((currentHour - forecastStartTime)/3) % totalDataOfToday;
                         float temp = getForecastResponse.getList()[index].getMain().getTemp();
                         int id = getForecastResponse.getList()[index].getWeather()[0].getId();
                         String main = getForecastResponse.getList()[index].getWeather()[0].getMain();
+                        //send current weather data to subscriber
                         EventBus.getDefault().post(new CityForecastChangedEvent(cityName, temp, id, main));
                     }
                 }
