@@ -60,7 +60,7 @@ public class StepsGoalDatabaseHelper {
                         if (stepsGoal != null) {
                             stepsGoal.setSteps(object.getSteps());
                             stepsGoal.setId(object.getId());
-                            stepsGoal.setSteps(object.getSteps());
+                            stepsGoal.setStatus(object.isStatus());
                             stepsGoal.setLabel(object.getLabel());
                             e.onNext(true);
                             e.onComplete();

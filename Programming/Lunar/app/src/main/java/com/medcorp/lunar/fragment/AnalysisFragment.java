@@ -14,7 +14,9 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisFragmentPagerAdapter;
 import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
+import com.medcorp.lunar.model.ChangeFragmentPageModel;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
@@ -23,12 +25,13 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2016/7/14.
  */
-public class AnalysisFragment extends BaseObservableFragment {
+public class AnalysisFragment extends BaseObservableFragment implements ViewPager.OnPageChangeListener {
 
     @Bind(R.id.analysis_fragment_indicator_tab)
     TabLayout analysisTable;
     @Bind(R.id.analysis_fragment_content_view_pager)
     ViewPager analysisViewpager;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,6 +41,7 @@ public class AnalysisFragment extends BaseObservableFragment {
         AnalysisFragmentPagerAdapter adapter = new AnalysisFragmentPagerAdapter(getChildFragmentManager(),this);
         analysisViewpager.setAdapter(adapter);
         analysisTable.setupWithViewPager(analysisViewpager);
+        analysisViewpager.addOnPageChangeListener(this);
         return view;
     }
 
@@ -58,10 +62,37 @@ public class AnalysisFragment extends BaseObservableFragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.choose_goal_menu).setVisible(false);
         menu.findItem(R.id.add_menu).setVisible(false);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        EventBus.getDefault().post(new ChangeFragmentPageModel(position));
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }
 

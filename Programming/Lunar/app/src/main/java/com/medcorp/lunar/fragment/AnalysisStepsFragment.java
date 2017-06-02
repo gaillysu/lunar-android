@@ -11,13 +11,17 @@ import android.widget.TextView;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
+import com.medcorp.lunar.event.ChangeGoalEvent;
 import com.medcorp.lunar.fragment.base.BaseFragment;
-import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.model.Steps;
+import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisStepsLineChart;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -112,7 +116,7 @@ public class AnalysisStepsFragment extends BaseFragment {
         setDesText(0);
 
         getModel().getSteps(getModel().getUser().getUserID(), userSelectDate
-                ,WeekData.TISHWEEK, new OnStepsGetListener() {
+                , WeekData.TISHWEEK, new OnStepsGetListener() {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
                         thisWeekData = stepsList;
@@ -122,7 +126,7 @@ public class AnalysisStepsFragment extends BaseFragment {
                     }
                 });
 
-        getModel().getSteps(getModel().getUser().getUserID(), userSelectDate,WeekData.LASTWEEK,
+        getModel().getSteps(getModel().getUser().getUserID(), userSelectDate, WeekData.LASTWEEK,
                 new OnStepsGetListener() {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
@@ -266,5 +270,17 @@ public class AnalysisStepsFragment extends BaseFragment {
 
     public interface OnStepsGetListener {
         void onStepsGet(List<Steps> stepsList);
+    }
+
+    @Subscribe
+    public void onEvent(ChangeGoalEvent event) {
+        if (event.isChangeGoal()) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    initData(mUserSelectDate);
+                }
+            });
+        }
     }
 }

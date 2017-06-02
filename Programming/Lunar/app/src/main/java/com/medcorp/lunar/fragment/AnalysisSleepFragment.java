@@ -12,12 +12,15 @@ import android.widget.TextView;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.lunar.fragment.base.BaseFragment;
+import com.medcorp.lunar.model.ChangeSleepGoalEvent;
 import com.medcorp.lunar.model.SleepData;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisSleepLineChart;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -119,10 +122,10 @@ public class AnalysisSleepFragment extends BaseFragment {
             }
             uiControl.addView(imageView, layoutParams);
         }
-        initData(userSelectDate);
+        initData();
     }
 
-    private void initData(final Date userSelectDate) {
+    private void initData() {
         mMv = new TipsView(AnalysisSleepFragment.this.getContext(), R.layout.custom_marker_view);
         getModel().getSleepDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
             @Override
@@ -138,14 +141,14 @@ public class AnalysisSleepFragment extends BaseFragment {
             }
         });
         if (mActiveSleepGoal == null) {
-            mActiveSleepGoal = new SleepGoal("Unknown",360,true);
+            mActiveSleepGoal = new SleepGoal("Unknown", 360, true);
         }
 
         getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.TISHWEEK,
                 new ObtainSleepDataListener() {
                     @Override
                     public void obtainSleepData(List<SleepData> thisWeekSleepData) {
-                        thisWeekChart.addData(thisWeekSleepData,mActiveSleepGoal, 7);
+                        thisWeekChart.addData(thisWeekSleepData, mActiveSleepGoal, 7);
                         thisWeekChart.setMarkerView(mMv);
                         thisWeekChart.animateY(3000);
                         setThisWeekData(thisWeekSleepData);
@@ -270,7 +273,7 @@ public class AnalysisSleepFragment extends BaseFragment {
                         new ObtainSleepDataListener() {
                             @Override
                             public void obtainSleepData(List<SleepData> thisWeekSleepData) {
-                                thisWeekChart.addData(thisWeekSleepData,mActiveSleepGoal, 7);
+                                thisWeekChart.addData(thisWeekSleepData, mActiveSleepGoal, 7);
                                 thisWeekChart.setMarkerView(mMv);
                                 thisWeekChart.animateY(3000);
                                 setThisWeekData(thisWeekSleepData);
@@ -282,7 +285,7 @@ public class AnalysisSleepFragment extends BaseFragment {
                         new ObtainSleepDataListener() {
                             @Override
                             public void obtainSleepData(List<SleepData> lastWeekSleepData) {
-                                lastWeekChart.addData(lastWeekSleepData,mActiveSleepGoal, 7);
+                                lastWeekChart.addData(lastWeekSleepData, mActiveSleepGoal, 7);
                                 lastWeekChart.setMarkerView(mMv);
                                 lastWeekChart.animateY(3000);
                                 setLastWeekData(lastWeekSleepData);
@@ -295,7 +298,7 @@ public class AnalysisSleepFragment extends BaseFragment {
                         , new ObtainSleepDataListener() {
                             @Override
                             public void obtainSleepData(List<SleepData> lastMonthSleepData) {
-                                lastMonthChart.addData(lastMonthSleepData, mActiveSleepGoal,30);
+                                lastMonthChart.addData(lastMonthSleepData, mActiveSleepGoal, 30);
                                 lastMonthChart.setMarkerView(mMv);
                                 lastMonthChart.animateY(3000);
                                 setLastMonthData(lastMonthSleepData);
@@ -307,5 +310,17 @@ public class AnalysisSleepFragment extends BaseFragment {
 
     public interface ObtainSleepDataListener {
         void obtainSleepData(List<SleepData> sleepDatas);
+    }
+
+    @Subscribe
+    public void onEvent(ChangeSleepGoalEvent event) {
+        if (event.isChange()) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setData(sleepViewPage.getCurrentItem());
+                }
+            });
+        }
     }
 }

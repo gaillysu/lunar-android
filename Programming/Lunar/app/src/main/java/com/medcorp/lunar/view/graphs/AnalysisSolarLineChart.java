@@ -229,5 +229,4 @@ public class AnalysisSolarLineChart extends LineChart {
             return 0;
         }
     }
-
 }

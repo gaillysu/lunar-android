@@ -141,16 +141,18 @@ public class MainFragment extends BaseObservableFragment {
         }
         getModel().getAllGoal(new ObtainGoalListener() {
             @Override
-            public void obtainGoal(List<StepsGoal> stepsGoalList) {
+            public void obtainGoal(final List<StepsGoal> stepsGoalList) {
                 List<String> stringList = new ArrayList<>();
                 final List<StepsGoal> stepsGoalEnableList = new ArrayList<>();
-                boolean status = false;
-                for (StepsGoal stepsGoal : stepsGoalList) {
+                int  selectIndex = 0;
+                for(int i=0;i<stepsGoalList.size();i++){
+                    StepsGoal stepsGoal = stepsGoalList.get(i);
                     if(stepsGoal.isStatus()){
-                        status = true;
+                        selectIndex = i;
                     }
                     stringList.add(stepsGoal.toString());
                     stepsGoalEnableList.add(stepsGoal);
+
                 }
                 CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
 
@@ -158,10 +160,19 @@ public class MainFragment extends BaseObservableFragment {
                     new MaterialDialog.Builder(getContext())
                             .title(R.string.steps_goal_title).itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
                             .items(cs)
-                            .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                            .itemsCallbackSingleChoice(selectIndex, new MaterialDialog.ListCallbackSingleChoice() {
                                 @Override
                                 public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                                     if (which >= 0) {
+                                        for (int i = 0; i < stepsGoalList.size(); i++) {
+                                            StepsGoal stepsGoal = stepsGoalList.get(i);
+                                            if (i == which) {
+                                                stepsGoal.setStatus(true);
+                                            }else{
+                                                stepsGoal.setStatus(false);
+                                            }
+                                            getModel().updateGoal(stepsGoal);
+                                        }
                                         getModel().setStepsGoal(stepsGoalEnableList.get(which));
                                         Preferences.savePreset(getContext(), stepsGoalEnableList.get(which));
                                         showSyncGoal = true;

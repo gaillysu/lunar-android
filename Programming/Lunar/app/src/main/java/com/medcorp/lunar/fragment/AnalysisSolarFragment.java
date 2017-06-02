@@ -12,12 +12,15 @@ import android.widget.TextView;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.lunar.fragment.base.BaseFragment;
+import com.medcorp.lunar.model.ChangeSolarGoalEvent;
 import com.medcorp.lunar.model.Solar;
 import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisSolarLineChart;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,7 +32,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
 
-/**
+/***
  * Created by Administrator on 2016/7/21.
  */
 public class AnalysisSolarFragment extends BaseFragment {
@@ -96,10 +99,10 @@ public class AnalysisSolarFragment extends BaseFragment {
             }
             uiControl.addView(imageView, params);
         }
-        initData(userSelectDate);
+        initData();
     }
 
-    private void initData(final Date userSelectDate) {
+    private void initData() {
 
         thisWeekChart = (AnalysisSolarLineChart) thisWeekView.findViewById(R.id.analysis_solar_chart);
         lastWeekChart = (AnalysisSolarLineChart) lastWeekView.findViewById(R.id.analysis_solar_chart);
@@ -220,5 +223,17 @@ public class AnalysisSolarFragment extends BaseFragment {
 
     public interface ObtainSolarListener {
         void obtainSolarData(List<Solar> solars);
+    }
+
+    @Subscribe
+    public void onEvent(ChangeSolarGoalEvent event) {
+        if (event.isChange()) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setData(solarViewPager.getCurrentItem());
+                }
+            });
+        }
     }
 }
