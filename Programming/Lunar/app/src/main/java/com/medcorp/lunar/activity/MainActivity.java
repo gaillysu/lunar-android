@@ -28,12 +28,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.login.LoginActivity;
 import com.medcorp.lunar.base.BaseActivity;
+import com.medcorp.lunar.event.ChangeGoalEvent;
 import com.medcorp.lunar.event.DateSelectChangedEvent;
 import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.fragment.AlarmFragment;
@@ -42,6 +45,12 @@ import com.medcorp.lunar.fragment.HomeClockFragment;
 import com.medcorp.lunar.fragment.MainFragment;
 import com.medcorp.lunar.fragment.SettingsFragment;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
+import com.medcorp.lunar.model.ChangeFragmentPageModel;
+import com.medcorp.lunar.model.ChangeSleepGoalEvent;
+import com.medcorp.lunar.model.ChangeSolarGoalEvent;
+import com.medcorp.lunar.model.SleepGoal;
+import com.medcorp.lunar.model.SolarGoal;
+import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.util.PublicUtils;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -56,24 +65,27 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 
 import static com.medcorp.lunar.R.id.navigation_header_imageview;
 import static com.medcorp.lunar.util.Preferences.getUserHeardPicturePath;
 import static com.medcorp.lunar.util.Preferences.saveSelectDate;
 
 
-/**
+/***
  * Created by Karl on 12/10/15.
  */
 public class MainActivity extends BaseActivity implements DrawerLayout.DrawerListener,
-        NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener, DatePickerDialog.OnDateSetListener {
+        NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener, DatePickerDialog.OnDateSetListener, View.OnClickListener {
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
@@ -102,6 +114,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private boolean bigSyncStart = false;
     private BaseObservableFragment mainStepsFragment;
     private Calendar mCalendar;
+    private int viewPage = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -291,23 +304,29 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.GONE);
             showDateText.setText(item.getTitle());
         }
-
+        Button setGoal = (Button) toolbar.findViewById(R.id.toolbar_title_set_goal_button);
+        setGoal.setOnClickListener(this);
         BaseObservableFragment fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_steps_fragment:
                 fragment = MainFragment.instantiate(MainActivity.this, MainFragment.class.getName());
+                setGoal.setVisibility(View.GONE);
                 break;
             case R.id.nav_alarm_fragment:
                 fragment = AlarmFragment.instantiate(MainActivity.this, AlarmFragment.class.getName());
+                setGoal.setVisibility(View.GONE);
                 break;
             case R.id.nav_sleep_fragment:
                 fragment = AnalysisFragment.instantiate(MainActivity.this, AnalysisFragment.class.getName());
+                setGoal.setVisibility(View.VISIBLE);
                 break;
             case R.id.nav_settings_fragment:
                 fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
+                setGoal.setVisibility(View.GONE);
                 break;
             case R.id.nav_world_clock:
                 fragment = HomeClockFragment.instantiate(MainActivity.this, HomeClockFragment.class.getName());
+                setGoal.setVisibility(View.GONE);
                 break;
         }
 
@@ -464,5 +483,215 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (viewPage) {
+            case 0:
+                popupStepsGoalDialog();
+                break;
+            case 1:
+                popupSleepGoalDialog();
+                break;
+            case 2:
+                popupSolarGoalDialog();
+                break;
+        }
+    }
+
+    @Subscribe
+    public void onEvent(ChangeFragmentPageModel event) {
+        viewPage = event.getViewPage();
+    }
+
+    private void popupStepsGoalDialog( ) {
+        getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
+            @Override
+            public void obtainGoal(final List<StepsGoal> stepsGoalList) {
+                List<String> stringList = new ArrayList<>();
+                final List<StepsGoal> stepsGoalEnableList = new ArrayList<>();
+                int selectIndex = 0;
+                for (int i = 0; i < stepsGoalList.size(); i++) {
+                    StepsGoal stepsGoal = stepsGoalList.get(i);
+                    if (stepsGoal.isStatus()) {
+                        selectIndex = i;
+                    }
+                    stringList.add(stepsGoal.toString());
+                    stepsGoalEnableList.add(stepsGoal);
+
+                }
+                CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
+
+                if (stepsGoalList.size() != 0) {
+                    new MaterialDialog.Builder(MainActivity.this)
+                            .title(R.string.steps_goal_title).itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
+                            .items(cs)
+                            .itemsCallbackSingleChoice(selectIndex, new MaterialDialog.ListCallbackSingleChoice() {
+                                @Override
+                                public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                    if (which >= 0) {
+
+                                        for (int i = 0; i < stepsGoalList.size(); i++) {
+                                            StepsGoal stepsGoal = stepsGoalList.get(i);
+                                            if (i == which) {
+                                                stepsGoal.setStatus(true);
+                                            }else{
+                                                stepsGoal.setStatus(false);
+                                            }
+                                            getModel().updateGoal(stepsGoal);
+                                        }
+                                        getModel().setStepsGoal(stepsGoalEnableList.get(which));
+                                        showStateString(R.string.goal_syncing_message, false);
+                                        EventBus.getDefault().post(new ChangeGoalEvent(true));
+                                    }
+                                    return true;
+                                }
+                            })
+                            .positiveText(R.string.goal_ok)
+                            .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
+                            .show();
+                } else {
+                    showStateString(R.string.in_app_notification_no_goal, false);
+                }
+            }
+        });
+    }
+
+
+
+    private void popupSleepGoalDialog( ) {
+        getModel().getSleepDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
+            @Override
+            public void accept(final List<SleepGoal> sleepGoals) throws Exception {
+                List<String> stringList = new ArrayList<>();
+                final List<SleepGoal> stepsGoalEnableList = new ArrayList<>();
+                int selectIndex = 0;
+                for (int i = 0; i < sleepGoals.size(); i++) {
+                    SleepGoal sleepGoal = sleepGoals.get(i);
+                    if (sleepGoal.isStatus()) {
+                        selectIndex = i;
+                    }
+                    stringList.add(obtainString(sleepGoal.getGoalName(),sleepGoal.getGoalDuration()));
+                    stepsGoalEnableList.add(sleepGoal);
+
+                }
+                CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
+
+                if (sleepGoals.size() != 0) {
+                    new MaterialDialog.Builder(MainActivity.this)
+                            .title(R.string.def_goal_sleep_name).itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
+                            .items(cs)
+                            .itemsCallbackSingleChoice(selectIndex, new MaterialDialog.ListCallbackSingleChoice() {
+                                @Override
+                                public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                    if (which >= 0) {
+
+                                        for (int i = 0; i < sleepGoals.size(); i++) {
+                                            SleepGoal sleepGoal = sleepGoals.get(i);
+                                            if (i == which) {
+                                                sleepGoal.setStatus(true);
+                                            }else{
+                                                sleepGoal.setStatus(false);
+                                            }
+                                            getModel().getSleepDatabseHelper().update(sleepGoal).subscribe(new Consumer<Boolean>() {
+                                                @Override
+                                                public void accept(Boolean aBoolean) throws Exception {
+                                                    Log.i("jason","change sleep goal");
+                                                }
+                                            });
+                                        }
+                                        EventBus.getDefault().post(new ChangeSleepGoalEvent(true));
+                                    }
+                                    return true;
+                                }
+                            })
+                            .positiveText(R.string.goal_ok)
+                            .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
+                            .show();
+                } else {
+                    showStateString(R.string.in_app_notification_no_goal, false);
+                }
+            }
+        });
+    }
+
+    private void popupSolarGoalDialog() {
+        getModel().getSolarGoalDatabaseHelper().getAll().subscribe(new Consumer<List<SolarGoal>>() {
+            @Override
+            public void accept(final List<SolarGoal> solarGoals) throws Exception {
+                List<String> stringList = new ArrayList<>();
+                final List<SolarGoal> stepsGoalEnableList = new ArrayList<>();
+                int selectIndex = 0;
+                for (int i = 0; i < solarGoals.size(); i++) {
+                    SolarGoal solarGoal = solarGoals.get(i);
+                    if (solarGoal.isStatus()) {
+                        selectIndex = i;
+                    }
+                    stringList.add(obtainString(solarGoal.getName(),solarGoal.getTime()));
+                    stepsGoalEnableList.add(solarGoal);
+
+                }
+                CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
+
+                if (solarGoals.size() != 0) {
+                    new MaterialDialog.Builder(MainActivity.this)
+                            .title(R.string.def_goal_solar_name).itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
+                            .items(cs)
+                            .itemsCallbackSingleChoice(selectIndex, new MaterialDialog.ListCallbackSingleChoice() {
+                                @Override
+                                public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                    if (which >= 0) {
+
+                                        for (int i = 0; i < solarGoals.size(); i++) {
+                                            SolarGoal solar = solarGoals.get(i);
+                                            if (i == which) {
+                                                solar.setStatus(true);
+                                            }else{
+                                                solar.setStatus(false);
+                                            }
+                                            getModel().getSolarGoalDatabaseHelper().update(solar).subscribe(new Consumer<Boolean>() {
+                                                @Override
+                                                public void accept(Boolean aBoolean) throws Exception {
+                                                    Log.i("jason","change sleep goal");
+                                                }
+                                            });
+                                        }
+                                        EventBus.getDefault().post(new ChangeSolarGoalEvent(true));
+                                    }
+                                    return true;
+                                }
+                            })
+                            .positiveText(R.string.goal_ok)
+                            .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
+                            .show();
+                } else {
+                    showStateString(R.string.in_app_notification_no_goal, false);
+                }
+
+            }
+        });
+    }
+
+    private String obtainString(String name, int time) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(name);
+        builder.append(": ");
+        builder.append(countTime(time));
+        return builder.toString();
+
+    }
+
+    private String countTime(int goalDuration) {
+        StringBuffer sb = new StringBuffer();
+        if (goalDuration > 60) {
+            sb.append(goalDuration / 60 + getString(R.string.sleep_unit_hour)
+                    + (goalDuration % 60 != 0 ? goalDuration % 60 + getString(R.string.sleep_unit_minute) : ""));
+        } else if (goalDuration == 60) {
+            sb.append(goalDuration / 60 +getString(R.string.sleep_unit_hour));
+        } else {
+            sb.append(goalDuration + getString(R.string.sleep_unit_minute));
+        }
+        return sb.toString();
     }
 }

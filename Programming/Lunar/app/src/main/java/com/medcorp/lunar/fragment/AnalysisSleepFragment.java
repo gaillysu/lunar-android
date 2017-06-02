@@ -12,11 +12,15 @@ import android.widget.TextView;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.lunar.fragment.base.BaseFragment;
+import com.medcorp.lunar.model.ChangeSleepGoalEvent;
 import com.medcorp.lunar.model.SleepData;
+import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisSleepLineChart;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,6 +30,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by Administrator on 2016/7/21.
@@ -64,6 +69,8 @@ public class AnalysisSleepFragment extends BaseFragment {
     private View lastWeekView;
     private View lastMonthView;
     private AnalysisSleepLineChart thisWeekChart, lastWeekChart, lastMonthChart;
+    private TipsView mMv;
+    private SleepGoal mActiveSleepGoal;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -115,42 +122,39 @@ public class AnalysisSleepFragment extends BaseFragment {
             }
             uiControl.addView(imageView, layoutParams);
         }
-        initData(userSelectDate);
+        initData();
     }
 
-    private void initData(Date userSelectDate) {
-        final TipsView mv = new TipsView(AnalysisSleepFragment.this.getContext(), R.layout.custom_marker_view);
+    private void initData() {
+        mMv = new TipsView(AnalysisSleepFragment.this.getContext(), R.layout.custom_marker_view);
+        getModel().getSleepDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
+            @Override
+            public void accept(List<SleepGoal> sleepGoals) throws Exception {
+                if (sleepGoals.size() > 0) {
+                    for (SleepGoal sleepGoal : sleepGoals) {
+                        if (sleepGoal.isStatus()) {
+                            mActiveSleepGoal = sleepGoal;
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+        if (mActiveSleepGoal == null) {
+            mActiveSleepGoal = new SleepGoal("Unknown", 360, true);
+        }
+
         getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.TISHWEEK,
                 new ObtainSleepDataListener() {
                     @Override
                     public void obtainSleepData(List<SleepData> thisWeekSleepData) {
-                        thisWeekChart.addData(thisWeekSleepData, 7);
-                        thisWeekChart.setMarkerView(mv);
+                        thisWeekChart.addData(thisWeekSleepData, mActiveSleepGoal, 7);
+                        thisWeekChart.setMarkerView(mMv);
                         thisWeekChart.animateY(3000);
                         setThisWeekData(thisWeekSleepData);
                     }
                 });
-        getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.LASTWEEK,
-                new ObtainSleepDataListener() {
-                    @Override
-                    public void obtainSleepData(List<SleepData> lastWeekSleepData) {
-                        lastWeekChart.addData(lastWeekSleepData, 7);
-                        lastWeekChart.setMarkerView(mv);
-                        lastWeekChart.animateY(3000);
-                        setLastWeekData(lastWeekSleepData);
-                    }
-                });
 
-        getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.LASTMONTH
-                , new ObtainSleepDataListener() {
-                    @Override
-                    public void obtainSleepData(List<SleepData> lastMonthSleepData) {
-                        lastMonthChart.addData(lastMonthSleepData, 30);
-                        lastMonthChart.setMarkerView(mv);
-                        lastMonthChart.animateY(3000);
-                        setLastMonthData(lastMonthSleepData);
-                    }
-                });
         /**
          * 'Sleep' is not the right way to put it into the chart because one evening and one night is spread
          * through 2 'Sleep' Objects.Therefor we have a solution which is 'SleepData' We have therefor
@@ -178,6 +182,8 @@ public class AnalysisSleepFragment extends BaseFragment {
                         imageView.setImageResource(R.drawable.ui_page_control_unselector);
                     }
                 }
+                setData(position);
+
             }
 
             @Override
@@ -260,7 +266,61 @@ public class AnalysisSleepFragment extends BaseFragment {
         }
     }
 
+    public void setData(int position) {
+        switch (position) {
+            case 0:
+                getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.TISHWEEK,
+                        new ObtainSleepDataListener() {
+                            @Override
+                            public void obtainSleepData(List<SleepData> thisWeekSleepData) {
+                                thisWeekChart.addData(thisWeekSleepData, mActiveSleepGoal, 7);
+                                thisWeekChart.setMarkerView(mMv);
+                                thisWeekChart.animateY(3000);
+                                setThisWeekData(thisWeekSleepData);
+                            }
+                        });
+                break;
+            case 1:
+                getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.LASTWEEK,
+                        new ObtainSleepDataListener() {
+                            @Override
+                            public void obtainSleepData(List<SleepData> lastWeekSleepData) {
+                                lastWeekChart.addData(lastWeekSleepData, mActiveSleepGoal, 7);
+                                lastWeekChart.setMarkerView(mMv);
+                                lastWeekChart.animateY(3000);
+                                setLastWeekData(lastWeekSleepData);
+                            }
+                        });
+
+                break;
+            case 2:
+                getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.LASTMONTH
+                        , new ObtainSleepDataListener() {
+                            @Override
+                            public void obtainSleepData(List<SleepData> lastMonthSleepData) {
+                                lastMonthChart.addData(lastMonthSleepData, mActiveSleepGoal, 30);
+                                lastMonthChart.setMarkerView(mMv);
+                                lastMonthChart.animateY(3000);
+                                setLastMonthData(lastMonthSleepData);
+                            }
+                        });
+                break;
+        }
+    }
+
     public interface ObtainSleepDataListener {
         void obtainSleepData(List<SleepData> sleepDatas);
+    }
+
+    @Subscribe
+    public void onEvent(ChangeSleepGoalEvent event) {
+        if (event.isChange()) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setData(sleepViewPage.getCurrentItem());
+                }
+            });
+        }
     }
 }

@@ -11,6 +11,7 @@ import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -20,6 +21,7 @@ import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.model.SleepData;
+import com.medcorp.lunar.model.SleepGoal;
 
 import org.joda.time.DateTime;
 
@@ -81,6 +83,7 @@ public class AnalysisSleepLineChart extends LineChart {
         leftAxis.setDrawLabels(true);
         leftAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         leftAxis.setAxisMinValue(0f);
+        leftAxis.setDrawLimitLinesBehindData(true);
 
         YAxis rightAxis = getAxisRight();
         rightAxis.setEnabled(false);
@@ -97,7 +100,7 @@ public class AnalysisSleepLineChart extends LineChart {
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
     }
 
-    public void addData(List<SleepData> sleepList, int maxDayInGraph) {
+    public void addData(List<SleepData> sleepList, SleepGoal sleepGoal, int maxDayInGraph) {
         this.sleepList = sleepList;
         this.maxDayInGraph = maxDayInGraph;
         List<Entry> wakeEntries = new ArrayList<>();
@@ -128,8 +131,11 @@ public class AnalysisSleepLineChart extends LineChart {
                 deepSleepEntries.add(new Entry(i, 0));
             }
         }
-        maxValue += 120;
-        maxValue = ((Math.round(maxValue / 60)) * 60);
+
+        if (maxValue == 0 | maxValue <= sleepGoal.getGoalDuration()) {
+            maxValue = sleepGoal.getGoalDuration()+120;
+            maxValue = ((Math.round(maxValue / 60)) * 60);
+        }
         List<ILineDataSet> dataSets = new ArrayList<>();
 
         getXAxis().setLabelCount(this.sleepList.size() - 1);
@@ -141,11 +147,18 @@ public class AnalysisSleepLineChart extends LineChart {
         dataSets.add(getDataSet(lightSleepEntries, "Light Sleep", lightGradient, R.color.analysis_sleep_light_line_color));
         dataSets.add(getDataSet(deepSleepEntries, "Deep Sleep", deepGradient, R.color.analysis_sleep_deep_line_color));
 
+        LimitLine limitLine = new LimitLine(sleepGoal.getGoalDuration(), "Goal");
+        limitLine.setLineWidth(1.50f);
+        limitLine.setLineColor(getResources().getColor(R.color.colorPrimary));
+        limitLine.setTextSize(18f);
+        limitLine.setTextColor(getResources().getColor(R.color.colorPrimary));
 
         YAxis leftAxis = getAxisLeft();
         leftAxis.setValueFormatter(new YValueFormatter());
         leftAxis.setAxisMaxValue((maxValue - 60) * 1.0f);
         leftAxis.setLabelCount(maxValue / 60, true);
+        leftAxis.addLimitLine(limitLine);
+
         LineData data = new LineData(dataSets);
         setData(data);
         animateY(2, Easing.EasingOption.EaseInCirc);

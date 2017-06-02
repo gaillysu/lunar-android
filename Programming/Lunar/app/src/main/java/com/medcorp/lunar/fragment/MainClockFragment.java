@@ -396,9 +396,5 @@ public class MainClockFragment extends BaseFragment {
         }
         return null;
     }
-
-    public interface ObtainDailyStepsListener {
-        void obtainDailySteps(Steps steps);
-    }
 }
 

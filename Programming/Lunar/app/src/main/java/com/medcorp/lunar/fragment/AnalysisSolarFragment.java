@@ -12,11 +12,15 @@ import android.widget.TextView;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.lunar.fragment.base.BaseFragment;
+import com.medcorp.lunar.model.ChangeSolarGoalEvent;
 import com.medcorp.lunar.model.Solar;
+import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisSolarLineChart;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,8 +30,9 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 
-/**
+/***
  * Created by Administrator on 2016/7/21.
  */
 public class AnalysisSolarFragment extends BaseFragment {
@@ -48,7 +53,9 @@ public class AnalysisSolarFragment extends BaseFragment {
     private View lastMonthView;
     private List<View> solarList;
     private Date userSelectDate;
-    private AnalysisSolarLineChart thisWeekChart,lastWeekChart,lastMonthChart;
+    private AnalysisSolarLineChart thisWeekChart, lastWeekChart, lastMonthChart;
+    private TipsView mMarker;
+    private SolarGoal solarGoal;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,62 +87,55 @@ public class AnalysisSolarFragment extends BaseFragment {
         solarList.add(lastWeekView);
         solarList.add(lastMonthView);
 
-        for(int i = 0; i<solarList.size(); i++){
-            ImageView imageView  = new  ImageView(AnalysisSolarFragment.this.getContext());
+        for (int i = 0; i < solarList.size(); i++) {
+            ImageView imageView = new ImageView(AnalysisSolarFragment.this.getContext());
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
-                    (LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-            if(i == 0){
+                    (LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            if (i == 0) {
                 imageView.setImageResource(R.drawable.ui_page_control_selector);
-            }else{
+            } else {
                 imageView.setImageResource(R.drawable.ui_page_control_unselector);
                 params.leftMargin = 20;
             }
-            uiControl.addView(imageView,params);
+            uiControl.addView(imageView, params);
         }
-
-        initData(userSelectDate);
+        initData();
     }
 
-    private void initData(Date userSelectDate) {
+    private void initData() {
 
         thisWeekChart = (AnalysisSolarLineChart) thisWeekView.findViewById(R.id.analysis_solar_chart);
         lastWeekChart = (AnalysisSolarLineChart) lastWeekView.findViewById(R.id.analysis_solar_chart);
         lastMonthChart = (AnalysisSolarLineChart) lastMonthView.findViewById(R.id.analysis_solar_chart);
-        final TipsView marker = new TipsView(AnalysisSolarFragment.this.getContext(),R.layout.custom_marker_view);
+        mMarker = new TipsView(AnalysisSolarFragment.this.getContext(), R.layout.custom_marker_view);
+        getModel().getSolarGoalDatabaseHelper().getAll().subscribe(new Consumer<List<SolarGoal>>() {
+            @Override
+            public void accept(List<SolarGoal> solarGoals) throws Exception {
+                if(solarGoals.size()>0){
+                    for(SolarGoal goal:solarGoals){
+                        if(goal.isStatus()){
+                            solarGoal = goal;
+                        }
+                    }
+                }
+            }
+        });
 
-        getModel().getSolarData(getModel().getUser().getId(), userSelectDate,WeekData.TISHWEEK,
+        if(solarGoal==null){
+            solarGoal = new SolarGoal("Unknown",60,true);
+        }
+        getModel().getSolarData(getModel().getUser().getId(), userSelectDate, WeekData.TISHWEEK,
                 new ObtainSolarListener() {
                     @Override
                     public void obtainSolarData(List<Solar> thisWeek) {
-                        thisWeekChart.addData(thisWeek, 7);
-                        thisWeekChart.setMarkerView(marker);
+                        thisWeekChart.addData(thisWeek,solarGoal, 7);
+                        thisWeekChart.setMarkerView(mMarker);
                         solarTitleTextView.setText(R.string.analysis_fragment_this_week_steps);
                         averageTimeOnSolar.setText(TimeUtil.formatTime(getAverageTimeOnBattery(thisWeek)));
-                        averageTimeOnBattery.setText(TimeUtil.formatTime(24*60-getAverageTimeOnBattery(thisWeek)));
+                        averageTimeOnBattery.setText(TimeUtil.formatTime(24 * 60 - getAverageTimeOnBattery(thisWeek)));
                     }
                 });
-        getModel().getSolarData(getModel().getUser().getId(), userSelectDate, WeekData.LASTWEEK,
-                new ObtainSolarListener() {
-            @Override
-            public void obtainSolarData(List<Solar> lastWeek) {
-                lastWeekChart.addData(lastWeek, 7);
-                lastWeekChart.setMarkerView(marker);
-                solarTitleTextView.setText(R.string.analysis_fragment_last_week_steps);
-                averageTimeOnSolar.setText(TimeUtil.formatTime(getAverageTimeOnBattery(lastWeek)));
-                averageTimeOnBattery.setText(TimeUtil.formatTime(24*60-getAverageTimeOnBattery(lastWeek)));
-            }
-        });
-        getModel().getSolarData(getModel().getUser().getId(), userSelectDate, WeekData.LASTMONTH,
-                new ObtainSolarListener() {
-                    @Override
-                    public void obtainSolarData(List<Solar> lastMonth) {
-                        lastMonthChart.addData(lastMonth, 30);
-                        lastMonthChart.setMarkerView(marker);
-                        solarTitleTextView.setText(R.string.analysis_fragment_last_month_solar);
-                        averageTimeOnSolar.setText(TimeUtil.formatTime(getAverageTimeOnBattery(lastMonth)));
-                        averageTimeOnBattery.setText(TimeUtil.formatTime(24*60-getAverageTimeOnBattery(lastMonth)));
-                    }
-                });
+
 
         AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(solarList);
         solarViewPager.setAdapter(adapter);
@@ -149,14 +149,16 @@ public class AnalysisSolarFragment extends BaseFragment {
             public void onPageSelected(int position) {
 
                 int childCount = uiControl.getChildCount();
-                for(int i = 0; i<childCount; i++){
+                for (int i = 0; i < childCount; i++) {
                     ImageView imageView = (ImageView) uiControl.getChildAt(i);
-                    if(position == i){
+                    if (position == i) {
                         imageView.setImageResource(R.drawable.ui_page_control_selector);
-                    }else{
+                    } else {
                         imageView.setImageResource(R.drawable.ui_page_control_unselector);
                     }
                 }
+                setData(position);
+
             }
 
             @Override
@@ -167,15 +169,71 @@ public class AnalysisSolarFragment extends BaseFragment {
 
     }
 
-    public int getAverageTimeOnBattery(List<Solar> list){
+    public int getAverageTimeOnBattery(List<Solar> list) {
         int sum = 0;
-        for(Solar solar : list){
+        for (Solar solar : list) {
             sum = solar.getTotalHarvestingTime();
         }
-        return sum == 0?0:sum/list.size();
+        return sum == 0 ? 0 : sum / list.size();
     }
 
-    public interface ObtainSolarListener{
+    public void setData(int position) {
+        switch (position) {
+            case 0:
+                getModel().getSolarData(getModel().getUser().getId(), userSelectDate, WeekData.TISHWEEK,
+                        new ObtainSolarListener() {
+                            @Override
+                            public void obtainSolarData(List<Solar> thisWeek) {
+                                thisWeekChart.addData(thisWeek,solarGoal, 7);
+                                thisWeekChart.setMarkerView(mMarker);
+                                solarTitleTextView.setText(R.string.analysis_fragment_this_week_steps);
+                                averageTimeOnSolar.setText(TimeUtil.formatTime(getAverageTimeOnBattery(thisWeek)));
+                                averageTimeOnBattery.setText(TimeUtil.formatTime(24 * 60 - getAverageTimeOnBattery(thisWeek)));
+                            }
+                        });
+                break;
+            case 1:
+                getModel().getSolarData(getModel().getUser().getId(), userSelectDate, WeekData.LASTWEEK,
+                        new ObtainSolarListener() {
+                            @Override
+                            public void obtainSolarData(List<Solar> lastWeek) {
+                                lastWeekChart.addData(lastWeek,solarGoal, 7);
+                                lastWeekChart.setMarkerView(mMarker);
+                                solarTitleTextView.setText(R.string.analysis_fragment_last_week_steps);
+                                averageTimeOnSolar.setText(TimeUtil.formatTime(getAverageTimeOnBattery(lastWeek)));
+                                averageTimeOnBattery.setText(TimeUtil.formatTime(24 * 60 - getAverageTimeOnBattery(lastWeek)));
+                            }
+                        });
+                break;
+            case 2:
+                getModel().getSolarData(getModel().getUser().getId(), userSelectDate, WeekData.LASTMONTH,
+                        new ObtainSolarListener() {
+                            @Override
+                            public void obtainSolarData(List<Solar> lastMonth) {
+                                lastMonthChart.addData(lastMonth,solarGoal, 30);
+                                lastMonthChart.setMarkerView(mMarker);
+                                solarTitleTextView.setText(R.string.analysis_fragment_last_month_solar);
+                                averageTimeOnSolar.setText(TimeUtil.formatTime(getAverageTimeOnBattery(lastMonth)));
+                                averageTimeOnBattery.setText(TimeUtil.formatTime(24 * 60 - getAverageTimeOnBattery(lastMonth)));
+                            }
+                        });
+                break;
+        }
+    }
+
+    public interface ObtainSolarListener {
         void obtainSolarData(List<Solar> solars);
+    }
+
+    @Subscribe
+    public void onEvent(ChangeSolarGoalEvent event) {
+        if (event.isChange()) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setData(solarViewPager.getCurrentItem());
+                }
+            });
+        }
     }
 }

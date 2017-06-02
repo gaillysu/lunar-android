@@ -33,7 +33,6 @@ import java.util.List;
 public class AnalysisStepsLineChart extends LineChart {
 
     private List<Steps> stepsList;
-    private StepsGoal mStepsGoal;
     private int maxDays;
 
     public AnalysisStepsLineChart(Context context) {
@@ -73,6 +72,7 @@ public class AnalysisStepsLineChart extends LineChart {
         leftAxis.setDrawLabels(true);
         leftAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         leftAxis.setAxisMinValue(0.0f);
+        leftAxis.setDrawLimitLinesBehindData(true);
 
         YAxis rightAxis = getAxisRight();
         rightAxis.setEnabled(false);
@@ -87,18 +87,15 @@ public class AnalysisStepsLineChart extends LineChart {
         xAxis.setDrawLimitLinesBehindData(false);
         xAxis.setDrawLabels(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-
-
     }
 
     public void addData(List<Steps> stepsList, StepsGoal stepsGoal, int maxDays) {
         this.stepsList = stepsList;
-        this.mStepsGoal = stepsGoal;
         this.maxDays = maxDays;
         List<Entry> yValue = new ArrayList<>();
         int maxValue = 0;
 
-        final int stepsModulo = 500;
+        final int stepsModulo = 1000;
         for (int i = 0; i < stepsList.size(); i++) {
             if (i < stepsList.size()) {
                 Steps steps = stepsList.get(i);
@@ -112,11 +109,9 @@ public class AnalysisStepsLineChart extends LineChart {
         }
 
         //Log.w("Karl", "Max vlaue = " + maxValue);
-        boolean putTop = false;
         if (maxValue == 0 || maxValue < stepsGoal.getSteps()) {
             maxValue = stepsGoal.getSteps() + stepsModulo;
         } else {
-            putTop = true;
             String formatValue = maxValue + "";
             char[] newValue = formatValue.toCharArray();
             StringBuffer str = new StringBuffer();
@@ -130,18 +125,12 @@ public class AnalysisStepsLineChart extends LineChart {
             maxValue = Integer.parseInt(str.toString());
             //            maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo));
         }
-        //        "StepsGoal: " + mStepsGoal.getSteps()
-        LimitLine limitLine = new LimitLine(0f, "");
-        limitLine.setLineWidth(0.0f);
+        //        "Goal: " + goal.getSteps()
+        LimitLine limitLine = new LimitLine(stepsGoal.getSteps(), "Goal");
+        limitLine.setLineWidth(1.50f);
         limitLine.setLineColor(getResources().getColor(R.color.colorPrimary));
         limitLine.setTextSize(18f);
-        limitLine.setTextColor(Color.BLACK);
-
-        if (putTop) {
-            limitLine.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_TOP);
-        } else {
-            limitLine.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_BOTTOM);
-        }
+        limitLine.setTextColor(getResources().getColor(R.color.colorPrimary));
         LineDataSet set = new LineDataSet(yValue, "");
         set.setColor(getContext().getResources().getColor(R.color.colorPrimary));
         set.setCircleColor(R.color.transparent);

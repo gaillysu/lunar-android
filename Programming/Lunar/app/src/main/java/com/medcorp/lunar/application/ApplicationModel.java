@@ -701,6 +701,7 @@ public class ApplicationModel extends Application {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 upDateIsSuccess = aBoolean;
+                Log.e("jason","update success");
             }
         });
         return upDateIsSuccess;
