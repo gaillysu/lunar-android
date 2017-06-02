@@ -676,7 +676,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private String obtainString(String name, int time) {
         StringBuilder builder = new StringBuilder();
         builder.append(name);
-        builder.append(":");
+        builder.append(": ");
         builder.append(countTime(time));
         return builder.toString();
 
