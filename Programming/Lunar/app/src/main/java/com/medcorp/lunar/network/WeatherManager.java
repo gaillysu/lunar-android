@@ -5,11 +5,12 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.medcorp.lunar.R;
+import com.medcorp.lunar.application.ApplicationModel;
 import com.medcorp.lunar.event.CityForecastChangedEvent;
+import com.medcorp.lunar.model.CityWeather;
 import com.medcorp.lunar.network.httpmanager.HttpManager;
 import com.medcorp.lunar.network.model.response.weather.Forecast;
 import com.medcorp.lunar.network.model.response.weather.GetForecastResponse;
-import com.medcorp.lunar.util.WeatherUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.joda.time.DateTime;
@@ -17,8 +18,10 @@ import org.joda.time.DateTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
+import io.reactivex.functions.Consumer;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -34,6 +37,10 @@ public class WeatherManager {
     {
         this.context = context;
         httpManager = HttpManager.getInstance(context);
+    }
+
+    private ApplicationModel getModel() {
+        return (ApplicationModel)context.getApplicationContext();
     }
 
     /**
@@ -72,9 +79,15 @@ public class WeatherManager {
                             }
                             weatherData.add(new Gson().toJson(forecast));
                         }
+
                         //save weather data for next 5 days (include today),weather data start with 0,3,6,9,12,15,18,21 hour of a day,
                         //so MAX 40 records need save, for today records, perhaps is less than 8 records
-                        WeatherUtils.saveCityWeather(context,cityName,weatherData);
+                        getModel().getCityWeatherDatabaseHelper().update(new CityWeather(cityName,weatherData.toString())).subscribe(new Consumer<Boolean>() {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception {
+                                  Log.i("","update done: " + aBoolean);
+                            }
+                        });
 
                         int forecastStartTime = new DateTime(getForecastResponse.getList()[0].getDt()*1000-offset).getHourOfDay();
                         index = ((currentHour - forecastStartTime)/3) % totalDataOfToday;

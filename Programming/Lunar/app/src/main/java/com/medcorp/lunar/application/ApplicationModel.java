@@ -26,6 +26,7 @@ import com.medcorp.lunar.ble.model.goal.NumberOfStepsGoal;
 import com.medcorp.lunar.cloud.CloudSyncManager;
 import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.entry.AlarmDatabaseHelper;
+import com.medcorp.lunar.database.entry.CityWeatherDatabaseHelper;
 import com.medcorp.lunar.database.entry.GoalDatabaseHelper;
 import com.medcorp.lunar.database.entry.LedLampDatabase;
 import com.medcorp.lunar.database.entry.SleepDatabaseHelper;
@@ -136,6 +137,7 @@ public class ApplicationModel extends Application {
     private GoalDatabaseHelper goalDatabaseHelper;
     private UserDatabaseHelper userDatabaseHelper;
     private SolarDatabaseHelper solarDatabaseHelper;
+    private CityWeatherDatabaseHelper cityWeatherDatabaseHelper;
     private boolean firmwareUpdateAlertDailog = false;
     //if it is -1, means mcu version hasn't be read
     private int mcuFirmwareVersion = -1;
@@ -182,6 +184,7 @@ public class ApplicationModel extends Application {
         goalDatabaseHelper = new GoalDatabaseHelper(this);
         userDatabaseHelper = new UserDatabaseHelper(this);
         solarDatabaseHelper = new SolarDatabaseHelper(this);
+        cityWeatherDatabaseHelper = new CityWeatherDatabaseHelper(this);
         cloudSyncManager = new CloudSyncManager(this);
         weatherManager = new WeatherManager(this);
         ledDataBase = new LedLampDatabase(this);
@@ -260,6 +263,10 @@ public class ApplicationModel extends Application {
 
     public SolarDatabaseHelper getSolarDatabaseHelper() {
         return solarDatabaseHelper;
+    }
+
+    public CityWeatherDatabaseHelper getCityWeatherDatabaseHelper() {
+        return cityWeatherDatabaseHelper;
     }
 
     public SyncController getSyncController() {

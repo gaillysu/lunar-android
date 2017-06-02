@@ -19,8 +19,7 @@ import java.util.Set;
 
 public class WeatherUtils {
     final static String CITYLIST = "CITYLIST";
-    final static String SP_Name = "LUNAR_SP_NAME";
-
+    
     //when user select/unselect a city, update the city list
 
     public static void addWeatherCity(Context context, String name)
@@ -57,45 +56,4 @@ public class WeatherUtils {
         editor.putString(CITYLIST,new String());
         editor.apply();
     }
-
-
-
-    /*
-    Set<String> allForecast, see@ GetForecastModel.Forecast to Json string
-    every 3 hours, will has a Forecast record, so total of record for 5 days is less than 40
-     */
-    public static void saveCityWeather(Context context, String name, Set<String> allForecast)
-    {
-        SharedPreferences sp = context.getSharedPreferences(SP_Name,Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor =  sp.edit();
-        editor.putStringSet(name,allForecast);
-        editor.apply();
-    }
-
-    public static List<Forecast> getCityWeather(Context context, String name)
-    {
-        SharedPreferences sp = context.getSharedPreferences(SP_Name,Context.MODE_PRIVATE);
-        Set<String> records =  sp.getStringSet(name, new HashSet<String>());
-        List<Forecast> weather = new ArrayList<>();
-        for(String record:records)
-        {
-            Forecast forecast = new Gson().fromJson(record, Forecast.class);
-            weather.add(forecast);
-        }
-        Comparator<Forecast> comparator = new Comparator<Forecast>() {
-            public int compare(Forecast s1, Forecast s2) {
-                if (s1.getDt() == s2.getDt()) {
-                    return 0;
-                } else if (s1.getDt() > s2.getDt()) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            }
-        };
-        Collections.sort(weather,comparator);
-
-        return weather;
-    }
-
 }

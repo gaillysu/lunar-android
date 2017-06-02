@@ -87,4 +87,5 @@
     <string name="date" translatable="false">date</string>
     <string name="userId" translatable="false">userId</string>
     <string name="user_is_login" translatable="false">isLogin</string>
+    <string name="cityName" translatable="false">cityName</string>
 </resources>
