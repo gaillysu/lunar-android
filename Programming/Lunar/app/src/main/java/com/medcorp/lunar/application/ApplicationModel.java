@@ -27,6 +27,9 @@ import com.medcorp.lunar.cloud.CloudSyncManager;
 import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.entry.AlarmDatabaseHelper;
 import com.medcorp.lunar.database.entry.StepsGoalDatabaseHelper;
+import com.medcorp.lunar.database.entry.CityWeatherDatabaseHelper;
+import com.medcorp.lunar.database.entry.GoalDatabaseHelper;
+
 import com.medcorp.lunar.database.entry.LedLampDatabase;
 import com.medcorp.lunar.database.entry.SleepDatabaseHelper;
 import com.medcorp.lunar.database.entry.SleepGoalDatabaseHelper;
@@ -73,6 +76,7 @@ import com.medcorp.lunar.model.SleepData;
 import com.medcorp.lunar.model.Solar;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
+import com.medcorp.lunar.network.WeatherManager;
 import com.medcorp.lunar.network.model.request.RequestWeChatToken;
 import com.medcorp.lunar.network.model.response.ObtainMoreSleepResponse;
 import com.medcorp.lunar.network.model.response.ObtainMoreStepsResponse;
@@ -137,6 +141,7 @@ public class ApplicationModel extends Application {
     private StepsGoalDatabaseHelper mStepsGoalDatabaseHelper;
     private UserDatabaseHelper userDatabaseHelper;
     private SolarDatabaseHelper solarDatabaseHelper;
+    private CityWeatherDatabaseHelper cityWeatherDatabaseHelper;
     private boolean firmwareUpdateAlertDailog = false;
     //if it is -1, means mcu version hasn't be read
     private int mcuFirmwareVersion = -1;
@@ -144,6 +149,7 @@ public class ApplicationModel extends Application {
     private GoogleFitManager googleFitManager;
     private GoogleFitTaskCounter googleFitTaskCounter;
     private CloudSyncManager cloudSyncManager;
+    private WeatherManager weatherManager;
     private User nevoUser;
     private WorldClockDatabaseHelper worldClockDatabaseHelper;
     private SleepGoalDatabaseHelper sleepGoalDatabaeHelper;
@@ -186,7 +192,9 @@ public class ApplicationModel extends Application {
         solarDatabaseHelper = new SolarDatabaseHelper(this);
         sleepGoalDatabaeHelper = new SleepGoalDatabaseHelper(this);
         solargoalDatabaseHelper = new SolarGoalDatabaseHelper(this);
+        cityWeatherDatabaseHelper = new CityWeatherDatabaseHelper(this);
         cloudSyncManager = new CloudSyncManager(this);
+        weatherManager = new WeatherManager(this);
         ledDataBase = new LedLampDatabase(this);
         locationController = new LocationController(this);
         mIWXAPI = WXAPIFactory.createWXAPI(this, getString(R.string.we_chat_app_id), true);
@@ -263,6 +271,10 @@ public class ApplicationModel extends Application {
 
     public SolarDatabaseHelper getSolarDatabaseHelper() {
         return solarDatabaseHelper;
+    }
+
+    public CityWeatherDatabaseHelper getCityWeatherDatabaseHelper() {
+        return cityWeatherDatabaseHelper;
     }
 
     public SyncController getSyncController() {
@@ -872,6 +884,10 @@ public class ApplicationModel extends Application {
 
     public CloudSyncManager getCloudSyncManager() {
         return cloudSyncManager;
+    }
+
+    public WeatherManager getWeatherManager() {
+        return weatherManager;
     }
 
     public LedLampDatabase getLedDataBase() {
