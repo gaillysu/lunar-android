@@ -18,6 +18,7 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.PresetArrayAdapter;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.fragment.MainFragment;
+import com.medcorp.lunar.listener.OnChangeSwitchListener;
 import com.medcorp.lunar.model.StepsGoal;
 
 import java.util.List;
@@ -63,6 +64,12 @@ public class StepsGoalsActivity extends BaseActivity implements AdapterView.OnIt
                 presetArrayAdapter = new PresetArrayAdapter(StepsGoalsActivity.this, getModel(), mStepsGoalList);
                 presetListView.setAdapter(presetArrayAdapter);
                 presetListView.setOnItemClickListener(StepsGoalsActivity.this);
+                presetArrayAdapter.dataUpdateNotification(new OnChangeSwitchListener() {
+                    @Override
+                    public void onChangeSwitchListener() {
+                        presetArrayAdapter.notifyDataSetChanged();
+                    }
+                });
 
             }
         });

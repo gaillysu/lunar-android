@@ -22,6 +22,7 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.SleepGoalListAdapter;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.database.entry.SleepGoalDatabaseHelper;
+import com.medcorp.lunar.listener.OnChangeSwitchListener;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.view.PickerView;
 
@@ -70,6 +71,12 @@ public class SleepGoalActivity extends BaseActivity implements AdapterView.OnIte
                 adapter = new SleepGoalListAdapter(SleepGoalActivity.this, getModel(), sleepGoals);
                 allSleepGoal.setAdapter(adapter);
                 all = sleepGoals;
+                adapter.dataUpdateNotification(new OnChangeSwitchListener() {
+                    @Override
+                    public void onChangeSwitchListener() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
         allSleepGoal.setOnItemClickListener(this);
@@ -135,6 +142,7 @@ public class SleepGoalActivity extends BaseActivity implements AdapterView.OnIte
                     adapter = new SleepGoalListAdapter(SleepGoalActivity.this, getModel(), sleepGoals);
                     allSleepGoal.setAdapter(adapter);
                     all = sleepGoals;
+
                 }
             });
         }

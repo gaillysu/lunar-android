@@ -11,6 +11,7 @@ import android.widget.CompoundButton;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.application.ApplicationModel;
+import com.medcorp.lunar.listener.OnChangeSwitchListener;
 import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.view.customfontview.RobotoTextView;
 
@@ -27,6 +28,7 @@ public class SolarGoalListAdapter extends ArrayAdapter<SolarGoal> {
     private Context context;
     private ApplicationModel model;
     private List<SolarGoal> listGoal;
+    private OnChangeSwitchListener listener;
 
     public SolarGoalListAdapter(Context context, ApplicationModel model, List<SolarGoal> listGoal) {
         super(context, 0, listGoal);
@@ -57,18 +59,31 @@ public class SolarGoalListAdapter extends ArrayAdapter<SolarGoal> {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SolarGoal goal = listGoal.get(position);
-                goal.setStatus(isChecked);
-                model.getSolarGoalDatabaseHelper().update(goal).subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean aBoolean) throws Exception {
-                        if (aBoolean) {
-                            Log.i("jason", "update is success");
-                        }
+                for (int i = 0; i < listGoal.size(); i++) {
+
+                    SolarGoal otherGoal = listGoal.get(i);
+                    if (otherGoal.getSolarGoalId() == goal.getSolarGoalId()) {
+                        otherGoal.setStatus(isChecked);
+                    } else {
+                        otherGoal.setStatus(false);
                     }
-                });
+                    model.getSolarGoalDatabaseHelper().update(otherGoal).subscribe(new Consumer<Boolean>() {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception {
+                            if (aBoolean) {
+                                Log.i("jason", "update is success");
+                                listener.onChangeSwitchListener();
+                            }
+                        }
+                    });
+                }
             }
         });
         return itemView;
+    }
+
+    public void dataUpdateNotification(OnChangeSwitchListener listener){
+        this.listener = listener;
     }
 
     private String countTime(SolarGoal goal) {

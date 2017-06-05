@@ -21,6 +21,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.SolarGoalListAdapter;
 import com.medcorp.lunar.base.BaseActivity;
+import com.medcorp.lunar.listener.OnChangeSwitchListener;
 import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.view.PickerView;
 
@@ -65,6 +66,12 @@ public class SolarGoalActivity extends BaseActivity implements AdapterView.OnIte
                 adapter = new SolarGoalListAdapter(SolarGoalActivity.this, getModel(), solarGoals);
                 allSolarGoal.setAdapter(adapter);
                 all = solarGoals;
+                adapter.dataUpdateNotification(new OnChangeSwitchListener() {
+                    @Override
+                    public void onChangeSwitchListener() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
         allSolarGoal.setOnItemClickListener(this);

@@ -11,6 +11,7 @@ import android.widget.CompoundButton;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.application.ApplicationModel;
+import com.medcorp.lunar.listener.OnChangeSwitchListener;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.view.customfontview.RobotoTextView;
 
@@ -27,6 +28,8 @@ public class SleepGoalListAdapter extends ArrayAdapter<SleepGoal> {
     private Context context;
     private ApplicationModel model;
     private List<SleepGoal> listGoal;
+    private OnChangeSwitchListener listener;
+
 
     public SleepGoalListAdapter(Context context, ApplicationModel model, List<SleepGoal> listGoal) {
         super(context, 0, listGoal);
@@ -57,18 +60,30 @@ public class SleepGoalListAdapter extends ArrayAdapter<SleepGoal> {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SleepGoal goal = listGoal.get(position);
-                goal.setStatus(isChecked);
-                model.getSleepDatabseHelper().update(goal).subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean aBoolean) throws Exception {
-                        if (aBoolean) {
-                            Log.i("jason", "update is success");
-                        }
+                for (int i = 0; i < listGoal.size(); i++) {
+                    SleepGoal sleepGoal = listGoal.get(i);
+                    if (sleepGoal.getSleepGoalId() == goal.getSleepGoalId()) {
+                        sleepGoal.setStatus(isChecked);
+                    } else {
+                        sleepGoal.setStatus(false);
                     }
-                });
+                    model.getSleepDatabseHelper().update(sleepGoal).subscribe(new Consumer<Boolean>() {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception {
+                            if (aBoolean) {
+                                Log.i("jason", "update is success");
+                                listener.onChangeSwitchListener();
+                            }
+                        }
+                    });
+                }
             }
         });
         return itemView;
+    }
+
+    public void dataUpdateNotification(OnChangeSwitchListener listener) {
+        this.listener = listener;
     }
 
     private String countTime(SleepGoal goal) {
