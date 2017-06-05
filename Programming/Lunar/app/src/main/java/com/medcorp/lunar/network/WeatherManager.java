@@ -8,6 +8,7 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.application.ApplicationModel;
 import com.medcorp.lunar.event.CityForecastChangedEvent;
 import com.medcorp.lunar.model.CityWeather;
+import com.medcorp.lunar.model.HourlyForecast;
 import com.medcorp.lunar.network.httpmanager.HttpManager;
 import com.medcorp.lunar.network.model.response.weather.Forecast;
 import com.medcorp.lunar.network.model.response.weather.GetForecastResponse;
@@ -68,7 +69,6 @@ public class WeatherManager {
                         int today = new DateTime().getDayOfMonth();
                         int index = 0;
                         int totalDataOfToday =0;
-                        Set<String> weatherData = new LinkedHashSet<>();
                         Calendar calendar = new GregorianCalendar();
                         long offset = calendar.getTimeZone().getRawOffset();
                         for(Forecast forecast:getForecastResponse.getList())
@@ -77,12 +77,9 @@ public class WeatherManager {
                             if(day == today) {
                                 totalDataOfToday++;
                             }
-                            weatherData.add(new Gson().toJson(forecast));
                         }
 
-                        //save weather data for next 5 days (include today),weather data start with 0,3,6,9,12,15,18,21 hour of a day,
-                        //so MAX 40 records need save, for today records, perhaps is less than 8 records
-                        getModel().getCityWeatherDatabaseHelper().update(new CityWeather(cityName,weatherData.toString())).subscribe(new Consumer<Boolean>() {
+                        getModel().getCityWeatherDatabaseHelper().update(cityName,getForecastResponse.getList()).subscribe(new Consumer<Boolean>() {
                             @Override
                             public void accept(Boolean aBoolean) throws Exception {
                                   Log.i("","update done: " + aBoolean);
@@ -94,7 +91,6 @@ public class WeatherManager {
                         float temp = getForecastResponse.getList()[index].getMain().getTemp();
                         int id = getForecastResponse.getList()[index].getWeather()[0].getId();
                         String main = getForecastResponse.getList()[index].getWeather()[0].getMain();
-                        //send current weather data to subscriber
                         EventBus.getDefault().post(new CityForecastChangedEvent(cityName, temp, id, main));
                     }
                 }

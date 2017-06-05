@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.model.CityWeather;
+import com.medcorp.lunar.model.HourlyForecast;
 import com.medcorp.lunar.network.model.response.weather.Forecast;
 
 import org.json.JSONArray;
@@ -13,6 +14,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -34,7 +36,7 @@ public class CityWeatherDatabaseHelper {
         this.context = context;
     }
 
-    public Observable<Boolean> update(final CityWeather object)
+    public Observable<Boolean> update(final String cityName, final Forecast[] forecasts)
     {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
@@ -42,12 +44,23 @@ public class CityWeatherDatabaseHelper {
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        CityWeather cityWeather = realm.where(CityWeather.class).equalTo(context.getString(R.string.cityName), object.getCityName()).findFirst();
+                        CityWeather cityWeather = realm.where(CityWeather.class).equalTo(context.getString(R.string.cityName), cityName).findFirst();
                         if(cityWeather==null) {
                             cityWeather = realm.createObject(CityWeather.class);
                         }
-                        cityWeather.setCityName(object.getCityName());
-                        cityWeather.setWeatherData(object.getWeatherData());
+                        else {
+                            cityWeather.getWeatherData().clear();
+                        }
+                        cityWeather.setCityName(cityName);
+                        for(Forecast forecast:forecasts)
+                        {
+                            HourlyForecast hourlyForecast = new HourlyForecast();
+                            hourlyForecast.setDt(forecast.getDt());
+                            hourlyForecast.setTemp(forecast.getMain().getTemp());
+                            hourlyForecast.setId(forecast.getWeather()[0].getId());
+                            hourlyForecast.setMain(forecast.getWeather()[0].getMain());
+                            cityWeather.getWeatherData().add(realm.copyToRealm(hourlyForecast));
+                        }
                         e.onNext(true);
                         e.onComplete();
                     }
@@ -68,23 +81,15 @@ public class CityWeatherDatabaseHelper {
         });
     }
 
-    public Observable<List<Forecast>> get(final String cityName) {
-        return Observable.create(new ObservableOnSubscribe<List<Forecast>>() {
+    public Observable<List<HourlyForecast>> get(final String cityName) {
+        return Observable.create(new ObservableOnSubscribe<List<HourlyForecast>>() {
             @Override
-            public void subscribe(ObservableEmitter<List<Forecast>> e) throws Exception {
-                List<Forecast> forecastList = new ArrayList<>();
+            public void subscribe(ObservableEmitter<List<HourlyForecast>> e) throws Exception {
+                List<HourlyForecast> forecastList = new ArrayList<>();
                 CityWeather cityWeather = realm.where(CityWeather.class).equalTo(context.getString(R.string.cityName), cityName).findFirst();
                 if(cityWeather!=null) {
-                    String string = cityWeather.getWeatherData();
-                    try {
-                        JSONArray jsonArray = new JSONArray(string);
-                        for(int i=0;i<jsonArray.length();i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            Forecast forecast = new Gson().fromJson(jsonObject.toString(),Forecast.class);
-                            forecastList.add(forecast);
-                        }
-                    } catch (JSONException exception) {
-                        exception.printStackTrace();
+                    for(int i=0;i<cityWeather.getWeatherData().size();i++){
+                        forecastList.add(cityWeather.getWeatherData().get(i));
                     }
                 }
                 e.onNext(forecastList);

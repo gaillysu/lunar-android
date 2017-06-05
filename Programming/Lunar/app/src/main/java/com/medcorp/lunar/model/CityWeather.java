@@ -1,5 +1,7 @@
 package com.medcorp.lunar.model;
 
+
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 /**
@@ -7,20 +9,8 @@ import io.realm.RealmObject;
  */
 
 public class CityWeather extends RealmObject {
-
     private String cityName;
-    private String weatherData;
-
-    public CityWeather()
-    {
-
-    }
-
-    public CityWeather(String cityName,String weatherData)
-    {
-        this.cityName = cityName;
-        this.weatherData = weatherData;
-    }
+    private RealmList<HourlyForecast> weatherData;
 
     public String getCityName() {
         return cityName;
@@ -30,11 +20,11 @@ public class CityWeather extends RealmObject {
         this.cityName = cityName;
     }
 
-    public String getWeatherData() {
+    public RealmList<HourlyForecast> getWeatherData() {
         return weatherData;
     }
 
-    public void setWeatherData(String weatherData) {
+    public void setWeatherData(RealmList<HourlyForecast> weatherData) {
         this.weatherData = weatherData;
     }
 }
