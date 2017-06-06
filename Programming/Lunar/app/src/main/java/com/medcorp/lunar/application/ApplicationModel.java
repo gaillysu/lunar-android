@@ -28,8 +28,6 @@ import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.entry.AlarmDatabaseHelper;
 import com.medcorp.lunar.database.entry.StepsGoalDatabaseHelper;
 import com.medcorp.lunar.database.entry.CityWeatherDatabaseHelper;
-import com.medcorp.lunar.database.entry.GoalDatabaseHelper;
-
 import com.medcorp.lunar.database.entry.LedLampDatabase;
 import com.medcorp.lunar.database.entry.SleepDatabaseHelper;
 import com.medcorp.lunar.database.entry.SleepGoalDatabaseHelper;

@@ -379,7 +379,7 @@ public class MainClockFragment extends BaseFragment {
                 } else {
                     solarHarvestStatus.setText(R.string.lunar_home_clock_solar_harvest_idle);
                 }
-                //solarHarvestTitle.setText("ADC = " + event.getPv_adc());
+                solarHarvestTitle.setText("ADC = " + event.getPv_adc());
             }
         });
     }
