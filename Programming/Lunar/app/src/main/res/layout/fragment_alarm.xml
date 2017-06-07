@@ -5,14 +5,53 @@
               android:background="@color/window_background_color"
               android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/fragment_alarm_list_view"
+    <LinearLayout
+        android:id="@+id/show_bedtime_alarm_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:listSelector="?android:attr/selectableItemBackground"
-        android:scrollbars="none"
+        android:layout_height="0dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:divider="@color/my_device_right_show_version_text_color"
-        android:dividerHeight="1dp"/>
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/append_new_alarm_bedtime"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp"/>
+
+        <ListView
+            android:id="@+id/fragment_alarm_list_view_bedtime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/my_device_right_show_version_text_color"
+            android:dividerHeight="1dp"
+            android:listSelector="?android:attr/selectableItemBackground"
+            android:scrollbars="none"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/show_normal_alarm_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/append_new_alarm_normal"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp"/>
+
+        <ListView
+            android:id="@+id/fragment_alarm_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/my_device_right_show_version_text_color"
+            android:dividerHeight="1dp"
+            android:listSelector="?android:attr/selectableItemBackground"
+            android:scrollbars="none"/>
+    </LinearLayout>
 </LinearLayout>

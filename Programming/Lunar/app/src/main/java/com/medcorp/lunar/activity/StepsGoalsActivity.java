@@ -70,7 +70,6 @@ public class StepsGoalsActivity extends BaseActivity implements AdapterView.OnIt
                         presetArrayAdapter.notifyDataSetChanged();
                     }
                 });
-
             }
         });
     }

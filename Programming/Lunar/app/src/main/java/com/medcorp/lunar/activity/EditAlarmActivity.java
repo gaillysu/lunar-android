@@ -40,7 +40,6 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
     ListView listView;
 
     private Alarm mAlarm;
-    private boolean isRepeat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +133,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                     .show();
         } else if (position == 2) {
             String[] weekDays = getResources().getStringArray(R.array.week_day);
-            String[] javaWeekDays = new String[]{weekDays[1], weekDays[2], weekDays[3], weekDays[4], weekDays[5], weekDays[6], weekDays[7]};
+            String[] javaWeekDays = new String[]{weekDays[0], weekDays[1], weekDays[2], weekDays[3], weekDays[4], weekDays[5], weekDays[6], weekDays[7], weekDays[8]};
             new MaterialDialog.Builder(EditAlarmActivity.this)
                     .title(R.string.alarm_edit)
                     .content(getString(R.string.alarm_set_week_day_dialog_text))
@@ -157,23 +156,6 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                     .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
                     .show();
         } else if (position == 3) {
-            String[] alarmType = {getString(R.string.edit_alarm_sleep), getString(R.string.edit_alarm_wake)};
-            new MaterialDialog.Builder(EditAlarmActivity.this)
-                    .title(R.string.alarm_edit)
-                    .content(getString(R.string.alarm_set_week_day_dialog_text))
-                    .items(alarmType).itemsCallbackSingleChoice((int) mAlarm.getAlarmType(),
-                    new MaterialDialog.ListCallbackSingleChoice() {
-                        @Override
-                        public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                            mAlarm.setAlarmType((byte) which);
-                            listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, mAlarm));
-                            return true;
-                        }
-                    })
-                    .positiveText(R.string.goal_ok)
-                    .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
-                    .show();
-        } else if (position == 4) {
             getModel().deleteAlarm(mAlarm).subscribe(new Consumer<Boolean>() {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception {

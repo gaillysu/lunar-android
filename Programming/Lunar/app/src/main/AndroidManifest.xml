@@ -64,8 +64,10 @@
             android:theme="@style/AppTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
+
                 <data android:scheme="@string/fb_login_protocol_scheme"/>
             </intent-filter>
         </activity>
@@ -100,9 +102,11 @@
         <activity
             android:name=".activity.EditSettingNotificationActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.SettingAboutActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.EditNewAlarmActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.tutorial.TutorialPage1Activity"
@@ -137,8 +141,12 @@
         <activity
             android:name=".activity.NotificationActivity"
             android:label="Dfu"/>
-        <activity android:name=".activity.ScanDurationActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ScanDurationActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.EditNewBedtimeActivity"
+            android:screenOrientation="portrait"/>
         <service
             android:name="net.medcorp.library.ble.ble.MEDBTService"
             android:enabled="true"/>

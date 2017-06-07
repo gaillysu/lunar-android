@@ -2,31 +2,26 @@ package com.medcorp.lunar.fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.SwitchCompat;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioGroup;
-import android.widget.TimePicker;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.EditAlarmActivity;
+import com.medcorp.lunar.activity.EditNewAlarmActivity;
+import com.medcorp.lunar.activity.EditNewBedtimeActivity;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.adapter.AlarmArrayAdapter;
 import com.medcorp.lunar.ble.controller.SyncControllerImpl;
@@ -39,48 +34,41 @@ import com.medcorp.lunar.view.ToastHelper;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
 
-/**
+/***
  * Created by karl-john on 11/12/15.
  */
-public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwitchListener,
-        TimePickerDialog.OnTimeSetListener, AdapterView.OnItemClickListener,
-        CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener, View.OnClickListener {
+public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwitchListener {
 
     @Bind(R.id.fragment_alarm_list_view)
     ListView alarmListView;
+    @Bind(R.id.fragment_alarm_list_view_bedtime)
+    ListView bedtimeListView;
+    @Bind(R.id.show_bedtime_alarm_view)
+    LinearLayout bedtime;
+    @Bind(R.id.show_normal_alarm_view)
+    LinearLayout normalAlarm;
 
     private List<Alarm> alarmList;
-    private AlarmArrayAdapter alarmArrayAdapter;
-    private LayoutInflater inflater;
-    private Boolean isMondayChecked = false;
-
-    private byte alarmSelectStyle = 0;
-    private Button monday;
-    private byte weekDay = 0;
-    private Button tuesday;
-    private Button thursday;
-    private Button wednesday;
-    private Button friday;
-    private Button sunday;
-    private Button saturday;
+    private List<Alarm> bedtimeList;
+    private AlarmArrayAdapter bedtimeAdapter;
+    private AlarmArrayAdapter normalAlarmAdapter;
     private Alarm editAlarm;
-    private boolean isRepeat = false;
     private boolean showSyncAlarm = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
         ButterKnife.bind(this, view);
-        this.inflater = inflater;
         setHasOptionsMenu(true);
+        bedtimeList = new ArrayList<>();
+        alarmList = new ArrayList<>();
         initData();
         return view;
     }
@@ -89,17 +77,64 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         getModel().getAllAlarm(new SyncControllerImpl.SyncAlarmToWatchListener() {
             @Override
             public void syncAlarmToWatch(List<Alarm> alarms) {
-                alarmList = alarms;
-                alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarmList, AlarmFragment.this);
-                alarmListView.setAdapter(alarmArrayAdapter);
-                alarmListView.setOnItemClickListener(AlarmFragment.this);
-                isMondayChecked = true;
+                for (Alarm alarm : alarms) {
+                    if (alarm.getAlarmNumber() > 6 && alarm.getAlarmNumber() < 13) {
+                        alarmList.add(alarm);
+                    } else if (alarm.getAlarmNumber() < 7) {
+                        bedtimeList.add(alarm);
+                    }
+                }
+
+                if (alarmList.size() == 0) {
+                    normalAlarm.setVisibility(View.GONE);
+                } else {
+                    normalAlarm.setVisibility(View.VISIBLE);
+                }
+
+                if (bedtimeList.size() == 0) {
+                    bedtime.setVisibility(View.GONE);
+                } else {
+                    bedtime.setVisibility(View.VISIBLE);
+                }
+                normalAlarmAdapter = new AlarmArrayAdapter(getContext(), alarmList, AlarmFragment.this);
+                alarmListView.setAdapter(normalAlarmAdapter);
+                alarmListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (!getModel().isWatchConnected()) {
+                            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+                            return;
+                        }
+                        Intent i = new Intent(getContext(), EditAlarmActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(getString(R.string.key_alarm_id), alarmList.get(position).getId());
+                        i.putExtras(bundle);
+                        SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+                        prefs.putString(getString(R.string.alarm_label), alarmList.get(position).getLabel());
+                        prefs.commit();
+                        editAlarm = alarmList.get(position);
+                        startActivityForResult(i, 0);
+                    }
+                });
+
+                bedtimeAdapter = new AlarmArrayAdapter(getContext(), bedtimeList, AlarmFragment.this);
+                bedtimeListView.setAdapter(bedtimeAdapter);
+                bedtimeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent i = new Intent(getContext(), EditAlarmActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(getString(R.string.key_alarm_id), bedtimeList.get(position).getId());
+                        i.putExtras(bundle);
+                        SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+                        prefs.putString(getString(R.string.alarm_label), bedtimeList.get(position).getLabel());
+                        prefs.commit();
+                        editAlarm = bedtimeList.get(position);
+                        startActivityForResult(i, 0);
+                    }
+                });
             }
         });
-    }
-
-    private void initAddAlarm() {
-        initAlarmDialog((byte) 2);
     }
 
     @Override
@@ -113,153 +148,38 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_menu:
-                if (!getModel().isWatchConnected()) {
-                    ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-                    return false;
-                }
-                Dialog alarmDialog = new TimePickerDialog(getContext(), R.style.NevoDialogStyle, this, 8, 0, true);
-                alarmDialog.setTitle(R.string.alarm_add);
-                alarmDialog.show();
+                //                if (!getModel().isWatchConnected()) {
+                //                    ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+                //                    return false;
+                //                }
+                View selectType = LayoutInflater.from(AlarmFragment.this.getActivity()).inflate(R.layout.select_alarm_type_layout, null);
+                final Dialog dialog = new AlertDialog.Builder(AlarmFragment.this.getActivity()).create();
+                Button bedtime = (Button) selectType.findViewById(R.id.bedtime_bt);
+                Button normalAlarm = (Button) selectType.findViewById(R.id.normal_alarm_bt);
+                dialog.show();
+                Window window = dialog.getWindow();
+                window.setContentView(selectType);
+                bedtime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        Intent intent = new Intent(AlarmFragment.this.getActivity(),
+                                EditNewBedtimeActivity.class);
+                        startActivityForResult(intent, 0x02);
+                    }
+                });
+                normalAlarm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        Intent intent = new Intent(AlarmFragment.this.getActivity(),
+                                EditNewAlarmActivity.class);
+                        startActivityForResult(intent, 0x01);
+                    }
+                });
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onTimeSet(TimePicker view, final int hourOfDay, final int minute) {
-        //set today 's week day
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        weekDay = (byte) calendar.get(Calendar.DAY_OF_WEEK);
-        alarmSelectStyle = 0;//here must reset it when add new alarm, due to it is the class member variable
-        editAlarmDialog(hourOfDay, minute);
-    }
-
-    private void editAlarmDialog(final int hourOfDay, final int minute) {
-        View alarmDialogView = inflater.inflate(R.layout.add_alarm_dialog_layout, null);
-        final Dialog dialog = new AlertDialog.Builder(getContext()).create();
-        dialog.show();
-        Window window = dialog.getWindow();
-        window.setContentView(alarmDialogView);
-
-        Button cancelButton = (Button) alarmDialogView.findViewById(R.id.cancel_edit_alarm_bt);
-        final Button saveNewAlarm = (Button) alarmDialogView.findViewById(R.id.add_new_alarm_bt);
-        final EditText alarmName = (EditText) alarmDialogView.findViewById(R.id.edit_input_alarm_name);
-        final RadioGroup alarmStyle = (RadioGroup) alarmDialogView.findViewById(R.id.select_alarm_style_radio_group);
-        monday = (Button) alarmDialogView.findViewById(R.id.tag_btn_monday);
-        tuesday = (Button) alarmDialogView.findViewById(R.id.tag_btn_tuesday);
-        wednesday = (Button) alarmDialogView.findViewById(R.id.tag_btn_wednesday);
-        thursday = (Button) alarmDialogView.findViewById(R.id.tag_btn_thursday);
-        friday = (Button) alarmDialogView.findViewById(R.id.tog_btn_friday);
-        saturday = (Button) alarmDialogView.findViewById(R.id.tag_btn_saturday);
-        sunday = (Button) alarmDialogView.findViewById(R.id.tag_btn_sunday);
-        initAddAlarm();
-        monday.setOnClickListener(this);
-        tuesday.setOnClickListener(this);
-        wednesday.setOnClickListener(this);
-        thursday.setOnClickListener(this);
-        friday.setOnClickListener(this);
-        saturday.setOnClickListener(this);
-        sunday.setOnClickListener(this);
-        alarmStyle.setOnCheckedChangeListener(this);
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        saveNewAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                getModel().getAlarmDatabaseHelper().getAll().subscribe(new Consumer<List<Alarm>>() {
-                    @Override
-                    public void accept(List<Alarm> allAlarm) throws Exception {
-                        final Alarm newAlarm = new Alarm(hourOfDay, minute, (byte) 0, "", (byte) 0, (byte) 0);
-                        if (TextUtils.isEmpty(alarmName.getText().toString())) {
-                            newAlarm.setLabel(getString(R.string.menu_drawer_alarm) + " " + (allAlarm.size() + 1));
-                        } else {
-                            newAlarm.setLabel(alarmName.getText().toString());
-                        }
-
-                        int num = 0;//awake/normal alarm: 0~12
-                        if (alarmSelectStyle == 0) {
-                            num = 13;//sleep alarm: 13~19
-                        }
-
-                        for (int i = 0; i < allAlarm.size(); i++) {
-                            if (allAlarm.get(i).getAlarmType() == alarmSelectStyle) {
-                                num++;
-                            }
-
-                        }
-
-                        isRepeat = false;
-                        for (int i = 0; i < allAlarm.size(); i++) {
-                            byte repeatDay = allAlarm.get(i).getWeekDay();
-                            byte alarmType = allAlarm.get(i).getAlarmType();
-                            if ((repeatDay & 0x0F) == weekDay && alarmSelectStyle == 0 && alarmType == 0) {
-                                isRepeat = true;
-                                break;
-                            }
-                        }
-
-                        if ((alarmSelectStyle == 0 && num <= 19) || (alarmSelectStyle == 1 && num <= 12)) {
-                            if (!isRepeat) {
-                                newAlarm.setWeekDay((byte) (0x80 | weekDay));
-                                newAlarm.setAlarmType(alarmSelectStyle);
-                                newAlarm.setAlarmNumber((byte) num);
-                                getModel().addAlarm(newAlarm).subscribe(new Consumer<Boolean>() {
-                                    @Override
-                                    public void accept(Boolean aBoolean) throws Exception {
-                                        if (aBoolean) {
-                                            showSyncAlarm = true;
-                                            Log.i("jason", "new alarm save complete");
-                                            refreshListView();
-                                            getModel().getSyncController().setAlarm(newAlarm);
-                                            ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
-                                        }
-                                    }
-                                });
-                            } else {
-                                String[] weekDayArray = getContext().getResources().getStringArray(R.array.week_day);
-                                if (alarmSelectStyle == 0) {
-                                    ToastHelper.showShortToast(AlarmFragment.this.getActivity()
-                                            , getString(R.string.prompt_user_alarm_no_repeat) + " " + weekDayArray[weekDay]);
-                                } else {
-                                    ToastHelper.showShortToast(AlarmFragment.this.getActivity()
-                                            , getString(R.string.prompt_user_alarm_no_repeat_two) + " " + weekDayArray[weekDay]);
-                                }
-                            }
-                        } else {
-                              ToastHelper.showShortToast(getContext(), String.format(getResources().getString(R.string.add_alarm_index_out),alarmSelectStyle==0?7:13));
-                        }
-                    }
-                });
-            }
-        });
-
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (!getModel().isWatchConnected()) {
-            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-            return;
-        }
-        Intent i = new Intent(getContext(), EditAlarmActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt(getString(R.string.key_alarm_id), alarmList.get(position).getId());
-        i.putExtras(bundle);
-        SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-        prefs.putString(getString(R.string.alarm_label), alarmList.get(position).getLabel());
-        prefs.commit();
-        editAlarm = alarmList.get(position);
-        startActivityForResult(i, 0);
     }
 
     @Override
@@ -269,22 +189,39 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         //resultCode == 0 ,do nothing
         refreshListView();
         if (resultCode != 0) {
-            syncAlarmByEditor(resultCode==-1);
+            syncAlarmByEditor(resultCode == -1);
         }
     }
 
     private void refreshListView() {
-        if (alarmArrayAdapter != null && alarmListView != null) {
-            getModel().getAlarmDatabaseHelper().getAll().subscribe(new Consumer<List<Alarm>>() {
-                @Override
-                public void accept(final List<Alarm> alarms) throws Exception {
-                    alarmList.clear();
-                    alarmList = alarms;
-                    alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarmList, AlarmFragment.this);
-                    alarmListView.setAdapter(alarmArrayAdapter);
+        getModel().getAlarmDatabaseHelper().getAll().subscribe(new Consumer<List<Alarm>>() {
+            @Override
+            public void accept(final List<Alarm> alarms) throws Exception {
+                alarmList.clear();
+                bedtimeList.clear();
+                for (Alarm alarm : alarms) {
+                    if (alarm.getAlarmNumber() > 6 && alarm.getAlarmNumber() < 13) {
+                        alarmList.add(alarm);
+                    } else if (alarm.getAlarmNumber() < 7) {
+                        bedtimeList.add(alarm);
+                    }
                 }
-            });
-        }
+
+                if (alarmList.size() == 0) {
+                    normalAlarm.setVisibility(View.GONE);
+                } else {
+                    normalAlarm.setVisibility(View.VISIBLE);
+                }
+
+                if (bedtimeList.size() == 0) {
+                    bedtime.setVisibility(View.GONE);
+                } else {
+                    bedtime.setVisibility(View.VISIBLE);
+                }
+                bedtimeAdapter.notifyDataSetChanged();
+                normalAlarmAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -330,7 +267,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
             getModel().getSyncController().setAlarm(editAlarm);
             ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
 
-        } else{
+        } else {
             getModel().getAlarmById(editAlarm.getId(), new EditAlarmActivity.ObtainAlarmListener() {
                 @Override
                 public void obtainAlarm(Alarm alarm) {
@@ -362,127 +299,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
             showSyncAlarm = false;
             int id = event.isSuccess() ? R.string.alarm_synced : R.string.alarm_error_sync;
             ((MainActivity) getActivity()).showStateString(id, false);
-        }
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-    }
-
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId) {
-            case R.id.alarm_style_sleep:
-                alarmSelectStyle = 0;
-                break;
-            case R.id.alarm_style_wake:
-                alarmSelectStyle = 1;
-                break;
-        }
-    }
-
-
-    private void initAlarmDialog(byte repeatday) {
-        switch (repeatday) {
-            case 2:
-                weekDay = repeatday;
-                monday.setTextColor(getResources().getColor(R.color.colorPrimary));
-                tuesday.setTextColor(getResources().getColor(R.color.text_color));
-                wednesday.setTextColor(getResources().getColor(R.color.text_color));
-                thursday.setTextColor(getResources().getColor(R.color.text_color));
-                friday.setTextColor(getResources().getColor(R.color.text_color));
-                saturday.setTextColor(getResources().getColor(R.color.text_color));
-                sunday.setTextColor(getResources().getColor(R.color.text_color));
-                break;
-            case 3:
-                monday.setTextColor(getResources().getColor(R.color.text_color));
-                tuesday.setTextColor(getResources().getColor(R.color.colorPrimary));
-                wednesday.setTextColor(getResources().getColor(R.color.text_color));
-                thursday.setTextColor(getResources().getColor(R.color.text_color));
-                friday.setTextColor(getResources().getColor(R.color.text_color));
-                saturday.setTextColor(getResources().getColor(R.color.text_color));
-                sunday.setTextColor(getResources().getColor(R.color.text_color));
-                weekDay = repeatday;
-                break;
-            case 4:
-                weekDay = repeatday;
-                monday.setTextColor(getResources().getColor(R.color.text_color));
-                tuesday.setTextColor(getResources().getColor(R.color.text_color));
-                wednesday.setTextColor(getResources().getColor(R.color.colorPrimary));
-                thursday.setTextColor(getResources().getColor(R.color.text_color));
-                friday.setTextColor(getResources().getColor(R.color.text_color));
-                saturday.setTextColor(getResources().getColor(R.color.text_color));
-                sunday.setTextColor(getResources().getColor(R.color.text_color));
-                break;
-            case 5:
-                weekDay = repeatday;
-                monday.setTextColor(getResources().getColor(R.color.text_color));
-                tuesday.setTextColor(getResources().getColor(R.color.text_color));
-                wednesday.setTextColor(getResources().getColor(R.color.text_color));
-                thursday.setTextColor(getResources().getColor(R.color.colorPrimary));
-                friday.setTextColor(getResources().getColor(R.color.text_color));
-                saturday.setTextColor(getResources().getColor(R.color.text_color));
-                sunday.setTextColor(getResources().getColor(R.color.text_color));
-                break;
-            case 6:
-                weekDay = repeatday;
-                monday.setTextColor(getResources().getColor(R.color.text_color));
-                tuesday.setTextColor(getResources().getColor(R.color.text_color));
-                wednesday.setTextColor(getResources().getColor(R.color.text_color));
-                thursday.setTextColor(getResources().getColor(R.color.text_color));
-                friday.setTextColor(getResources().getColor(R.color.colorPrimary));
-                saturday.setTextColor(getResources().getColor(R.color.text_color));
-                sunday.setTextColor(getResources().getColor(R.color.text_color));
-                break;
-            case 7:
-                weekDay = repeatday;
-                monday.setTextColor(getResources().getColor(R.color.text_color));
-                tuesday.setTextColor(getResources().getColor(R.color.text_color));
-                wednesday.setTextColor(getResources().getColor(R.color.text_color));
-                thursday.setTextColor(getResources().getColor(R.color.text_color));
-                friday.setTextColor(getResources().getColor(R.color.text_color));
-                saturday.setTextColor(getResources().getColor(R.color.colorPrimary));
-                sunday.setTextColor(getResources().getColor(R.color.text_color));
-                break;
-            case 1:
-                weekDay = repeatday;
-                monday.setTextColor(getResources().getColor(R.color.text_color));
-                tuesday.setTextColor(getResources().getColor(R.color.text_color));
-                wednesday.setTextColor(getResources().getColor(R.color.text_color));
-                thursday.setTextColor(getResources().getColor(R.color.text_color));
-                friday.setTextColor(getResources().getColor(R.color.text_color));
-                saturday.setTextColor(getResources().getColor(R.color.text_color));
-                sunday.setTextColor(getResources().getColor(R.color.colorPrimary));
-                break;
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.tag_btn_monday:
-                initAlarmDialog((byte) 2);
-                break;
-            case R.id.tag_btn_tuesday:
-                initAlarmDialog((byte) 3);
-                weekDay = 3;
-                break;
-            case R.id.tag_btn_wednesday:
-                initAlarmDialog((byte) 4);
-                break;
-            case R.id.tag_btn_thursday:
-                initAlarmDialog((byte) 5);
-                break;
-            case R.id.tog_btn_friday:
-                initAlarmDialog((byte) 6);
-                break;
-            case R.id.tag_btn_saturday:
-                initAlarmDialog((byte) 7);
-                break;
-            case R.id.tag_btn_sunday:
-                initAlarmDialog((byte) 1);
-                break;
         }
     }
 }

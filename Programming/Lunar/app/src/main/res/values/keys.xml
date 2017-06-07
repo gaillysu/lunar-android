@@ -78,6 +78,7 @@
     <string name="led_lamp_color_green" translatable="false">Green</string>
     <string name="alarm_number" translatable="false">alarmNumber</string>
     <string name="database_id" translatable="false">id</string>
+    <string name="alarm_type" translatable="false">alarmType</string>
     <string name="database_goal_label" translatable="false">label</string>
     <string name="led_lamp_name" translatable="false">name</string>
     <string name="led_lamp_color" translatable="false">color</string>
@@ -90,4 +91,5 @@
     <string name="sleep_goal_id" translatable="false">sleepGoalId</string>
     <string name="solar_goal_id" translatable="false">solarGoalId</string>
     <string name="launch_edit_goal_activity_flag" translatable="false">launch_flag</string>
+    <string name="edit_new_alarm_type" translatable="false">alarmType</string>
 </resources>

@@ -26,7 +26,6 @@
         <item>12 o\'clock</item>
     </string-array>
     <string-array name="week_day" translatable="false">
-        <item name="disable">@string/disable</item>
         <item name="sunday">@string/sunday</item>
         <item name="monday">@string/monday</item>
         <item name="tuesday">@string/tuesday</item>
@@ -34,6 +33,8 @@
         <item name="thursday">@string/thursday</item>
         <item name="friday">@string/friday</item>
         <item name="saturday">@string/saturday</item>
+        <item name="one_time">@string/one_time_alarm</item>
+        <item name="daily">@string/daily_time_alarm</item>
     </string-array>
     <string-array name="solar_describe_battery_text" translatable="false">
         <item>Solar</item>

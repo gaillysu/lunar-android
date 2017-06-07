@@ -15,6 +15,7 @@ public class Alarm extends RealmObject{
     private byte alarmType;
     private byte alarmNumber;
 
+
     public Alarm(){
 
     }

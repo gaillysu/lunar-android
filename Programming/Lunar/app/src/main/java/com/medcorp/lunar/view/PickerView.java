@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
+/***
  * Created by Jason on 2017/5/31.
  */
 
@@ -33,7 +33,6 @@ public class PickerView extends View {
 
     private float mMaxTextAlpha = 255;
     private float mMinTextAlpha = 120;
-
     private int mColorText = 0x6F6F6F;
 
     private int mViewHeight;
@@ -90,6 +89,16 @@ public class PickerView extends View {
         invalidate();
     }
 
+    public void setTextColor(int color){
+        mColorText = color;
+        mPaint.setColor(color);
+    }
+
+    public void setMaxTextSize(int maxSize){
+        mMaxTextSize = maxSize;
+        mMinTextSize = maxSize-5;
+    }
+
     public void setSelected(int selected) {
         mCurrentSelected = selected;
     }
@@ -124,6 +133,7 @@ public class PickerView extends View {
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setTextAlign(Paint.Align.CENTER);
         mPaint.setColor(mColorText);
+        mPaint.setTextSize(mMaxTextSize);
     }
 
     @Override
@@ -135,8 +145,7 @@ public class PickerView extends View {
 
     private void drawData(Canvas canvas) {
         float scale = parabola(mViewHeight / 4.0f, mMoveLen);
-        float size = (mMaxTextSize - mMinTextSize) * scale + mMinTextSize;
-        mPaint.setTextSize(size);
+        mPaint.setTextSize(mMaxTextSize);
         mPaint.setAlpha((int) ((mMaxTextAlpha - mMinTextAlpha) * scale + mMinTextAlpha));
         float x = (float) (mViewWidth / 2.0);
         float y = (float) (mViewHeight / 2.0 + mMoveLen);
@@ -150,15 +159,14 @@ public class PickerView extends View {
         for (int i = 1; (mCurrentSelected + i) < mDataList.size(); i++) {
             drawOtherText(canvas, i, 1);
         }
-
     }
+
 
     private void drawOtherText(Canvas canvas, int position, int type) {
         float d = (float) (MARGIN_ALPHA * mMinTextSize * position + type
                 * mMoveLen);
+        mPaint.setTextSize(mMinTextSize);
         float scale = parabola(mViewHeight / 4.0f, d);
-        float size = (mMaxTextSize - mMinTextSize) * scale + mMinTextSize;
-        mPaint.setTextSize(size);
         mPaint.setAlpha((int) ((mMaxTextAlpha - mMinTextAlpha) * scale + mMinTextAlpha));
         float y = (float) (mViewHeight / 2.0 + type * d);
         FontMetricsInt fmi = mPaint.getFontMetricsInt();
