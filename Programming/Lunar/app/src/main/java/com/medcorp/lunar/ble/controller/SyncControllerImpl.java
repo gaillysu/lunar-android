@@ -30,6 +30,7 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.application.ApplicationModel;
 import com.medcorp.lunar.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.lunar.ble.model.packet.BatteryLevelPacket;
+import com.medcorp.lunar.ble.model.packet.ChargingNotificationPacket;
 import com.medcorp.lunar.ble.model.packet.DailyStepsPacket;
 import com.medcorp.lunar.ble.model.packet.DailyTrackerInfoPacket;
 import com.medcorp.lunar.ble.model.packet.DailyTrackerPacket;
@@ -77,6 +78,7 @@ import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.Solar;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.WatchInfomation;
+import com.medcorp.lunar.util.BatteryLowNotificationUtils;
 import com.medcorp.lunar.util.Common;
 import com.medcorp.lunar.util.LinklossNotificationUtils;
 import com.medcorp.lunar.util.Preferences;
@@ -475,6 +477,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         lockObject.notifyAll();
                     }
                     EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.SUCCESS));
+                }
+                else if ((byte) ChargingNotificationPacket.HEADER == packet.getHeader()) {
+                    BatteryLowNotificationUtils.sendNotification(mContext);
                 }
                 packetsBuffer.clear();
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
