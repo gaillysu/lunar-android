@@ -1,12 +1,26 @@
 package com.medcorp.lunar.model;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by gaillysu on 15/4/21.
  */
 public class Alarm extends RealmObject{
 
+    /**
+     * alarm number(index) & alarm type mapping table:
+     * total alarms:20, alarm number starts with 0, ends with 19
+     *
+     *     alarm type |  alarm number   |  alarm weekdays
+     * ---------------|-----------------|----------------
+     * wake up alarms | [0..6]          | [Sun,Mon,Tue,Wed,Thu,Fri,Sat]
+     * sleep alarms:  | [13..19]        | [Sun,Mon,Tue,Wed,Thu,Fri,Sat]
+     * normal alarms: | [7..12]         | [Disable,Sun,Mon,Tue,Wed,Thu,Fri,Sat,Once time,Daily]
+     *
+     */
+
+    @PrimaryKey
     private int id =  (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
     private int hour;
     private int minute;
@@ -14,17 +28,18 @@ public class Alarm extends RealmObject{
     private String label;
     private byte alarmType;
     private byte alarmNumber;
+    private boolean enable;
 
     public Alarm(){
 
     }
 
-    public Alarm(int hour, int minute, byte weekDay, String label, byte alarmStyle, byte alarmNumber) {
+    public Alarm(int hour, int minute, byte weekDay, String label, byte alarmType, byte alarmNumber) {
         this.hour = hour;
         this.minute = minute;
         this.weekDay = weekDay;
         this.label = label;
-        this.alarmType = alarmStyle;
+        this.alarmType = alarmType;
         this.alarmNumber = alarmNumber;
     }
 
@@ -34,14 +49,6 @@ public class Alarm extends RealmObject{
 
     public void setAlarmNumber(byte alarmNumber) {
         this.alarmNumber = alarmNumber;
-    }
-
-    public byte getAlarmType() {
-        return alarmType;
-    }
-
-    public void setAlarmType(byte alarmStyle) {
-        this.alarmType = alarmStyle;
     }
 
     public void setId(int id) {
@@ -84,6 +91,23 @@ public class Alarm extends RealmObject{
         this.label = label;
     }
 
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
+
+    public byte getAlarmType() {
+        return alarmType;
+    }
+
+    public void setAlarmType(byte alarmType) {
+        this.alarmType = alarmType;
+    }
+
     @Override
     public String toString() {
 
@@ -106,4 +130,6 @@ public class Alarm extends RealmObject{
         return builder.toString();
 
     }
+
+
 }

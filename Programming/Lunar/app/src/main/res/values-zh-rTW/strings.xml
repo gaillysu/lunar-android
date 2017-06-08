@@ -467,7 +467,6 @@
     <string name="sleep_goal_def_long">長睡</string>
     <string name="sleep_goal_def_noon">午睡</string>
     <string name="sleep_goal_def_short">短睡</string>
-    <string name="sleep_goal_id" translatable="false"></string>
     <string name="sleep_unit_hour">小時</string>
     <string name="sleep_unit_minute">分鐘</string>
     <string name="solar_goal_def_long">大目標</string>
