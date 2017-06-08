@@ -47,6 +47,7 @@ import com.medcorp.lunar.ble.model.request.ReadDailyTrackerRequest;
 import com.medcorp.lunar.ble.model.request.ReadWatchInfoRequest;
 import com.medcorp.lunar.ble.model.request.SetAlarmWithTypeRequest;
 import com.medcorp.lunar.ble.model.request.SetBleConnectTimeoutRequest;
+import com.medcorp.lunar.ble.model.request.SetChargingNotificationRequest;
 import com.medcorp.lunar.ble.model.request.SetGoalRequest;
 import com.medcorp.lunar.ble.model.request.SetNotificationRequest;
 import com.medcorp.lunar.ble.model.request.SetProfileRequest;
@@ -985,6 +986,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     @Override
     public void setBleConnectTimeout(int timeoutInminutes) {
         sendRequest(new SetBleConnectTimeoutRequest(mContext,timeoutInminutes));
+    }
+
+    @Override
+    public void setChargingNotification(byte chargingThreshold, boolean enableWatchNotification, boolean enablePhoneNotification) {
+        sendRequest(new SetChargingNotificationRequest(mContext,chargingThreshold,enableWatchNotification,enablePhoneNotification));
     }
 
     public interface SyncAlarmToWatchListener {
