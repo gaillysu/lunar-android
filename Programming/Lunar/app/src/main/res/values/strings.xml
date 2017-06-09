@@ -171,6 +171,7 @@
     <string name="alarm_set_different_time">Set a different time</string>
     <string name="alarm_set_label_for_alarm">Set label for alarm</string>
     <string name="alarm_set_week_day">Set weekday for alarm</string>
+    <string name="bedtime_set_week_day">Please set weekday for bedtime</string>
     <string name="alarm_set_week_day_dialog_text">Set the alarm clock to repeat time</string>
     <string name="alarm_synced">Alarm Synced</string>
     <string name="alarm_error_sync">Error Syncing Alarm</string>

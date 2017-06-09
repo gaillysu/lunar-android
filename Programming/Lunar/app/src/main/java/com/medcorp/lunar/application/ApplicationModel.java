@@ -26,13 +26,14 @@ import com.medcorp.lunar.ble.model.goal.NumberOfStepsGoal;
 import com.medcorp.lunar.cloud.CloudSyncManager;
 import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.entry.AlarmDatabaseHelper;
-import com.medcorp.lunar.database.entry.StepsGoalDatabaseHelper;
+import com.medcorp.lunar.database.entry.BedtimeDatabaseHelper;
 import com.medcorp.lunar.database.entry.LedLampDatabase;
 import com.medcorp.lunar.database.entry.SleepDatabaseHelper;
 import com.medcorp.lunar.database.entry.SleepGoalDatabaseHelper;
 import com.medcorp.lunar.database.entry.SolarDatabaseHelper;
 import com.medcorp.lunar.database.entry.SolarGoalDatabaseHelper;
 import com.medcorp.lunar.database.entry.StepsDatabaseHelper;
+import com.medcorp.lunar.database.entry.StepsGoalDatabaseHelper;
 import com.medcorp.lunar.database.entry.UserDatabaseHelper;
 import com.medcorp.lunar.event.LocationChangedEvent;
 import com.medcorp.lunar.event.ReturnUserInfoEvent;
@@ -67,11 +68,11 @@ import com.medcorp.lunar.googlefit.GoogleFitTaskCounter;
 import com.medcorp.lunar.googlefit.GoogleHistoryUpdateTask;
 import com.medcorp.lunar.location.LocationController;
 import com.medcorp.lunar.model.Alarm;
-import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.SleepData;
 import com.medcorp.lunar.model.Solar;
 import com.medcorp.lunar.model.Steps;
+import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.network.model.request.RequestWeChatToken;
 import com.medcorp.lunar.network.model.response.ObtainMoreSleepResponse;
@@ -137,6 +138,7 @@ public class ApplicationModel extends Application {
     private StepsGoalDatabaseHelper mStepsGoalDatabaseHelper;
     private UserDatabaseHelper userDatabaseHelper;
     private SolarDatabaseHelper solarDatabaseHelper;
+    private BedtimeDatabaseHelper mBedTimeDatabaseHelper;
     private boolean firmwareUpdateAlertDailog = false;
     //if it is -1, means mcu version hasn't be read
     private int mcuFirmwareVersion = -1;
@@ -184,6 +186,7 @@ public class ApplicationModel extends Application {
         mStepsGoalDatabaseHelper = new StepsGoalDatabaseHelper(this);
         userDatabaseHelper = new UserDatabaseHelper(this);
         solarDatabaseHelper = new SolarDatabaseHelper(this);
+        mBedTimeDatabaseHelper = new BedtimeDatabaseHelper(this);
         sleepGoalDatabaeHelper = new SleepGoalDatabaseHelper(this);
         solargoalDatabaseHelper = new SolarGoalDatabaseHelper(this);
         cloudSyncManager = new CloudSyncManager(this);
@@ -305,14 +308,8 @@ public class ApplicationModel extends Application {
         syncController.forgetDevice();
     }
 
-    public List<Steps> getAllSteps() {
-        stepsDatabaseHelper.getAll(nevoUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
-            @Override
-            public void accept(List<Steps> stepses) throws Exception {
-                allSteps = stepses;
-            }
-        });
-        return allSteps;
+    public Observable<List<Steps>> getAllSteps() {
+        return stepsDatabaseHelper.getAll(nevoUser.getUserID());
     }
 
     public void getAllAlarm(final SyncControllerImpl.SyncAlarmToWatchListener listener) {
@@ -701,7 +698,7 @@ public class ApplicationModel extends Application {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 upDateIsSuccess = aBoolean;
-                Log.e("jason","update success");
+                Log.e("jason", "update success");
             }
         });
         return upDateIsSuccess;
@@ -717,7 +714,7 @@ public class ApplicationModel extends Application {
         return mStepsGoal;
     }
 
-    public StepsGoalDatabaseHelper getStepsGoalDatabaseHelper(){
+    public StepsGoalDatabaseHelper getStepsGoalDatabaseHelper() {
         return mStepsGoalDatabaseHelper;
     }
 
@@ -863,10 +860,15 @@ public class ApplicationModel extends Application {
     public void updateGoogleFit() {
         if (Preferences.isGoogleFitSet(this)) {
             initGoogleFit(null);
-            GoogleFitStepsDataHandler dataHandler = new GoogleFitStepsDataHandler(getAllSteps(), ApplicationModel.this);
-            new GoogleHistoryUpdateTask(googleFitManager).execute(dataHandler.getStepsDataSet());
-            new GoogleHistoryUpdateTask(googleFitManager).execute(dataHandler.getCaloriesDataSet());
-            new GoogleHistoryUpdateTask(googleFitManager).execute(dataHandler.getDistanceDataSet());
+            getAllSteps().subscribe(new Consumer<List<Steps>>() {
+                @Override
+                public void accept(List<Steps> stepses) throws Exception {
+                    GoogleFitStepsDataHandler dataHandler = new GoogleFitStepsDataHandler(stepses, ApplicationModel.this);
+                    new GoogleHistoryUpdateTask(googleFitManager).execute(dataHandler.getStepsDataSet());
+                    new GoogleHistoryUpdateTask(googleFitManager).execute(dataHandler.getCaloriesDataSet());
+                    new GoogleHistoryUpdateTask(googleFitManager).execute(dataHandler.getDistanceDataSet());
+                }
+            });
         }
     }
 
@@ -1073,11 +1075,15 @@ public class ApplicationModel extends Application {
                 });
     }
 
-    public SolarGoalDatabaseHelper getSolarGoalDatabaseHelper(){
+    public SolarGoalDatabaseHelper getSolarGoalDatabaseHelper() {
         return solargoalDatabaseHelper;
     }
 
-    public SleepGoalDatabaseHelper getSleepDatabseHelper(){
+    public SleepGoalDatabaseHelper getSleepDatabseHelper() {
         return sleepGoalDatabaeHelper;
+    }
+
+    public BedtimeDatabaseHelper getBedTimeDatabaseHelper() {
+        return mBedTimeDatabaseHelper;
     }
 }

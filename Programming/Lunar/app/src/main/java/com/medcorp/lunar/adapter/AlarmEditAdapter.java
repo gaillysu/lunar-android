@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.medcorp.lunar.R;
+import com.medcorp.lunar.model.Alarm;
+import com.medcorp.lunar.model.BedtimeModel;
 import com.medcorp.lunar.view.customfontview.RobotoTextView;
 
 
@@ -15,12 +17,15 @@ import com.medcorp.lunar.view.customfontview.RobotoTextView;
  */
 public class AlarmEditAdapter extends BaseAdapter {
     Context context;
-    com.medcorp.lunar.model.Alarm alarm;
+    Alarm alarm;
+    BedtimeModel bedtime;
 
-    public AlarmEditAdapter(Context context, com.medcorp.lunar.model.Alarm alarm) {
+
+    public AlarmEditAdapter(Context context, Alarm alarm, BedtimeModel bedtimeModel) {
         super();
         this.context = context;
         this.alarm = alarm;
+        bedtime = bedtimeModel;
     }
 
     @Override
@@ -47,22 +52,45 @@ public class AlarmEditAdapter extends BaseAdapter {
         RobotoTextView title = (RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_title_label);
         RobotoTextView summary = (RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_summary_label);
         RobotoTextView delete = (RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_delete_label);
+        if (alarm != null) {
+            if (position == 0) {
+                title.setText(alarm.toString());
+                summary.setText(context.getString(R.string.alarm_set_different_time));
+            } else if (position == 1) {
+                title.setText(alarm.getLabel());
+                summary.setText(context.getString(R.string.alarm_set_label_for_alarm));
+            } else if (position == 2) {
+                String[] weekDayArray = context.getResources().getStringArray(R.array.week_day);
+                String weekDay = weekDayArray[alarm.getWeekDay() & 0x0F];
+                title.setText(weekDay);
+                summary.setText(context.getString(R.string.alarm_set_week_day));
+            } else if (position == 3) {
+                summary.setVisibility(View.GONE);
+                title.setVisibility(View.GONE);
+                delete.setVisibility(View.VISIBLE);
+            }
+        }else{
+            if (position == 0) {
+                title.setText(bedtime.toString());
+                summary.setText(context.getString(R.string.alarm_set_different_time));
+            } else if (position == 1) {
+                title.setText(bedtime.getName());
+                summary.setText(context.getString(R.string.alarm_set_label_for_alarm));
+            } else if (position == 2) {
 
-        if (position == 0) {
-            title.setText(alarm.toString());
-            summary.setText(context.getString(R.string.alarm_set_different_time));
-        } else if (position == 1) {
-            title.setText(alarm.getLabel());
-            summary.setText(context.getString(R.string.alarm_set_label_for_alarm));
-        } else if (position == 2) {
-            String[] weekDayArray = context.getResources().getStringArray(R.array.week_day);
-            String weekDay = weekDayArray[alarm.getWeekDay() & 0x0F];
-            title.setText(weekDay);
-            summary.setText(context.getString(R.string.alarm_set_week_day));
-        } else if(position == 3) {
-            summary.setVisibility(View.GONE);
-            title.setVisibility(View.GONE);
-            delete.setVisibility(View.VISIBLE);
+                String[] weekDayArray = context.getResources().getStringArray(R.array.week_day);
+                byte[] weekday = bedtime.getWeekday();
+                StringBuffer wk = new StringBuffer();
+                for(int i = 0;i<weekday.length;i++){
+                    wk.append(weekDayArray[weekday[i]]+" ,");
+                }
+                title.setText(wk.toString());
+                summary.setText(context.getString(R.string.alarm_set_week_day));
+            } else if (position == 3) {
+                summary.setVisibility(View.GONE);
+                title.setVisibility(View.GONE);
+                delete.setVisibility(View.VISIBLE);
+            }
         }
         return itemView;
     }

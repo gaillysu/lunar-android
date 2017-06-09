@@ -3,10 +3,9 @@ package com.medcorp.lunar.fragment;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,11 +23,13 @@ import com.medcorp.lunar.activity.EditNewAlarmActivity;
 import com.medcorp.lunar.activity.EditNewBedtimeActivity;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.adapter.AlarmArrayAdapter;
+import com.medcorp.lunar.adapter.BedtimeAdapter;
 import com.medcorp.lunar.ble.controller.SyncControllerImpl;
 import com.medcorp.lunar.event.bluetooth.RequestResponseEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
 import com.medcorp.lunar.fragment.listener.OnAlarmSwitchListener;
 import com.medcorp.lunar.model.Alarm;
+import com.medcorp.lunar.model.BedtimeModel;
 import com.medcorp.lunar.view.ToastHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -44,7 +45,7 @@ import io.reactivex.functions.Consumer;
 /***
  * Created by karl-john on 11/12/15.
  */
-public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwitchListener {
+public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwitchListener, BedtimeAdapter.OnBedtimeSwitchListener {
 
     @Bind(R.id.fragment_alarm_list_view)
     ListView alarmListView;
@@ -56,8 +57,8 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     LinearLayout normalAlarm;
 
     private List<Alarm> alarmList;
-    private List<Alarm> bedtimeList;
-    private AlarmArrayAdapter bedtimeAdapter;
+    private BedtimeAdapter bedtimeAdapter;
+    private List<BedtimeModel> allBedtimeModels;
     private AlarmArrayAdapter normalAlarmAdapter;
     private Alarm editAlarm;
     private boolean showSyncAlarm = false;
@@ -67,7 +68,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
-        bedtimeList = new ArrayList<>();
         alarmList = new ArrayList<>();
         initData();
         return view;
@@ -80,8 +80,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 for (Alarm alarm : alarms) {
                     if (alarm.getAlarmNumber() > 6 && alarm.getAlarmNumber() < 13) {
                         alarmList.add(alarm);
-                    } else if (alarm.getAlarmNumber() < 7) {
-                        bedtimeList.add(alarm);
                     }
                 }
 
@@ -91,11 +89,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                     normalAlarm.setVisibility(View.VISIBLE);
                 }
 
-                if (bedtimeList.size() == 0) {
-                    bedtime.setVisibility(View.GONE);
-                } else {
-                    bedtime.setVisibility(View.VISIBLE);
-                }
                 normalAlarmAdapter = new AlarmArrayAdapter(getContext(), alarmList, AlarmFragment.this);
                 alarmListView.setAdapter(normalAlarmAdapter);
                 alarmListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -106,31 +99,34 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                             return;
                         }
                         Intent i = new Intent(getContext(), EditAlarmActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putInt(getString(R.string.key_alarm_id), alarmList.get(position).getId());
-                        i.putExtras(bundle);
-                        SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-                        prefs.putString(getString(R.string.alarm_label), alarmList.get(position).getLabel());
-                        prefs.commit();
-                        editAlarm = alarmList.get(position);
+                        i.putExtra(getString(R.string.key_alarm_id), alarmList.get(position).getId());
+                        i.putExtra(getString(R.string.key_launch_edit_page_flag),getString(R.string.key_launch_edit_page_alarm));
                         startActivityForResult(i, 0);
                     }
                 });
+            }
+        });
 
-                bedtimeAdapter = new AlarmArrayAdapter(getContext(), bedtimeList, AlarmFragment.this);
+        getModel().getBedTimeDatabaseHelper().getAll().subscribe(new Consumer<List<BedtimeModel>>() {
+            @Override
+            public void accept(List<BedtimeModel> bedtimeModels) throws Exception {
+                if (bedtimeModels.size() == 0) {
+                    bedtime.setVisibility(View.GONE);
+                } else {
+                    bedtime.setVisibility(View.VISIBLE);
+                }
+                allBedtimeModels = bedtimeModels;
+                Log.e("jason",allBedtimeModels.toString());
+                bedtimeAdapter = new BedtimeAdapter(getContext(), bedtimeModels, AlarmFragment.this);
                 bedtimeListView.setAdapter(bedtimeAdapter);
                 bedtimeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent i = new Intent(getContext(), EditAlarmActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putInt(getString(R.string.key_alarm_id), bedtimeList.get(position).getId());
-                        i.putExtras(bundle);
-                        SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-                        prefs.putString(getString(R.string.alarm_label), bedtimeList.get(position).getLabel());
-                        prefs.commit();
-                        editAlarm = bedtimeList.get(position);
-                        startActivityForResult(i, 0);
+                        Intent intent = new Intent(getContext(), EditAlarmActivity.class);
+                        intent.putExtra(getResources().getString(R.string.key_alarm_id)
+                                , allBedtimeModels.get(position).getId());
+                        intent.putExtra(getString(R.string.key_launch_edit_page_flag),getString(R.string.key_launch_edit_page_bedtime));
+                        startActivityForResult(intent, 0);
                     }
                 });
             }
@@ -159,6 +155,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 dialog.show();
                 Window window = dialog.getWindow();
                 window.setContentView(selectType);
+
                 bedtime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -168,6 +165,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                         startActivityForResult(intent, 0x02);
                     }
                 });
+
                 normalAlarm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -187,23 +185,38 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         super.onActivityResult(requestCode, resultCode, data);
         //when delete (resultCode == -1) or update (resultCode == 1) the enable alarm, do alarm sync
         //resultCode == 0 ,do nothing
-        refreshListView();
+            refreshNormalListView();
+            refreshBedtimeListView();
         if (resultCode != 0) {
             syncAlarmByEditor(resultCode == -1);
         }
     }
 
-    private void refreshListView() {
+    private void refreshBedtimeListView() {
+        getModel().getBedTimeDatabaseHelper().getAll().subscribe(new Consumer<List<BedtimeModel>>() {
+            @Override
+            public void accept(List<BedtimeModel> bedtimeModels) throws Exception {
+                allBedtimeModels.clear();
+                allBedtimeModels = bedtimeModels;
+                if (bedtimeModels.size() == 0) {
+                    bedtime.setVisibility(View.GONE);
+                } else {
+                    bedtime.setVisibility(View.VISIBLE);
+                }
+                bedtimeAdapter = new BedtimeAdapter(getContext(), allBedtimeModels, AlarmFragment.this);
+                bedtimeListView.setAdapter(bedtimeAdapter);
+            }
+        });
+    }
+
+    private void refreshNormalListView() {
         getModel().getAlarmDatabaseHelper().getAll().subscribe(new Consumer<List<Alarm>>() {
             @Override
             public void accept(final List<Alarm> alarms) throws Exception {
                 alarmList.clear();
-                bedtimeList.clear();
                 for (Alarm alarm : alarms) {
                     if (alarm.getAlarmNumber() > 6 && alarm.getAlarmNumber() < 13) {
                         alarmList.add(alarm);
-                    } else if (alarm.getAlarmNumber() < 7) {
-                        bedtimeList.add(alarm);
                     }
                 }
 
@@ -212,14 +225,8 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 } else {
                     normalAlarm.setVisibility(View.VISIBLE);
                 }
-
-                if (bedtimeList.size() == 0) {
-                    bedtime.setVisibility(View.GONE);
-                } else {
-                    bedtime.setVisibility(View.VISIBLE);
-                }
-                bedtimeAdapter.notifyDataSetChanged();
-                normalAlarmAdapter.notifyDataSetChanged();
+                normalAlarmAdapter = new AlarmArrayAdapter(getContext(), alarmList, AlarmFragment.this);
+                alarmListView.setAdapter(normalAlarmAdapter);
             }
         });
     }
@@ -300,5 +307,15 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
             int id = event.isSuccess() ? R.string.alarm_synced : R.string.alarm_error_sync;
             ((MainActivity) getActivity()).showStateString(id, false);
         }
+    }
+
+    @Override
+    public void onBedtimeSwitch(SwitchCompat alarmSwitch, BedtimeModel bedtime) {
+        if (!getModel().isWatchConnected()) {
+            alarmSwitch.setChecked(!alarmSwitch.isChecked());
+            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+            return;
+        }
+        //TODO sync Alarm
     }
 }

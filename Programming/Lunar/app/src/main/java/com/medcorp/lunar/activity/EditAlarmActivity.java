@@ -2,10 +2,12 @@ package com.medcorp.lunar.activity;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +22,7 @@ import com.medcorp.lunar.adapter.AlarmEditAdapter;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.ble.controller.SyncControllerImpl;
 import com.medcorp.lunar.model.Alarm;
+import com.medcorp.lunar.model.BedtimeModel;
 import com.medcorp.lunar.view.ToastHelper;
 
 import java.util.List;
@@ -39,7 +42,10 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
     @Bind(R.id.activity_edit_alarm_list_view)
     ListView listView;
 
+    private BedtimeModel bedtime;
     private Alarm mAlarm;
+    private boolean flag;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,16 +59,36 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.title_alarm);
 
-        Bundle bundle = getIntent().getExtras();
-        getModel().getAlarmById(bundle.getInt(getString(R.string.key_alarm_id)), new ObtainAlarmListener() {
-            @Override
-            public void obtainAlarm(Alarm alarm) {
-                mAlarm = alarm;
-                listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, mAlarm));
-                listView.setOnItemClickListener(EditAlarmActivity.this);
-            }
-        });
+        initView();
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void initView() {
+        Intent intent = getIntent();
+        String flag = intent.getStringExtra(getString(R.string.key_launch_edit_page_flag));
+        if (flag.equals(getString(R.string.key_launch_edit_page_alarm))) {
+            this.flag = true;
+            getModel().getAlarmById(intent.getIntExtra(getString(R.string.key_alarm_id), -1), new ObtainAlarmListener() {
+                @Override
+                public void obtainAlarm(Alarm alarm) {
+                    mAlarm = alarm;
+                    listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, mAlarm, bedtime));
+                    listView.setOnItemClickListener(EditAlarmActivity.this);
+                }
+            });
+        } else if (flag.equals(getString(R.string.key_launch_edit_page_bedtime))) {
+            this.flag = false;
+            getModel().getBedTimeDatabaseHelper().get(intent.getIntExtra(getString(R.string.key_alarm_id), -1))
+                    .subscribe(new Consumer<BedtimeModel>() {
+                        @Override
+                        public void accept(BedtimeModel bedtimeModel) throws Exception {
+                            bedtime = bedtimeModel;
+                            listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, mAlarm, bedtime));
+                            listView.setOnItemClickListener(EditAlarmActivity.this);
+                        }
+                    });
+        }
     }
 
     @Override
@@ -126,55 +152,80 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                         public void onInput(MaterialDialog dialog, CharSequence input) {
                             if (input.length() == 0)
                                 return;
-                            mAlarm.setLabel(input.toString());
-                            listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, mAlarm));
+                            if (flag) {
+                                mAlarm.setLabel(input.toString());
+                            } else {
+                                bedtime.setName(input.toString());
+                            }
+                            listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, mAlarm, bedtime));
                         }
                     }).negativeText(R.string.alarm_cancel)
                     .show();
         } else if (position == 2) {
-            String[] weekDays = getResources().getStringArray(R.array.week_day);
-            String[] javaWeekDays = new String[]{weekDays[0], weekDays[1], weekDays[2], weekDays[3], weekDays[4], weekDays[5], weekDays[6], weekDays[7], weekDays[8]};
-            new MaterialDialog.Builder(EditAlarmActivity.this)
-                    .title(R.string.alarm_edit)
-                    .content(getString(R.string.alarm_set_week_day_dialog_text))
-                    .items(javaWeekDays)
-                    .itemsCallbackSingleChoice((mAlarm.getWeekDay() & 0x0F) - 1, new MaterialDialog.ListCallbackSingleChoice() {
-                        @Override
-                        public boolean onSelection(MaterialDialog dialog, View view, final int which, CharSequence text) {
-                            getModel().getAllAlarm(new SyncControllerImpl.SyncAlarmToWatchListener() {
-                                @Override
-                                public void syncAlarmToWatch(List<Alarm> alarms) {
-                                    mAlarm.setWeekDay(((mAlarm.getWeekDay() & 0x80) == 0x80) ? (byte) (0x80 | (which + 1)) : (byte) (which + 1));
-                                    listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, mAlarm));
+            if (flag) {
+                String[] weekDays = getResources().getStringArray(R.array.week_day);
+                String[] javaWeekDays = new String[]{weekDays[0], weekDays[1], weekDays[2], weekDays[3], weekDays[4], weekDays[5], weekDays[6], weekDays[7], weekDays[8]};
+                new MaterialDialog.Builder(EditAlarmActivity.this)
+                        .title(R.string.alarm_edit)
+                        .content(getString(R.string.alarm_set_week_day_dialog_text))
+                        .items(javaWeekDays)
+                        .itemsCallbackSingleChoice((mAlarm.getWeekDay() & 0x0F) - 1, new MaterialDialog.ListCallbackSingleChoice() {
+                            @Override
+                            public boolean onSelection(MaterialDialog dialog, View view, final int which, CharSequence text) {
+                                getModel().getAllAlarm(new SyncControllerImpl.SyncAlarmToWatchListener() {
+                                    @Override
+                                    public void syncAlarmToWatch(List<Alarm> alarms) {
+                                        mAlarm.setWeekDay(((mAlarm.getWeekDay() & 0x80) == 0x80) ? (byte) (0x80 | (which + 1)) : (byte) (which + 1));
+                                        listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, mAlarm, bedtime));
 
-                                }
-                            });
-                            return true;
-                        }
-                    })
-                    .positiveText(R.string.goal_ok)
-                    .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
-                    .show();
+                                    }
+                                });
+                                return true;
+                            }
+                        })
+                        .positiveText(R.string.goal_ok)
+                        .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
+                        .show();
+            }
         } else if (position == 3) {
-            getModel().deleteAlarm(mAlarm).subscribe(new Consumer<Boolean>() {
-                @Override
-                public void accept(Boolean aBoolean) throws Exception {
-                    if (aBoolean) {
-                        ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_deleted);
-                        setResult(-1);
-                        finish();
+            if (flag) {
+                getModel().deleteAlarm(mAlarm).subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_deleted);
+                            setResult(-1);
+                            finish();
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                getModel().getBedTimeDatabaseHelper().remove(bedtime.getId()).subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_deleted);
+                            setResult(-1);
+                            finish();
+                            Log.i("jason", "delete bedtime success");
+                        }
+                    }
+                });
+            }
         }
     }
 
     TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            mAlarm.setHour(hourOfDay);
-            mAlarm.setMinute(minute);
-            listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, mAlarm));
+            if (flag) {
+                mAlarm.setHour(hourOfDay);
+                mAlarm.setMinute(minute);
+            } else {
+                bedtime.setHour(hourOfDay);
+                bedtime.setMinute(minute);
+            }
+            listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, mAlarm, bedtime));
         }
     };
 
