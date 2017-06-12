@@ -2,7 +2,7 @@ package com.medcorp.lunar.model;
 
 import io.realm.RealmObject;
 
-/**
+/***
  * Created by gaillysu on 15/4/21.
  */
 public class Alarm extends RealmObject {
@@ -14,8 +14,6 @@ public class Alarm extends RealmObject {
     private String label;
     private byte alarmType;
     private byte alarmNumber;
-    private int sleepGoal = 0;
-
 
     public Alarm() {
 
@@ -28,14 +26,6 @@ public class Alarm extends RealmObject {
         this.label = label;
         this.alarmType = alarmStyle;
         this.alarmNumber = alarmNumber;
-    }
-
-    public int getSleepGoal() {
-        return sleepGoal;
-    }
-
-    public void setSleepGoal(int sleepGoal) {
-        this.sleepGoal = sleepGoal;
     }
 
     public byte getAlarmNumber() {
