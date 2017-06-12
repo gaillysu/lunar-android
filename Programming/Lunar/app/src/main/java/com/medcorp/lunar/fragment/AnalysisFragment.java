@@ -31,14 +31,15 @@ public class AnalysisFragment extends BaseObservableFragment implements ViewPage
     TabLayout analysisTable;
     @Bind(R.id.analysis_fragment_content_view_pager)
     ViewPager analysisViewpager;
+    private AnalysisFragmentPagerAdapter mAdapter;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view  = inflater.inflate(R.layout.analysis_fragment_layout,container,false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.analysis_fragment_layout, container, false);
+        ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
-        AnalysisFragmentPagerAdapter adapter = new AnalysisFragmentPagerAdapter(getChildFragmentManager(),this);
+        AnalysisFragmentPagerAdapter adapter = new AnalysisFragmentPagerAdapter(getChildFragmentManager(), this);
         analysisViewpager.setAdapter(adapter);
         analysisTable.setupWithViewPager(analysisViewpager);
         analysisViewpager.addOnPageChangeListener(this);
@@ -52,8 +53,8 @@ public class AnalysisFragment extends BaseObservableFragment implements ViewPage
                 @Override
                 public void run() {
                     int currentItem = analysisViewpager.getCurrentItem();
-                    AnalysisFragmentPagerAdapter adapter = new AnalysisFragmentPagerAdapter(getChildFragmentManager(), AnalysisFragment.this);
-                    analysisViewpager.setAdapter(adapter);
+                    mAdapter = new AnalysisFragmentPagerAdapter(getChildFragmentManager(), AnalysisFragment.this);
+                    analysisViewpager.setAdapter(mAdapter);
                     analysisTable.setupWithViewPager(analysisViewpager);
                     analysisViewpager.setCurrentItem(currentItem);
                 }

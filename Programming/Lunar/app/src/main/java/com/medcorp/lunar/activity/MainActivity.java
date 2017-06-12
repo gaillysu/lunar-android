@@ -46,8 +46,6 @@ import com.medcorp.lunar.fragment.MainFragment;
 import com.medcorp.lunar.fragment.SettingsFragment;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
 import com.medcorp.lunar.model.ChangeFragmentPageModel;
-import com.medcorp.lunar.model.ChangeSleepGoalEvent;
-import com.medcorp.lunar.model.ChangeSolarGoalEvent;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.model.StepsGoal;
@@ -505,7 +503,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         viewPage = event.getViewPage();
     }
 
-    private void popupStepsGoalDialog( ) {
+    private void popupStepsGoalDialog() {
         getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
             @Override
             public void obtainGoal(final List<StepsGoal> stepsGoalList) {
@@ -536,7 +534,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                                             StepsGoal stepsGoal = stepsGoalList.get(i);
                                             if (i == which) {
                                                 stepsGoal.setStatus(true);
-                                            }else{
+                                            } else {
                                                 stepsGoal.setStatus(false);
                                             }
                                             getModel().updateGoal(stepsGoal);
@@ -544,6 +542,9 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                                         getModel().setStepsGoal(stepsGoalEnableList.get(which));
                                         showStateString(R.string.goal_syncing_message, false);
                                         EventBus.getDefault().post(new ChangeGoalEvent(true));
+                                        Intent intent = new Intent(getString(R.string.key_steps_goal_change));
+                                        intent.putExtra(getString(R.string.key_goal_is_change), true);
+                                        sendBroadcast(intent);
                                     }
                                     return true;
                                 }
@@ -559,8 +560,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     }
 
 
-
-    private void popupSleepGoalDialog( ) {
+    private void popupSleepGoalDialog() {
         getModel().getSleepDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
             @Override
             public void accept(final List<SleepGoal> sleepGoals) throws Exception {
@@ -572,7 +572,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                     if (sleepGoal.isStatus()) {
                         selectIndex = i;
                     }
-                    stringList.add(obtainString(sleepGoal.getGoalName(),sleepGoal.getGoalDuration()));
+                    stringList.add(obtainString(sleepGoal.getGoalName(), sleepGoal.getGoalDuration()));
                     stepsGoalEnableList.add(sleepGoal);
 
                 }
@@ -588,20 +588,22 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                                     if (which >= 0) {
 
                                         for (int i = 0; i < sleepGoals.size(); i++) {
-                                            SleepGoal sleepGoal = sleepGoals.get(i);
+                                            final SleepGoal sleepGoal = sleepGoals.get(i);
                                             if (i == which) {
                                                 sleepGoal.setStatus(true);
-                                            }else{
+                                            } else {
                                                 sleepGoal.setStatus(false);
                                             }
                                             getModel().getSleepDatabseHelper().update(sleepGoal).subscribe(new Consumer<Boolean>() {
                                                 @Override
                                                 public void accept(Boolean aBoolean) throws Exception {
-                                                    Log.i("jason","change sleep goal");
+                                                    Log.i("jason", "change sleep goal");
                                                 }
                                             });
                                         }
-                                        EventBus.getDefault().post(new ChangeSleepGoalEvent(true));
+                                        Intent intent = new Intent(getString(R.string.key_sleep_goal_change));
+                                        intent.putExtra(getString(R.string.key_goal_is_change), true);
+                                        sendBroadcast(intent);
                                     }
                                     return true;
                                 }
@@ -628,7 +630,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                     if (solarGoal.isStatus()) {
                         selectIndex = i;
                     }
-                    stringList.add(obtainString(solarGoal.getName(),solarGoal.getTime()));
+                    stringList.add(obtainString(solarGoal.getName(), solarGoal.getTime()));
                     stepsGoalEnableList.add(solarGoal);
 
                 }
@@ -647,17 +649,19 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                                             SolarGoal solar = solarGoals.get(i);
                                             if (i == which) {
                                                 solar.setStatus(true);
-                                            }else{
+                                            } else {
                                                 solar.setStatus(false);
                                             }
                                             getModel().getSolarGoalDatabaseHelper().update(solar).subscribe(new Consumer<Boolean>() {
                                                 @Override
                                                 public void accept(Boolean aBoolean) throws Exception {
-                                                    Log.i("jason","change sleep goal");
+                                                    Log.i("jason", "change sleep goal");
                                                 }
                                             });
                                         }
-                                        EventBus.getDefault().post(new ChangeSolarGoalEvent(true));
+                                        Intent intent = new Intent(getString(R.string.key_solar_goal_change));
+                                        intent.putExtra(getString(R.string.key_goal_is_change), true);
+                                        sendBroadcast(intent);
                                     }
                                     return true;
                                 }
@@ -688,7 +692,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             sb.append(goalDuration / 60 + getString(R.string.sleep_unit_hour)
                     + (goalDuration % 60 != 0 ? goalDuration % 60 + getString(R.string.sleep_unit_minute) : ""));
         } else if (goalDuration == 60) {
-            sb.append(goalDuration / 60 +getString(R.string.sleep_unit_hour));
+            sb.append(goalDuration / 60 + getString(R.string.sleep_unit_hour));
         } else {
             sb.append(goalDuration + getString(R.string.sleep_unit_minute));
         }

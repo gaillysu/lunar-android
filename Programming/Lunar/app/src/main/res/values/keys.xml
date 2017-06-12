@@ -28,7 +28,10 @@
     <string name="key_sleep_hourly_wake" translatable="false">mergeHourlyWakeTime</string>
     <string name="key_sleep_hourly_light" translatable="false">mergeHourlyLightTime</string>
     <string name="key_sleep_hourly_deep" translatable="false">mergeHourlyDeepTime</string>
-
+    <string name="key_sleep_goal_change" translatable="false">change sleep goal</string>
+    <string name="key_goal_is_change" translatable="false">change goal</string>
+    <string name="key_steps_goal_change" translatable="false">change steps goal</string>
+    <string name="key_solar_goal_change" translatable="false">change solar goal</string>
     <!-- preferences-->
     <string name="key_prefs_nevo_shared_pref" translatable="false">Nevo_Shared_Preferences</string>
     <string name="key_prefs_step_preset_id" translatable="false">steps_preset_id</string>

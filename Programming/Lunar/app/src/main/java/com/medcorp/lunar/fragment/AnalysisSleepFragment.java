@@ -1,5 +1,9 @@
 package com.medcorp.lunar.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -12,15 +16,12 @@ import android.widget.TextView;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.lunar.fragment.base.BaseFragment;
-import com.medcorp.lunar.model.ChangeSleepGoalEvent;
 import com.medcorp.lunar.model.SleepData;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisSleepLineChart;
-
-import org.greenrobot.eventbus.Subscribe;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,7 +33,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
 
-/**
+/***
  * Created by Administrator on 2016/7/21.
  */
 public class AnalysisSleepFragment extends BaseFragment {
@@ -71,6 +72,18 @@ public class AnalysisSleepFragment extends BaseFragment {
     private AnalysisSleepLineChart thisWeekChart, lastWeekChart, lastMonthChart;
     private TipsView mMv;
     private SleepGoal mActiveSleepGoal;
+    private AnalysisStepsChartAdapter mAdapter;
+    private LayoutInflater inflater;
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean isChange = intent.getBooleanExtra(getString(R.string.key_goal_is_change), false);
+            if (isChange) {
+                sleepList.clear();
+                initView(inflater);
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,9 +99,20 @@ public class AnalysisSleepFragment extends BaseFragment {
                 e.printStackTrace();
             }
         }
+        this.inflater = inflater;
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(getString(R.string.key_sleep_goal_change));
+        getActivity().registerReceiver(receiver, filter);
 
         initView(inflater);
         return sleepView;
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(receiver);
     }
 
     private void initView(LayoutInflater inflater) {
@@ -109,7 +133,7 @@ public class AnalysisSleepFragment extends BaseFragment {
         sleepList.add(thisWeekView);
         sleepList.add(lastWeekView);
         sleepList.add(lastMonthView);
-
+        uiControl.removeAllViews();
         for (int i = 0; i < sleepList.size(); i++) {
             ImageView imageView = new ImageView(AnalysisSleepFragment.this.getContext());
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
@@ -163,8 +187,8 @@ public class AnalysisSleepFragment extends BaseFragment {
          */
 
 
-        AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(sleepList);
-        sleepViewPage.setAdapter(adapter);
+        mAdapter = new AnalysisStepsChartAdapter(sleepList);
+        sleepViewPage.setAdapter(mAdapter);
         sleepViewPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -310,17 +334,5 @@ public class AnalysisSleepFragment extends BaseFragment {
 
     public interface ObtainSleepDataListener {
         void obtainSleepData(List<SleepData> sleepDatas);
-    }
-
-    @Subscribe
-    public void onEvent(ChangeSleepGoalEvent event) {
-        if (event.isChange()) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setData(sleepViewPage.getCurrentItem());
-                }
-            });
-        }
     }
 }

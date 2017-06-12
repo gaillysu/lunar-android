@@ -1,5 +1,9 @@
 package com.medcorp.lunar.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -11,7 +15,6 @@ import android.widget.TextView;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
-import com.medcorp.lunar.event.ChangeGoalEvent;
 import com.medcorp.lunar.fragment.base.BaseFragment;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.StepsGoal;
@@ -19,9 +22,6 @@ import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisStepsLineChart;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -64,12 +64,22 @@ public class AnalysisStepsFragment extends BaseFragment {
     private List<Steps> lastWeekData = new ArrayList<>();
     private List<Steps> lastMonthData = new ArrayList<>();
     private Date mUserSelectDate;
+    private LayoutInflater inflater;
+    private List<View> mStepsDataList;
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getBooleanExtra(getString(R.string.key_goal_is_change), false)) {
+                initView();
+                initData();
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View stepsView = inflater.inflate(R.layout.analysis_fragment_child_steps_fragment, container, false);
         ButterKnife.bind(this, stepsView);
-
         String selectDate = Preferences.getSelectDate(this.getContext());
         mUserSelectDate = new Date();
         if (selectDate != null) {
@@ -79,12 +89,15 @@ public class AnalysisStepsFragment extends BaseFragment {
                 e.printStackTrace();
             }
         }
-        initView(inflater);
-        initData(mUserSelectDate);
+        this.inflater = inflater;
+        IntentFilter filter = new IntentFilter(getString(R.string.key_steps_goal_change));
+        getActivity().registerReceiver(receiver, filter);
+        initView();
+        initData();
         return stepsView;
     }
 
-    private void initData(Date userSelectDate) {
+    private void initData() {
         thisWeekChart = (AnalysisStepsLineChart) thisWeekView.findViewById(R.id.analysis_step_chart);
         lastWeekChart = (AnalysisStepsLineChart) lastWeekView.findViewById(R.id.analysis_step_chart);
         lastMonthChart = (AnalysisStepsLineChart) lastMonthView.findViewById(R.id.analysis_step_chart);
@@ -115,7 +128,7 @@ public class AnalysisStepsFragment extends BaseFragment {
 
         setDesText(0);
 
-        getModel().getSteps(getModel().getUser().getUserID(), userSelectDate
+        getModel().getSteps(getModel().getUser().getUserID(), mUserSelectDate
                 , WeekData.TISHWEEK, new OnStepsGetListener() {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
@@ -126,7 +139,7 @@ public class AnalysisStepsFragment extends BaseFragment {
                     }
                 });
 
-        getModel().getSteps(getModel().getUser().getUserID(), userSelectDate, WeekData.LASTWEEK,
+        getModel().getSteps(getModel().getUser().getUserID(), mUserSelectDate, WeekData.LASTWEEK,
                 new OnStepsGetListener() {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
@@ -137,7 +150,7 @@ public class AnalysisStepsFragment extends BaseFragment {
                     }
                 });
 
-        getModel().getSteps(getModel().getUser().getUserID(), userSelectDate, WeekData.LASTMONTH,
+        getModel().getSteps(getModel().getUser().getUserID(), mUserSelectDate, WeekData.LASTMONTH,
                 new OnStepsGetListener() {
                     @Override
                     public void onStepsGet(List<Steps> stepsList) {
@@ -149,30 +162,17 @@ public class AnalysisStepsFragment extends BaseFragment {
                 });
     }
 
-    private void initView(LayoutInflater inflater) {
-        final List<View> stepsDataList = new ArrayList<>(3);
+    private void initView() {
+        mStepsDataList = new ArrayList<>();
         thisWeekView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout, null);
         lastWeekView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout, null);
         lastMonthView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout, null);
-        stepsDataList.add(thisWeekView);
-        stepsDataList.add(lastWeekView);
-        stepsDataList.add(lastMonthView);
-
-        for (int i = 0; i < stepsDataList.size(); i++) {
-            ImageView imageView = new ImageView(AnalysisStepsFragment.this.getContext());
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
-                    (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            if (i == 0) {
-                imageView.setImageResource(R.drawable.ui_page_control_selector);
-            } else {
-                imageView.setImageResource(R.drawable.ui_page_control_unselector);
-                layoutParams.leftMargin = 20;
-            }
-            uiPageControl.addView(imageView, layoutParams);
-        }
-
-        AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(stepsDataList);
-        chartViewPager.setAdapter(adapter);
+        mStepsDataList.add(thisWeekView);
+        mStepsDataList.add(lastWeekView);
+        mStepsDataList.add(lastMonthView);
+        setUiPageControl();
+        AnalysisStepsChartAdapter mAdapter = new AnalysisStepsChartAdapter(mStepsDataList);
+        chartViewPager.setAdapter(mAdapter);
         chartViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -196,6 +196,24 @@ public class AnalysisStepsFragment extends BaseFragment {
             public void onPageScrollStateChanged(int state) {
             }
         });
+    }
+
+    private void setUiPageControl() {
+        uiPageControl.removeAllViews();
+        for (int i = 0; i < mStepsDataList.size(); i++) {
+            ImageView imageView = new ImageView(AnalysisStepsFragment.this.getContext());
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
+                    (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            if (i == 0) {
+                imageView.setImageResource(R.drawable.ui_page_control_selector);
+            } else {
+                imageView.setImageResource(R.drawable.ui_page_control_unselector);
+                layoutParams.leftMargin = 20;
+            }
+            uiPageControl.addView(imageView, layoutParams);
+        }
+
+
     }
 
     private void setAverageText(int totalSteps, int averageSteps, String averageCalories, int averageDuration, String title) {
@@ -272,15 +290,9 @@ public class AnalysisStepsFragment extends BaseFragment {
         void onStepsGet(List<Steps> stepsList);
     }
 
-    @Subscribe
-    public void onEvent(ChangeGoalEvent event) {
-        if (event.isChangeGoal()) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    initData(mUserSelectDate);
-                }
-            });
-        }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(receiver);
     }
 }
