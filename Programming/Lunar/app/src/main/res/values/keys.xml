@@ -97,5 +97,11 @@
     <string name="sleep_goal_id" translatable="false">sleepGoalId</string>
     <string name="solar_goal_id" translatable="false">solarGoalId</string>
     <string name="launch_edit_goal_activity_flag" translatable="false">launch_flag</string>
+<<<<<<< HEAD
     <string name="edit_new_alarm_type" translatable="false">alarmType</string>
 </resources>
+=======
+    <string name="cityName" translatable="false">cityName</string>
+
+</resources>
+>>>>>>> develop

@@ -54,6 +54,13 @@ android {
 //            signingConfig signingConfigs.config
         }
     }
+    configurations {
+        all*.exclude group: 'org.apache.commons'
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
 }
 
 dependencies {

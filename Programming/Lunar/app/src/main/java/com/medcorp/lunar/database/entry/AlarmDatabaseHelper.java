@@ -33,24 +33,10 @@ public class AlarmDatabaseHelper {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        Alarm alarm = realm.createObject(Alarm.class);
-                        alarm.setId(object.getId());
-                        alarm.setWeekDay(object.getWeekDay());
-                        alarm.setMinute(object.getMinute());
-                        alarm.setLabel(object.getLabel());
-                        alarm.setAlarmNumber(object.getAlarmNumber());
-                        alarm.setAlarmType(object.getAlarmType());
-                        alarm.setHour(object.getHour());
-                        if (alarm != null) {
-                            e.onNext(true);
-                            e.onComplete();
-                        } else {
-                            e.onNext(false);
-                            e.onComplete();
-                        }
+                        realm.copyToRealm(object);
+                        e.onNext(true);
+                        e.onComplete();
                     }
-
-
                 });
             }
         }).subscribeOn(AndroidSchedulers.mainThread());
@@ -63,22 +49,9 @@ public class AlarmDatabaseHelper {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        Alarm alarm = mRealm.where(Alarm.class).equalTo(mContext.getString(R.string.alarm_number),
-                                object.getAlarmNumber()).findFirst();
-                        if (alarm != null) {
-                            alarm.setId(object.getId());
-                            alarm.setWeekDay(object.getWeekDay());
-                            alarm.setMinute(object.getMinute());
-                            alarm.setLabel(object.getLabel());
-                            alarm.setAlarmNumber(object.getAlarmNumber());
-                            alarm.setAlarmType(object.getAlarmType());
-                            alarm.setHour(object.getHour());
-                            e.onNext(true);
-                            e.onComplete();
-                        } else {
-                            e.onNext(false);
-                            e.onComplete();
-                        }
+                    realm.insertOrUpdate(object);
+                        e.onNext(true);
+                        e.onComplete();
                     }
                 });
             }
