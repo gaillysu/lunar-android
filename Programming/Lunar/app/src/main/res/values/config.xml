@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="support_url" translatable="false">http://support.nevowatch.com/support/home</string>
+    <string name="support_url" translatable="false">http://lunar-watch.com/</string>
     <string name="video_url" translatable="false">http://nevowatch.com/wp-content/uploads/2016/03/video.mp4</string>
     <string name="validic_pin_code_url" translatable="false">https://partner.validic.com/applications/47/test/marketplace</string>
     <string name="font_roboto_bold_path" translatable="false">font/Roboto-Bold.ttf</string>
