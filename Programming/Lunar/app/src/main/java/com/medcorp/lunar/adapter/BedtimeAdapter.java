@@ -46,15 +46,9 @@ public class BedtimeAdapter extends ArrayAdapter<BedtimeModel> {
         RobotoTextView repeatText = (RobotoTextView) itemView.findViewById(R.id.fragment_alarm_list_view_item_bedtime_repeat);
         alarmTimeTextView.setText(bedtime.toString());
         alarmLabelTextView.setText(bedtime.getName());
-        sleepGoal.setText(PublicUtils.countTime(context,bedtime.getSleepGoal()));
+        sleepGoal.setText(PublicUtils.countTime(context, bedtime.getSleepGoal()));
         onOffSwitch.setOnCheckedChangeListener(null);
-
-        if (bedtime.isEnable()) {
-            onOffSwitch.setChecked(false);
-        } else {
-            onOffSwitch.setChecked(true);
-        }
-
+        onOffSwitch.setChecked(bedtime.isEnable());
         String[] weekDayArray = getContext().getResources().getStringArray(R.array.week_day);
         byte[] weekday = bedtime.getWeekday();
         StringBuffer weekdayString = new StringBuffer();
@@ -67,7 +61,6 @@ public class BedtimeAdapter extends ArrayAdapter<BedtimeModel> {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 onAlarmSwitchedListener.onBedtimeSwitch((SwitchCompat) buttonView, bedtime);
-                onOffSwitch.setChecked(isChecked);
             }
         });
         return itemView;

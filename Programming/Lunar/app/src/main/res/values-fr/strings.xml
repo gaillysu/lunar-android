@@ -481,4 +481,15 @@
     <string name="goal_name_goal_solar">Solar Goal name</string>
     <string name="goal_input_sleep">Set your sleep Goal</string>
     <string name="goal_input_solar">Set your solar Goal</string>
+    <string name="alarm_max_value">You can add up to 6 alarm clocks at most!</string>
+    <string name="append_new_alarm_bedtime">Bedtime Alarm</string>
+    <string name="append_new_alarm_normal">Normal Alarm</string>
+    <string name="bedtime_set_week_day">Please set weekday for bedtime</string>
+    <string name="daily_time_alarm">Daily Day</string>
+    <string name="edit_new_bedtime_alarm">Edit Bedtime</string>
+    <string name="edit_new_normal_alarm">Edit Alarm</string>
+    <string name="new_bedtime_sleep_goal">Sleep Goal</string>
+    <string name="one_time_alarm">One Time Alarm</string>
+    <string name="edit_alarm_repeat_day_tv">Edit weekday</string>
+    <string name="tool_bar_set_goal">Set Goal</string>
 </resources>

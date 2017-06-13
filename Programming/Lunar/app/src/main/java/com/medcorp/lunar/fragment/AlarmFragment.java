@@ -45,7 +45,8 @@ import io.reactivex.functions.Consumer;
 /***
  * Created by karl-john on 11/12/15.
  */
-public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwitchListener, BedtimeAdapter.OnBedtimeSwitchListener {
+public class AlarmFragment extends BaseObservableFragment
+        implements OnAlarmSwitchListener, BedtimeAdapter.OnBedtimeSwitchListener {
 
     @Bind(R.id.fragment_alarm_list_view)
     ListView alarmListView;
@@ -60,8 +61,8 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     private BedtimeAdapter bedtimeAdapter;
     private List<BedtimeModel> allBedtimeModels;
     private AlarmArrayAdapter normalAlarmAdapter;
-    private Alarm editAlarm;
     private boolean showSyncAlarm = false;
+    private Alarm editAlarm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -98,9 +99,10 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                             ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
                             return;
                         }
+                        editAlarm = alarmList.get(position);
                         Intent i = new Intent(getContext(), EditAlarmActivity.class);
-                        i.putExtra(getString(R.string.key_alarm_id), alarmList.get(position).getId());
-                        i.putExtra(getString(R.string.key_launch_edit_page_flag),getString(R.string.key_launch_edit_page_alarm));
+                        i.putExtra(getString(R.string.key_alarm_id), editAlarm.getId());
+                        i.putExtra(getString(R.string.key_launch_edit_page_flag), getString(R.string.key_launch_edit_page_alarm));
                         startActivityForResult(i, 0);
                     }
                 });
@@ -116,7 +118,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                     bedtime.setVisibility(View.VISIBLE);
                 }
                 allBedtimeModels = bedtimeModels;
-                Log.e("jason",allBedtimeModels.toString());
+                Log.e("jason", allBedtimeModels.toString());
                 bedtimeAdapter = new BedtimeAdapter(getContext(), bedtimeModels, AlarmFragment.this);
                 bedtimeListView.setAdapter(bedtimeAdapter);
                 bedtimeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -125,7 +127,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                         Intent intent = new Intent(getContext(), EditAlarmActivity.class);
                         intent.putExtra(getResources().getString(R.string.key_alarm_id)
                                 , allBedtimeModels.get(position).getId());
-                        intent.putExtra(getString(R.string.key_launch_edit_page_flag),getString(R.string.key_launch_edit_page_bedtime));
+                        intent.putExtra(getString(R.string.key_launch_edit_page_flag), getString(R.string.key_launch_edit_page_bedtime));
                         startActivityForResult(intent, 0);
                     }
                 });
@@ -144,10 +146,10 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_menu:
-                //                if (!getModel().isWatchConnected()) {
-                //                    ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-                //                    return false;
-                //                }
+                if (!getModel().isWatchConnected()) {
+                    ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+                    return false;
+                }
                 View selectType = LayoutInflater.from(AlarmFragment.this.getActivity()).inflate(R.layout.select_alarm_type_layout, null);
                 final Dialog dialog = new AlertDialog.Builder(AlarmFragment.this.getActivity()).create();
                 Button bedtime = (Button) selectType.findViewById(R.id.bedtime_bt);
@@ -185,8 +187,8 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         super.onActivityResult(requestCode, resultCode, data);
         //when delete (resultCode == -1) or update (resultCode == 1) the enable alarm, do alarm sync
         //resultCode == 0 ,do nothing
-            refreshNormalListView();
-            refreshBedtimeListView();
+        refreshNormalListView();
+        refreshBedtimeListView();
         if (resultCode != 0) {
             syncAlarmByEditor(resultCode == -1);
         }
@@ -233,34 +235,19 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
 
     @Override
     public void onAlarmSwitch(SwitchCompat alarmSwitch, Alarm alarm) {
-        if (!getModel().isWatchConnected()) {
-            alarmSwitch.setChecked(!alarmSwitch.isChecked());
-            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-            return;
-        }
-        boolean isChecked = alarmSwitch.isChecked();
-        if (isChecked && getAlarmEnableCount() == 20) {
-            alarmSwitch.setChecked(!alarmSwitch.isChecked());
-            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_max_alarms);
-            return;
-        }
+        //        if (!getModel().isWatchConnected()) {
+        //            alarmSwitch.setChecked(!alarmSwitch.isChecked());
+        //            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+        //            return;
+        //        }
+        alarmSwitch.setChecked(alarmSwitch.isChecked());
         //save weekday to low 4 bit,bit 7 to save enable or disable
-        alarm.setWeekDay(isChecked ? (byte) (alarm.getWeekDay() | 0x80) : (byte) (alarm.getWeekDay() & 0x0F));
+        alarm.setEnable(alarmSwitch.isChecked());
+        Log.e("jason", alarmSwitch.isChecked() + "AAl");
         getModel().updateAlarm(alarm);
         showSyncAlarm = true;
         getModel().getSyncController().setAlarm(alarm);
         ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
-    }
-
-    private int getAlarmEnableCount() {
-        int count = 0;
-        for (Alarm alarm : alarmList) {
-            //the bi7 save the alarm enable status, bit0~3 save the weekday,1~7, 8,9
-            if ((alarm.getWeekDay() & 0x80) == 0x80) {
-                count++;
-            }
-        }
-        return count;
     }
 
     private void syncAlarmByEditor(boolean delete) {
@@ -269,11 +256,8 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
             return;
         }
         if (delete) {
-            editAlarm.setWeekDay((byte) 0);
             showSyncAlarm = true;
-            getModel().getSyncController().setAlarm(editAlarm);
             ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
-
         } else {
             getModel().getAlarmById(editAlarm.getId(), new EditAlarmActivity.ObtainAlarmListener() {
                 @Override
@@ -310,12 +294,38 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     }
 
     @Override
-    public void onBedtimeSwitch(SwitchCompat alarmSwitch, BedtimeModel bedtime) {
+    public void onBedtimeSwitch(final SwitchCompat alarmSwitch, BedtimeModel bedtime) {
         if (!getModel().isWatchConnected()) {
             alarmSwitch.setChecked(!alarmSwitch.isChecked());
             ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
             return;
         }
-        //TODO sync Alarm
+        final byte[] alarmNumber = bedtime.getAlarmNumber();
+        final boolean checked = alarmSwitch.isChecked();
+        alarmSwitch.setChecked(checked);
+        bedtime.setEnable(checked);
+        getModel().getBedTimeDatabaseHelper().update(bedtime).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                Log.i("jason","success bedtime");
+            }
+        });
+        for (int i = 0; i < alarmNumber.length; i++) {
+            getModel().getAlarmDatabaseHelper().obtainAlarm(alarmNumber[i]).subscribe(new Consumer<Alarm>() {
+                @Override
+                public void accept(Alarm alarm) throws Exception {
+                    alarm.setEnable(checked);
+                    getModel().getSyncController().setAlarm(alarm);
+                }
+            });
+            getModel().getAlarmDatabaseHelper().obtainAlarm(alarmNumber[i] + 13).subscribe(new Consumer<Alarm>() {
+                @Override
+                public void accept(Alarm alarm) throws Exception {
+                    alarm.setEnable(checked);
+                    getModel().getSyncController().setAlarm(alarm);
+                }
+            });
+        }
+        ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
     }
 }

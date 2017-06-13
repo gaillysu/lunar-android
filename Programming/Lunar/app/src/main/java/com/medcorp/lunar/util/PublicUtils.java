@@ -45,16 +45,16 @@ public class PublicUtils {
         return bitmap;
     }
 
-    public static String obtainString(Context context,String name, int time) {
+    public static String obtainString(Context context, String name, int time) {
         StringBuilder builder = new StringBuilder();
         builder.append(name);
         builder.append(": ");
-        builder.append(countTime(context,time));
+        builder.append(countTime(context, time));
         return builder.toString();
 
     }
 
-    public static String countTime(Context context,int goalDuration) {
+    public static String countTime(Context context, int goalDuration) {
         StringBuffer sb = new StringBuffer();
         if (goalDuration > 60) {
             sb.append(goalDuration / 60 + context.getString(R.string.sleep_unit_hour)
@@ -67,9 +67,8 @@ public class PublicUtils {
         return sb.toString();
     }
 
-    public static int[] countTime(int sleepGoal,int hourOfDay,int minuteOfHour){
-        int [] countTime = new int[3];
-        int weekday = 0;
+    public static int[] countTime(int sleepGoal, int hourOfDay, int minuteOfHour, int weekday) {
+        int[] countTime = new int[3];
         int hour = sleepGoal / 60;
         int minute = sleepGoal % 60;
         hourOfDay -= hour;
@@ -92,6 +91,10 @@ public class PublicUtils {
                 hourOfDay -= 1;
                 minuteOfHour += 60;
             }
+        }
+
+        if (weekday == -1) {
+            weekday = 6;
         }
         countTime[0] = hourOfDay;
         countTime[1] = minuteOfHour;

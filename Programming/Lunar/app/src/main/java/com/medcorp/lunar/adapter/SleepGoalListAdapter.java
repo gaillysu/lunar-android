@@ -13,6 +13,7 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.application.ApplicationModel;
 import com.medcorp.lunar.listener.OnChangeSwitchListener;
 import com.medcorp.lunar.model.SleepGoal;
+import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.view.customfontview.RobotoTextView;
 
 import java.util.List;
@@ -64,6 +65,7 @@ public class SleepGoalListAdapter extends ArrayAdapter<SleepGoal> {
                     SleepGoal sleepGoal = listGoal.get(i);
                     if (sleepGoal.getSleepGoalId() == goal.getSleepGoalId()) {
                         sleepGoal.setStatus(isChecked);
+                        Preferences.saveSleepGoal(context,sleepGoal);
                     } else {
                         sleepGoal.setStatus(false);
                     }

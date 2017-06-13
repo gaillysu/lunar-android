@@ -8,9 +8,6 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Alarm extends RealmObject {
 
-<<<<<<< HEAD
-    private int id = (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
-=======
     /**
      * alarm number(index) & alarm type mapping table:
      * total alarms:20, alarm number starts with 0, ends with 19
@@ -25,7 +22,6 @@ public class Alarm extends RealmObject {
 
     @PrimaryKey
     private int id =  (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
->>>>>>> develop
     private int hour;
     private int minute;
     private byte weekDay;

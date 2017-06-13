@@ -311,7 +311,7 @@
     <string name="forget_password_result_prompt">檢查妳的郵箱</string>
     <string name="forget_password_result_prompt_user_check_email">請打開鏈接來驗證妳的電子郵箱</string>
     <string name="forget_password_send_request_bt_text">發送</string>
-    <string name="friday">星期五</string>
+    <string name="friday">五</string>
     <string name="google_fit_cancel">取消</string>
     <string name="google_fit_log_out">退出</string>
     <string name="google_fit_log_out_message">妳想退出Google Fit嗎?</string>
@@ -406,7 +406,7 @@
     <string name="register_to_login">已有帳號?登錄</string>
     <string name="register_user_info_page_next_text">下壹步</string>
     <string name="register_user_info_page_text">註冊</string>
-    <string name="saturday">星期六</string>
+    <string name="saturday">六</string>
     <string name="save_notification_ok">保存成功</string>
     <string name="settings_login">登錄</string>
     <string name="settings_other_apps">連接到其它應用</string>
@@ -428,9 +428,9 @@
     <string name="this_week_steps_identification_average">平均</string>
     <string name="this_week_steps_identification_one">妳</string>
     <string name="this_week_steps_identification_two">平均步數</string>
-    <string name="thursday">星期四</string>
+    <string name="thursday">四</string>
     <string name="tips_user_account_password">電郵不能為空</string>
-    <string name="tuesday">星期二</string>
+    <string name="tuesday">二</string>
     <string name="user_email_is_error">請檢查妳的郵件格式...</string>
     <string name="user_info_back_text">返回</string>
     <string name="user_info_user_birthday_error">生日不能為空</string>
@@ -440,7 +440,7 @@
     <string name="validic_enable_message">請先登錄</string>
     <string name="validic_pin_code">PIN 碼</string>
     <string name="validic_pin_code_title">輸入 PIN 碼</string>
-    <string name="wednesday">星期三</string>
+    <string name="wednesday">三</string>
     <string name="lunar_home_clock_solar_harvest_charge">充電中</string>
     <string name="lunar_home_clock_solar_harvest_idle">空閑</string>
     <string name="check_email_message">邮箱已经存在!!!</string>
@@ -479,4 +479,15 @@
     <string name="goal_name_goal_solar">目標名字</string>
     <string name="goal_input_sleep">設置您的目標</string>
     <string name="goal_input_solar">設置您的目標</string>
+    <string name="alarm_max_value">最多可以設置6個普通鬧鐘!</string>
+    <string name="append_new_alarm_bedtime">睡眠鬧鐘</string>
+    <string name="append_new_alarm_normal">普通鬧鐘</string>
+    <string name="bedtime_set_week_day">請為鬧鐘設置重復時間!</string>
+    <string name="daily_time_alarm">每天</string>
+    <string name="edit_new_bedtime_alarm">睡眠鬧鐘</string>
+    <string name="edit_new_normal_alarm">普通鬧鐘</string>
+    <string name="new_bedtime_sleep_goal">睡眠目標</string>
+    <string name="one_time_alarm">只提示壹次</string>
+    <string name="edit_alarm_repeat_day_tv">重復日期</string>
+    <string name="tool_bar_set_goal">目標</string>
 </resources>

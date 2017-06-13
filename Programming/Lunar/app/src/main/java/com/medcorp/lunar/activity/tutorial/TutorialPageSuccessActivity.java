@@ -10,9 +10,11 @@ import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.ble.model.color.LedLamp;
 import com.medcorp.lunar.model.Alarm;
-import com.medcorp.lunar.model.StepsGoal;
+import com.medcorp.lunar.model.BedtimeModel;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.SolarGoal;
+import com.medcorp.lunar.model.StepsGoal;
+import com.medcorp.lunar.util.Preferences;
 
 import net.medcorp.library.ble.util.Constants;
 
@@ -51,26 +53,50 @@ public class TutorialPageSuccessActivity extends BaseActivity {
             getModel().addLedLamp(new LedLamp(getString(R.string.led_lamp_color_orange), getResources().getColor(R.color.orange_normal)));
             getModel().addLedLamp(new LedLamp(getString(R.string.led_lamp_color_yellow), getResources().getColor(R.color.yellow_normal)));
             getModel().addLedLamp(new LedLamp(getString(R.string.led_lamp_color_green), getResources().getColor(R.color.green_normal)));
-            getModel().addAlarm(new Alarm(21, 0, (byte) (0), getString(R.string.def_alarm_one), (byte) 0, (byte) 13)).subscribe(new Consumer<Boolean>() {
-                @Override
-                public void accept(Boolean aBoolean) throws Exception {
-                    if(aBoolean){
-                        Log.i("jason","save def alarm success");
-                    }
-                }
-            });
-            getModel().addAlarm(new Alarm(8, 0, (byte) (0), getString(R.string.def_alarm_two), (byte) 1, (byte) 0)).subscribe(new Consumer<Boolean>() {
-                @Override
-                public void accept(Boolean aBoolean) throws Exception {
-                    if(aBoolean){
-                        Log.i("jason","save def alarm success");
-                    }
-                }
-            });
+            setDefAlarm();
+            setDefBedtime();
             sharedPreferences.putBoolean(getString(R.string.key_preset), true);
             sharedPreferences.commit();
         }
 
+    }
+
+    private void setDefBedtime() {
+        BedtimeModel bedtimeDef = new BedtimeModel("bedTime1",480, new byte[]{6}, 8
+                , 30, new byte[]{5}, false);
+        getModel().getBedTimeDatabaseHelper().add(bedtimeDef).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                Log.i("jason","save def bedtime success");
+            }
+        });
+        BedtimeModel bedtimeDef2 = new BedtimeModel("bedTime2", 480,new byte[]{0}, 9
+                , 0, new byte[]{6}, false);
+        getModel().getBedTimeDatabaseHelper().add(bedtimeDef2).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                Log.i("jason","save def bedtime success");
+            }
+        });
+    }
+
+    private void setDefAlarm(){
+        getModel().addAlarm(new Alarm(21, 0, (byte) (0), getString(R.string.def_alarm_one), (byte) 0, (byte) 13)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if(aBoolean){
+                    Log.i("jason","save def alarm success");
+                }
+            }
+        });
+        getModel().addAlarm(new Alarm(8, 0, (byte) (0), getString(R.string.def_alarm_two), (byte) 1, (byte) 0)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if(aBoolean){
+                    Log.i("jason","save def alarm success");
+                }
+            }
+        });
     }
 
     private void addSolarDefGoal() {
@@ -93,7 +119,8 @@ public class TutorialPageSuccessActivity extends BaseActivity {
     }
 
     private void addSleepDefGoal() {
-        getModel().getSleepDatabseHelper().add(new SleepGoal(getString(R.string.sleep_goal_def_long),480,true)).subscribe(new Consumer<Boolean>() {
+        SleepGoal defSleepGoal =  new SleepGoal(getString(R.string.sleep_goal_def_long),480,true);
+        getModel().getSleepDatabseHelper().add(defSleepGoal).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if(aBoolean){
@@ -101,6 +128,7 @@ public class TutorialPageSuccessActivity extends BaseActivity {
                 }
             }
         });
+        Preferences.saveSleepGoal(this,defSleepGoal);
         getModel().getSleepDatabseHelper().add(new SleepGoal(getString(R.string.sleep_goal_def_noon),90,false)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {

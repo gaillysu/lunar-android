@@ -296,7 +296,7 @@
     <string name="forget_password_result_prompt">检查你的邮箱</string>
     <string name="forget_password_result_prompt_user_check_email">请打开链接来验证你的电子邮箱</string>
     <string name="forget_password_send_request_bt_text">发送</string>
-    <string name="friday">星期五</string>
+    <string name="friday">五</string>
     <string name="google_fit_cancel">取消</string>
     <string name="google_fit_log_out">退出</string>
     <string name="google_fit_log_out_message">你想退出Google Fit吗?</string>
@@ -346,7 +346,7 @@
     <string name="main_fragment_solar_page_time_on_solar_text">太阳能时间</string>
     <string name="main_sleep_fragment_title">睡眠</string>
     <string name="main_steps_fragment_title">步数</string>
-    <string name="monday">星期一</string>
+    <string name="monday">一</string>
     <string name="my_device_version_text">手表版本</string>
     <string name="my_nevo_new_update_available">有可用的新版本</string>
     <string name="open_forget_password_dialog_title">忘记密码</string>
@@ -390,7 +390,7 @@
     <string name="register_to_login">已有帐号?登录</string>
     <string name="register_user_info_page_next_text">下一步</string>
     <string name="register_user_info_page_text">注册</string>
-    <string name="saturday">星期六</string>
+    <string name="saturday">六</string>
     <string name="save_notification_ok">保存成功</string>
     <string name="settings_login">登录</string>
     <string name="settings_other_apps">连接到其它应用</string>
@@ -408,13 +408,13 @@
     <string name="steps_goal_one">4500 步</string>
     <string name="steps_goal_three">8000 步</string>
     <string name="steps_goal_two">6000 步</string>
-    <string name="sunday">星期日</string>
+    <string name="sunday">日</string>
     <string name="this_week_steps_identification_average">平均</string>
     <string name="this_week_steps_identification_one">你</string>
     <string name="this_week_steps_identification_two">平均步数</string>
-    <string name="thursday">星期四</string>
+    <string name="thursday">四</string>
     <string name="tips_user_account_password">电邮不能为空</string>
-    <string name="tuesday">星期二</string>
+    <string name="tuesday">二</string>
     <string name="user_email_is_error">请检查你的邮件格式...</string>
     <string name="user_info_back_text">返回</string>
     <string name="user_info_user_birthday_error">生日不能为空</string>
@@ -424,7 +424,7 @@
     <string name="validic_enable_message">请先登录</string>
     <string name="validic_pin_code">PIN 码</string>
     <string name="validic_pin_code_title">输入 PIN 码</string>
-    <string name="wednesday">星期三</string>
+    <string name="wednesday">三</string>
     <string name="forget_password_input_new_password">新密码</string>
     <string name="profile_activity_popupwindow_title">选择图片</string>
     <string name="profile_activity_popupwindow_slect_library">相册</string>
@@ -476,4 +476,15 @@
     <string name="goal_name_goal_solar">目标名字</string>
     <string name="goal_input_sleep">设置您的目标</string>
     <string name="goal_input_solar">设置您的目标</string>
+    <string name="alarm_max_value">最多可以设置6个普通闹钟!</string>
+    <string name="append_new_alarm_bedtime">睡眠闹钟</string>
+    <string name="append_new_alarm_normal">普通闹钟</string>
+    <string name="bedtime_set_week_day">请为闹钟设置重复时间!</string>
+    <string name="daily_time_alarm">每天</string>
+    <string name="edit_new_bedtime_alarm">睡眠闹钟</string>
+    <string name="edit_new_normal_alarm">普通闹钟</string>
+    <string name="new_bedtime_sleep_goal">睡眠目标</string>
+    <string name="one_time_alarm">只提示一次</string>
+    <string name="edit_alarm_repeat_day_tv">重复日期</string>
+    <string name="tool_bar_set_goal">目标</string>
 </resources>

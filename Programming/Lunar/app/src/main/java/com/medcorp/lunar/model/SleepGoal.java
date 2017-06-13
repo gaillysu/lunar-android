@@ -1,12 +1,14 @@
 package com.medcorp.lunar.model;
 
+import java.io.Serializable;
+
 import io.realm.RealmObject;
 
 /**
  * Created by Jason on 2017/5/27.
  */
 
-public class SleepGoal extends RealmObject {
+public class SleepGoal extends RealmObject implements Serializable {
     private int sleepGoalId =(int) (Math.floor(Math.random() * Integer.MAX_VALUE));
     private String sleepGoalName;
     private int goalDuration;

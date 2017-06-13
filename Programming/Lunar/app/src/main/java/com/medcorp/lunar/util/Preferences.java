@@ -15,6 +15,7 @@ import com.medcorp.lunar.ble.model.color.OrangeLed;
 import com.medcorp.lunar.ble.model.color.RedLed;
 import com.medcorp.lunar.ble.model.color.YellowLed;
 import com.medcorp.lunar.ble.model.notification.Notification;
+import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.StepsGoal;
 
 import java.util.TimeZone;
@@ -167,7 +168,7 @@ public class Preferences {
         return preferences.getInt(context.getString(R.string.key_prefs_watch_model), 1);
     }
 
-    private static NevoLed  distinguish(int ledColor) {
+    private static NevoLed distinguish(int ledColor) {
         switch (ledColor) {
             case 0x100000:
                 return new GreenLed();
@@ -247,5 +248,18 @@ public class Preferences {
     public static int getScanDuration(Context context) {
         init(context);
         return preferences.getInt(context.getString(R.string.key_prefs_scan_duration_time), -1);
+    }
+
+    public static void saveSleepGoal(Context context, SleepGoal sleepGoal) {
+        init(context);
+        SharedPreferences.Editor edit = preferences.edit();
+        Gson gson = new Gson();
+        edit.putString(context.getString(R.string.key_prefs_sleep_goal), gson.toJson(sleepGoal)).apply();
+    }
+
+    public static SleepGoal getSleepGoal(Context context) {
+        init(context);
+        String sleepGoal = preferences.getString(context.getString(R.string.key_prefs_sleep_goal), null);
+        return new Gson().fromJson(sleepGoal, SleepGoal.class);
     }
 }

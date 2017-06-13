@@ -218,11 +218,12 @@ public class EditNewAlarmActivity extends BaseActivity {
                     }
                     alarmNumber += normalAlarm.size();
                     if (alarmNumber <= 12) {
-                        getModel().getAlarmDatabaseHelper().add(new Alarm(hourOfDay, minuteOfHour,
-                                (byte) weekDay, alarmName, (byte) 1, (byte) alarmNumber)).subscribe(new Consumer<Boolean>() {
+                        final Alarm newAlarm = new Alarm(hourOfDay, minuteOfHour, (byte) weekDay, alarmName, (byte) 1, (byte) alarmNumber);
+                        getModel().getAlarmDatabaseHelper().add(newAlarm).subscribe(new Consumer<Boolean>() {
                             @Override
                             public void accept(Boolean aBoolean) throws Exception {
                                 if (aBoolean) {
+                                    getModel().getSyncController().setAlarm(newAlarm);
                                     setResult(-1);
                                     finish();
                                 }

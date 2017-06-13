@@ -11,7 +11,6 @@ import android.widget.CompoundButton;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.fragment.listener.OnAlarmSwitchListener;
 import com.medcorp.lunar.model.Alarm;
-import com.medcorp.lunar.view.ToastHelper;
 import com.medcorp.lunar.view.customfontview.RobotoTextView;
 
 import java.util.List;
@@ -51,17 +50,8 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         alarmTimeTextView.setText(alarm.toString());
         alarmLabelTextView.setText(alarm.getLabel());
         onOffSwitch.setOnCheckedChangeListener(null);
-        if ((alarm.getWeekDay() & 0x80) == 0) {
-            onOffSwitch.setChecked(false);
-        } else {
-            onOffSwitch.setChecked(true);
-        }
-        if (alarm.getAlarmType() == 0) {
-            alarmStyle = getContext().getString(R.string.edit_alarm_sleep);
-        } else if (alarm.getAlarmType() == 1) {
-            alarmStyle = getContext().getString(R.string.edit_alarm_wake);
-        }
-
+        onOffSwitch.setChecked(alarm.isEnable());
+        alarmStyle = getContext().getString(R.string.edit_alarm_wake);
         String[] weekDayArray = getContext().getResources().getStringArray(R.array.week_day);
         String weekDay = weekDayArray[alarm.getWeekDay() & 0x0F];
         repeatText.setText(weekDay);
@@ -69,14 +59,7 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                isDefWeekDay = alarm.getWeekDay() & 0x0F;
-                if (isDefWeekDay != 0) {
-                    onAlarmSwitchedListener.onAlarmSwitch((SwitchCompat) buttonView, alarm);
-                } else {
-                    onOffSwitch.setChecked(false);
-                    ToastHelper.showShortToast(context, context.getString(R.string.tell_user_change_week_day));
-                }
-
+                onAlarmSwitchedListener.onAlarmSwitch((SwitchCompat) buttonView, alarm);
             }
         });
         return itemView;

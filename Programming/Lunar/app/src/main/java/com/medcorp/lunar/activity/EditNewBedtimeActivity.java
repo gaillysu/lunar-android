@@ -14,8 +14,10 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.base.BaseActivity;
+import com.medcorp.lunar.model.Alarm;
 import com.medcorp.lunar.model.BedtimeModel;
 import com.medcorp.lunar.model.SleepGoal;
+import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.PublicUtils;
 import com.medcorp.lunar.view.PickerView;
 import com.medcorp.lunar.view.ToastHelper;
@@ -278,22 +280,67 @@ public class EditNewBedtimeActivity extends BaseActivity implements CompoundButt
                     alarmNumber[i] = (byte) integer.intValue();
                 }
                 if (wednesday.length() > 0) {
-                    BedtimeModel bedtimeModel = new BedtimeModel(alarmName, sleepGoal, alarmNumber, hourOfDay
+                    final BedtimeModel bedtimeModel = new BedtimeModel(alarmName, sleepGoal, alarmNumber, hourOfDay
                             , minuteOfHour, weekday, false);
                     getModel().getBedTimeDatabaseHelper().add(bedtimeModel).subscribe(new Consumer<Boolean>() {
                         @Override
                         public void accept(Boolean aBoolean) throws Exception {
+                            createAlarm(bedtimeModel);
                             setResult(-1);
                             finish();
                         }
                     });
-                }else{
-                    ToastHelper.showShortToast(EditNewBedtimeActivity.this,getString(R.string.bedtime_set_week_day));
+                } else {
+                    ToastHelper.showShortToast(EditNewBedtimeActivity.this, getString(R.string.bedtime_set_week_day));
                 }
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void createAlarm(BedtimeModel bedtimeModel) {
+        //  create wake alarm and sleep alarm
+        byte[] bedtimeAlarmNumber = bedtimeModel.getAlarmNumber();
+        for (int i = 0; i < bedtimeAlarmNumber.length; i++) {
+            createWakeAlarm(bedtimeModel.getHour(),bedtimeModel.getMinute(),bedtimeModel.getWeekday()[i]
+                    ,bedtimeModel.getName(),bedtimeModel.getAlarmNumber()[i],bedtimeModel.isEnable());
+            createSleepAlarm(bedtimeModel.getHour(),bedtimeModel.getMinute(),bedtimeModel.getWeekday()[i]
+                    ,bedtimeModel.getName(),bedtimeModel.getAlarmNumber()[i],bedtimeModel.getSleepGoal(),bedtimeModel.isEnable());
+        }
+    }
+
+    private void createWakeAlarm(int hour, int minute, byte weekday, String name, byte alarmNumber,boolean isEnable) {
+        final Alarm alarm = new Alarm(hour,minute,weekday,name,(byte)1,alarmNumber);
+        alarm.setEnable(isEnable);
+        getModel().getAlarmDatabaseHelper().add(alarm).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    getModel().getSyncController().setAlarm(alarm);
+                }
+            }
+        });
+    }
+
+    private void createSleepAlarm(int hour, int minute, byte weekday, String name
+            , byte alarmNumber, int sleepGoal, boolean enable) {
+        int[] time = PublicUtils.countTime(sleepGoal,hour,minute,weekday);
+        int hourOfDay = time[0];
+        int minuteOfHour = time[1];
+        int Weekday = time[2];
+        final Alarm alarm = new Alarm(hourOfDay,minuteOfHour,(byte)Weekday,name,(byte)0,(byte)(alarmNumber+13));
+        alarm.setEnable(enable);
+        getModel().getAlarmDatabaseHelper().add(alarm).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    getModel().getSyncController().setAlarm(alarm);
+                }
+            }
+        });
+
+    }
+
 
     @OnClick(R.id.edit_new_alarm_name_bt)
     public void editNewAlarmName() {
@@ -321,37 +368,43 @@ public class EditNewBedtimeActivity extends BaseActivity implements CompoundButt
                 List<String> stringList = new ArrayList<>();
                 final List<SleepGoal> stepsGoalEnableList = new ArrayList<>();
                 int selectIndex = 0;
-                for (int i = 0; i < sleepGoals.size(); i++) {
-                    SleepGoal sleepGoal = sleepGoals.get(i);
-                    if (sleepGoal.isStatus()) {
-                        selectIndex = i;
+                if (sleepGoals.size() != 0) {
+                    for (int i = 0; i < sleepGoals.size(); i++) {
+                        SleepGoal sleepGoal = sleepGoals.get(i);
+                        if (sleepGoal.isStatus()) {
+                            selectIndex = i;
+                        }
+                        stringList.add(PublicUtils.obtainString(EditNewBedtimeActivity.this,
+                                sleepGoal.getGoalName(), sleepGoal.getGoalDuration()));
+                        stepsGoalEnableList.add(sleepGoal);
+
                     }
+                } else {
+                    SleepGoal sleepGoal = Preferences.getSleepGoal(EditNewBedtimeActivity.this);
                     stringList.add(PublicUtils.obtainString(EditNewBedtimeActivity.this,
                             sleepGoal.getGoalName(), sleepGoal.getGoalDuration()));
                     stepsGoalEnableList.add(sleepGoal);
-
                 }
                 CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
 
-                if (sleepGoals.size() != 0) {
-                    new MaterialDialog.Builder(EditNewBedtimeActivity.this)
-                            .title(R.string.def_goal_sleep_name).itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
-                            .items(cs)
-                            .itemsCallbackSingleChoice(selectIndex, new MaterialDialog.ListCallbackSingleChoice() {
-                                @Override
-                                public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                    if (which >= 0) {
-                                        sleepGoal = sleepGoals.get(which).getGoalDuration();
-                                        sleepGoalTv.setText(PublicUtils.countTime
-                                                (EditNewBedtimeActivity.this, sleepGoal));
-                                    }
-                                    return true;
+                new MaterialDialog.Builder(EditNewBedtimeActivity.this)
+                        .title(R.string.def_goal_sleep_name).itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
+                        .items(cs)
+                        .itemsCallbackSingleChoice(selectIndex, new MaterialDialog.ListCallbackSingleChoice() {
+                            @Override
+                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                if (which >= 0) {
+                                    sleepGoal = sleepGoals.get(which).getGoalDuration();
+                                    sleepGoalTv.setText(PublicUtils.countTime
+                                            (EditNewBedtimeActivity.this, sleepGoal));
                                 }
-                            })
-                            .positiveText(R.string.goal_ok)
-                            .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
-                            .show();
-                }
+                                return true;
+                            }
+                        })
+                        .positiveText(R.string.goal_ok)
+                        .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
+                        .show();
+
             }
         });
     }

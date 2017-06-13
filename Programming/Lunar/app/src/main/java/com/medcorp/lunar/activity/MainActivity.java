@@ -49,6 +49,7 @@ import com.medcorp.lunar.model.ChangeFragmentPageModel;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.model.StepsGoal;
+import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.PublicUtils;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -591,6 +592,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                                             final SleepGoal sleepGoal = sleepGoals.get(i);
                                             if (i == which) {
                                                 sleepGoal.setStatus(true);
+                                                Preferences.saveSleepGoal(MainActivity.this,sleepGoal);
                                             } else {
                                                 sleepGoal.setStatus(false);
                                             }
