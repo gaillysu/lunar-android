@@ -50,4 +50,9 @@
         <item>50</item>
         <item>60</item>
     </integer-array>
+    <string-array name="detection_battery" translatable="false">
+        <item>10%</item>
+        <item>15%</item>
+        <item>20%</item>
+    </string-array>
 </resources>

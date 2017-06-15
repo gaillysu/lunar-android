@@ -43,6 +43,7 @@
     <string name="key_prefs_home_country" translatable="false">home_country</string>
     <string name="key_prefs_home_timezone" translatable="false">timezone_id</string>
     <string name="key_prefs_scan_duration_time" translatable="false">scan_duration_time</string>
+    <string name="key_prefs_detection_battery" translatable="false">detection_battery</string>
     <string name="key_prefs_location_city" translatable="false">location_city</string>
     <!-- aid OTA -->
     <string name="key_manual_mode" translatable="false">manualMode</string>

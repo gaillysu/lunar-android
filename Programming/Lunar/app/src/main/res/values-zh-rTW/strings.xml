@@ -479,4 +479,8 @@
     <string name="goal_name_goal_solar">目標名字</string>
     <string name="goal_input_sleep">設置您的目標</string>
     <string name="goal_input_solar">設置您的目標</string>
+    <string name="detection_battery">低電量通知</string>
+    <string name="low_detection_battery_title">低電量通知</string>
+    <string name="set_detection_battery_alerts">設置低電量通知的電量比!</string>
+    <string name="tool_bar_set_goal">目標</string>
 </resources>

@@ -5,6 +5,7 @@ package com.medcorp.lunar.model;
  */
 public class SettingsMenuItem {
     private String title;
+    private String subtitle;
     private int icon;
     private boolean hasSwitch = false;
     private boolean switchStatus = false;
@@ -15,12 +16,31 @@ public class SettingsMenuItem {
         this.icon  = icon;
     }
 
-    public SettingsMenuItem(String title, int icon, boolean switchStatus)
+    public SettingsMenuItem(String title,int icon, boolean switchStatus)
     {
         this.title = title;
         this.icon  = icon;
         hasSwitch = true;
         this.switchStatus = switchStatus;
+    }
+
+    public SettingsMenuItem(String title,String subtitle, int icon)
+    {
+        this.title = title;
+        this.subtitle = subtitle;
+        this.icon  = icon;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getTitle() {
