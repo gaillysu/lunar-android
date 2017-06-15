@@ -259,4 +259,15 @@ public class Preferences {
         init(context);
         return preferences.getInt(context.getString(R.string.key_prefs_detection_battery),0);
     }
+
+    public static boolean getBatterySwitch(Context context) {
+        init(context);
+        return preferences.getBoolean(context.getString(R.string.battery_low_switch_status),false);
+    }
+
+    public static void saveBatterySwitch(Context context ,boolean status) {
+        init(context);
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.putBoolean(context.getString(R.string.battery_low_switch_status),status).apply();
+    }
 }

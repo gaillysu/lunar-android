@@ -10,26 +10,26 @@ public class SettingsMenuItem {
     private boolean hasSwitch = false;
     private boolean switchStatus = false;
 
-    public SettingsMenuItem(String title, int icon)
-    {
+    public SettingsMenuItem(String title, int icon) {
         this.title = title;
-        this.icon  = icon;
+        this.icon = icon;
     }
 
-    public SettingsMenuItem(String title,int icon, boolean switchStatus)
-    {
+    public SettingsMenuItem(String title, int icon, boolean switchStatus) {
         this.title = title;
-        this.icon  = icon;
+        this.icon = icon;
         hasSwitch = true;
         this.switchStatus = switchStatus;
     }
 
-    public SettingsMenuItem(String title,String subtitle, int icon)
-    {
+    public SettingsMenuItem(String title, String subtitle, int icon, boolean switchStatus) {
         this.title = title;
+        this.icon = icon;
+        hasSwitch = true;
         this.subtitle = subtitle;
-        this.icon  = icon;
+        this.switchStatus = switchStatus;
     }
+
 
     public String getSubtitle() {
         return subtitle;
