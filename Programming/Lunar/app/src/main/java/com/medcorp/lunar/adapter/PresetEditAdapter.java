@@ -49,7 +49,7 @@ public class PresetEditAdapter extends BaseAdapter {
                 });
                 break;
             case 0x03:
-                model.getSleepDatabseHelper().get(goalId).subscribe(new Consumer<SleepGoal>() {
+                model.getSleepGoalDatabseHelper().get(goalId).subscribe(new Consumer<SleepGoal>() {
                     @Override
                     public void accept(SleepGoal goal) throws Exception {
                         sleepGoal = goal;

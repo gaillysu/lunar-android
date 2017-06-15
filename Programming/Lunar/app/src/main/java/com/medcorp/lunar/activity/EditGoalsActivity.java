@@ -91,7 +91,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                         });
                 break;
             case 0x03:
-                getModel().getSleepDatabseHelper().get(intent.getIntExtra(getString(R.string.key_preset_id), -1)).
+                getModel().getSleepGoalDatabseHelper().get(intent.getIntExtra(getString(R.string.key_preset_id), -1)).
                         subscribe(new Consumer<SleepGoal>() {
                             @Override
                             public void accept(SleepGoal goal) throws Exception {
@@ -243,7 +243,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                             if (input.length() == 0)
                                 return;
                             sleepGoal.setGoalName(input.toString());
-                            getModel().getSleepDatabseHelper().update(sleepGoal).subscribe(new Consumer<Boolean>() {
+                            getModel().getSleepGoalDatabseHelper().update(sleepGoal).subscribe(new Consumer<Boolean>() {
                                 @Override
                                 public void accept(Boolean aBoolean) throws Exception {
                                     if (aBoolean) {
@@ -256,7 +256,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                     }).negativeText(R.string.goal_cancel)
                     .show();
         } else if (position == 2) {
-            getModel().getSleepDatabseHelper().remove(sleepGoal.getSleepGoalId()).subscribe(new Consumer<Boolean>() {
+            getModel().getSleepGoalDatabseHelper().remove(sleepGoal.getSleepGoalId()).subscribe(new Consumer<Boolean>() {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception {
                     if (aBoolean) {
@@ -331,7 +331,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                     });
                 } else if (mFlag == 0x03) {
                     sleepGoal.setGoalDuration(selectHour*60+selectMinutes);
-                    getModel().getSleepDatabseHelper().update(sleepGoal).subscribe(new Consumer<Boolean>() {
+                    getModel().getSleepGoalDatabseHelper().update(sleepGoal).subscribe(new Consumer<Boolean>() {
                         @Override
                         public void accept(Boolean aBoolean) throws Exception {
                             if (aBoolean) {

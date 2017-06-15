@@ -58,7 +58,7 @@ public class SleepGoalActivity extends BaseActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting_sleep_goal_activity);
         ButterKnife.bind(this);
-        sleepDatabaseHelper = getModel().getSleepDatabseHelper();
+        sleepDatabaseHelper = getModel().getSleepGoalDatabseHelper();
         initToolbar();
         initData();
     }
@@ -129,7 +129,7 @@ public class SleepGoalActivity extends BaseActivity implements AdapterView.OnIte
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != 0) {
-            getModel().getSleepDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
+            getModel().getSleepGoalDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
                 @Override
                 public void accept(List<SleepGoal> sleepGoals) throws Exception {
                     adapter = new SleepGoalListAdapter(SleepGoalActivity.this, getModel(), sleepGoals);

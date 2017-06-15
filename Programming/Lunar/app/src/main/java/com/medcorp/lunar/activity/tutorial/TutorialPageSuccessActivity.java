@@ -93,7 +93,7 @@ public class TutorialPageSuccessActivity extends BaseActivity {
     }
 
     private void addSleepDefGoal() {
-        getModel().getSleepDatabseHelper().add(new SleepGoal(getString(R.string.sleep_goal_def_long),480,true)).subscribe(new Consumer<Boolean>() {
+        getModel().getSleepGoalDatabseHelper().add(new SleepGoal(getString(R.string.sleep_goal_def_long),480,true)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if(aBoolean){
@@ -101,7 +101,7 @@ public class TutorialPageSuccessActivity extends BaseActivity {
                 }
             }
         });
-        getModel().getSleepDatabseHelper().add(new SleepGoal(getString(R.string.sleep_goal_def_noon),90,false)).subscribe(new Consumer<Boolean>() {
+        getModel().getSleepGoalDatabseHelper().add(new SleepGoal(getString(R.string.sleep_goal_def_noon),90,false)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if(aBoolean){
@@ -109,7 +109,7 @@ public class TutorialPageSuccessActivity extends BaseActivity {
                 }
             }
         });
-        getModel().getSleepDatabseHelper().add(new SleepGoal(getString(R.string.sleep_goal_def_short),30,false)).subscribe(new Consumer<Boolean>() {
+        getModel().getSleepGoalDatabseHelper().add(new SleepGoal(getString(R.string.sleep_goal_def_short),30,false)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if(aBoolean){

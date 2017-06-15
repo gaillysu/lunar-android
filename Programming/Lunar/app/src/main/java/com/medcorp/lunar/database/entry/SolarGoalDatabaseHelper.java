@@ -121,4 +121,26 @@ public class SolarGoalDatabaseHelper {
             }
         }).subscribeOn(AndroidSchedulers.mainThread());
     }
+
+    public Observable<SolarGoal> getSelectedGoal() {
+        return Observable.create(new ObservableOnSubscribe<SolarGoal>() {
+            @Override
+            public void subscribe(ObservableEmitter<SolarGoal> e) throws Exception {
+                RealmResults<SolarGoal> allGoal = mRealm.where(SolarGoal.class).findAll();
+                boolean found = false;
+                for(SolarGoal solarGoal:allGoal) {
+                    if(solarGoal.isStatus()) {
+                        found = true;
+                        e.onNext(mRealm.copyFromRealm(solarGoal));
+                        e.onComplete();
+                        break;
+                    }
+                }
+                if(!found) {
+                    e.onNext(new SolarGoal("unknown",30,false));
+                    e.onComplete();
+                }
+            }
+        });
+    }
 }

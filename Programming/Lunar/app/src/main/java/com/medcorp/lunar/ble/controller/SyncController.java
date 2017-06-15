@@ -111,5 +111,5 @@ public interface SyncController {
 
     public int getBluetoothStatus();
     public void setBleConnectTimeout(int timeoutInminutes);
-    public void setChargingNotification(byte chargingThreshold,boolean enableWatchNotification,boolean enablePhoneNotification);
+    public void setChargingNotification(byte chargingThreshold,boolean enablePhoneNotification);
 }

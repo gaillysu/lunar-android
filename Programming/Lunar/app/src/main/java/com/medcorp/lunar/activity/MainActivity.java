@@ -561,7 +561,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
 
     private void popupSleepGoalDialog( ) {
-        getModel().getSleepDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
+        getModel().getSleepGoalDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
             @Override
             public void accept(final List<SleepGoal> sleepGoals) throws Exception {
                 List<String> stringList = new ArrayList<>();
@@ -594,7 +594,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                                             }else{
                                                 sleepGoal.setStatus(false);
                                             }
-                                            getModel().getSleepDatabseHelper().update(sleepGoal).subscribe(new Consumer<Boolean>() {
+                                            getModel().getSleepGoalDatabseHelper().update(sleepGoal).subscribe(new Consumer<Boolean>() {
                                                 @Override
                                                 public void accept(Boolean aBoolean) throws Exception {
                                                     Log.i("jason","change sleep goal");

@@ -12,13 +12,11 @@ import net.medcorp.library.ble.model.request.BLERequestData;
 public class SetChargingNotificationRequest extends BLERequestData {
     public  final static  byte HEADER = 0x47;
     private final byte  chargingThreshold; //0~70
-    private final boolean  enableWatchNotification;
     private final boolean  enablePhoneNotification;
 
-    public SetChargingNotificationRequest(Context context, byte chargingThreshold, boolean enableWatchNotification, boolean enablePhoneNotification) {
+    public SetChargingNotificationRequest(Context context, byte chargingThreshold, boolean enablePhoneNotification) {
         super(new GattAttributesDataSourceImpl(context));
         this.chargingThreshold = chargingThreshold;
-        this.enableWatchNotification = enableWatchNotification;
         this.enablePhoneNotification = enablePhoneNotification;
     }
 
@@ -30,10 +28,8 @@ public class SetChargingNotificationRequest extends BLERequestData {
 
     @Override
     public byte[][] getRawDataEx() {
-        int enableNotification = 0;
-        if(enableWatchNotification) {
-            enableNotification = enableNotification | 1;
-        }
+        int enableNotification = 1;//always keep watch notification on
+
         if(enablePhoneNotification) {
             enableNotification = enableNotification | 2;
         }

@@ -58,7 +58,7 @@ public class SleepGoalListAdapter extends ArrayAdapter<SleepGoal> {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SleepGoal goal = listGoal.get(position);
                 goal.setStatus(isChecked);
-                model.getSleepDatabseHelper().update(goal).subscribe(new Consumer<Boolean>() {
+                model.getSleepGoalDatabseHelper().update(goal).subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
                         if (aBoolean) {

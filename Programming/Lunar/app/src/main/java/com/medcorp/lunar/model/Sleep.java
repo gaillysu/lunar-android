@@ -37,6 +37,8 @@ public class Sleep extends RealmObject implements Comparable<Sleep> {
 
     private long end;
 
+    private int goal;
+
     private int sleepQuality;
 
     private String remarks;
@@ -200,6 +202,14 @@ public class Sleep extends RealmObject implements Comparable<Sleep> {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    public int getGoal() {
+        return goal;
+    }
+
+    public void setGoal(int goal) {
+        this.goal = goal;
     }
 
     @Override

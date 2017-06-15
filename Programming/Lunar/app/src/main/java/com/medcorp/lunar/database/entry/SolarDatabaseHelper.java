@@ -42,6 +42,7 @@ public class SolarDatabaseHelper {
                         solar.setCreatedDate(object.getCreatedDate());
                         solar.setDate(object.getDate());
                         solar.setUserId(object.getUserId());
+                        solar.setGoal(object.getGoal());
                         e.onNext(true);
                         e.onComplete();
                     }
@@ -67,6 +68,7 @@ public class SolarDatabaseHelper {
                             solar.setCreatedDate(object.getCreatedDate());
                             solar.setDate(object.getDate());
                             solar.setUserId(object.getUserId());
+                            solar.setGoal(object.getGoal());
                             e.onNext(true);
                             e.onComplete();
                         } else {

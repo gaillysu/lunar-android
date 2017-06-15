@@ -32,6 +32,8 @@ public class Solar extends RealmObject {
     //unit is in minutes
     private int totalHarvestingTime;
 
+    private int goal;
+
     //just realm use this method
     public Solar() {
 
@@ -99,6 +101,14 @@ public class Solar extends RealmObject {
 
     public int[] getHourlyHarvestingTimeInt() {
         return Common.convertJSONArrayIntToArray(getHourlyHarvestingTime());
+    }
+
+    public int getGoal() {
+        return goal;
+    }
+
+    public void setGoal(int goal) {
+        this.goal = goal;
     }
 
     @Override
