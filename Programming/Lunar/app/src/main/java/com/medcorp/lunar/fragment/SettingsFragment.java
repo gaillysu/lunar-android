@@ -59,13 +59,28 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
 
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, view);
+        initData();
+        settingAdapter = new SettingMenuAdapter(getContext(), listMenu, this);
+        settingListView.setAdapter(settingAdapter);
+        settingListView.setOnItemClickListener(this);
+        setHasOptionsMenu(true);
+        return view;
+    }
 
+    private void initData() {
+        int mSelectIndex = Preferences.getDetectionBattery(SettingsFragment.this.getActivity());
+        String value = getResources().getStringArray(R.array.detection_battery)[mSelectIndex];
+        Preferences.getBatterySwitch(SettingsFragment.this.getActivity());
         listMenu = new ArrayList<>();
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_link_loss_notification), R.drawable.setting_linkloss, Preferences.getLinklossNotification(getActivity())));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_notifications), R.drawable.setting_notfications));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_my_nevo), R.drawable.setting_mynevo));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_find_my_watch), R.drawable.setting_findmywatch));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_bluetooth_scan), R.drawable.ic_scan_bluetooth));
+        listMenu.add(new SettingsMenuItem(getString(R.string.detection_battery),
+                getString(R.string.originally_chosen_value)+" : "+value,
+                R.drawable.ic_low_detection_alert,Preferences.getBatterySwitch(SettingsFragment.this.getContext())));
+
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_more), R.drawable.setting_goals));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
@@ -78,12 +93,6 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             listMenu.add(new SettingsMenuItem(getString(R.string.login_page_activity_title), R.drawable.ic_login_setting_page));
         }
         //        listMenu.add(new SettingsMenuItem(getString(R.string.settings_about), R.drawable.setting_about));
-
-        settingAdapter = new SettingMenuAdapter(getContext(), listMenu, this);
-        settingListView.setAdapter(settingAdapter);
-        settingListView.setOnItemClickListener(this);
-        setHasOptionsMenu(true);
-        return view;
     }
 
     @Override
@@ -127,15 +136,37 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                 ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
             }
         } else if (position == 5) {
-            startActivity(MoreSettingActivity.class);
+            int selectIndex = Preferences.getDetectionBattery(SettingsFragment.this.getActivity());
+            new MaterialDialog.Builder(getContext())
+                    .title(R.string.low_detection_battery_title)
+                    .itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
+                    .content(getString(R.string.set_detection_battery_alerts))
+                    .items(getResources().getStringArray(R.array.detection_battery))
+                    .itemsCallbackSingleChoice(selectIndex, new MaterialDialog.ListCallbackSingleChoice() {
+                        @Override
+                        public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                            Preferences.saveDetectionBattery(SettingsFragment.this.getActivity(), which);
+                            listMenu.get(5).setSubtitle(getString(R.string.originally_chosen_value) + " : "
+                                    + getResources().getStringArray(R.array.detection_battery)[which]);
+                            settingAdapter.notifyDataSetChanged();
+
+                            return true;
+                        }
+                    })
+                    .positiveText(R.string.goal_ok)
+                    .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
+                    .show();
 
         } else if (position == 6) {
-            startActivity(ConnectToOtherAppsActivity.class);
+            startActivity(MoreSettingActivity.class);
+
         } else if (position == 7) {
+            startActivity(ConnectToOtherAppsActivity.class);
+        } else if (position == 8) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.support_url)));
             getActivity().startActivity(intent);
 
-        } else if (position == 8) {
+        } else if (position == 9) {
 
             new MaterialDialog.Builder(getContext())
                     .content(R.string.settings_sure)
@@ -152,7 +183,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                     .cancelable(false)
                     .show();
 
-        } else if (position == 9) {
+        } else if (position == 10) {
             if (!getModel().getUser().isLogin()) {
                 getModel().removeUser(getModel().getUser());
                 Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
@@ -178,7 +209,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog dialog, DialogAction which) {
-                            startActivity(MyWatchActivity.class);
+                        startActivity(MyWatchActivity.class);
                     }
                 })
                 .cancelable(false)
@@ -189,6 +220,8 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     public void onCheckedChange(CompoundButton buttonView, boolean isChecked, int position) {
         if (position == 0) {
             Preferences.saveLinklossNotification(getActivity(), isChecked);
+        }else if(position == 5){
+            Preferences.saveBatterySwitch(getActivity(),isChecked);
         }
     }
 

@@ -22,25 +22,25 @@ import java.util.List;
  */
 public class SettingMenuAdapter extends ArrayAdapter<SettingsMenuItem> {
     private Context context;
-    private List< SettingsMenuItem> listMenu;
+    private List<SettingsMenuItem> listMenu;
     private OnCheckedChangeInListListener onCheckedChangeInListListener;
     private List<SwitchCompat> switchCompatList;
 
-    public SettingMenuAdapter(Context context, List< SettingsMenuItem> listMenu,   OnCheckedChangeInListListener listener){
-        super(context,0,listMenu);
+    public SettingMenuAdapter(Context context, List<SettingsMenuItem> listMenu, OnCheckedChangeInListListener listener) {
+        super(context, 0, listMenu);
         this.context = context;
         this.listMenu = listMenu;
         this.onCheckedChangeInListListener = listener;
         switchCompatList = new ArrayList<>();
     }
 
-    public SettingMenuAdapter(Context context,List< SettingsMenuItem> listMenu){
-        this(context,listMenu,null);
+    public SettingMenuAdapter(Context context, List<SettingsMenuItem> listMenu) {
+        this(context, listMenu, null);
     }
 
     @Override
     public int getCount() {
-        return listMenu==null?0:listMenu.size();
+        return listMenu == null ? 0 : listMenu.size();
     }
 
     @Override
@@ -49,20 +49,23 @@ public class SettingMenuAdapter extends ArrayAdapter<SettingsMenuItem> {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.activity_setting_menu_list_view_item, parent, false);
         ImageView menuImage = (ImageView) itemView.findViewById(R.id.activity_setting_menu_image);
-         RobotoTextView menuNameTextView = ( RobotoTextView) itemView.findViewById(R.id.activity_setting_menu_name);
+        RobotoTextView menuNameTextView = (RobotoTextView) itemView.findViewById(R.id.activity_setting_menu_name);
         SwitchCompat onOffSwitch = (SwitchCompat) itemView.findViewById(R.id.activity_setting_menu_switch);
-
+        RobotoTextView subtitle = (RobotoTextView) itemView.findViewById(R.id.activity_setting_menu_subtitle);
         menuImage.setImageResource(listMenu.get(position).getIcon());
         menuNameTextView.setText(listMenu.get(position).getTitle());
-        if(listMenu.get(position).isWithSwitch())
-        {
+        if (listMenu.get(position).getSubtitle() != null) {
+            subtitle.setText(listMenu.get(position).getSubtitle());
+            subtitle.setVisibility(View.VISIBLE);
+        }
+        if (listMenu.get(position).isWithSwitch()) {
             switchCompatList.add(onOffSwitch);
             onOffSwitch.setVisibility(View.VISIBLE);
             onOffSwitch.setChecked(listMenu.get(position).isSwitchOn());
             onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    onCheckedChangeInListListener.onCheckedChange(buttonView,isChecked,position);
+                    onCheckedChangeInListListener.onCheckedChange(buttonView, isChecked, position);
                 }
             });
         } else {
@@ -71,8 +74,8 @@ public class SettingMenuAdapter extends ArrayAdapter<SettingsMenuItem> {
         return itemView;
     }
 
-    public void toggleSwitch(int i, boolean status){
-        if(i < switchCompatList.size()) {
+    public void toggleSwitch(int i, boolean status) {
+        if (i < switchCompatList.size()) {
             switchCompatList.get(i).setChecked(status);
         }
     }

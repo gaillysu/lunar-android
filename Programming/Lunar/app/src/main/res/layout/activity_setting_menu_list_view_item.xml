@@ -6,38 +6,51 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:gravity="center_vertical"
                 android:paddingBottom="8dp"
-                android:paddingTop="8dp"
-    >
+                android:paddingTop="8dp">
 
     <ImageView
         android:id="@+id/activity_setting_menu_image"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
+        android:layout_centerVertical="true"
         android:src="@drawable/ic_login_setting_page"
         android:tint="@color/setting_tint_color_icon"/>
 
-    <com.medcorp.lunar.view.customfontview.RobotoTextView
-        android:id="@+id/activity_setting_menu_name"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="56dp"
-        android:text="@string/settings_link_loss_notification"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@drawable/setting_fragment_menu_adapter_select"
-        android:textSize="16sp"/>
+        android:orientation="vertical">
+        <com.medcorp.lunar.view.customfontview.RobotoTextView
+            android:id="@+id/activity_setting_menu_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_link_loss_notification"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@drawable/setting_fragment_menu_adapter_select"
+            android:textSize="16sp"/>
+        <com.medcorp.lunar.view.customfontview.RobotoTextView
+            android:id="@+id/activity_setting_menu_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/activity_setting_menu_name"
+            android:visibility="gone"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/graph_grid_line_color"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
 
     <android.support.v7.widget.SwitchCompat
         android:id="@+id/activity_setting_menu_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
         android:focusable="false"
         android:shadowColor="@color/colorPrimary"
         android:theme="@style/my_switch_color"/>

@@ -47,7 +47,7 @@
         </provider>
 
         <activity
-            android:name=".activity.tutorial.TutorialPageVideoActivity"
+            android:name=".activity.tutorial.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             >

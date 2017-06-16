@@ -12,23 +12,22 @@ import com.medcorp.lunar.util.Preferences;
 
 import net.medcorp.library.ble.util.Constants;
 
-/**
+/***
  * Created by gaillysu on 16/1/14.
- *
  */
-public class TutorialPageVideoActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_welcome_page);
+        setContentView(R.layout.splash_activity);
         if(Preferences.getIsFirstLogin(this))
         {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                  Intent intent = new Intent(TutorialPageVideoActivity.this,LoginActivity.class);
+                  Intent intent = new Intent(SplashActivity.this,LoginActivity.class);
                     intent.putExtra("isTutorialPage",true);
                     startActivity(intent);
                     finish();
@@ -40,7 +39,7 @@ public class TutorialPageVideoActivity extends BaseActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    startActivity(new Intent(TutorialPageVideoActivity.this, MainActivity.class));
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     finish();
                     overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 }
@@ -51,7 +50,7 @@ public class TutorialPageVideoActivity extends BaseActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    startActivity(new Intent(TutorialPageVideoActivity.this, TutorialPage1Activity.class));
+                    startActivity(new Intent(SplashActivity.this, TutorialPage1Activity.class));
                     finish();
                     overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 }
