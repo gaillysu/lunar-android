@@ -257,6 +257,7 @@
     <string name="log_in">Log in</string>
     <string name="log_in_password">Password</string>
     <string name="log_in_popup_message">Logging in...</string>
+    <string name="load_in_popup_message">loading in...</string>
     <string name="log_in_success">Login success</string>
     <string name="log_in_failed">Login failed</string>
 
@@ -393,7 +394,7 @@
     <string name="register_last_name_hint">Last Name</string>
 
     <string name="register_password_confirm">Re-Type Password</string>
-    <string name="register_account_page_title">Sign Up</string>
+    <string name="register_account_page_title">Create an account</string>
     <string name="register_terms_text">Terms &amp; Conditions</string>
     <string name="register_account_message">Don\'t have  account ?\n Register here</string>
     <string name="register_create_account">Submit</string>
@@ -510,4 +511,12 @@
     <string name="tool_bar_set_goal">Set Goal</string>
     <string name="battery_low_notification_title">Battery Low</string>
     <string name="battery_low_notification_message">Please charge your watch</string>
+    <string name="welcome_activity_create_account">Create an account</string>
+    <string name="welcome_activity_skip_login">or continue without registration</string>
+    <string name="register_activity_other_account">or register using</string>
+    <string name="login_activity_other_account">or log in using</string>
+    <string name="cancel_register_an_account">Cancel register</string>
+    <string name="forget_password_bt_tv">Forget your password?</string>
+    <string name="cancel_login_bt_tv">Cancel login</string>
+    <string name="login_activity_title">Login</string>
 </resources>

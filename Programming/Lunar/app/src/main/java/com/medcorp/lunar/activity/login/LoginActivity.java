@@ -10,7 +10,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -28,6 +27,7 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.ForgetPasswordActivity;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.activity.tutorial.TutorialPage1Activity;
+import com.medcorp.lunar.activity.tutorial.WelcomeActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.cloud.med.MedNetworkOperation;
 import com.medcorp.lunar.event.LoginEvent;
@@ -88,12 +88,8 @@ public class LoginActivity extends BaseActivity {
     EditText _passwordText;
     @Bind(R.id.btn_login)
     Button _loginButton;
-    @Bind(R.id.link_signup)
-    TextView _signupLink;
     @Bind(R.id.login_activity_layout)
     CoordinatorLayout loginLayout;
-    @Bind(R.id.facebook_login_button)
-    ImageButton facebookLoginBt;
 
     private IWXAPI weChatApi;
     private String APP_ID;
@@ -115,23 +111,22 @@ public class LoginActivity extends BaseActivity {
         registerFacebookCallBack();
     }
 
-
-    @OnClick(R.id.link_signup)
-    public void signUpAction() {
-        startActivity(SignupActivity.class);
+    @OnClick(R.id.cancel_login_button)
+    public void cancelLogin() {
+        startActivity(WelcomeActivity.class);
         finish();
     }
 
-    @OnClick(R.id.login_skip_bt)
-    public void skipLogin() {
-        Preferences.saveIsFirstLogin(this, false);
-        if (getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) && !getModel().isWatchConnected()) {
-            startActivity(TutorialPage1Activity.class);
-        } else {
-            startActivity(MainActivity.class);
-        }
-        finish();
-    }
+    //    @OnClick(R.id.login_skip_bt)
+    //    public void skipLogin() {
+    //        Preferences.saveIsFirstLogin(this, false);
+    //        if (getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) && !getModel().isWatchConnected()) {
+    //            startActivity(TutorialPage1Activity.class);
+    //        } else {
+    //            startActivity(MainActivity.class);
+    //        }
+    //        finish();
+    //    }
 
     @OnClick(R.id.btn_login)
     public void loginAction() {
@@ -194,6 +189,14 @@ public class LoginActivity extends BaseActivity {
         } else {
             startActivity(MainActivity.class);
         }
+        finish();
+    }
+
+    @OnClick(R.id.forget_password_send_bt)
+    public void forgetPassword() {
+        Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
+        intent.putExtra(getString(R.string.user_email_account), email);
+        startActivity(intent);
         finish();
     }
 
@@ -306,7 +309,7 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.facebook_login_button)
+    @OnClick(R.id.facebook_login_bt)
     public void facebookLoginButtonClick() {
         LoginManager.getInstance().logInWithReadPermissions(this,
                 Arrays.asList(getString(R.string.facebook_public_profile)
@@ -366,7 +369,7 @@ public class LoginActivity extends BaseActivity {
         }
         String[] birthday = userInfoResponse.getBirthday().split("/");
         final CreateFacebookAccountRequest request = new CreateFacebookAccountRequest(currentProfile.getFirstName()
-                , userInfoResponse.getEmail(), currentProfile.getId(),birthday[2] + "-" +
+                , userInfoResponse.getEmail(), currentProfile.getId(), birthday[2] + "-" +
                 birthday[0] + "-" + birthday[1], 170, 55, sex);
         MedNetworkOperation.getInstance(this).createFacebookUser(request,
                 new RequestResponseListener<CreateFacebookAccountResponse>() {
@@ -449,10 +452,11 @@ public class LoginActivity extends BaseActivity {
      * facebook end
      */
 
+
     /**
      * wechat login start
      */
-    @OnClick(R.id.wechat_login_button)
+    @OnClick(R.id.wechat_login_bt)
     public void weChatLogin() {
         regToWx();
         if (!weChatApi.isWXAppInstalled()) {
