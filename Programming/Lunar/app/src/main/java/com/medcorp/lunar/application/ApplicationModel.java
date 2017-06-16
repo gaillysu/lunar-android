@@ -1091,7 +1091,7 @@ public class ApplicationModel extends Application {
         return solargoalDatabaseHelper;
     }
 
-    public SleepGoalDatabaseHelper getSleepDatabseHelper(){
+    public SleepGoalDatabaseHelper getSleepGoalDatabseHelper(){
         return sleepGoalDatabaeHelper;
     }
 }

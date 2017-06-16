@@ -127,7 +127,7 @@ public class AnalysisSleepFragment extends BaseFragment {
 
     private void initData() {
         mMv = new TipsView(AnalysisSleepFragment.this.getContext(), R.layout.custom_marker_view);
-        getModel().getSleepDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
+        getModel().getSleepGoalDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
             @Override
             public void accept(List<SleepGoal> sleepGoals) throws Exception {
                 if (sleepGoals.size() > 0) {

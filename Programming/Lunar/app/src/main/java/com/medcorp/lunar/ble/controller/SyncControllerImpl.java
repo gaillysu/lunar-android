@@ -30,6 +30,7 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.application.ApplicationModel;
 import com.medcorp.lunar.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.lunar.ble.model.packet.BatteryLevelPacket;
+import com.medcorp.lunar.ble.model.packet.ChargingNotificationPacket;
 import com.medcorp.lunar.ble.model.packet.DailyStepsPacket;
 import com.medcorp.lunar.ble.model.packet.DailyTrackerInfoPacket;
 import com.medcorp.lunar.ble.model.packet.DailyTrackerPacket;
@@ -46,6 +47,7 @@ import com.medcorp.lunar.ble.model.request.ReadDailyTrackerRequest;
 import com.medcorp.lunar.ble.model.request.ReadWatchInfoRequest;
 import com.medcorp.lunar.ble.model.request.SetAlarmWithTypeRequest;
 import com.medcorp.lunar.ble.model.request.SetBleConnectTimeoutRequest;
+import com.medcorp.lunar.ble.model.request.SetChargingNotificationRequest;
 import com.medcorp.lunar.ble.model.request.SetGoalRequest;
 import com.medcorp.lunar.ble.model.request.SetNotificationRequest;
 import com.medcorp.lunar.ble.model.request.SetProfileRequest;
@@ -74,9 +76,12 @@ import com.medcorp.lunar.model.Battery;
 import com.medcorp.lunar.model.DailyHistory;
 import com.medcorp.lunar.model.GoalBase;
 import com.medcorp.lunar.model.Sleep;
+import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.Solar;
+import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.WatchInfomation;
+import com.medcorp.lunar.util.BatteryLowNotificationUtils;
 import com.medcorp.lunar.util.Common;
 import com.medcorp.lunar.util.LinklossNotificationUtils;
 import com.medcorp.lunar.util.Preferences;
@@ -117,6 +122,7 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.reactivex.functions.Consumer;
 import io.realm.Realm;
 
 public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<Void> {
@@ -380,7 +386,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         ((ApplicationModel) mContext).saveDailySteps(steps);
                     }
                     //for maintaining data consistency,here save sleep
-                    Sleep sleep = new Sleep(history.getCreated());
+                    final Sleep sleep = new Sleep(history.getCreated());
                     sleep.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
                     sleep.setHourlySleep(history.getHourlySleepTime());
                     sleep.setHourlyWake(history.getHourlyWakeTime());
@@ -393,6 +399,13 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
                     sleep.setStart(0);
                     sleep.setEnd(0);
+                    ((ApplicationModel) mContext).getSleepGoalDatabseHelper().getSelectedGoal().subscribe(new Consumer<SleepGoal>() {
+                        @Override
+                        public void accept(SleepGoal sleepGoal) throws Exception {
+                            sleep.setGoal(sleepGoal.getGoalDuration());
+                        }
+                    });
+
                     sleep.setUserID(((ApplicationModel) mContext).getUser().getUserID());
                     try {
                         sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
@@ -406,11 +419,17 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //end update
                     //here save solar time to local database when watch ID>1
                     if (getWatchInfomation().getWatchID() > 1) {
-                        Solar solar = new Solar(new Date(history.getCreated()));
+                        final Solar solar = new Solar(new Date(history.getCreated()));
                         solar.setDate((Common.removeTimeFromDate(solar.getCreatedDate())).getTime());
                         solar.setUserId(Integer.parseInt(((ApplicationModel) mContext).getUser().getUserID()));
                         solar.setTotalHarvestingTime(thispacket.getSolarHarvestingTime());
                         solar.setHourlyHarvestingTime(thispacket.getHourlyHarvestTime().toString());
+                        ((ApplicationModel) mContext).getSolarGoalDatabaseHelper().getSelectedGoal().subscribe(new Consumer<SolarGoal>() {
+                            @Override
+                            public void accept(SolarGoal solarGoal) throws Exception {
+                                solar.setGoal(solarGoal.getTime());
+                            }
+                        });
                         Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "hourly solar time:" + solar.getHourlyHarvestingTime());
                         Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total solar time:" + solar.getTotalHarvestingTime());
                         ((ApplicationModel) mContext).getSolarDatabaseHelper().update(solar);
@@ -475,6 +494,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         lockObject.notifyAll();
                     }
                     EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.SUCCESS));
+                }
+                else if ((byte) ChargingNotificationPacket.HEADER == packet.getHeader()) {
+                    BatteryLowNotificationUtils.sendNotification(mContext);
                 }
                 packetsBuffer.clear();
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
@@ -980,6 +1002,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     @Override
     public void setBleConnectTimeout(int timeoutInminutes) {
         sendRequest(new SetBleConnectTimeoutRequest(mContext,timeoutInminutes));
+    }
+
+    @Override
+    public void setChargingNotification(byte chargingThreshold, boolean enablePhoneNotification) {
+        sendRequest(new SetChargingNotificationRequest(mContext,chargingThreshold,enablePhoneNotification));
     }
 
     public interface SyncAlarmToWatchListener {

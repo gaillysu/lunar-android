@@ -53,6 +53,7 @@ public class SleepDatabaseHelper {
                         sleep.setTotalDeepTime(object.getTotalDeepTime());
                         sleep.setTotalWakeTime(object.getTotalWakeTime());
                         sleep.setStart(object.getStart());
+                        sleep.setGoal(object.getGoal());
                         e.onNext(true);
                         e.onComplete();
                     }
@@ -88,6 +89,7 @@ public class SleepDatabaseHelper {
                             sleep.setTotalDeepTime(object.getTotalDeepTime());
                             sleep.setTotalWakeTime(object.getTotalWakeTime());
                             sleep.setStart(object.getStart());
+                            sleep.setGoal(object.getGoal());
                             e.onNext(true);
                             e.onComplete();
                         } else {

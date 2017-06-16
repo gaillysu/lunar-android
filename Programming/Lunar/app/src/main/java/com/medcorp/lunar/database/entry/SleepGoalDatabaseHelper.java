@@ -120,4 +120,26 @@ public class SleepGoalDatabaseHelper {
             }
         }).subscribeOn(AndroidSchedulers.mainThread());
     }
+
+    public Observable<SleepGoal> getSelectedGoal() {
+        return Observable.create(new ObservableOnSubscribe<SleepGoal>() {
+            @Override
+            public void subscribe(ObservableEmitter<SleepGoal> e) throws Exception {
+                RealmResults<SleepGoal> allGoal = mRealm.where(SleepGoal.class).findAll();
+                boolean found = false;
+                for(SleepGoal sleepGoal:allGoal) {
+                    if(sleepGoal.isStatus()) {
+                        found = true;
+                        e.onNext(mRealm.copyFromRealm(sleepGoal));
+                        e.onComplete();
+                        break;
+                    }
+                }
+                if(!found) {
+                    e.onNext(new SleepGoal("unknown",480,false));
+                    e.onComplete();
+                }
+            }
+        });
+    }
 }

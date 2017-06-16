@@ -504,4 +504,6 @@
     <string name="more_settings_sleep_goal">Sleep Goal</string>
     <string name="more_settings_solar_goal">Solar Goal</string>
     <string name="tool_bar_set_goal">Set Goal</string>
+    <string name="battery_low_notification_title">Battery Low</string>
+    <string name="battery_low_notification_message">Please charge your watch</string>
 </resources>
