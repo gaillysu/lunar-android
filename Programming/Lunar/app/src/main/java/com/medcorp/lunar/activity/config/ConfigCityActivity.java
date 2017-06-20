@@ -36,8 +36,8 @@ public class ConfigCityActivity extends BaseActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStart() {
+        super.onStart();
         initView();
     }
 

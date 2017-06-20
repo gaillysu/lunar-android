@@ -531,4 +531,5 @@
     <string name="config_location_city_is_null">The local city is not empty!</string>
     <string name="activity_goals_title">Set your goals</string>
     <string name="activity_goals_describe">Enter your goals below, so that LunaR can help you achief them.</string>
+    <string name="tutorial_4_next">Next</string>
 </resources>

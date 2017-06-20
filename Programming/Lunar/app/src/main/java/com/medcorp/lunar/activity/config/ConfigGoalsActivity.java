@@ -184,7 +184,7 @@ public class ConfigGoalsActivity extends BaseActivity {
                 CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
 
                 if (solarGoals.size() != 0) {
-                    new MaterialDialog.Builder(ConfigGoalsActivity.this)
+                  new MaterialDialog.Builder(ConfigGoalsActivity.this)
                             .title(R.string.def_goal_solar_name).itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
                             .items(cs)
                             .itemsCallbackSingleChoice(selectIndex, new MaterialDialog.ListCallbackSingleChoice() {
