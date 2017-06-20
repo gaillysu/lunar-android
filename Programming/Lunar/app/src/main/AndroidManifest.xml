@@ -145,6 +145,17 @@
         <activity
             android:name=".activity.ScanDurationActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.config.ConfigTimeSyncActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.config.ConfigCityActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.config.ConfigGoalsActivity"
+            android:screenOrientation="portrait"
+            />
 
         <service
             android:name="net.medcorp.library.ble.ble.MEDBTService"

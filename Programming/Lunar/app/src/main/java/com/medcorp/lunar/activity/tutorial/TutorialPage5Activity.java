@@ -17,7 +17,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
-/**
+/***
  * Created by gaillysu on 16/1/14.
  */
 public class TutorialPage5Activity extends BaseActivity {

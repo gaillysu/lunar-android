@@ -141,6 +141,6 @@ public class SolarGoalDatabaseHelper {
                     e.onComplete();
                 }
             }
-        });
+        }).subscribeOn(AndroidSchedulers.mainThread());
     }
 }

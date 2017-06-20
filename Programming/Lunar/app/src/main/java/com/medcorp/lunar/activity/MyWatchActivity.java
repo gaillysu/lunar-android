@@ -95,7 +95,6 @@ public class MyWatchActivity extends BaseActivity {
             return;
         }
 
-        int currentSoftwareVersion = Integer.parseInt(getModel().getWatchSoftware());
         int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
         final int buildingFirmwareVersion = getResources().getInteger(R.integer.launar_version);
         if (currentFirmwareVersion < buildingFirmwareVersion) {

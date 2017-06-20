@@ -111,11 +111,11 @@
     <string name="tutorial_3_title">Set time</string>
     <string name="tutorial_3_next">Next</string>
 
-    <string name="tutorial_4_next">Next</string>
+    <string name="tutorial_next_step_text">Next Step</string>
 
-    <string name="tutorial_5_text">Keep lunar close to your phone</string>
+    <string name="tutorial_5_text">Trying to connect with LunaR.Make sure you to keep LunaR  in reach of your phone!</string>
 
-    <string name="tutorial_failed_title">Cannot connect</string>
+    <string name="tutorial_failed_title">Connection failed</string>
     <string name="tutorial_failed_try_again">Try Again</string>
 
     <string name="tutorial_success_title">Connected</string>
@@ -402,15 +402,15 @@
     <string name="log_in_email">E-mail</string>
     <string name="register_terms_is_agree">I agree to the terms and conditions</string>
     <string name="tutorial_1_text">Use your LunaR watch to set, track and analyse\n your personal health and fitness data</string>
-    <string name="tutorial_1_lets_activate">Activate your LunaR</string>
+    <string name="tutorial_1_lets_activate">Activate LunaR</string>
     <string name="change_select_city">Change city</string>
-    <string name="tutorial_3_text">Pull out the crown out and turn to set the time on\n your LunaR watch. Be aware that LunaR doesn\’t sync\n time with your phone</string>
+    <string name="tutorial_3_text">Pull out the crown out and turn to set the time on\n your LunaR watch. Be aware that LunaR doesn\’t sync time with your phone</string>
     <string name="tutorial_2_text">Tap the Settings button and turn\n Bluetooth on.</string>
     <string name="tutorial_2_continue">Turn Bluetooth on</string>
     <string name="tutorial_4_title">Turn on LunaR </string>
     <string name="tutorial_4_text">Push and hold the third button, until the \n LED blinks.</string>
     <string name="tutorial_5_title">Searching...</string>
-    <string name="tutorial_failed_text">Make sure the blue LED on the LunaR is blinking\n and try again.</string>
+    <string name="tutorial_failed_text">Make sure your phone\'s bluetooth is enabled and that the LED on the LunaR is blinking.</string>
     <string name="in_app_notification_found_nevo">Found LunaR!</string>
     <string name="in_app_notification_nevo_disconnected">LunaR disconnected.</string>
     <string name="in_app_notification_searching">Searching for LunaR&#8230;</string>
@@ -519,4 +519,16 @@
     <string name="forget_password_bt_tv">Forget your password?</string>
     <string name="cancel_login_bt_tv">Cancel login</string>
     <string name="login_activity_title">Login</string>
+    <string name="tutorial_out_shipping_mode_title">Shipping-mode</string>
+    <string name="tutorial_shipping_mode_describe_text">Take LunaR out of shipping-mode by pressing\n the lower left button. The 12 0\'clock LED will\n blink turquoise and the rest blink white.</string>
+    <string name="start_config_watch_tv">Configurate LunaR</string>
+    <string name="config_time_title">Second Timezone</string>
+    <string name="config_time_describe">LunaR can display your home or local time by pushing on the right button. Which time would you like to use?</string>
+    <string name="config_city_describe">Select your location</string>
+    <string name="location_describe_title">Your local time has been set to</string>
+    <string name="config_location_failed">Location Failed</string>
+    <string name="select_local_city">Or set your location manualy</string>
+    <string name="config_location_city_is_null">The local city is not empty!</string>
+    <string name="activity_goals_title">Set your goals</string>
+    <string name="activity_goals_describe">Enter your goals below, so that LunaR can help you achief them.</string>
 </resources>

@@ -140,6 +140,6 @@ public class SleepGoalDatabaseHelper {
                     e.onComplete();
                 }
             }
-        });
+        }).subscribeOn(AndroidSchedulers.mainThread());
     }
 }
