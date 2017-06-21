@@ -89,9 +89,9 @@ public class ConfigGoalsActivity extends BaseActivity {
                                         }
                                         getModel().setStepsGoal(stepsGoalEnableList.get(which));
                                         EventBus.getDefault().post(new ChangeGoalEvent(true));
-                                        stepGoal.setText(getString(R.string.more_settings_sleep_goal)+
-                                                " : "+stepsGoalList.get(which).getSteps());
-                                    }else{
+                                        stepGoal.setText(getString(R.string.more_settings_sleep_goal) +
+                                                " : " + stepsGoalList.get(which).getSteps());
+                                    } else {
                                         stepGoal.setText(getString(R.string.more_settings_sleep_goal));
                                     }
                                     return true;
@@ -184,7 +184,7 @@ public class ConfigGoalsActivity extends BaseActivity {
                 CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
 
                 if (solarGoals.size() != 0) {
-                  new MaterialDialog.Builder(ConfigGoalsActivity.this)
+                    new MaterialDialog.Builder(ConfigGoalsActivity.this)
                             .title(R.string.def_goal_solar_name).itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
                             .items(cs)
                             .itemsCallbackSingleChoice(selectIndex, new MaterialDialog.ListCallbackSingleChoice() {
@@ -225,7 +225,6 @@ public class ConfigGoalsActivity extends BaseActivity {
 
     @OnClick(R.id.config_next_button)
     public void next() {
-
         int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
         final int buildingFirmwareVersion = getResources().getInteger(R.integer.launar_version);
         if (currentFirmwareVersion < buildingFirmwareVersion) {
@@ -233,6 +232,7 @@ public class ConfigGoalsActivity extends BaseActivity {
         } else {
             startActivity(MainActivity.class);
         }
+        finish();
     }
 
     private String obtainString(String name, int time) {

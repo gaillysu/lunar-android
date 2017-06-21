@@ -41,12 +41,12 @@ public class TutorialPageFailedActivity extends BaseActivity {
             ForegroundColorSpan span2 = new ForegroundColorSpan(Color.WHITE);
             ForegroundColorSpan span3 = new ForegroundColorSpan(Color.WHITE);
             String text = getString(R.string.tutorial_failed_text);
-            int index = text.indexOf("bluetooth is enabled");
-            int index2 = text.indexOf("LED");
-            int index3 = text.indexOf("blinking");
-            ss.setSpan(span, index, index + "bluetooth is enabled".length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-            ss.setSpan(span2, index2, index2 + "LED".length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-            ss.setSpan(span3, index3, index3 + "blinking".length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            int index = text.indexOf(getString(R.string.other_color_bluetooth_failed));
+            int index2 = text.indexOf(getString(R.string.other_color_led_text));
+            int index3 = text.indexOf(getString(R.string.other_color_blinking));
+            ss.setSpan(span, index, index + getString(R.string.other_color_bluetooth_failed).length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            ss.setSpan(span2, index2, index2 + getString(R.string.other_color_led_text).length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            ss.setSpan(span3, index3, index3 + getString(R.string.other_color_blinking).length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             describeTv.setText(ss);
         }
     }
