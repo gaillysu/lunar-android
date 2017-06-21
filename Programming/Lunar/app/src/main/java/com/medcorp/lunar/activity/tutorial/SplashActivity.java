@@ -3,7 +3,7 @@ package com.medcorp.lunar.activity.tutorial;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.WindowManager;
+import android.support.annotation.Nullable;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.MainActivity;
@@ -16,11 +16,9 @@ import net.medcorp.library.ble.util.Constants;
  * Created by gaillysu on 16/1/14.
  */
 public class SplashActivity extends BaseActivity {
-
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.splash_activity);
         if (Preferences.getIsFirstLogin(this)) {
             new Handler().postDelayed(new Runnable() {

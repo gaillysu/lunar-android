@@ -115,18 +115,8 @@ public class LoginActivity extends BaseActivity {
     public void cancelLogin() {
         startActivity(WelcomeActivity.class);
         finish();
+        overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
     }
-
-    //    @OnClick(R.id.login_skip_bt)
-    //    public void skipLogin() {
-    //        Preferences.saveIsFirstLogin(this, false);
-    //        if (getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) && !getModel().isWatchConnected()) {
-    //            startActivity(TutorialPage1Activity.class);
-    //        } else {
-    //            startActivity(MainActivity.class);
-    //        }
-    //        finish();
-    //    }
 
     @OnClick(R.id.btn_login)
     public void loginAction() {

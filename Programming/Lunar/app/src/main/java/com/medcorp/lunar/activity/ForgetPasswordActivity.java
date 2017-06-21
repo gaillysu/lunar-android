@@ -41,11 +41,6 @@ public class ForgetPasswordActivity extends BaseActivity {
         editEmail.setText(intent.getStringExtra(getString(R.string.user_email_account)));
     }
 
-    @OnClick(R.id.back_page_image_button)
-    public void backPageClick() {
-        finish();
-    }
-
     @OnClick(R.id.forget_password_send_bt)
     public void forgetPasswordClick() {
         final String email = editEmail.getText().toString();

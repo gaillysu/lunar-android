@@ -225,6 +225,7 @@ public class SignupActivity extends BaseActivity {
     public void cancelClick() {
         startActivity(WelcomeActivity.class);
         finish();
+        overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
     }
 
 

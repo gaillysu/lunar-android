@@ -18,7 +18,7 @@
     <string name="register_input_first_is_empty">User name cannot be empty</string>
     <!--login-->
     <string name="forget_password_activity_title_dec">Forget Password</string>
-    <string name="forget_password_activity_page_dec">Don\'t worry.We get you \n covered.As long as \n you don\'t forget to your\n LunaR in the morning.</string>
+    <string name="forget_password_activity_page_dec">Don\'t worry.We get you covered.As long as you don\'t forget to your LunaR in the morning.</string>
     <string name="forget_password_send_request_bt_text">SEND</string>
     <string name="tips_user_account_password">Email must not be empty</string>
     <string name="email_format_error">Invalid Email format</string>

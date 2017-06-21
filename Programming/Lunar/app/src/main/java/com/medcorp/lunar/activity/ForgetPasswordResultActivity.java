@@ -90,8 +90,4 @@ public class ForgetPasswordResultActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.back_page_image_button)
-    public void closePageClick() {
-        finish();
-    }
 }
