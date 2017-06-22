@@ -1,6 +1,5 @@
 package com.medcorp.lunar.activity.tutorial;
 
-import android.bluetooth.BluetoothAdapter;
 import android.os.Bundle;
 import android.view.WindowManager;
 
@@ -10,7 +9,7 @@ import com.medcorp.lunar.base.BaseActivity;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
+/***
  * Created by gaillysu on 16/1/14.
  */
 public class TutorialPage1Activity extends BaseActivity {
@@ -25,12 +24,8 @@ public class TutorialPage1Activity extends BaseActivity {
     }
 
     @OnClick(R.id.activity_tutorial_1_activate_button)
-    public void activateClicked(){
-        if(BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-            startActivity(TutorialPage3Activity.class);
-        }else {
-            startActivity(TutorialPage2Activity.class);
-        }
+    public void activateClicked() {
+        startActivity(TutorialPage2Activity.class);
         finish();
     }
 }

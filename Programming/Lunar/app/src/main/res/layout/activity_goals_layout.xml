@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:roboto="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/baseBackground"
+                android:orientation="vertical">
+
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
+        android:id="@+id/activity_goals_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:gravity="center"
+        android:text="@string/activity_goals_title"
+        android:textColor="@color/black"
+        android:textSize="36sp"
+        roboto:bold="true"/>
+
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
+        android:id="@+id/activity_goals_describe"
+        android:layout_width="275dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_goals_title"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:paddingTop="5dp"
+        android:text="@string/activity_goals_describe"
+        android:textColor="@color/left_menu_item_text_color"
+        android:textSize="12sp"/>
+
+    <RelativeLayout
+        android:id="@+id/activity_goals_step_goal_ll"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/activity_goals_describe"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/activity_goals_step_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/alarm_repeat_text_color"
+            android:text="@string/more_settings_steps_goal"
+            android:layout_centerInParent="true"/>
+
+        <ImageButton
+            android:id="@+id/activity_goals_set_step_goal_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:background="@color/transparent"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_down"
+            android:text="@string/more_setting_place_home"
+            android:textAllCaps="false"
+            android:textColor="@color/white"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/activity_goals_sleep_goal_ll"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/activity_goals_step_goal_ll"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/activity_goals_sleep_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/alarm_repeat_text_color"
+            android:text="@string/more_settings_sleep_goal"
+            android:layout_centerInParent="true"/>
+
+        <ImageButton
+            android:id="@+id/activity_goals_set_sleep_goal_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:background="@color/transparent"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_down"
+            android:text="@string/more_setting_place_home"
+            android:textAllCaps="false"
+            android:textColor="@color/white"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/activity_goals_sleep_goal_ll"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/activity_goals_solar_tv"
+            android:layout_width="wrap_content"
+            android:textColor="@color/alarm_repeat_text_color"
+            android:layout_height="wrap_content"
+            android:text="@string/more_settings_solar_goal"
+            android:layout_centerInParent="true"/>
+
+        <ImageButton
+            android:id="@+id/activity_goals_set_solar_goal_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_down"
+            android:layout_centerVertical="true"
+            android:text="@string/more_setting_place_home"
+            android:textAllCaps="false"
+            android:textColor="@color/white"/>
+    </RelativeLayout>
+
+    <com.medcorp.lunar.view.customfontview.RobotoButton
+        android:id="@+id/config_next_button"
+        style="@style/TutorialButton"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:text="@string/tutorial_3_next"
+        android:textColor="@color/tutorial_text_color"/>
+</RelativeLayout>

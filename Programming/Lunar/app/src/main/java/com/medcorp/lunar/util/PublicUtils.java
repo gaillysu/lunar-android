@@ -10,6 +10,7 @@ import android.graphics.PorterDuffXfermode;
 import android.net.Uri;
 
 import java.io.FileNotFoundException;
+import java.util.Locale;
 
 /**
  * Created by Jason on 2016/11/7.
@@ -41,5 +42,13 @@ public class PublicUtils {
             e.printStackTrace();
         }
         return bitmap;
+    }
+
+    public static boolean isLocaleChinese() {
+        String language = Locale.getDefault().getLanguage();
+        if ("zh".equals(language)) {
+            return true;
+        }
+        return false;
     }
 }

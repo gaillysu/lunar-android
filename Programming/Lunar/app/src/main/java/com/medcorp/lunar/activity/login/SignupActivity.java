@@ -2,32 +2,64 @@ package com.medcorp.lunar.activity.login;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.design.widget.Snackbar;
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
 import com.medcorp.lunar.R;
+import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.activity.UserInfoActivity;
+import com.medcorp.lunar.activity.tutorial.TutorialPage1Activity;
+import com.medcorp.lunar.activity.tutorial.WelcomeActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.cloud.med.MedNetworkOperation;
+import com.medcorp.lunar.event.ReturnUserInfoEvent;
 import com.medcorp.lunar.event.SignUpEvent;
+import com.medcorp.lunar.event.WeChatEvent;
+import com.medcorp.lunar.event.WeChatTokenEvent;
+import com.medcorp.lunar.model.Sleep;
+import com.medcorp.lunar.model.Steps;
+import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.network.listener.RequestResponseListener;
 import com.medcorp.lunar.network.model.request.CheckEmailRequest;
+import com.medcorp.lunar.network.model.request.WeChatAccountCheckRequest;
+import com.medcorp.lunar.network.model.request.WeChatAccountRegisterRequest;
+import com.medcorp.lunar.network.model.request.WeChatLoginRequest;
 import com.medcorp.lunar.network.model.response.CheckEmailResponse;
+import com.medcorp.lunar.network.model.response.CheckWeChatAccountResponse;
+import com.medcorp.lunar.network.model.response.CreateWeChatAccountResponse;
+import com.medcorp.lunar.network.model.response.WeChatLoginResponse;
+import com.medcorp.lunar.network.model.response.WeChatUserInfoResponse;
+import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.view.ToastHelper;
+import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+
+import net.medcorp.library.ble.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.Date;
+import java.util.Arrays;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 
+import static com.medcorp.lunar.R.id.use_wechat_account_register;
 import static com.medcorp.lunar.R.style.AppTheme_Dark_Dialog;
 
 public class SignupActivity extends BaseActivity {
@@ -41,18 +73,23 @@ public class SignupActivity extends BaseActivity {
     EditText _passwordConfirmText;
     @Bind(R.id.btn_signup)
     Button _signupButton;
-    @Bind(R.id.register_title)
-    RelativeLayout titleRegister;
+    @Bind(R.id.register_account_activity_edit_first_name)
+    EditText editTextFirstName;
+    @Bind(R.id.register_account_activity_edit_last_name)
+    EditText editLastName;
+    @Bind(R.id.register_layout)
+    LinearLayout registerLayout;
 
-    private EditText editTextFirstName;
-    private EditText editLastName;
-
-
+    private Snackbar snackbar;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
-
+    private static final int REQUEST_SIGN_UP = 0;
+    private CallbackManager mCallbackManager;
+    private IWXAPI weChatApi;
+    private String APP_ID;
+    private ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,30 +97,21 @@ public class SignupActivity extends BaseActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-        editTextFirstName = (EditText) findViewById(R.id.register_account_activity_edit_first_name);
-        editLastName = (EditText) findViewById(R.id.register_account_activity_edit_last_name);
-    }
 
-    @OnClick(R.id.register_title_back_image_button)
-    public void backClick() {
-        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-        intent.putExtra(getString(R.string.open_activity_is_tutorial), true);
-        startActivity(intent);
-        finish();
+        progressDialog = new ProgressDialog(this, AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage(getString(R.string.load_in_popup_message));
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            backClick();
+            startActivity(WelcomeActivity.class);
+            finish();
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    @OnClick(R.id.link_login)
-    public void loginLink() {
-        finish();
     }
 
     @OnClick(R.id.btn_signup)
@@ -92,7 +120,8 @@ public class SignupActivity extends BaseActivity {
             onSignupFailed();
             return;
         }
-        final ProgressDialog progressDialog; progressDialog = new ProgressDialog(SignupActivity.this, AppTheme_Dark_Dialog);
+        final ProgressDialog progressDialog;
+        progressDialog = new ProgressDialog(SignupActivity.this, AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.setMessage(getString(R.string.network_wait_text));
@@ -101,7 +130,7 @@ public class SignupActivity extends BaseActivity {
             @Override
             public void onFailed() {
                 progressDialog.dismiss();
-                ToastHelper.showShortToast(SignupActivity.this,getString(R.string.network_error));
+                ToastHelper.showShortToast(SignupActivity.this, getString(R.string.network_error));
             }
 
             @Override
@@ -115,8 +144,8 @@ public class SignupActivity extends BaseActivity {
                     intent.putExtra(getString(R.string.user_register_last_name), lastName);
                     startActivity(intent);
                     finish();
-                }else{
-                    ToastHelper.showShortToast(SignupActivity.this,getString(R.string.check_email_message));
+                } else {
+                    ToastHelper.showShortToast(SignupActivity.this, getString(R.string.check_email_message));
                 }
             }
         });
@@ -191,4 +220,218 @@ public class SignupActivity extends BaseActivity {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
+    @OnClick(R.id.cancel_register_button)
+    public void cancelClick() {
+        startActivity(WelcomeActivity.class);
+        finish();
+        overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
+    }
+
+
+    /**
+     * create WeChat account
+     */
+    @OnClick(use_wechat_account_register)
+    public void createWeChatAccount() {
+        regToWx();
+        if (!weChatApi.isWXAppInstalled()) {
+            showSnackbar(R.string.wechat_uninstall);
+            return;
+        }
+        SendAuth.Req request = new SendAuth.Req();
+        request.scope = getString(R.string.weixin_scope);
+        request.state = getString(R.string.weixin_package_name);
+        weChatApi.sendReq(request);
+    }
+
+    private void regToWx() {
+        APP_ID = getString(R.string.we_chat_app_id);
+        weChatApi = getModel().getWXApi();
+        weChatApi.registerApp(APP_ID);
+    }
+
+    @Subscribe
+    public void weChatErrorEvent(WeChatEvent event) {
+        showSnackbar(getString(R.string.network_error));
+    }
+
+    @Subscribe
+    public void weChatEvent(final WeChatTokenEvent event) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if (event != null) {
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+                    progressDialog.show();
+                    getModel().getWeChatToken(event.getCode());
+                }
+            }
+        });
+    }
+
+    @Subscribe
+    public void userInfoEvent(final ReturnUserInfoEvent event) {
+        if (event != null) {
+            final WeChatUserInfoResponse userInfo = event.getUserInfo();
+            WeChatAccountCheckRequest request = new WeChatAccountCheckRequest(userInfo.getNickname(), userInfo.getUnionid());
+            MedNetworkOperation.getInstance(this).checkWeChat(this, request, new RequestResponseListener<CheckWeChatAccountResponse>() {
+                @Override
+                public void onFailed() {
+                    showSnackbar(getString(R.string.check_wechat_fail));
+                    progressDialog.dismiss();
+                }
+
+                @Override
+                public void onSuccess(CheckWeChatAccountResponse response) {
+                    if (response.getStatus() <= 0) {
+                        createWeChatUser(userInfo);
+                    }
+                }
+            });
+        } else {
+            progressDialog.dismiss();
+            showSnackbar(getString(R.string.wechat_login_fail));
+        }
+    }
+
+    private void createWeChatUser(final WeChatUserInfoResponse userInfo) {
+        WeChatAccountRegisterRequest request = new WeChatAccountRegisterRequest(userInfo.getNickname(), userInfo.getUnionid());
+        MedNetworkOperation.getInstance(this).createWeChatAccount(this, request, new RequestResponseListener<CreateWeChatAccountResponse>() {
+            @Override
+            public void onFailed() {
+                showSnackbar(getString(R.string.wechat_create_account_fail));
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onSuccess(CreateWeChatAccountResponse response) {
+                if (response.getStatus() == 1) {
+                    WeChatLoginRequest request = new WeChatLoginRequest(userInfo.getUnionid());
+                    weChatStartLogin(request);
+                } else {
+                    showSnackbar(response.getMessage());
+                }
+            }
+        });
+    }
+
+    private void weChatStartLogin(WeChatLoginRequest request) {
+        MedNetworkOperation.getInstance(this).weChatLogin(this, request, new RequestResponseListener<WeChatLoginResponse>() {
+            @Override
+            public void onFailed() {
+                showSnackbar(getString(R.string.wechat_login_fail));
+            }
+
+            @Override
+            public void onSuccess(WeChatLoginResponse response) {
+                if (response.getStatus() == 1) {
+                    WeChatLoginResponse.UserBean user = response.getUser();
+                    final User lunarUser = getModel().getUser();
+                    lunarUser.setFirstName(user.getFirst_name());
+                    lunarUser.setUserID("" + user.getId());
+                    lunarUser.setWechat(user.getWechat());
+                    lunarUser.setIsLogin(true);
+                    lunarUser.setCreatedDate(new Date().getTime());
+                    //save it and sync with watch and cloud server
+                    getModel().saveUser(lunarUser);
+                    getModel().getSyncController().getDailyTrackerInfo(true);
+                    getModel().getNeedSyncSteps(lunarUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
+                        @Override
+                        public void accept(final List<Steps> stepses) throws Exception {
+                            getModel().getNeedSyncSleep(lunarUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
+                                @Override
+                                public void accept(List<Sleep> sleeps) throws Exception {
+                                    getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses, sleeps);
+                                }
+                            });
+                        }
+                    });
+                    onLoginSuccess();
+                } else {
+                    onFailed();
+                    showSnackbar(getString(R.string.wechat_login_fail));
+                }
+            }
+        });
+    }
+
+
+    public void onLoginSuccess() {
+        showSnackbar(R.string.log_in_success);
+        getModel().getUser().setUserEmail(_emailText.getText().toString());
+        getModel().saveUser(getModel().getUser());
+        setResult(RESULT_OK, null);
+        Preferences.saveIsFirstLogin(this, false);
+        if ((getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) &&
+                getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, false)) | !getModel().isWatchConnected()) {
+            startActivity(TutorialPage1Activity.class);
+        } else {
+            startActivity(MainActivity.class);
+        }
+        finish();
+    }
+
+    @OnClick(R.id.use_facebook_account_register)
+    public void createFacebookAccount() {
+        LoginManager.getInstance().logInWithReadPermissions(this,
+                Arrays.asList(getString(R.string.facebook_public_profile)
+                        , getString(R.string.facebook_user_email), getString(R.string.facebook_user_birthday)));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_SIGN_UP) {
+            if (resultCode == RESULT_OK) {
+                setResult(RESULT_OK, null);
+                this.finish();
+            }
+        }
+    }
+
+    public void showSnackbar(int id) {
+        if (snackbar != null) {
+            if (snackbar.isShown()) {
+                snackbar.dismiss();
+            }
+        }
+        snackbar = Snackbar.make(registerLayout, "", Snackbar.LENGTH_SHORT);
+        TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextColor(Color.WHITE);
+        tv.setText(getString(id));
+        Snackbar.SnackbarLayout ve = (Snackbar.SnackbarLayout) snackbar.getView();
+        ve.setBackgroundColor(getResources().getColor(R.color.snackbar_bg_color));
+        snackbar.show();
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                snackbar.dismiss();
+            }
+        }, 1000);
+    }
+
+    public void showSnackbar(String msg) {
+        if (snackbar != null) {
+            if (snackbar.isShown()) {
+                snackbar.dismiss();
+            }
+        }
+        snackbar = Snackbar.make(registerLayout, "", Snackbar.LENGTH_SHORT);
+        TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextColor(Color.WHITE);
+        tv.setText(msg);
+        Snackbar.SnackbarLayout ve = (Snackbar.SnackbarLayout) snackbar.getView();
+        ve.setBackgroundColor(getResources().getColor(R.color.snackbar_bg_color));
+        snackbar.show();
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                snackbar.dismiss();
+            }
+        }, 1000);
+    }
+
 }

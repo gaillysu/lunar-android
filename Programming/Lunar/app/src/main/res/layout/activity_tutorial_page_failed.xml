@@ -3,7 +3,7 @@
                 xmlns:roboto="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/window_background_color"
+                android:background="@color/baseBackground"
                 android:orientation="vertical">
 
     <com.medcorp.lunar.view.customfontview.RobotoTextView
@@ -13,9 +13,23 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:text="@string/tutorial_failed_title"
-        android:textColor="@color/text_color"
+        android:textColor="@color/white"
         android:textSize="36sp"
         roboto:bold="true"/>
+
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
+        android:id="@+id/activity_tutorial_page5_search_failure_tip_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/activity_tutorial_retry_button"
+        android:layout_alignStart="@+id/activity_tutorial_retry_button"
+        android:layout_below="@+id/activity_tutorial_page5_search_failure_textview"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:paddingTop="5dp"
+        android:text="@string/tutorial_failed_text"
+        android:textColor="@color/left_menu_item_text_color"
+        android:textSize="12sp"/>
 
     <com.medcorp.lunar.view.customfontview.RobotoButton
         android:id="@+id/activity_tutorial_retry_button"
@@ -27,22 +41,6 @@
         android:text="@string/tutorial_failed_try_again"
         />
 
-    <com.medcorp.lunar.view.customfontview.RobotoTextView
-        android:id="@+id/activity_tutorial_page5_search_failure_tip_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/activity_tutorial_retry_button"
-        android:layout_alignStart="@+id/activity_tutorial_retry_button"
-        android:layout_below="@+id/activity_tutorial_retry_button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:gravity="center"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="5dp"
-        android:text="@string/tutorial_failed_text"
-        android:textColor="@color/text_color"
-        android:textSize="12sp"/>
 
     <ImageView
         android:id="@+id/activity_tutorial_page6_image"

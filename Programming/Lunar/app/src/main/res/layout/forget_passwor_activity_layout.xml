@@ -3,26 +3,29 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:focusable="true"
-              android:focusableInTouchMode="true"
+             android:background="@drawable/login_background"
               android:layout_height="match_parent">
-
-        <include
-            layout="@layout/forget_password_activity_title"/>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/forget_password_activity_title_dec"
             android:textSize="30dp"
-            android:layout_marginTop="60dp"
-            android:textColor="@color/text_color"
-            />
+            android:layout_marginTop="50dp"
+            android:textColor="@color/text_color"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="50dp"
+            android:background="@color/window_background_color">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:textColor="@color/text_color"
             android:gravity="center"
             android:layout_gravity="center_horizontal"
@@ -53,4 +56,5 @@
             android:text="@string/forget_password_send_request_bt_text"
             android:textColor="@color/text_color"
             android:textSize="20sp"/>
+        </LinearLayout>
 </LinearLayout>

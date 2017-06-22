@@ -19,39 +19,31 @@
 
     <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page3_notice_textview"
-        android:layout_width="275dp"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_marginTop="20dp"
         android:layout_below="@+id/activity_tutorial_page3_start_textview"
         android:layout_centerHorizontal="true"
-        android:paddingTop="5dp"
+        android:gravity="center"
         android:text="@string/tutorial_3_text"
-        android:textColor="@color/black"
+        android:textColor="@color/left_menu_item_text_color"
         android:textSize="12sp"/>
 
     <ImageView
         android:id="@+id/activity_tutorial_page3_image"
         android:layout_width="260dp"
         android:layout_height="260dp"
-        android:layout_marginTop="20dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/tutorial_nevo_settime"
-        android:padding="20dp"/>
+        android:padding="20dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_dial_crown"/>
 
     <com.medcorp.lunar.view.customfontview.RobotoButton
         android:id="@+id/activity_tutorial_3_next_button"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        android:layout_marginTop="40dp"
-        android:background="@color/transparent"
-        android:text="@string/tutorial_3_next"
-        android:textAllCaps="false"
+        style="@style/TutorialButton"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/tutorial_next_text_color"
-        android:textSize="21sp"
-        roboto:light="true"/>
-
+        android:layout_marginBottom="60dp"
+        android:text="@string/tutorial_next_step_text"/>
 </RelativeLayout>
