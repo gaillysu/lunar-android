@@ -25,9 +25,9 @@ public class ConfigTimeSyncActivity extends BaseActivity implements RadioGroup.O
 
     @Bind(R.id.select_sync_time_rg)
     RadioGroup selectRg;
-    @Bind(R.id.select_sync_home_time)
+    @Bind(R.id.select_sync_home_time_rb)
     RadioButton homeTime;
-    @Bind(R.id.select_sync_local_time)
+    @Bind(R.id.select_sync_local_time_rb)
     RadioButton localTime;
 
     @Override
@@ -51,10 +51,10 @@ public class ConfigTimeSyncActivity extends BaseActivity implements RadioGroup.O
     @Override
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
         switch (checkedId) {
-            case R.id.select_sync_home_time:
+            case R.id.select_sync_home_time_rb:
                 Preferences.savePlaceSelect(ConfigTimeSyncActivity.this, true);
                 break;
-            case R.id.select_sync_local_time:
+            case R.id.select_sync_local_time_rb:
                 Preferences.savePlaceSelect(ConfigTimeSyncActivity.this, false);
                 break;
         }

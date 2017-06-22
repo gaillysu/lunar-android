@@ -67,7 +67,6 @@
             android:text="@string/welcome_activity_skip_login"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="14sp"
-            />
+            android:textSize="14sp"/>
     </LinearLayout>
 </RelativeLayout>

@@ -24,8 +24,9 @@ import butterknife.OnClick;
 
 public class ConfigCityActivity extends BaseActivity {
 
-    @Bind(R.id.gps_location_address)
+    @Bind(R.id.gps_location_address_tv)
     TextView localAddress;
+
     private Address mPositionLocal;
 
     @Override
@@ -71,6 +72,7 @@ public class ConfigCityActivity extends BaseActivity {
         String text = localAddress.getText().toString();
         if (text != null && !text.equals(getString(R.string.config_location_failed))) {
             startActivity(ConfigGoalsActivity.class);
+            finish();
         } else {
             ToastHelper.showShortToast(this, getString(R.string.config_location_city_is_null));
         }

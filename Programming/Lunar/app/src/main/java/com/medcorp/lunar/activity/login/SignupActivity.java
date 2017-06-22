@@ -50,8 +50,8 @@ import net.medcorp.library.ble.util.Constants;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.Date;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -59,23 +59,23 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.functions.Consumer;
 
-import static com.medcorp.lunar.R.id.use_wechat_account_register;
+import static com.medcorp.lunar.R.id.use_wechat_account_register_ib;
 import static com.medcorp.lunar.R.style.AppTheme_Dark_Dialog;
 
 public class SignupActivity extends BaseActivity {
     private static final String TAG = "SignupActivity";
 
-    @Bind(R.id.input_email)
+    @Bind(R.id.input_email_ed)
     EditText _emailText;
-    @Bind(R.id.input_password)
+    @Bind(R.id.register_account_activity_edit_password_ed)
     EditText _passwordText;
-    @Bind(R.id.input_password_confirm)
+    @Bind(R.id.register_account_activity_edit_password_confirm_ed)
     EditText _passwordConfirmText;
-    @Bind(R.id.btn_signup)
+    @Bind(R.id.register_bt)
     Button _signupButton;
-    @Bind(R.id.register_account_activity_edit_first_name)
+    @Bind(R.id.register_account_activity_edit_first_name_ed)
     EditText editTextFirstName;
-    @Bind(R.id.register_account_activity_edit_last_name)
+    @Bind(R.id.register_account_activity_edit_last_name_ed)
     EditText editLastName;
     @Bind(R.id.register_layout)
     LinearLayout registerLayout;
@@ -114,7 +114,7 @@ public class SignupActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    @OnClick(R.id.btn_signup)
+    @OnClick(R.id.register_bt)
     public void signUpAction() {
         if (!validate()) {
             onSignupFailed();
@@ -221,7 +221,7 @@ public class SignupActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    @OnClick(R.id.cancel_register_button)
+    @OnClick(R.id.cancel_register_bt)
     public void cancelClick() {
         startActivity(WelcomeActivity.class);
         finish();
@@ -232,7 +232,7 @@ public class SignupActivity extends BaseActivity {
     /**
      * create WeChat account
      */
-    @OnClick(use_wechat_account_register)
+    @OnClick(use_wechat_account_register_ib)
     public void createWeChatAccount() {
         regToWx();
         if (!weChatApi.isWXAppInstalled()) {
@@ -374,7 +374,7 @@ public class SignupActivity extends BaseActivity {
         finish();
     }
 
-    @OnClick(R.id.use_facebook_account_register)
+    @OnClick(R.id.use_facebook_account_register_ib)
     public void createFacebookAccount() {
         LoginManager.getInstance().logInWithReadPermissions(this,
                 Arrays.asList(getString(R.string.facebook_public_profile)

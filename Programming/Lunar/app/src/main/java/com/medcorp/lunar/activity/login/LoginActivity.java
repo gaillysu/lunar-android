@@ -82,11 +82,11 @@ public class LoginActivity extends BaseActivity {
     private String email;
     private Snackbar snackbar;
 
-    @Bind(R.id.input_email)
+    @Bind(R.id.input_email_ed)
     EditText _emailText;
-    @Bind(R.id.input_password)
+    @Bind(R.id.input_password_ed)
     EditText _passwordText;
-    @Bind(R.id.btn_login)
+    @Bind(R.id.login_bt)
     Button _loginButton;
     @Bind(R.id.login_activity_layout)
     CoordinatorLayout loginLayout;
@@ -111,14 +111,14 @@ public class LoginActivity extends BaseActivity {
         registerFacebookCallBack();
     }
 
-    @OnClick(R.id.cancel_login_button)
+    @OnClick(R.id.cancel_login_bt)
     public void cancelLogin() {
         startActivity(WelcomeActivity.class);
         finish();
         overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
     }
 
-    @OnClick(R.id.btn_login)
+    @OnClick(R.id.login_bt)
     public void loginAction() {
         if (!validate()) {
             onLoginFailed();

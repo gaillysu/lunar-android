@@ -21,7 +21,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/login_skip_bt"
+                android:id="@+id/login_skip_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -45,7 +45,7 @@
                 android:paddingRight="50dp">
                 <!--  Email Label -->
                 <EditText
-                    android:id="@+id/input_email"
+                    android:id="@+id/input_email_ed"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginTop="50dp"
@@ -60,7 +60,7 @@
                 <!--  Password Label -->
 
                 <EditText
-                    android:id="@+id/input_password"
+                    android:id="@+id/input_password_ed"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginTop="15dp"
@@ -74,7 +74,7 @@
                     />
 
                 <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn_login"
+                    android:id="@+id/login_bt"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_marginBottom="20dp"
@@ -170,7 +170,7 @@
                         android:textSize="14sp"/>
 
                     <Button
-                        android:id="@+id/cancel_login_button"
+                        android:id="@+id/cancel_login_bt"
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
                         android:layout_gravity="center_horizontal"

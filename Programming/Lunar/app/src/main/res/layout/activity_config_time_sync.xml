@@ -39,7 +39,7 @@
         android:layout_centerInParent="true">
 
         <RadioButton
-            android:id="@+id/select_sync_home_time"
+            android:id="@+id/select_sync_home_time_rb"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/radio_button_bg"
@@ -51,7 +51,7 @@
             android:textColor="@color/white"/>
 
         <RadioButton
-            android:id="@+id/select_sync_local_time"
+            android:id="@+id/select_sync_local_time_rb"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/radio_button_bg"

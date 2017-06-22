@@ -41,7 +41,7 @@
             android:paddingTop="20dp">
 
             <EditText
-                android:id="@+id/input_email"
+                android:id="@+id/input_email_ed"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
@@ -55,7 +55,7 @@
                 android:textSize="16sp"/>
 
             <EditText
-                android:id="@+id/register_account_activity_edit_first_name"
+                android:id="@+id/register_account_activity_edit_first_name_ed"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
@@ -69,7 +69,7 @@
                 android:textSize="16sp"/>
 
             <EditText
-                android:id="@+id/register_account_activity_edit_last_name"
+                android:id="@+id/register_account_activity_edit_last_name_ed"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
@@ -87,7 +87,7 @@
             <!-- Password Label -->
 
             <EditText
-                android:id="@+id/input_password"
+                android:id="@+id/register_account_activity_edit_password_ed"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
@@ -102,7 +102,7 @@
                 />
 
             <EditText
-                android:id="@+id/input_password_confirm"
+                android:id="@+id/register_account_activity_edit_password_confirm_ed"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
@@ -117,7 +117,7 @@
                 />
 
             <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btn_signup"
+                android:id="@+id/register_bt"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
@@ -174,7 +174,7 @@
                     android:orientation="horizontal">
 
                     <ImageButton
-                        android:id="@+id/use_facebook_account_register"
+                        android:id="@+id/use_facebook_account_register_ib"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight="1"
@@ -182,7 +182,7 @@
                         android:src="@drawable/ic_facebook_login"/>
 
                     <ImageButton
-                        android:id="@+id/use_twitter_account_register"
+                        android:id="@+id/use_twitter_account_register_ib"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_marginLeft="10dp"
@@ -191,7 +191,7 @@
                         android:src="@drawable/ic_twitter_icon"/>
 
                     <ImageButton
-                        android:id="@+id/use_wechat_account_register"
+                        android:id="@+id/use_wechat_account_register_ib"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_marginLeft="10dp"
@@ -201,7 +201,7 @@
                 </LinearLayout>
 
                 <Button
-                    android:id="@+id/cancel_register_button"
+                    android:id="@+id/cancel_register_bt"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:layout_gravity="center_horizontal"

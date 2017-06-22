@@ -4,6 +4,7 @@ import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -26,7 +27,6 @@ import com.medcorp.lunar.ble.model.goal.NumberOfStepsGoal;
 import com.medcorp.lunar.cloud.CloudSyncManager;
 import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.entry.AlarmDatabaseHelper;
-import com.medcorp.lunar.database.entry.StepsGoalDatabaseHelper;
 import com.medcorp.lunar.database.entry.CityWeatherDatabaseHelper;
 import com.medcorp.lunar.database.entry.LedLampDatabase;
 import com.medcorp.lunar.database.entry.SleepDatabaseHelper;
@@ -34,6 +34,7 @@ import com.medcorp.lunar.database.entry.SleepGoalDatabaseHelper;
 import com.medcorp.lunar.database.entry.SolarDatabaseHelper;
 import com.medcorp.lunar.database.entry.SolarGoalDatabaseHelper;
 import com.medcorp.lunar.database.entry.StepsDatabaseHelper;
+import com.medcorp.lunar.database.entry.StepsGoalDatabaseHelper;
 import com.medcorp.lunar.database.entry.UserDatabaseHelper;
 import com.medcorp.lunar.event.LocationChangedEvent;
 import com.medcorp.lunar.event.ReturnUserInfoEvent;
@@ -68,11 +69,13 @@ import com.medcorp.lunar.googlefit.GoogleFitTaskCounter;
 import com.medcorp.lunar.googlefit.GoogleHistoryUpdateTask;
 import com.medcorp.lunar.location.LocationController;
 import com.medcorp.lunar.model.Alarm;
-import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.SleepData;
+import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.Solar;
+import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.model.Steps;
+import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.network.WeatherManager;
 import com.medcorp.lunar.network.model.request.RequestWeChatToken;
@@ -87,6 +90,7 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import net.medcorp.library.ble.controller.OtaController;
+import net.medcorp.library.ble.util.Constants;
 import net.medcorp.library.worldclock.WorldClockDatabaseHelper;
 import net.medcorp.library.worldclock.WorldClockLibraryModule;
 
@@ -203,6 +207,16 @@ public class ApplicationModel extends Application {
             }
         });
         updateGoogleFit();
+        if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(getString(R.string.key_preset), false)) {
+            addSolarDefGoal();
+            addSleepDefGoal();
+            addDefAlarm();
+            addDefNotificationColor();
+            setStepDefGoal();
+            SharedPreferences.Editor sharedPreferences = getSharedPreferences(Constants.PREF_NAME, 0).edit();
+            sharedPreferences.putBoolean(getString(R.string.key_preset), true);
+            sharedPreferences.commit();
+        }
     }
 
     @Subscribe
@@ -711,7 +725,7 @@ public class ApplicationModel extends Application {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 upDateIsSuccess = aBoolean;
-                Log.e("jason","update success");
+                Log.e("jason", "update success");
             }
         });
         return upDateIsSuccess;
@@ -727,7 +741,7 @@ public class ApplicationModel extends Application {
         return mStepsGoal;
     }
 
-    public StepsGoalDatabaseHelper getStepsGoalDatabaseHelper(){
+    public StepsGoalDatabaseHelper getStepsGoalDatabaseHelper() {
         return mStepsGoalDatabaseHelper;
     }
 
@@ -1087,11 +1101,92 @@ public class ApplicationModel extends Application {
                 });
     }
 
-    public SolarGoalDatabaseHelper getSolarGoalDatabaseHelper(){
+    private void setStepDefGoal() {
+        addGoal(new StepsGoal(getString(R.string.startup_goal_light), false, 7000));
+        addGoal(new StepsGoal(getString(R.string.startup_goal_moderate), true, 10000));
+        addGoal(new StepsGoal(getString(R.string.startup_goal_heavy), false, 20000));
+    }
+
+    private void addDefNotificationColor() {
+        addLedLamp(new LedLamp(getString(R.string.led_lamp_color_red), getResources().getColor(R.color.red_normal)));
+        addLedLamp(new LedLamp(getString(R.string.led_lamp_color_blue), getResources().getColor(R.color.blue_normal)));
+        addLedLamp(new LedLamp(getString(R.string.led_lamp_color_light_green), getResources().getColor(R.color.light_green_normal)));
+        addLedLamp(new LedLamp(getString(R.string.led_lamp_color_orange), getResources().getColor(R.color.orange_normal)));
+        addLedLamp(new LedLamp(getString(R.string.led_lamp_color_yellow), getResources().getColor(R.color.yellow_normal)));
+        addLedLamp(new LedLamp(getString(R.string.led_lamp_color_green), getResources().getColor(R.color.green_normal)));
+    }
+
+    public SolarGoalDatabaseHelper getSolarGoalDatabaseHelper() {
         return solargoalDatabaseHelper;
     }
 
-    public SleepGoalDatabaseHelper getSleepGoalDatabseHelper(){
+    public SleepGoalDatabaseHelper getSleepGoalDatabseHelper() {
         return sleepGoalDatabaeHelper;
+    }
+
+    private void addSolarDefGoal() {
+        solargoalDatabaseHelper.add(new SolarGoal(getString(R.string.solar_goal_def_long), 480, true)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    Log.i("jason", "add def solar goal success");
+                }
+            }
+        });
+        solargoalDatabaseHelper.add(new SolarGoal(getString(R.string.solar_goal_def_short), 30, false)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    Log.i("jason", "add def sleep goal success");
+                }
+            }
+        });
+    }
+
+
+    private void addDefAlarm() {
+        addAlarm(new Alarm(21, 0, (byte) (0), getString(R.string.def_alarm_one), (byte) 0, (byte) 13)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    Log.i("jason", "save def alarm success");
+                }
+            }
+        });
+        addAlarm(new Alarm(8, 0, (byte) (0), getString(R.string.def_alarm_two), (byte) 1, (byte) 0)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    Log.i("jason", "save def alarm success");
+                }
+            }
+        });
+    }
+
+    private void addSleepDefGoal() {
+        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_long), 480, true)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    Log.i("jason", "add def sleep success");
+                }
+            }
+        });
+        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_noon), 90, false)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    Log.i("jason", "add def sleep success");
+                }
+            }
+        });
+        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_short), 30, false)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    Log.i("jason", "add def sleep success");
+                }
+            }
+        });
     }
 }
