@@ -35,7 +35,7 @@ public class TutorialPageFailedActivity extends BaseActivity {
     }
 
     private void initView() {
-        if (!PublicUtils.isChainLanguage()) {
+        if (!PublicUtils.isLocaleChinese()) {
             SpannableString ss = new SpannableString(getString(R.string.tutorial_failed_text));
             ForegroundColorSpan span = new ForegroundColorSpan(Color.WHITE);
             ForegroundColorSpan span2 = new ForegroundColorSpan(Color.WHITE);

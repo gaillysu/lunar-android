@@ -39,7 +39,7 @@ public class TutorialPage2Activity extends BaseActivity {
     }
 
     private void initView() {
-        if (!PublicUtils.isChainLanguage()) {
+        if (!PublicUtils.isLocaleChinese()) {
             SpannableString ss = new SpannableString(getString(R.string.tutorial_shipping_mode_describe_text));
             ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.colorPrimary));
             ForegroundColorSpan span2 = new ForegroundColorSpan(getResources().getColor(R.color.colorPrimary));

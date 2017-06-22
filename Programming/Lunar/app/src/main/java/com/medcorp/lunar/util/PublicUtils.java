@@ -44,7 +44,7 @@ public class PublicUtils {
         return bitmap;
     }
 
-    public static boolean isChainLanguage() {
+    public static boolean isLocaleChinese() {
         String language = Locale.getDefault().getLanguage();
         if ("zh".equals(language)) {
             return true;
