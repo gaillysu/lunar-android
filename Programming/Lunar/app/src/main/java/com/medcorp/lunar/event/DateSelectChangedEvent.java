@@ -2,7 +2,7 @@ package com.medcorp.lunar.event;
 
 import java.util.Date;
 
-/**
+/***
  * Created by med on 16/8/10.
  */
 public class DateSelectChangedEvent {

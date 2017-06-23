@@ -147,6 +147,7 @@ public class StepsDatabaseHelper {
                     e.onNext(mRealm.copyFromRealm(steps));
                     e.onComplete();
                 } else {
+                    e.onNext(new Steps());
                     e.onComplete();
                 }
             }

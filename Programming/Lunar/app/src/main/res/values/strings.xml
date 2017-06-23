@@ -11,7 +11,7 @@
     <string name="notification_def_name">Red</string>
     <string name="unit_length">mi</string>
     <string name="unit_cal">kcal</string>
-    <string name="lunar_steps_percentage">OF GOAL</string>
+    <string name="lunar_steps_percentage">of goal</string>
     <string name="home_time_home_city_name" translatable="false">Getting location.. </string>
     <string name="permission_location_message">We need your location to search for your LunaR and to determine the sunset and sunrise time</string>
     <string name="my_watch_firmwer_version">Version </string>
@@ -304,6 +304,7 @@
     <string name="lunar_adapter_clock">Clock</string>
     <string name="lunar_adapter_chart">Chart</string>
     <string name="lunar_adapter_solar">Solar</string>
+    <string name="lunar_adapter_sunshine" translatable="false">sunshine</string>
     <string name="main_sleep_fragment_title">Sleep</string>
     <string name="main_steps_fragment_title">Steps</string>
     <string name="main_clock_fragment_title">Clock</string>
@@ -419,6 +420,7 @@
     <string name="in_app_notification_no_goal">Please select your target.</string>
     <string name="location_access_content">Please grant location access so it can detect lunaR.</string>
     <string name="title_steps">Dashboard</string>
+    <string name="title_sunshine">Sunshine</string>
     <string name="settings_my_nevo">My LunaR</string>
     <string name="settings_bluetooth_scan">Scan duration</string>
     <string name="detection_battery">Low Battery Alert</string>
@@ -458,6 +460,7 @@
     <string name="edit_home_position_city">Position City</string>
     <string name="edit_home_all_city">All City</string>
     <string name="lunar_main_clock_charging_status_title">HARVESTING STATUS</string>
+    <string name="lunar_main_clock_solar_harvesting_title">SUN HARVESTING</string>
     <string name="lunar_main_clock_sleep_time_title">INACTIVITY</string>
     <string name="lunar_main_clock_local_home_time">HOME TIME</string>
     <string name="lunar_main_clock_home_city_sunrise">SUNRISE</string>
@@ -486,4 +489,9 @@
     <string name="tool_bar_set_goal">Set Goal</string>
     <string name="battery_low_notification_title">Battery Low</string>
     <string name="battery_low_notification_message">Please charge your watch</string>
+    <string name="todays_weather_text">todays weather -</string>
+    <string name="main_solar_details_battery_title">BATTERY LEVEL</string>
+    <string name="main_solar_details_history_title">gathered electricity</string>
+    <string name="main_solar_details_history_describe_last_week">Last week</string>
+    <string name="main_solar_details_history_describe_last_month">Last month</string>
 </resources>

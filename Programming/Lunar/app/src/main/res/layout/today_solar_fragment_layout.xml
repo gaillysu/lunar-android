@@ -26,28 +26,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginRight="40dp"
-        android:layout_weight="1"
-        android:layout_marginTop="40dp"
         android:layout_marginLeft="60dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="40dp"
+        android:layout_weight="1"
         android:orientation="horizontal"
         >
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             >
 
             <TextView
+                android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/main_fragment_solar_page_time_on_battery_text"
                 android:textColor="@color/text_color"
-                android:textSize="18sp"
-                android:id="@+id/textView2"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -62,10 +62,11 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical"
             >
+
             <TextView
                 android:id="@+id/today_solar_battery_time_tv"
                 android:layout_width="match_parent"
@@ -81,9 +82,9 @@
                 android:id="@+id/today_solar_solar_time_tv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginRight="30dp"
                 android:layout_marginTop="20dp"
                 android:gravity="center_horizontal"
-                android:layout_marginRight="30dp"
                 android:text="0"
                 android:textColor="@color/profile_fragment_text_right_color"
                 android:textSize="18sp"

@@ -17,6 +17,7 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.adapter.LunarMainFragmentAdapter;
 import com.medcorp.lunar.event.ChangeGoalEvent;
+import com.medcorp.lunar.event.ViewPagerChildChange;
 import com.medcorp.lunar.event.bluetooth.GetWatchInfoChangedEvent;
 import com.medcorp.lunar.event.bluetooth.RequestResponseEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
@@ -46,6 +47,7 @@ public class MainFragment extends BaseObservableFragment {
     ViewPager showWatchViewPage;
     @Bind(R.id.ui_page_control_point)
     LinearLayout uiPageControl;
+
     private boolean showSyncGoal;
     private LunarMainFragmentAdapter adapter;
     private String[] fragmentAdapterArray;
@@ -107,6 +109,7 @@ public class MainFragment extends BaseObservableFragment {
                         im.setImageResource(R.drawable.ui_page_control_unselector);
                     }
                 }
+                EventBus.getDefault().post(new ViewPagerChildChange(position));
             }
 
             @Override

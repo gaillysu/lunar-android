@@ -9,52 +9,47 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@drawable/main_clock_fragment_content_top_left_shape"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            >
+            android:background="@drawable/main_clock_fragment_content_shape"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/lunar_main_clock_battery_status_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
                 android:maxLines="1"
-                android:text="@string/lunar_main_clock_charging_status_title"
+                android:text="@string/lunar_home_clock_steps_title_tv"
+                android:textColor="@color/text_color"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/lunar_main_clock_steps_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:maxLines="1"
+                android:textColor="@color/text_color"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/steps_of_goal_percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp"
+                android:maxLines="1"
                 android:textAllCaps="false"
                 android:textColor="@color/text_color"
                 android:textSize="12sp"
                 />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="2dp"
-                android:layout_weight="1"
-                android:src="@drawable/sun_icon"/>
-
-            <TextView
-                android:id="@+id/lunar_main_clock_battery_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:maxLines="1"
-                android:text="@string/lunar_home_clock_solar_harvest_idle"
-                android:textColor="@color/text_color"
-                android:textSize="12sp"
-                />
-        </LinearLayout>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
@@ -65,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@drawable/main_clock_fragment_content_bottom_left_shape"
+            android:background="@drawable/main_clock_fragment_content_shape"
             android:gravity="center"
             android:orientation="vertical"
             >
@@ -112,67 +107,103 @@
 
 
     <!--middle layout-->
-    <RelativeLayout
+
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1.6"
-        android:background="@color/analysis_fragment_tablayout_background_color"
-        >
-
-        <com.medcorp.lunar.view.RoundProgressBar
-            android:id="@+id/lunar_main_clock_steps_goal_analysis"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:layout_margin="4dp"
-            android:minWidth="2dp"
-            android_custom:max="100"
-            android_custom:roundColor="@color/graph_grid_line_color"
-            android_custom:roundProgressColor="@color/colorAccent"
-            android_custom:roundWidth="4dp"
-            android_custom:textIsDisplayable="false"/>
+        android:layout_centerInParent="true"
+        android:layout_weight="1"
+        android:background="@drawable/main_solar_bg_shape"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/lunar_main_clock_battery_status_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/lunar_main_clock_charging_status_title"
+                android:textAllCaps="false"
+                android:textColor="@color/edit_alarm_item_text_color"
+                android:textSize="12sp"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="2dp"
+                android:layout_weight="1"
+                android:src="@drawable/sun_icon"/>
+
+            <TextView
+                android:id="@+id/lunar_main_clock_battery_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:maxLines="1"
+                android:text="@string/lunar_home_clock_solar_harvest_idle"
+                android:textColor="@color/edit_alarm_item_text_color"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:orientation="vertical"
-            >
+            android:layout_height="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@color/window_background_color"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="10dp"
                 android:maxLines="1"
-                android:text="@string/lunar_home_clock_steps_title_tv"
-                android:textColor="@color/text_color"
-                android:textSize="12sp"
-                />
+                android:text="@string/lunar_main_clock_solar_harvesting_title"
+                android:textColor="@color/edit_alarm_item_text_color"
+                android:textSize="12sp"/>
 
             <TextView
-                android:id="@+id/lunar_main_clock_steps_count"
+                android:id="@+id/main_clock_solar_harvesting_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:maxLines="1"
+                android:textColor="@color/edit_alarm_item_text_color"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/main_clock_solar_harvesting_percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:maxLines="1"
-                android:textColor="@color/text_color"
-                android:textSize="12sp"
-                />
-
-            <TextView
-                android:id="@+id/steps_of_goal_percentage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="8dp"
                 android:maxLines="1"
                 android:textAllCaps="false"
-                android:textColor="@color/text_color"
+                android:textColor="@color/edit_alarm_item_text_color"
                 android:textSize="12sp"
                 />
-        </LinearLayout>
-    </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
 
     <View
         android:layout_width="5dp"
@@ -192,10 +223,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@drawable/main_clock_fragment_content_top_right_shape"
+            android:background="@drawable/main_clock_fragment_content_shape"
             android:gravity="center_vertical|center_horizontal"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -235,11 +265,11 @@
             <TextView
                 android:id="@+id/lunar_main_clock_home_country"
                 android:layout_width="match_parent"
-                android:gravity="center_horizontal"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
+                android:gravity="center_horizontal"
                 android:maxLines="1"
                 android:textAllCaps="false"
                 android:textColor="@color/text_color"
@@ -258,7 +288,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@drawable/main_clock_fragment_content_bottom_right_shape"
+            android:background="@drawable/main_clock_fragment_content_shape"
             android:gravity="center"
             android:orientation="vertical"
             >
@@ -292,19 +322,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:textColor="@color/text_color"
                 android:text="@string/seek_failed"
+                android:textColor="@color/text_color"
                 android:textSize="12sp"
                 />
 
             <TextView
                 android:id="@+id/lunar_main_clock_home_city_name_tv"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:gravity="center_horizontal"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
                 android:maxLines="1"
                 android:textAllCaps="false"
                 android:textColor="@color/text_color"

@@ -8,9 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.fragment.MainClockFragment;
 import com.medcorp.lunar.fragment.MainFragment;
-import com.medcorp.lunar.fragment.MainSleepFragment;
-import com.medcorp.lunar.fragment.MainSolarFragment;
-import com.medcorp.lunar.fragment.MainStepsFragment;
+import com.medcorp.lunar.fragment.MainSolarDetailsFragment;
 
 
 /**
@@ -35,11 +33,13 @@ public class LunarMainFragmentAdapter extends FragmentPagerAdapter {
             case 0:
                 return MainClockFragment.instantiate(context, MainClockFragment.class.getName());
             case 1:
-                return MainStepsFragment.instantiate(context, MainStepsFragment.class.getName());
-            case 2:
-                return MainSleepFragment.instantiate(context, MainSleepFragment.class.getName());
-            case 3:
-                return MainSolarFragment.instantiate(context, MainSolarFragment.class.getName());
+                return MainSolarDetailsFragment.instantiate(context,MainSolarDetailsFragment.class.getName());
+//            case 1:
+//                return MainStepsFragment.instantiate(context, MainStepsFragment.class.getName());
+//            case 2:
+//                return MainSleepFragment.instantiate(context, MainSleepFragment.class.getName());
+//            case 3:
+//                return MainSolarFragment.instantiate(context, MainSolarFragment.class.getName());
             default:
                 return null;
         }

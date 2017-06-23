@@ -33,10 +33,14 @@
     <!--lunar start -->
     <array name="lunar_main_adapter_fragment">
         <item>@string/lunar_adapter_clock</item>
-        <item>@string/lunar_adapter_chart</item>
-        <item>@string/lunar_adapter_sleep</item>
-        <item>@string/lunar_adapter_solar</item>
+        <item>@string/lunar_adapter_sunshine</item>
     </array>
+    <!--<array name="lunar_main_adapter_fragment">-->
+        <!--<item>@string/lunar_adapter_clock</item>-->
+        <!--<item>@string/lunar_adapter_chart</item>-->
+        <!--<item>@string/lunar_adapter_sleep</item>-->
+        <!--<item>@string/lunar_adapter_solar</item>-->
+    <!--</array>-->
 
     <array name="analysis_fragment_table_array">
         <item>@string/analysis_fragment_table_steps</item>
@@ -57,4 +61,13 @@
         <item>@string/analysis_fragment_table_sleep</item>
     </array>
     <!--nevo end-->
+    <declare-styleable name="HorizontalProgressBar">
+        <attr name="progress_unreach_color" format="color" />
+        <attr name="progress_unreach_height" format="dimension" />
+        <attr name="progress_reach_color" format="color" />
+        <attr name="progress_reach_height" format="dimension" />
+        <attr name="progress_text_color" format="color" />
+        <attr name="progress_text_size" format="dimension" />
+        <attr name="progress_text_offset" format="dimension" />
+    </declare-styleable>
 </resources>
