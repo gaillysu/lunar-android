@@ -18,6 +18,7 @@ import com.medcorp.lunar.event.ChangeGoalEvent;
 import com.medcorp.lunar.event.DateSelectChangedEvent;
 import com.medcorp.lunar.event.LocationChangedEvent;
 import com.medcorp.lunar.event.Timer10sEvent;
+import com.medcorp.lunar.event.bluetooth.GetWatchInfoChangedEvent;
 import com.medcorp.lunar.event.bluetooth.LittleSyncEvent;
 import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.event.bluetooth.PositionAddressChangeEvent;
@@ -49,7 +50,6 @@ import java.util.TimeZone;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
-import io.realm.Realm;
 
 /**
  * Created by Jason on 2016/12/26.
@@ -113,7 +113,6 @@ public class MainClockFragment extends BaseFragment {
     private String homeCountryName;
     private Address mPositionLocal;
     private SunriseSunsetCalculator calculator;
-    private Realm realm = Realm.getDefaultInstance();
     private String totalSleepTime;
     private City mDefaultTimeZoneCity;
 
@@ -379,8 +378,18 @@ public class MainClockFragment extends BaseFragment {
     }
 
     @Subscribe
+    public void onEvent(GetWatchInfoChangedEvent event) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                initData();
+            }
+        });
+    }
+
+    @Subscribe
     public void onEvent(final SolarConvertEvent event) {
-        solarHarvestStatus.post(new Runnable() {
+        mUiHandler.post(new Runnable() {
             @Override
             public void run() {
                 //NOTICE: nevo solar adc threshold is 200，but lunar is 170

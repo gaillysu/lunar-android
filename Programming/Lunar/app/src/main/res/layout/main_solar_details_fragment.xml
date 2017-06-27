@@ -3,6 +3,7 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:baselineAligned="false"
               android:orientation="vertical">
 
     <RelativeLayout
@@ -27,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/show_solar_details_fragment_weather_describe_tv"
             android:layout_marginTop="10dp"
-            android:text="@string/todays_weather_text"
             android:textColor="@color/text_color"
             android:textSize="16sp"/>
 
@@ -73,7 +73,7 @@
                     android:text="@string/lunar_main_clock_charging_status_title"
                     android:textAllCaps="false"
                     android:textColor="@color/text_color"
-                    android:textSize="16sp"/>
+                    android:textSize="14sp"/>
 
                 <ImageView
                     android:layout_width="60dp"
@@ -120,7 +120,7 @@
                     android:text="@string/main_solar_details_battery_title"
                     android:textAllCaps="false"
                     android:textColor="@color/text_color"
-                    android:textSize="16sp"/>
+                    android:textSize="14sp"/>
 
                 <ImageView
                     android:layout_width="45dp"
@@ -142,7 +142,6 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="10dp"
                     android:maxLines="1"
-                    android:text="@string/lunar_home_clock_solar_harvest_idle"
                     android:textColor="@color/text_color"
                     android:textSize="14sp"/>
             </RelativeLayout>
@@ -155,11 +154,11 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/main_solar_details_solar_harvest_time_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:text="sdfsdafsdfsdg"
         android:textColor="@color/text_color"
         android:textSize="20sp"/>
 
@@ -168,23 +167,26 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="5dp"
-        android:text="sdfsdafsdfsdg"
+        android:text="@string/main_solar_details_sun_exposure_describe"
+        android:textAllCaps="true"
         android:textColor="@color/text_color"
         android:textSize="16sp"/>
 
     <com.medcorp.lunar.view.HorizontalProgressBar
+        android:id="@+id/main_solar_details_horizontalProgressBar"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        app:progress_reach_height="20dp"
-        android:layout_marginRight="50dp"
         android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_marginTop="20dp"
-        android:progress="20"
-        app:progress_unreach_color="@color/md_divider_white"
+        android:progress="0"
         app:progress_reach_color="@color/colorAccent"
+        app:progress_reach_height="20dp"
         app:progress_text_color="@color/text_color"
-        app:progress_unreach_height="20sp"
-        app:progress_text_size="14sp"/>
+        app:progress_text_size="14sp"
+        app:progress_unreach_color="@color/md_divider_white"
+        app:progress_unreach_height="20sp"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -192,72 +194,84 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
         android:background="@color/colorAccent"/>
+
     <TextView
+        android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:textSize="18sp"
-        android:textColor="@color/text_color"
         android:text="@string/main_solar_details_history_title"
-        />
+        android:textAllCaps="true"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_height="wrap_content">
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/main_solar_details_history_bg"
             >
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="3dp"
+                android:text="@string/main_solar_details_history_describe_last_week"
                 android:textColor="@color/history_data_black"
                 android:textSize="14sp"
-                android:text="@string/main_solar_details_history_describe_last_week"
                 />
+
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:paddingRight="2dp"
                 android:layout_alignParentRight="true"
+                android:paddingRight="2dp"
                 android:src="@drawable/sun_icon"/>
         </RelativeLayout>
+
         <TextView
+            android:id="@+id/main_solar_details_last_week_solar_total"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginLeft="20dp"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/text_color"/>
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:textColor="@color/text_color"
+            android:textSize="14sp"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_height="wrap_content">
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/main_solar_details_history_bg"
             >
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="3dp"
+                android:text="@string/main_solar_details_history_describe_last_month"
                 android:textColor="@color/history_data_black"
                 android:textSize="14sp"
-                android:text="@string/main_solar_details_history_describe_last_month"
                 />
+
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -265,12 +279,14 @@
                 android:paddingRight="2dp"
                 android:src="@drawable/sun_icon"/>
         </RelativeLayout>
+
         <TextView
+            android:id="@+id/main_solar_details_last_month_solar_total"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginLeft="20dp"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/text_color"/>
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:textColor="@color/text_color"
+            android:textSize="14sp"/>
     </LinearLayout>
 </LinearLayout>

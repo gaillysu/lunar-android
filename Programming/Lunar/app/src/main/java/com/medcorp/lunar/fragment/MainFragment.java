@@ -1,8 +1,6 @@
 package com.medcorp.lunar.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,7 +16,6 @@ import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.adapter.LunarMainFragmentAdapter;
 import com.medcorp.lunar.event.ChangeGoalEvent;
 import com.medcorp.lunar.event.ViewPagerChildChange;
-import com.medcorp.lunar.event.bluetooth.GetWatchInfoChangedEvent;
 import com.medcorp.lunar.event.bluetooth.RequestResponseEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
 import com.medcorp.lunar.model.StepsGoal;
@@ -147,10 +144,10 @@ public class MainFragment extends BaseObservableFragment {
             public void obtainGoal(final List<StepsGoal> stepsGoalList) {
                 List<String> stringList = new ArrayList<>();
                 final List<StepsGoal> stepsGoalEnableList = new ArrayList<>();
-                int  selectIndex = 0;
-                for(int i=0;i<stepsGoalList.size();i++){
+                int selectIndex = 0;
+                for (int i = 0; i < stepsGoalList.size(); i++) {
                     StepsGoal stepsGoal = stepsGoalList.get(i);
-                    if(stepsGoal.isStatus()){
+                    if (stepsGoal.isStatus()) {
                         selectIndex = i;
                     }
                     stringList.add(stepsGoal.toString());
@@ -171,7 +168,7 @@ public class MainFragment extends BaseObservableFragment {
                                             StepsGoal stepsGoal = stepsGoalList.get(i);
                                             if (i == which) {
                                                 stepsGoal.setStatus(true);
-                                            }else{
+                                            } else {
                                                 stepsGoal.setStatus(false);
                                             }
                                             getModel().updateGoal(stepsGoal);
@@ -219,18 +216,6 @@ public class MainFragment extends BaseObservableFragment {
             int id = event.isSuccess() ? R.string.goal_synced : R.string.goal_error_sync;
             ((MainActivity) getActivity()).showStateString(id, false);
         }
-    }
-
-    @Subscribe
-    public void onEvent(GetWatchInfoChangedEvent event) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                initUiControl();
-                adapter = new LunarMainFragmentAdapter(getChildFragmentManager(), MainFragment.this);
-                showWatchViewPage.setAdapter(adapter);
-            }
-        });
     }
 
     public interface ObtainGoalListener {

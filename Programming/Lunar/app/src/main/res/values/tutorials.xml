@@ -53,4 +53,5 @@
     <string name="other_color_turquoise" translatable="false">turquoise</string>
     <string name="other_color_white" translatable="false">white</string>
     <string name="other_color_text" translatable="false">lower left button</string>
+    <string name="main_solar_details_sun_exposure_describe">Todays sun exposure</string>
 </resources>

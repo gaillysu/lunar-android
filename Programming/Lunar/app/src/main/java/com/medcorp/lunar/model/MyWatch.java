@@ -2,11 +2,10 @@ package com.medcorp.lunar.model;
 
 import java.util.List;
 
-/**
+/***
  * Created by gaillysu on 15/12/28.
- *
  */
-public class MyNevo {
+public class MyWatch {
     private String bleFirmwareVersion;
     private String mcuFirmwareVersion;
     private String appVersion;
@@ -14,8 +13,7 @@ public class MyNevo {
     private boolean availableVersion;
     private List<String> firmwareURLs;
 
-    public MyNevo(String bleFirmwareVersion,String mcuFirmwareVersion,String appVersion,int batteryLevel,boolean availableVersion,List<String> firmwareURLs)
-    {
+    public MyWatch(String bleFirmwareVersion, String mcuFirmwareVersion, String appVersion, int batteryLevel, boolean availableVersion, List<String> firmwareURLs) {
         this.bleFirmwareVersion = bleFirmwareVersion;
         this.mcuFirmwareVersion = mcuFirmwareVersion;
         this.appVersion = appVersion;

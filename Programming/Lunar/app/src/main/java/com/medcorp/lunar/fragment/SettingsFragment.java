@@ -78,8 +78,8 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_find_my_watch), R.drawable.setting_findmywatch));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_bluetooth_scan), R.drawable.ic_scan_bluetooth));
         listMenu.add(new SettingsMenuItem(getString(R.string.detection_battery),
-                getString(R.string.originally_chosen_value)+" : "+value,
-                R.drawable.ic_low_detection_alert,Preferences.getBatterySwitch(SettingsFragment.this.getContext())));
+                getString(R.string.originally_chosen_value) + " : " + value,
+                R.drawable.ic_low_detection_alert, Preferences.getBatterySwitch(SettingsFragment.this.getContext())));
 
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_more), R.drawable.setting_goals));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
@@ -218,11 +218,16 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
 
     @Override
     public void onCheckedChange(CompoundButton buttonView, boolean isChecked, int position) {
-        if (position == 0) {
-            Preferences.saveLinklossNotification(getActivity(), isChecked);
-        }else if(position == 5){
-            Preferences.saveBatterySwitch(getActivity(),isChecked);
-        }
+            if (position == 0) {
+                Preferences.saveLinklossNotification(getActivity(), isChecked);
+            } else if (position == 5) {
+                Preferences.saveBatterySwitch(getActivity(), isChecked);
+                int[] vaule = {5, 10, 15, 20, 30};
+
+                getModel().getSyncController().setChargingNotification((byte) vaule[Preferences.getDetectionBattery
+                        (SettingsFragment.this.getContext())], isChecked);
+            }
+
     }
 
     @Override

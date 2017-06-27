@@ -69,5 +69,6 @@
         <attr name="progress_text_color" format="color" />
         <attr name="progress_text_size" format="dimension" />
         <attr name="progress_text_offset" format="dimension" />
+        <attr name="progress_text_bg" format="color"/>
     </declare-styleable>
 </resources>
