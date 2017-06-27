@@ -509,5 +509,13 @@
     <string name="welcome_activity_skip_login">or continue without registration</string>
     <string name="tutorial_out_shipping_mode_title">Shipping-mode</string>
     <string name="tutorial_shipping_mode_describe_text">Take LunaR out of shipping-mode by pressing  the lower left button. The 12 0\'clock LED will  blink turquoise and the rest blink white.</string>
+    <string name="lunar_main_clock_solar_harvesting_title">SUN HARVESTING</string>
+    <string name="main_solar_details_battery_title">BATTERY LEVEL</string>
+    <string name="main_solar_details_history_describe_last_month">Last month</string>
+    <string name="main_solar_details_history_describe_last_week">Last week</string>
+    <string name="main_solar_details_history_title">gathered electricity</string>
+    <string name="main_solar_details_sun_exposure_describe">Todays sun exposure</string>
+    <string name="title_sunshine">Sunshine</string>
+    <string name="todays_weather_text">todays weather -</string>
 
 </resources>

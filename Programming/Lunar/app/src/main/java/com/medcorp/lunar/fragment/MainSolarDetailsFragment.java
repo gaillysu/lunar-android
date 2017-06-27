@@ -56,7 +56,7 @@ public class MainSolarDetailsFragment extends BaseFragment {
     TextView showLastMonthSolarTotalTv;
 
     private MyWatch mMyWatch;
-    private final int battery_level = 2; //default is 2,  value is [0,1,2], need get later
+    private final int battery_level = 2;
     private final boolean available_version = false;//need check later
     private Address mPositionLocal;
 
@@ -89,6 +89,7 @@ public class MainSolarDetailsFragment extends BaseFragment {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+
         mMyWatch = new MyWatch(getModel().getWatchFirmware(), getModel().getWatchSoftware(), app_version, battery_level, available_version, null);
         String str_battery = this.getString(R.string.my_nevo_battery_low);
         if (mMyWatch.getBatteryLevel() == 2) {

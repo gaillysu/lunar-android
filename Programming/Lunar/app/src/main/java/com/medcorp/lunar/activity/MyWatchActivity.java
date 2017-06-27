@@ -154,7 +154,6 @@ public class MyWatchActivity extends BaseActivity {
         });
     }
 
-
     private void initLunarData() {
 
         String str_battery = this.getString(R.string.my_nevo_battery_low);
