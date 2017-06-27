@@ -50,8 +50,8 @@ import net.medcorp.library.ble.util.Constants;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.Date;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -79,6 +79,7 @@ public class SignupActivity extends BaseActivity {
     EditText editLastName;
     @Bind(R.id.register_layout)
     LinearLayout registerLayout;
+
 
     private Snackbar snackbar;
     private String firstName;
@@ -109,6 +110,7 @@ public class SignupActivity extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             startActivity(WelcomeActivity.class);
             finish();
+            overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -201,6 +203,7 @@ public class SignupActivity extends BaseActivity {
         }
 
         if (password.isEmpty() || password.length() < 8) {
+
             _passwordText.setError(getString(R.string.register_password_error));
             valid = false;
         } else {
@@ -220,14 +223,6 @@ public class SignupActivity extends BaseActivity {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
-
-    @OnClick(R.id.cancel_register_button)
-    public void cancelClick() {
-        startActivity(WelcomeActivity.class);
-        finish();
-        overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
-    }
-
 
     /**
      * create WeChat account

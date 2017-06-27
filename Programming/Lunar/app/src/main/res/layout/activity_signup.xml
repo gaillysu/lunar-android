@@ -33,93 +33,142 @@
             android:layout_height="match_parent"
             android:layout_marginTop="30dp"
             android:background="@color/window_background_color"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             android:orientation="vertical"
             android:paddingLeft="50dp"
             android:paddingRight="50dp"
             android:paddingTop="20dp">
 
-            <EditText
-                android:id="@+id/input_email"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="48dp"
+                android:background="@drawable/shape_input_email_account_bg"
+                android:gravity="center_vertical"
+                android:paddingTop="2dp"
+                android:textColorHint="@color/colorAccent"
+                app:hintTextAppearance="@style/hintAppearance">
+
+                <EditText
+                    android:id="@+id/input_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
+                    android:hint="@string/log_in_email"
+                    android:inputType="textPersonName"
+                    android:paddingLeft="12dp"
+                    android:textColor="@color/text_color"
+                    android:textSize="14sp"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_input_email_account_bg"
-                android:hint="@string/log_in_email"
-                android:imeOptions="actionNext"
-                android:inputType="textPersonName"
-                android:paddingLeft="12dp"
-                android:textColor="@color/text_color"
-                android:textColorHint="@color/text_color"
-                android:textSize="16sp"/>
+                android:gravity="center_vertical"
+                android:paddingTop="2dp"
+                android:textColorHint="@color/colorAccent"
+                app:hintTextAppearance="@style/hintAppearance">
 
-            <EditText
-                android:id="@+id/register_account_activity_edit_first_name"
+                <EditText
+                    android:id="@+id/register_account_activity_edit_first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/shape_input_email_account_bg"
+                    android:hint="@string/register_first_name_hint"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName"
+                    android:paddingLeft="12dp"
+                    android:textColor="@color/text_color"
+                    android:textSize="14sp"/>
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="48dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_input_email_account_bg"
-                android:hint="@string/register_first_name_hint"
-                android:imeOptions="actionNext"
-                android:inputType="textPersonName"
-                android:paddingLeft="12dp"
-                android:textColor="@color/text_color"
-                android:textColorHint="@color/text_color"
-                android:textSize="16sp"/>
+                android:gravity="center_vertical"
+                android:paddingTop="2dp"
+                android:textColorHint="@color/colorAccent"
+                app:hintTextAppearance="@style/hintAppearance"
+                >
 
-            <EditText
-                android:id="@+id/register_account_activity_edit_last_name"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/shape_input_email_account_bg"
-                android:hint="@string/register_last_name_hint"
-                android:imeOptions="actionNext"
-                android:inputType="textPersonName"
-                android:paddingLeft="12dp"
-                android:textColor="@color/text_color"
-                android:textColorHint="@color/text_color"
-                android:textSize="16sp"
-                />
-
+                <EditText
+                    android:id="@+id/register_account_activity_edit_last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/transparent"
+                    android:hint="@string/register_last_name_hint"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName"
+                    android:paddingLeft="12dp"
+                    android:textColor="@color/text_color"
+                    android:textSize="14sp"
+                    />
+            </android.support.design.widget.TextInputLayout>
 
             <!-- Password Label -->
 
-            <EditText
-                android:id="@+id/input_password"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="48dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_input_email_account_bg"
-                android:hint="@string/log_in_password"
-                android:imeOptions="actionNext"
-                android:inputType="textPassword"
-                android:paddingLeft="12dp"
-                android:textColor="@color/text_color"
-                android:textColorHint="@color/text_color"
-                android:textSize="16sp"
-                />
+                android:gravity="center_vertical"
+                android:paddingRight="10dp"
+                android:paddingTop="2dp"
+                android:textColorHint="@color/colorAccent"
+                app:hintTextAppearance="@style/hintAppearance">
 
-            <EditText
-                android:id="@+id/input_password_confirm"
+                <EditText
+                    android:id="@+id/input_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/transparent"
+                    android:hint="@string/log_in_password"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword"
+                    android:paddingLeft="12dp"
+                    android:textColor="@color/text_color"
+                    android:textSize="14sp"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="48dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_input_email_account_bg"
-                android:hint="@string/register_password_confirm"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:paddingLeft="12dp"
-                android:textColor="@color/text_color"
-                android:textColorHint="@color/text_color"
-                android:textSize="16sp"
-                />
+                android:gravity="center_vertical"
+                android:paddingRight="10dp"
+                android:paddingTop="2dp"
+                android:textColorHint="@color/colorAccent"
+                app:hintTextAppearance="@style/hintAppearance">
+
+                <EditText
+                    android:id="@+id/input_password_confirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/transparent"
+                    android:hint="@string/register_password_confirm"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:paddingLeft="12dp"
+                    android:textColor="@color/text_color"
+                    android:textSize="14sp"/>
+            </android.support.design.widget.TextInputLayout>
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btn_signup"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="45dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="24dp"
@@ -182,15 +231,6 @@
                         android:src="@drawable/ic_facebook_login"/>
 
                     <ImageButton
-                        android:id="@+id/use_twitter_account_register"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/twitter_button_bg"
-                        android:src="@drawable/ic_twitter_icon"/>
-
-                    <ImageButton
                         android:id="@+id/use_wechat_account_register"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
@@ -199,18 +239,6 @@
                         android:background="@drawable/wechat_button_bg"
                         android:src="@drawable/ic_wechat_green"/>
                 </LinearLayout>
-
-                <Button
-                    android:id="@+id/cancel_register_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/transparent"
-                    android:text="@string/cancel_register_an_account"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
