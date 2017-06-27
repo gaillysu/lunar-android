@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.medcorp.lunar.R;
+import com.medcorp.lunar.event.bluetooth.BatteryEvent;
 import com.medcorp.lunar.event.bluetooth.GetWatchInfoChangedEvent;
 import com.medcorp.lunar.event.bluetooth.PositionAddressChangeEvent;
 import com.medcorp.lunar.event.bluetooth.SolarConvertEvent;
@@ -115,7 +116,7 @@ public class MainSolarDetailsFragment extends BaseFragment {
         if (mPositionLocal != null) {
             showWeatherCityTv.setText(getString(R.string.todays_weather_text) + " " + mPositionLocal.getLocality());
         } else {
-
+            showWeatherCityTv.setText(getString(R.string.todays_weather_text));
         }
         setLastWeekSolarTotal();
         setLastMonthSolarTotal();
@@ -191,6 +192,17 @@ public class MainSolarDetailsFragment extends BaseFragment {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
+                initData();
+            }
+        });
+    }
+
+    @Subscribe
+    public void onEvent(final BatteryEvent batteryEvent) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                mMyWatch.setBatteryLevel((int) batteryEvent.getBattery().getBatteryLevel());
                 initData();
             }
         });

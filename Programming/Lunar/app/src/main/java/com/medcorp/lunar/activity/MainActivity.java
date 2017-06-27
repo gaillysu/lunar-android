@@ -18,7 +18,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -44,6 +43,7 @@ import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.fragment.AlarmFragment;
 import com.medcorp.lunar.fragment.AnalysisFragment;
 import com.medcorp.lunar.fragment.HomeClockFragment;
+import com.medcorp.lunar.fragment.MainClockFragment;
 import com.medcorp.lunar.fragment.MainFragment;
 import com.medcorp.lunar.fragment.SettingsFragment;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
@@ -495,7 +495,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     }
 
     private void popupStepsGoalDialog() {
-        getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
+        getModel().getAllGoal(new MainClockFragment.ObtainGoalListener() {
             @Override
             public void obtainGoal(final List<StepsGoal> stepsGoalList) {
                 List<String> stringList = new ArrayList<>();

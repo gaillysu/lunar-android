@@ -60,7 +60,7 @@ import com.medcorp.lunar.event.validic.ValidicUpdateRoutineRecordsModelEvent;
 import com.medcorp.lunar.fragment.AnalysisSleepFragment;
 import com.medcorp.lunar.fragment.AnalysisSolarFragment;
 import com.medcorp.lunar.fragment.AnalysisStepsFragment;
-import com.medcorp.lunar.fragment.MainFragment;
+import com.medcorp.lunar.fragment.MainClockFragment;
 import com.medcorp.lunar.fragment.MainSleepFragment;
 import com.medcorp.lunar.fragment.WeekData;
 import com.medcorp.lunar.googlefit.GoogleFitManager;
@@ -698,7 +698,7 @@ public class ApplicationModel extends Application {
         return alarmDatabaseHelper;
     }
 
-    public void getAllGoal(final MainFragment.ObtainGoalListener listener) {
+    public void getAllGoal(final MainClockFragment.ObtainGoalListener listener) {
         mStepsGoalDatabaseHelper.getAll().subscribe(new Consumer<List<StepsGoal>>() {
             @Override
             public void accept(List<StepsGoal> stepsGoals) throws Exception {
