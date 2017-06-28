@@ -88,10 +88,11 @@ public class WelcomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_page);
         ButterKnife.bind(this);
-        progressDialog = new ProgressDialog(this, AppTheme_Dark_Dialog);
+        progressDialog = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.setMessage(getString(R.string.log_in_popup_message));
+        registerFacebookCallBack();
     }
 
     @OnClick(R.id.create_account_bt)
@@ -250,7 +251,7 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     @OnClick(R.id.welcome_activity_facebook_login)
-    public void facebookLogin(){
+    public void facebookLogin() {
         LoginManager.getInstance().logInWithReadPermissions(this,
                 Arrays.asList(getString(R.string.facebook_public_profile)
                         , getString(R.string.facebook_user_email), getString(R.string.facebook_user_birthday)));
@@ -378,6 +379,7 @@ public class WelcomeActivity extends BaseActivity {
                             }
                         });
                     }
+
                     @Override
                     public void onSuccess(final FacebookLoginResponse response) {
                         progressDialog.dismiss();
@@ -422,8 +424,7 @@ public class WelcomeActivity extends BaseActivity {
     public void onLoginSuccess() {
         showSnackbar(getString(R.string.log_in_success));
         Preferences.saveIsFirstLogin(this, false);
-        if ((getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) &&
-                getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, false)) | !getModel().isWatchConnected()) {
+        if ((getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) && getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, false)) | !getModel().isWatchConnected()) {
             startActivity(TutorialPage1Activity.class);
         } else {
             startActivity(MainActivity.class);

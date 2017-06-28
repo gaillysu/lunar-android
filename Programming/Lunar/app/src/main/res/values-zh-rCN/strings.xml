@@ -144,7 +144,7 @@
     <string name="tutorial_4_text">按下第三键，任意LED灯闪烁表示蓝牙打开.</string>
     <string name="tutorial_4_next">下一步</string>
 
-    <string name="tutorial_5_title">正在搜索&#8230;</string>
+    <string name="tutorial_5_title">正在搜索</string>
     <string name="tutorial_5_text">保持手表接近您的电话</string>
 
     <string name="tutorial_failed_title">连接手表失败</string>
@@ -262,9 +262,8 @@
     <string name="activity_user_info_female">女</string>
     <string name="activity_user_info_height">身高</string>
     <string name="activity_user_info_man">男</string>
-    <string name="activity_user_info_text_dec_middle">输入你的信息,不用担心,你的信息完全受到保护。</string>
-    <string name="activity_user_info_text_our_text">检查我们的私有策略</string>
-    <string name="activity_user_info_title_above_text">你的信息</string>
+    <string name="activity_user_info_text_dec_middle">输入更多关于你的信息!</string>
+    <string name="activity_user_info_title_above_text">信息</string>
     <string name="activity_user_info_weight">体重</string>
     <string name="add_alarm_index_out">最多支持%1$d个同类型的闹钟</string>
     <string name="alarm_set_week_day">设置闹钟的星期日期</string>
@@ -290,7 +289,7 @@
     <string name="email_format_error">非法的Email格式</string>
     <string name="alarm_week_day">重复</string>
     <string name="every_day">每天</string>
-    <string name="forget_password_activity_page_dec">别担心,我们会帮你找到密码</string>
+    <string name="forget_password_activity_page_dec">告诉我们你用来注册LunaR帐户的电子邮件地址。在请求之后的几分钟内，您将收到一个新的临时密码。</string>
     <string name="forget_password_activity_title_dec">忘记密码</string>
     <string name="forget_password_result_email_address_text">发送邮件到:</string>
     <string name="forget_password_result_prompt">检查你的邮箱</string>
@@ -505,4 +504,6 @@
     <string name="welcome_activity_skip_login">或者不登录</string>
     <string name="tutorial_out_shipping_mode_title">禁用模式</string>
     <string name="tutorial_shipping_mode_describe_text">按下左键退出禁用模式,表盘任意LED灯,亮起代表蓝牙开启!</string>
+    <string name="welcome_activity_facebook_login">使用Facebook</string>
+    <string name="welcome_activity_wechat_login">使用微信</string>
 </resources>

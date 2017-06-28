@@ -29,19 +29,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/welcome_activity_facebook_login"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:background="@drawable/facebook_button_bg"
                 android:button="@null"
-                android:drawableLeft="@drawable/ic_facebook_login"
                 android:checked="true"
+                android:drawableLeft="@drawable/ic_facebook_login"
                 android:text="@string/welcome_activity_facebook_login"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="16sp"/>
-            <Button
+
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/welcome_activity_wechat_login_bt"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
@@ -55,7 +56,7 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"/>
 
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/create_account_bt"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
@@ -69,7 +70,7 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"/>
 
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/login_bt"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"

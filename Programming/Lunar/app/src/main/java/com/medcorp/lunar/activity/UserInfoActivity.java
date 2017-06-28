@@ -9,8 +9,12 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
@@ -33,13 +37,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.medcorp.lunar.R.style.AppTheme_Dark_Dialog;
-
 
 /**
  * Created by Administrator on 2016/7/1.
  */
-public class UserInfoActivity extends BaseActivity {
+public class UserInfoActivity extends BaseActivity implements View.OnTouchListener {
 
     private String email;
     private String firstName;
@@ -51,11 +53,11 @@ public class UserInfoActivity extends BaseActivity {
     @Bind(R.id.user_info_activity_layout)
     CoordinatorLayout coordinatorLayout;
     @Bind(R.id.register_account_activity_edit_birthday)
-    TextView tv_userBirth;
+    EditText tv_userBirth;
     @Bind(R.id.register_account_activity_edit_height)
-    TextView tv_userHeight;
+    EditText tv_userHeight;
     @Bind(R.id.register_account_activity_edit_weight)
-    TextView tv_userWeight;
+    EditText tv_userWeight;
 
     @Bind(R.id.user_info_sex_male_tv)
     TextView maleTextView;
@@ -76,14 +78,18 @@ public class UserInfoActivity extends BaseActivity {
         firstName = intent.getStringExtra(getString(R.string.user_register_first_name));
         lastName = intent.getStringExtra(getString(R.string.user_register_last_name));
         password = intent.getStringExtra(getString(R.string.user_register_password));
-
+        initView();
     }
 
-    @OnClick(R.id.user_info_title_back_ll)
-    public void backClick() {
-        startActivity(SignupActivity.class);
-        finish();
+    private void initView() {
+        tv_userBirth.setInputType(InputType.TYPE_NULL);
+        tv_userHeight.setInputType(InputType.TYPE_NULL);
+        tv_userWeight.setInputType(InputType.TYPE_NULL);
+        tv_userBirth.setOnTouchListener(this);
+        tv_userHeight.setOnTouchListener(this);
+        tv_userWeight.setOnTouchListener(this);
     }
+
 
     @OnClick(R.id.register_info_activity_next_tv)
     public void nextClick() {
@@ -95,7 +101,7 @@ public class UserInfoActivity extends BaseActivity {
                 RegisterNewAccountRequest registerModel = new RegisterNewAccountRequest(firstName, lastName, email, password
                         , userBirthday, new Integer(userHeight.replace(getString(R.string.info_company_height), "")).intValue(),
                         (int) Double.parseDouble(userWeight.replace(getString(R.string.info_company_weight), "")), gender);
-                progressDialog = new ProgressDialog(UserInfoActivity.this, AppTheme_Dark_Dialog);
+                progressDialog = new ProgressDialog(UserInfoActivity.this, R.style.AppTheme_Dark_Dialog);
                 progressDialog.setIndeterminate(false);
                 progressDialog.setCancelable(false);
                 progressDialog.setMessage(getString(R.string.network_wait_text));
@@ -177,6 +183,7 @@ public class UserInfoActivity extends BaseActivity {
 
     }
 
+
     @OnClick(R.id.user_info_sex_female_tv)
     public void selectFamale() {
         gender = 0;
@@ -186,7 +193,6 @@ public class UserInfoActivity extends BaseActivity {
         famaleTextView.setBackground(getResources().getDrawable(R.drawable.shape_login_button_bg));
     }
 
-    @OnClick(R.id.register_account_activity_edit_birthday)
     public void setUserBIrthday() {
         viewType = 1;
         final Date date = new Date(System.currentTimeMillis());
@@ -214,9 +220,9 @@ public class UserInfoActivity extends BaseActivity {
                         + "-" + formatDate.split("-")[1] + "-" + formatDate.split("-")[2]) // date chose when init popwindow
                 .build();
         pickerPopWin.showPopWin(UserInfoActivity.this);
+
     }
 
-    @OnClick(R.id.register_account_activity_edit_height)
     public void setUserHeight() {
         viewType = 2;
         DatePickerPopWin pickerPopWin2 = new DatePickerPopWin.Builder(UserInfoActivity.this,
@@ -234,7 +240,6 @@ public class UserInfoActivity extends BaseActivity {
     }
 
 
-    @OnClick(R.id.register_account_activity_edit_weight)
     public void setUserWeight() {
         viewType = 3;
         DatePickerPopWin pickerPopWin3 = new DatePickerPopWin.Builder(UserInfoActivity.this,
@@ -254,9 +259,29 @@ public class UserInfoActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            backClick();
+            startActivity(SignupActivity.class);
+            finish();
+            overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_UP) {
+            switch (v.getId()) {
+                case R.id.register_account_activity_edit_birthday:
+                    setUserBIrthday();
+                    return true;
+                case R.id.register_account_activity_edit_height:
+                    setUserHeight();
+                    return true;
+                case R.id.register_account_activity_edit_weight:
+                    setUserWeight();
+                    return true;
+            }
+        }
+        return false;
     }
 }

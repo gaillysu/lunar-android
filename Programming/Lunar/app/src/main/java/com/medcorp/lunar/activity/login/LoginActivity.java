@@ -8,76 +8,35 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.google.gson.Gson;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.ForgetPasswordActivity;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.lunar.activity.tutorial.WelcomeActivity;
 import com.medcorp.lunar.base.BaseActivity;
-import com.medcorp.lunar.cloud.med.MedNetworkOperation;
 import com.medcorp.lunar.event.LoginEvent;
-import com.medcorp.lunar.event.ReturnUserInfoEvent;
-import com.medcorp.lunar.event.WeChatEvent;
-import com.medcorp.lunar.event.WeChatTokenEvent;
-import com.medcorp.lunar.model.Sleep;
-import com.medcorp.lunar.model.Steps;
-import com.medcorp.lunar.model.User;
-import com.medcorp.lunar.network.listener.RequestResponseListener;
-import com.medcorp.lunar.network.model.request.CheckEmailRequest;
-import com.medcorp.lunar.network.model.request.CreateFacebookAccountRequest;
-import com.medcorp.lunar.network.model.request.FaceBookAccountLoginRequest;
-import com.medcorp.lunar.network.model.request.WeChatAccountCheckRequest;
-import com.medcorp.lunar.network.model.request.WeChatAccountRegisterRequest;
-import com.medcorp.lunar.network.model.request.WeChatLoginRequest;
-import com.medcorp.lunar.network.model.response.CheckEmailResponse;
-import com.medcorp.lunar.network.model.response.CheckWeChatAccountResponse;
-import com.medcorp.lunar.network.model.response.CreateFacebookAccountResponse;
-import com.medcorp.lunar.network.model.response.CreateWeChatAccountResponse;
-import com.medcorp.lunar.network.model.response.FacebookLoginResponse;
-import com.medcorp.lunar.network.model.response.FacebookUserInfoResponse;
-import com.medcorp.lunar.network.model.response.WeChatLoginResponse;
-import com.medcorp.lunar.network.model.response.WeChatUserInfoResponse;
 import com.medcorp.lunar.util.Preferences;
-import com.tencent.mm.sdk.modelmsg.SendAuth;
-import com.tencent.mm.sdk.openapi.IWXAPI;
 
 import net.medcorp.library.ble.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.json.JSONObject;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.functions.Consumer;
-
-import static com.medcorp.lunar.R.style.AppTheme_Dark_Dialog;
 
 
 public class LoginActivity extends BaseActivity {
 
     private int errorSum = 0;
-    private static final int REQUEST_SIGN_UP = 0;
     private ProgressDialog progressDialog;
     private String email;
     private Snackbar snackbar;
@@ -91,10 +50,6 @@ public class LoginActivity extends BaseActivity {
     @Bind(R.id.login_activity_layout)
     CoordinatorLayout loginLayout;
 
-    private IWXAPI weChatApi;
-    private String APP_ID;
-    private CallbackManager mCallbackManager;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,18 +59,21 @@ public class LoginActivity extends BaseActivity {
         if (getModel().getUser().getUserEmail() != null) {
             _emailText.setText(getModel().getUser().getUserEmail());
         }
-        progressDialog = new ProgressDialog(LoginActivity.this, AppTheme_Dark_Dialog);
+        progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.setMessage(getString(R.string.log_in_popup_message));
-        registerFacebookCallBack();
     }
 
-    @OnClick(R.id.cancel_login_button)
-    public void cancelLogin() {
-        startActivity(WelcomeActivity.class);
-        finish();
-        overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            startActivity(WelcomeActivity.class);
+            finish();
+            overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @OnClick(R.id.btn_login)
@@ -149,16 +107,6 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_SIGN_UP) {
-            if (resultCode == RESULT_OK) {
-                setResult(RESULT_OK, null);
-                this.finish();
-            }
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -174,7 +122,8 @@ public class LoginActivity extends BaseActivity {
         setResult(RESULT_OK, null);
         Preferences.saveIsFirstLogin(this, false);
         if ((getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) &&
-                getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, false)) | !getModel().isWatchConnected()) {
+                getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, false))
+                | !getModel().isWatchConnected()) {
             startActivity(TutorialPage1Activity.class);
         } else {
             startActivity(MainActivity.class);
@@ -273,306 +222,6 @@ public class LoginActivity extends BaseActivity {
             _passwordText.setError(null);
         }
         return valid;
-    }
-
-    /**
-     * Facebook login start
-     */
-
-    private void registerFacebookCallBack() {
-        mCallbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                obtainFacebookProfile(loginResult);
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                showSnackbar(error.getMessage());
-            }
-        });
-    }
-
-    @OnClick(R.id.facebook_login_bt)
-    public void facebookLoginButtonClick() {
-        LoginManager.getInstance().logInWithReadPermissions(this,
-                Arrays.asList(getString(R.string.facebook_public_profile)
-                        , getString(R.string.facebook_user_email), getString(R.string.facebook_user_birthday)));
-    }
-
-    private void obtainFacebookProfile(LoginResult loginResult) {
-        GraphRequest request = GraphRequest.newMeRequest(
-                loginResult.getAccessToken(),
-                new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        if (object != null) {
-                            Gson gson = new Gson();
-                            FacebookUserInfoResponse rsp = gson.fromJson
-                                    (object.toString(), FacebookUserInfoResponse.class);
-                            checkFacebookEmail(rsp);
-                        } else {
-                            showSnackbar(R.string.obtain_facebook_info_failed);
-                        }
-                    }
-                });
-        Bundle parameters = new Bundle();
-        parameters.putString(getString(R.string.facebook_user_file), getString(R.string.facebook_user_files));
-        request.setParameters(parameters);
-        request.executeAsync();
-    }
-
-    private void checkFacebookEmail(final FacebookUserInfoResponse userInfoResponse) {
-        progressDialog.show();
-        final CheckEmailRequest request = new CheckEmailRequest(userInfoResponse.getEmail());
-        MedNetworkOperation.getInstance(this).checkEmail(this, request, new RequestResponseListener<CheckEmailResponse>() {
-            @Override
-            public void onFailed() {
-            }
-
-            @Override
-            public void onSuccess(CheckEmailResponse response) {
-                if (response.getStatus() == 1) {
-                    FaceBookAccountLoginRequest loginRequest = new FaceBookAccountLoginRequest
-                            (userInfoResponse.getEmail(), userInfoResponse.getId());
-                    facebookLogin(loginRequest);
-                } else {
-                    createFacebookAccount(userInfoResponse);
-                }
-            }
-        });
-    }
-
-    private void createFacebookAccount(FacebookUserInfoResponse userInfoResponse) {
-        Profile currentProfile = Profile.getCurrentProfile();
-        int sex = 0;
-        if (userInfoResponse.getGender().equals(getString(R.string.user_gender))) {
-            sex = 1;
-        } else {
-            sex = 0;
-        }
-        String[] birthday = userInfoResponse.getBirthday().split("/");
-        final CreateFacebookAccountRequest request = new CreateFacebookAccountRequest(currentProfile.getFirstName()
-                , userInfoResponse.getEmail(), currentProfile.getId(), birthday[2] + "-" +
-                birthday[0] + "-" + birthday[1], 170, 55, sex);
-        MedNetworkOperation.getInstance(this).createFacebookUser(request,
-                new RequestResponseListener<CreateFacebookAccountResponse>() {
-                    @Override
-                    public void onFailed() {
-                    }
-
-                    @Override
-                    public void onSuccess(final CreateFacebookAccountResponse response) {
-                        if (response.getStatus() == 1) {
-                            FaceBookAccountLoginRequest request = new FaceBookAccountLoginRequest
-                                    (response.getUser().getEmail(), response.getUser().getFacebook_id());
-                            facebookLogin(request);
-                        } else {
-                            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showSnackbar(response.getMessage());
-                                }
-                            });
-                        }
-                    }
-                });
-    }
-
-    private void facebookLogin(FaceBookAccountLoginRequest loginRequest) {
-        MedNetworkOperation.getInstance(this).facebookLogin(loginRequest,
-                new RequestResponseListener<FacebookLoginResponse>() {
-                    @Override
-                    public void onFailed() {
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                showSnackbar(getString(R.string.log_in_failed));
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onSuccess(final FacebookLoginResponse response) {
-                        progressDialog.dismiss();
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (response.getStatus() == 1) {
-                                    FacebookLoginResponse.UserBean user = response.getUser();
-                                    final User lunarUser = getModel().getUser();
-                                    lunarUser.setFirstName(user.getFirst_name());
-                                    lunarUser.setUserID("" + user.getId());
-                                    lunarUser.setUserEmail(user.getEmail());
-                                    lunarUser.setIsLogin(true);
-                                    lunarUser.setCreatedDate(new Date().getTime());
-                                    //save it and sync with watch and cloud server
-                                    getModel().saveUser(lunarUser);
-                                    getModel().getSyncController().getDailyTrackerInfo(true);
-                                    getModel().getNeedSyncSteps(lunarUser.getUserID())
-                                            .subscribe(new Consumer<List<Steps>>() {
-                                                @Override
-                                                public void accept(final List<Steps> stepses) throws Exception {
-                                                    getModel().getNeedSyncSleep(lunarUser.getUserID())
-                                                            .subscribe(new Consumer<List<Sleep>>() {
-                                                                @Override
-                                                                public void accept(List<Sleep> sleeps) throws Exception {
-                                                                    getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses
-                                                                            , sleeps);
-                                                                }
-                                                            });
-                                                }
-                                            });
-                                    onLoginSuccess();
-                                } else {
-                                    showSnackbar(getString(R.string.log_in_failed));
-                                }
-                            }
-                        });
-                    }
-                });
-    }
-    /**
-     * facebook end
-     */
-
-
-    /**
-     * wechat login start
-     */
-    @OnClick(R.id.wechat_login_bt)
-    public void weChatLogin() {
-        regToWx();
-        if (!weChatApi.isWXAppInstalled()) {
-            showSnackbar(R.string.wechat_uninstall);
-            return;
-        }
-        SendAuth.Req request = new SendAuth.Req();
-        request.scope = getString(R.string.weixin_scope);
-        request.state = getString(R.string.weixin_package_name);
-        weChatApi.sendReq(request);
-    }
-
-    private void regToWx() {
-        APP_ID = getString(R.string.we_chat_app_id);
-        weChatApi = getModel().getWXApi();
-        weChatApi.registerApp(APP_ID);
-    }
-
-    @Subscribe
-    public void weChatErrorEvent(WeChatEvent event) {
-        showSnackbar(getString(R.string.network_error));
-    }
-
-    @Subscribe
-    public void weChatEvent(final WeChatTokenEvent event) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                if (event != null) {
-                    if (progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
-                    progressDialog.show();
-                    getModel().getWeChatToken(event.getCode());
-                }
-            }
-        });
-    }
-
-    @Subscribe
-    public void userInfoEvent(final ReturnUserInfoEvent event) {
-        if (event != null) {
-            final WeChatUserInfoResponse userInfo = event.getUserInfo();
-            WeChatAccountCheckRequest request = new WeChatAccountCheckRequest(userInfo.getNickname(), userInfo.getUnionid());
-            MedNetworkOperation.getInstance(this).checkWeChat(this, request, new RequestResponseListener<CheckWeChatAccountResponse>() {
-                @Override
-                public void onFailed() {
-                    showSnackbar(getString(R.string.check_wechat_fail));
-                    progressDialog.dismiss();
-                }
-
-                @Override
-                public void onSuccess(CheckWeChatAccountResponse response) {
-                    if (response.getStatus() <= 0) {
-                        createWeChatUser(userInfo);
-                    } else if (response.getStatus() == 1) {
-                        WeChatLoginRequest request = new WeChatLoginRequest(userInfo.getUnionid());
-                        weChatStartLogin(request);
-                    }
-                }
-            });
-        } else {
-            progressDialog.dismiss();
-            showSnackbar(getString(R.string.wechat_login_fail));
-        }
-    }
-
-    private void createWeChatUser(final WeChatUserInfoResponse userInfo) {
-        WeChatAccountRegisterRequest request = new WeChatAccountRegisterRequest(userInfo.getNickname(), userInfo.getUnionid());
-        MedNetworkOperation.getInstance(this).createWeChatAccount(this, request, new RequestResponseListener<CreateWeChatAccountResponse>() {
-            @Override
-            public void onFailed() {
-                showSnackbar(getString(R.string.wechat_create_account_fail));
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onSuccess(CreateWeChatAccountResponse response) {
-                if (response.getStatus() == 1) {
-                    WeChatLoginRequest request = new WeChatLoginRequest(userInfo.getUnionid());
-                    weChatStartLogin(request);
-                } else {
-                    showSnackbar(response.getMessage());
-                }
-            }
-        });
-    }
-
-    private void weChatStartLogin(WeChatLoginRequest request) {
-        MedNetworkOperation.getInstance(this).weChatLogin(this, request, new RequestResponseListener<WeChatLoginResponse>() {
-            @Override
-            public void onFailed() {
-                showSnackbar(getString(R.string.wechat_login_fail));
-            }
-
-            @Override
-            public void onSuccess(WeChatLoginResponse response) {
-                if (response.getStatus() == 1) {
-                    WeChatLoginResponse.UserBean user = response.getUser();
-                    final User lunarUser = getModel().getUser();
-                    lunarUser.setFirstName(user.getFirst_name());
-                    lunarUser.setUserID("" + user.getId());
-                    lunarUser.setWechat(user.getWechat());
-                    lunarUser.setIsLogin(true);
-                    lunarUser.setCreatedDate(new Date().getTime());
-                    //save it and sync with watch and cloud server
-                    getModel().saveUser(lunarUser);
-                    getModel().getSyncController().getDailyTrackerInfo(true);
-                    getModel().getNeedSyncSteps(lunarUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
-                        @Override
-                        public void accept(final List<Steps> stepses) throws Exception {
-                            getModel().getNeedSyncSleep(lunarUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
-                                @Override
-                                public void accept(List<Sleep> sleeps) throws Exception {
-                                    getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses, sleeps);
-                                }
-                            });
-                        }
-                    });
-                    onLoginSuccess();
-                } else {
-                    onFailed();
-                    showSnackbar(getString(R.string.wechat_login_fail));
-                }
-            }
-        });
     }
 
     @Override
