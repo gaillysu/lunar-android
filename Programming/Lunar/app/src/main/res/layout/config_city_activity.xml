@@ -31,39 +31,49 @@
         android:textColor="@color/left_menu_item_text_color"
         android:textSize="12sp"/>
 
+    <Button
+        android:id="@+id/select_sync_local_time"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/shape_login_button_bg"
+        android:button="@null"
+        android:checked="true"
+        android:drawableTop="@drawable/ic_home_time"
+        android:gravity="center_horizontal"
+        android:drawablePadding="10dp"
+        android:paddingTop="40dp"
+        android:text="@string/more_setting_place_local"
+        android:textAllCaps="false"
+        android:textColor="@color/history_data_black"/>
+
     <LinearLayout
         android:id="@+id/show_location_city_ll"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/button_normal_shape"
-        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/select_sync_local_time"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/show_location_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:singleLine="true"
-            android:text="@string/location_describe_title"
             android:textColor="@color/left_menu_item_text_color"
-            android:textSize="16sp"/>
+            android:textSize="20sp"/>
 
         <TextView
-            android:id="@+id/gps_location_address"
+            android:id="@+id/show_select_local_city_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:padding="10dp"
             android:singleLine="true"
             android:textColor="@color/white"
-            android:textSize="25sp"/>
+            android:textSize="16sp"/>
     </LinearLayout>
-
 
     <com.medcorp.lunar.view.customfontview.RobotoButton
         android:id="@+id/config_location_city"
@@ -82,9 +92,9 @@
         style="@style/TutorialButton"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/config_location_city"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp"
+        android:layout_marginTop="20dp"
         android:text="@string/tutorial_3_next"
         android:textColor="@color/tutorial_text_color"/>
 </RelativeLayout>

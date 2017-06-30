@@ -1,35 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-             >
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+    >
+
+    <TextView
+        android:id="@+id/choose_adapter_item_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:textColor="@color/text_color"
+        android:textSize="18sp"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/choose_adapter_item_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
         android:layout_centerVertical="true"
+        android:layout_marginStart="60dp"
+        android:maxLines="1"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
         android:textColor="@color/text_color"
-        android:textSize="18sp"/>
+        android:textSize="14sp"/>
+
     <ImageView
         android:id="@+id/world_clock_adapter_item_is_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_done"
-        android:layout_centerVertical="true"
-        android:visibility="gone"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_marginRight="18dp"
+        android:src="@drawable/ic_done"
+        android:visibility="gone"
         />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="15dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/edit_world_clock_driver_color"/>
 </RelativeLayout>

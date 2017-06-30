@@ -54,4 +54,5 @@
     <string name="other_color_turquoise" translatable="false">green</string>
     <string name="tutorial_4_other_color_text">white</string>
     <string name="other_color_text" translatable="false">two lower buttons</string>
+    <string name="search_city_hint_text">Search your city</string>
 </resources>

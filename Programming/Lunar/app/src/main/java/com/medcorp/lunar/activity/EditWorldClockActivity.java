@@ -126,7 +126,7 @@ public class EditWorldClockActivity extends BaseActivity {
             }
         });
 
-        allCityAdapter = new ChooseCityAdapter(this, chooseCityViewModelsList);
+        allCityAdapter = new ChooseCityAdapter(this, chooseCityViewModelsList,false);
         showAllCityList.setAdapter(allCityAdapter);
         sortCityBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
             @Override

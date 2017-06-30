@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.widget.TextView;
 
 import com.medcorp.lunar.R;
-import com.medcorp.lunar.activity.EditWorldClockActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.view.ToastHelper;
@@ -24,8 +23,10 @@ import butterknife.OnClick;
 
 public class ConfigCityActivity extends BaseActivity {
 
-    @Bind(R.id.gps_location_address)
+    @Bind(R.id.show_location_address)
     TextView localAddress;
+    @Bind(R.id.show_select_local_city_country)
+    TextView localCountry;
     private Address mPositionLocal;
 
     @Override
@@ -52,7 +53,8 @@ public class ConfigCityActivity extends BaseActivity {
         mPositionLocal = Preferences.getLocation(ConfigCityActivity.this);
         if (positionCity == null) {
             if (mPositionLocal != null) {
-                localAddress.setText(mPositionLocal.getLocality() + ", " + mPositionLocal.getCountryName());
+                localAddress.setText(mPositionLocal.getLocality());
+                localCountry.setText( mPositionLocal.getCountryName());
             } else {
                 localAddress.setText(getString(R.string.config_location_failed));
             }
@@ -63,7 +65,7 @@ public class ConfigCityActivity extends BaseActivity {
 
     @OnClick(R.id.config_location_city)
     public void selectLocalCity() {
-        startActivity(EditWorldClockActivity.class);
+        startActivity(SelectLocalCityActivity.class);
     }
 
     @OnClick(R.id.config_next_button)

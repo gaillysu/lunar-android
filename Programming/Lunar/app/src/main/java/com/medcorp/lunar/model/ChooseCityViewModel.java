@@ -5,7 +5,6 @@ import net.medcorp.library.worldclock.City;
 public class ChooseCityViewModel {
 
     private final String displayName;
-
     private final int cityId;
 
     public ChooseCityViewModel(City city) {

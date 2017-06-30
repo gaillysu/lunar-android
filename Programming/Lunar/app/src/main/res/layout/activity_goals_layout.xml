@@ -35,24 +35,25 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@+id/activity_goals_describe"
-        android:layout_marginTop="20dp">
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="40dp">
 
         <TextView
             android:id="@+id/activity_goals_step_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/alarm_repeat_text_color"
+            android:layout_centerInParent="true"
             android:text="@string/more_settings_steps_goal"
-            android:layout_centerInParent="true"/>
+            android:textColor="@color/alarm_repeat_text_color"/>
 
         <ImageButton
             android:id="@+id/activity_goals_set_step_goal_bt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:background="@color/transparent"
-            android:layout_centerVertical="true"
             android:src="@drawable/ic_down"
             android:text="@string/more_setting_place_home"
             android:textAllCaps="false"
@@ -65,24 +66,25 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@+id/activity_goals_step_goal_ll"
+        android:layout_marginRight="40dp"
         android:layout_marginTop="10dp">
 
         <TextView
             android:id="@+id/activity_goals_sleep_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/alarm_repeat_text_color"
+            android:layout_centerInParent="true"
             android:text="@string/more_settings_sleep_goal"
-            android:layout_centerInParent="true"/>
+            android:textColor="@color/alarm_repeat_text_color"/>
 
         <ImageButton
             android:id="@+id/activity_goals_set_sleep_goal_bt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:background="@color/transparent"
-            android:layout_centerVertical="true"
             android:src="@drawable/ic_down"
             android:text="@string/more_setting_place_home"
             android:textAllCaps="false"
@@ -95,25 +97,26 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@+id/activity_goals_sleep_goal_ll"
+        android:layout_marginRight="40dp"
         android:layout_marginTop="10dp">
 
         <TextView
             android:id="@+id/activity_goals_solar_tv"
             android:layout_width="wrap_content"
-            android:textColor="@color/alarm_repeat_text_color"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="@string/more_settings_solar_goal"
-            android:layout_centerInParent="true"/>
+            android:textColor="@color/alarm_repeat_text_color"/>
 
         <ImageButton
             android:id="@+id/activity_goals_set_solar_goal_bt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:background="@color/transparent"
             android:src="@drawable/ic_down"
-            android:layout_centerVertical="true"
             android:text="@string/more_setting_place_home"
             android:textAllCaps="false"
             android:textColor="@color/white"/>
