@@ -50,7 +50,7 @@ public class MyWatchActivity extends BaseActivity {
     @Bind(R.id.my_watch_update_tv)
     TextView firmwerUpdateInfomation;
 
-    private MyWatch mMyWatch;
+    private MyWatch myWatch;
     private final int battery_level = 2; //default is 2,  value is [0,1,2], need get later
     private final boolean available_version = false;//need check later
 
@@ -72,7 +72,7 @@ public class MyWatchActivity extends BaseActivity {
             e.printStackTrace();
         }
 
-        mMyWatch = new MyWatch(getModel().getWatchFirmware(), getModel().getWatchSoftware(), app_version, battery_level, available_version, null);
+        myWatch = new MyWatch(getModel().getWatchFirmware(), getModel().getWatchSoftware(), app_version, battery_level, available_version, null);
         myNevoListView.setVisibility(View.GONE);
         showMyDeviceNewsLayout.setVisibility(View.VISIBLE);
         initLunarData();
@@ -114,7 +114,7 @@ public class MyWatchActivity extends BaseActivity {
                 }
             });
         } else {
-            showFirmwerVersion.setText(mMyWatch.getBleFirmwareVersion());
+            showFirmwerVersion.setText(myWatch.getBleFirmwareVersion());
             firmwerUpdateInfomation.setVisibility(View.INVISIBLE);
         }
     }
@@ -148,7 +148,7 @@ public class MyWatchActivity extends BaseActivity {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                mMyWatch.setBatteryLevel((int) batteryEvent.getBattery().getBatteryLevel());
+                myWatch.setBatteryLevel((int) batteryEvent.getBattery().getBatteryLevel());
                 initLunarData();
             }
         });
@@ -157,12 +157,12 @@ public class MyWatchActivity extends BaseActivity {
     private void initLunarData() {
 
         String str_battery = this.getString(R.string.my_nevo_battery_low);
-        if (mMyWatch.getBatteryLevel() == 2) {
+        if (myWatch.getBatteryLevel() == 2) {
             str_battery = this.getString(R.string.my_nevo_battery_full);
-        } else if (mMyWatch.getBatteryLevel() == 1) {
+        } else if (myWatch.getBatteryLevel() == 1) {
             str_battery = this.getString(R.string.my_nevo_battery_half);
         }
         showWatchBattery.setText(str_battery);
-        showWatchVersion.setText(mMyWatch.getAppVersion());
+        showWatchVersion.setText(myWatch.getAppVersion());
     }
 }
