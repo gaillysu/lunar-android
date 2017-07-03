@@ -100,9 +100,10 @@ public class Preferences {
         return preferences.getBoolean(context.getString(R.string.key_prefs_is_first_login), true);
     }
 
-    public static boolean saveFirstSettingDefValue(Context context) {
+    public static void saveFirstSettingDefValue(Context context) {
         init(context);
-        return preferences.getBoolean(context.getString(R.string.key_first_setting), false);
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.putBoolean(context.getString(R.string.key_first_setting), false).commit();
     }
 
     public static boolean isFirstSettingDefValue(Context context) {

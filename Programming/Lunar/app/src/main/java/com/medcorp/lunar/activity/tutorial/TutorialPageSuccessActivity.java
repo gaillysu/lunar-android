@@ -127,7 +127,7 @@ public class TutorialPageSuccessActivity extends BaseActivity {
     public void nextClicked() {
         if (Preferences.isFirstSettingDefValue(this)) {
             startActivity(ConfigTimeSyncActivity.class);
-        }else{
+        } else {
             startActivity(MainActivity.class);
         }
         finish();

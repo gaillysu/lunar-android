@@ -88,6 +88,10 @@ public class UserInfoActivity extends BaseActivity implements View.OnTouchListen
         tv_userBirth.setOnTouchListener(this);
         tv_userHeight.setOnTouchListener(this);
         tv_userWeight.setOnTouchListener(this);
+        progressDialog = new ProgressDialog(UserInfoActivity.this, R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(false);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage(getString(R.string.network_wait_text));
     }
 
 
@@ -101,12 +105,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnTouchListen
                 RegisterNewAccountRequest registerModel = new RegisterNewAccountRequest(firstName, lastName, email, password
                         , userBirthday, new Integer(userHeight.replace(getString(R.string.info_company_height), "")).intValue(),
                         (int) Double.parseDouble(userWeight.replace(getString(R.string.info_company_weight), "")), gender);
-                progressDialog = new ProgressDialog(UserInfoActivity.this, R.style.AppTheme_Dark_Dialog);
-                progressDialog.setIndeterminate(false);
-                progressDialog.setCancelable(false);
-                progressDialog.setMessage(getString(R.string.network_wait_text));
                 progressDialog.show();
-
                 getModel().getCloudSyncManager().createUser(registerModel);
             } catch (NumberFormatException e) {
                 showSnackbar(R.string.user_no_select_profile_info);

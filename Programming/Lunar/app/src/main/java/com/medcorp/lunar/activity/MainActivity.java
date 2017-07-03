@@ -172,7 +172,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             userEmail = getString(R.string.watch_med_profile);
         }
         Bitmap bt = BitmapFactory.decodeFile(getUserHeardPicturePath(this, userEmail));
-        //从Sd中找头像，转换成Bitmap
         if (bt != null) {
             userImageView.setImageBitmap(PublicUtils.drawCircleView(bt));
         } else {

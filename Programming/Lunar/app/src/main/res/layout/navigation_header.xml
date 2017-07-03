@@ -22,8 +22,7 @@
         android:layout_marginTop="25dp"
         android:scaleType="fitXY"
         android:background="@android:color/transparent"
-        android:src="@drawable/user"
-        />
+        android:src="@drawable/user"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/navigation_header_spinner"

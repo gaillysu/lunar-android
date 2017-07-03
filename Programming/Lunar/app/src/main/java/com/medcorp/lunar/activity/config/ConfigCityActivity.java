@@ -76,5 +76,6 @@ public class ConfigCityActivity extends BaseActivity {
         } else {
             ToastHelper.showShortToast(this, getString(R.string.config_location_city_is_null));
         }
+        finish();
     }
 }

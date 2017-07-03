@@ -21,17 +21,27 @@ import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.lunar.activity.tutorial.WelcomeActivity;
 import com.medcorp.lunar.base.BaseActivity;
-import com.medcorp.lunar.event.LoginEvent;
+import com.medcorp.lunar.cloud.med.MedNetworkOperation;
+import com.medcorp.lunar.model.Sleep;
+import com.medcorp.lunar.model.Steps;
+import com.medcorp.lunar.model.User;
+import com.medcorp.lunar.network.model.response.UserLoginResponse;
 import com.medcorp.lunar.util.Preferences;
+import com.medcorp.lunar.view.ToastHelper;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 import net.medcorp.library.ble.util.Constants;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 
 
 public class LoginActivity extends BaseActivity {
@@ -54,7 +64,6 @@ public class LoginActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        EventBus.getDefault().register(this);
         ButterKnife.bind(this);
         if (getModel().getUser().getUserEmail() != null) {
             _emailText.setText(getModel().getUser().getUserEmail());
@@ -86,27 +95,54 @@ public class LoginActivity extends BaseActivity {
         progressDialog.show();
         email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
-        getModel().getCloudSyncManager().userLogin(email, password);
-    }
-
-    @Subscribe
-    public void onEvent(final LoginEvent event) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
+        MedNetworkOperation.getInstance(this).userMedLogin(email, password, new RequestListener<UserLoginResponse>() {
             @Override
-            public void run() {
+            public void onRequestFailure(SpiceException spiceException) {
                 progressDialog.dismiss();
-                switch (event.getLoginStatus()) {
-                    case FAILED:
-                        onLoginFailed();
-                        break;
-                    case SUCCESS:
-                        onLoginSuccess();
-                        break;
+                onLoginFailed();
+            }
+
+            @Override
+            public void onRequestSuccess(UserLoginResponse userLoginResponse) {
+                progressDialog.dismiss();
+                if (userLoginResponse.getStatus() == 1) {
+                    UserLoginResponse.UserBean user = userLoginResponse.getUser();
+                    final User nevoUser = getModel().getUser();
+                    try {
+                        nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday().getDate()).getTime());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    nevoUser.setFirstName(user.getFirst_name());
+                    nevoUser.setHeight(user.getLength());
+                    nevoUser.setLastName(user.getLast_name());
+                    nevoUser.setWeight(user.getWeight());
+                    nevoUser.setUserID("" + user.getId());
+                    nevoUser.setUserEmail(user.getEmail());
+                    nevoUser.setIsLogin(true);
+                    nevoUser.setCreatedDate(new Date().getTime());
+                    //save it and sync with watch and cloud server
+                    getModel().saveUser(nevoUser);
+                    getModel().getSyncController().getDailyTrackerInfo(true);
+                    getModel().getNeedSyncSteps(nevoUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
+                        @Override
+                        public void accept(final List<Steps> stepses) throws Exception {
+                            getModel().getNeedSyncSleep(nevoUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
+                                @Override
+                                public void accept(List<Sleep> sleeps) throws Exception {
+                                    getModel().getCloudSyncManager().launchSyncAll(nevoUser, stepses, sleeps);
+                                }
+                            });
+                        }
+                    });
+                    onLoginSuccess();
+                } else {
+                    onLoginFailed();
+                    ToastHelper.showShortToast(LoginActivity.this, userLoginResponse.getMessage());
                 }
             }
         });
     }
-
 
     @Override
     public void onBackPressed() {
@@ -115,20 +151,23 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void onLoginSuccess() {
-        showSnackbar(R.string.log_in_success);
-        _loginButton.setEnabled(true);
-        getModel().getUser().setUserEmail(_emailText.getText().toString());
-        getModel().saveUser(getModel().getUser());
-        setResult(RESULT_OK, null);
-        Preferences.saveIsFirstLogin(this, false);
-        if ((getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) &&
-                getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, false))
-                | !getModel().isWatchConnected()) {
-            startActivity(TutorialPage1Activity.class);
-        } else {
-            startActivity(MainActivity.class);
-        }
-        finish();
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                showSnackbar(R.string.log_in_success);
+                _loginButton.setEnabled(true);
+                setResult(RESULT_OK, null);
+                Preferences.saveIsFirstLogin(LoginActivity.this, false);
+                if ((getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) &&
+                        getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, false))
+                        | !getModel().isWatchConnected()) {
+                    startActivity(TutorialPage1Activity.class);
+                } else {
+                    startActivity(MainActivity.class);
+                }
+                finish();
+            }
+        });
     }
 
     @OnClick(R.id.forget_password_send_bt)
@@ -227,7 +266,6 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }

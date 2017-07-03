@@ -125,6 +125,7 @@
     <style name="AppTheme.Dark.Dialog" parent="Theme.AppCompat.Dialog">
         <item name="colorAccent">#7ED8D1</item>
         <item name="android:textColorPrimary">@color/text_color</item>
+        <item name="android:textColor">@color/text_color</item>
         <item name="android:background">@color/baseBackground</item>
     </style>
 

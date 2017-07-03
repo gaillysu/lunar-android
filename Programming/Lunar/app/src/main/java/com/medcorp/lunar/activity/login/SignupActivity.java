@@ -29,8 +29,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.medcorp.lunar.R.style.AppTheme_Dark_Dialog;
-
 public class SignupActivity extends BaseActivity {
     private static final String TAG = "SignupActivity";
 
@@ -61,11 +59,10 @@ public class SignupActivity extends BaseActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-
-        progressDialog = new ProgressDialog(this, AppTheme_Dark_Dialog);
+        progressDialog = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
-        progressDialog.setMessage(getString(R.string.load_in_popup_message));
+        progressDialog.setMessage(getString(R.string.network_wait_text));
     }
 
     @Override
@@ -81,17 +78,13 @@ public class SignupActivity extends BaseActivity {
 
     @OnClick(R.id.btn_signup)
     public void signUpAction() {
+        progressDialog.show();
         if (!validate()) {
             onSignupFailed();
             return;
         }
-        final ProgressDialog progressDialog;
-        progressDialog = new ProgressDialog(SignupActivity.this, R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage(getString(R.string.network_wait_text));
         CheckEmailRequest request = new CheckEmailRequest(email);
-        MedNetworkOperation.getInstance(this).checkEmail(this, request, new RequestResponseListener<CheckEmailResponse>() {
+        MedNetworkOperation.getInstance(this).checkEmail(this, request,new RequestResponseListener<CheckEmailResponse>() {
             @Override
             public void onFailed() {
                 progressDialog.dismiss();
