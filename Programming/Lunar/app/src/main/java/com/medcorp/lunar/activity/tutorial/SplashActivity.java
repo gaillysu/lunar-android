@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.MainActivity;
+import com.medcorp.lunar.activity.config.ConfigTimeSyncActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.util.Preferences;
 
@@ -31,7 +32,21 @@ public class SplashActivity extends BaseActivity {
             }, 1500);
         }
 
-        if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)) {
+        if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)
+                && Preferences.isFirstSettingDefValue(this)) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(SplashActivity.this, ConfigTimeSyncActivity.class));
+                    finish();
+                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                }
+            }, 1500);
+        }
+
+        if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)
+                && !Preferences.isFirstSettingDefValue(this)) {
+
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
