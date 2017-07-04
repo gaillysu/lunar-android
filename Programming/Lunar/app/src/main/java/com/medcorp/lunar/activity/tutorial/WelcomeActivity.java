@@ -53,6 +53,7 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 
 import net.medcorp.library.ble.util.Constants;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONObject;
 
@@ -65,9 +66,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.functions.Consumer;
 
-import static com.medcorp.lunar.R.style.AppTheme_Dark_Dialog;
-
-/**
+/***
  * Created by Jason on 2017/6/16.
  */
 
@@ -88,6 +87,7 @@ public class WelcomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_page);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         progressDialog = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
@@ -451,5 +451,11 @@ public class WelcomeActivity extends BaseActivity {
                 snackbar.dismiss();
             }
         }, 1000);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

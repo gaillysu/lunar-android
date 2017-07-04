@@ -94,7 +94,7 @@ public class ProfileActivity extends BaseActivity {
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.profile_title);
         user = getModel().getUser();
-        if (getModel().getUser().isLogin()) {
+        if (user.getUserEmail() != null) {
             userEmail = user.getUserEmail();
         } else {
             userEmail = getString(R.string.watch_med_profile);

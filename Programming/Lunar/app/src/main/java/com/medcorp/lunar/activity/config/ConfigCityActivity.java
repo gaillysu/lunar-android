@@ -1,6 +1,7 @@
 package com.medcorp.lunar.activity.config;
 
 import android.Manifest;
+import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -49,23 +50,35 @@ public class ConfigCityActivity extends BaseActivity {
         builder.setText(R.string.location_access_content);
         builder.setTitle(R.string.location_access_title);
         builder.askForPermission(this, 1);
-        String positionCity = Preferences.getPositionCity(ConfigCityActivity.this);
+        String positionCity = Preferences.getPositionCity(this);
+        String positionCountry = Preferences.getPositionCountry(this);
         mPositionLocal = Preferences.getLocation(ConfigCityActivity.this);
         if (positionCity == null) {
             if (mPositionLocal != null) {
                 localAddress.setText(mPositionLocal.getLocality());
-                localCountry.setText( mPositionLocal.getCountryName());
+                localCountry.setText(mPositionLocal.getCountryName());
             } else {
                 localAddress.setText(getString(R.string.config_location_failed));
             }
         } else {
             localAddress.setText(positionCity);
+            localCountry.setText(positionCountry);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 0x02) {
+            localAddress.setText(Preferences.getPositionCity(this));
+            localCountry.setText(Preferences.getPositionCountry(this));
         }
     }
 
     @OnClick(R.id.config_location_city)
     public void selectLocalCity() {
-        startActivity(SelectLocalCityActivity.class);
+        Intent intent = new Intent(this, SelectLocalCityActivity.class);
+        startActivityForResult(intent, 0x01);
     }
 
     @OnClick(R.id.config_next_button)
