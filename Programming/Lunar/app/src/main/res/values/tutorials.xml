@@ -4,9 +4,8 @@
     <string name="user_info_back_text">Back</string>
     <string name="register_user_info_page_text">Register</string>
     <string name="register_user_info_page_next_text">Next</string>
-    <string name="activity_user_info_title_above_text">Your information</string>
-    <string name="activity_user_info_text_dec_middle">Enter your information below.\n Don\'t worry, it is completely private to you and\n your phone.</string>
-    <string name="activity_user_info_text_our_text">Check our private policy</string>
+    <string name="activity_user_info_title_above_text">About you</string>
+    <string name="activity_user_info_text_dec_middle">we\'d love to get to know you a bit better.</string>
     <string name="activity_user_info_birthday">Date of Birth</string>
     <string name="activity_user_info_height">Height</string>
     <string name="activity_user_info_weight">Weight</string>
@@ -18,7 +17,7 @@
     <string name="register_input_first_is_empty">User name cannot be empty</string>
     <!--login-->
     <string name="forget_password_activity_title_dec">Forget Password</string>
-    <string name="forget_password_activity_page_dec">Don\'t worry.We get you covered.As long as you don\'t forget to your LunaR in the morning.</string>
+    <string name="forget_password_activity_page_dec">Tell us the email-address you used to register a LunaR-account. Within minutes after the request you will receive a new temporary password.</string>
     <string name="forget_password_send_request_bt_text">SEND</string>
     <string name="tips_user_account_password">Email must not be empty</string>
     <string name="email_format_error">Invalid Email format</string>
@@ -26,7 +25,9 @@
     <string name="forget_password_input_new_password">New Password</string>
     <string name="password_is_not_empty">Password must not be empty</string>
     <string name="password_is_not_repeat">Passwords do not match with each other.</string>
-    <string name="welcome_activity_create_account">Create an account</string>
+    <string name="welcome_activity_create_account">Signup with Email</string>
+    <string name="welcome_activity_facebook_login">Continue with Facebook</string>
+    <string name="welcome_activity_wechat_login">Continue with WeChat</string>
     <string name="welcome_activity_skip_login">or continue without registration</string>
     <string name="register_activity_other_account">or register using</string>
     <string name="login_activity_other_account">or log in using</string>
@@ -35,7 +36,7 @@
     <string name="cancel_login_bt_tv">Cancel login</string>
     <string name="login_activity_title">Login</string>
     <string name="tutorial_out_shipping_mode_title">Shipping-mode</string>
-    <string name="tutorial_shipping_mode_describe_text">Take LunaR out of shipping-mode by pressing\n the lower left button. The 12 0\'clock LED will\n blink turquoise and the rest blink white.</string>
+    <string name="tutorial_shipping_mode_describe_text">Take LunaR out of shipping-mode by pressing the two lower buttons. The LED at 12 0\'clock will blink green.</string>
     <string name="start_config_watch_tv">Configurate LunaR</string>
     <string name="config_time_title">Second Timezone</string>
     <string name="config_time_describe">LunaR can display your home or local time by pushing on the right button. Which time would you like to use?</string>
@@ -50,7 +51,8 @@
     <string name="other_color_bluetooth_failed" translatable="false">bluetooth is enabled</string>
     <string name="other_color_led_text" translatable="false">LED</string>
     <string name="other_color_blinking" translatable="false">blinking</string>
-    <string name="other_color_turquoise" translatable="false">turquoise</string>
-    <string name="other_color_white" translatable="false">white</string>
-    <string name="other_color_text" translatable="false">lower left button</string>
+    <string name="other_color_turquoise" translatable="false">green</string>
+    <string name="tutorial_4_other_color_text">white</string>
+    <string name="other_color_text" translatable="false">two lower buttons</string>
+    <string name="search_city_hint_text">Search your city</string>
 </resources>

@@ -25,10 +25,9 @@
     <string name="activity_user_info_birthday">Date of Birth</string>
     <string name="activity_user_info_man">Male</string>
     <string name="activity_user_info_height">Height</string>
-    <string name="activity_user_info_text_our_text">Check our private policy</string>
-    <string name="activity_user_info_text_dec_middle">Enter your information below.  Don\'t worry, it is completely private to you and  your phone.</string>
+    <string name="activity_user_info_text_dec_middle">we\'d love to get to know you a bit better.</string>
     <string name="activity_user_info_weight">Weight</string>
-    <string name="activity_user_info_title_above_text">Your information</string>
+    <string name="activity_user_info_title_above_text">About you</string>
     <string name="add_new_notification_dialog_hint_content">Input name</string>
     <string name="add_new_notification_dialog_title">Add name</string>
     <string name="add_alarm_index_out">The same type of alarm clock can only add %1$d!</string>
@@ -60,7 +59,7 @@
     <string name="edit_user_first_name">Click to set your first name</string>
     <string name="email_format_error">Invalid Email format</string>
     <string name="every_day">Every</string>
-    <string name="forget_password_activity_page_dec">Don\'t worry.We get you   covered.As long as   you don\'t forget to your  LunaR in the morning.</string>
+    <string name="forget_password_activity_page_dec">Tell us the email-address you used to register a LunaR-account. Within minutes after the request you will receive a new temporary password.</string>
     <string name="forget_password_activity_title_dec">Forget Password</string>
     <string name="forget_password_input_new_password">New Password</string>
     <string name="forget_password_result_email_address_text">A email has been sent to:</string>
@@ -315,11 +314,11 @@
     <string name="tutorial_2_dialog_positive">Activez le Bluetooth dans les paramètres pour la connexion avec LunaR</string>
 
     <string name="tutorial_3_title">Régler l\'heure</string>
-    <string name="tutorial_3_text">Tirez la couronne et tournez pour régler l\'heure sur votre montre LunaR. Notez que LunaR ne synchronise pas l\'heure avec votre téléphone.</string>
+    <string name="tutorial_3_text">Pull out the crown out and turn to set the time on LunR.Be aware that the hands doesn\'t sync with your phone\'s time.</string>
     <string name="tutorial_3_next">Suivant</string>
 
     <string name="tutorial_4_title">Allumez LunaR</string>
-    <string name="tutorial_4_text">Maintenez enfoncé le troisième bouton, jusqu\'à ce que la LED bleue clignote.</string>
+    <string name="tutorial_4_text">Push any of the lower buttons to turn on LunaR. the LED ar 12 o\'clock will blink white.</string>
     <string name="tutorial_4_next">Suivant</string>
 
     <string name="tutorial_5_title">Recherche en cours</string>
@@ -509,5 +508,7 @@
     <string name="welcome_activity_create_account">Create an account</string>
     <string name="welcome_activity_skip_login">or continue without registration</string>
     <string name="tutorial_out_shipping_mode_title">Shipping-mode</string>
-    <string name="tutorial_shipping_mode_describe_text">Take LunaR out of shipping-mode by pressing  the lower left button. The 12 0\'clock LED will  blink turquoise and the rest blink white.</string>
+    <string name="tutorial_shipping_mode_describe_text">Take LunaR out of shipping-mode by pressing the two lower buttons. The LED at 12 0\'clock will blink green.</string>
+    <string name="welcome_activity_facebook_login">Continue with Facebook</string>
+    <string name="welcome_activity_wechat_login">Continue with WeChat</string>
 </resources>

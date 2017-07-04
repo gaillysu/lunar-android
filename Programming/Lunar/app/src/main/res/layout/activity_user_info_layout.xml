@@ -1,99 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/user_info_activity_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:layout_height="match_parent">
 
-        <include layout="@layout/activity_user_info_title"/>
-
-        <View
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black"/>
-
-        <TextView
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
-            android:text="@string/activity_user_info_title_above_text"
-            android:textColor="@color/text_color"
-            android:textSize="25sp"
-            />
+            android:layout_centerInParent="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:text="@string/activity_user_info_text_dec_middle"
-            android:textColor="@color/text_color"
-            android:textSize="16sp"
-            android:id="@+id/textView7"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="40dp"
+                android:text="@string/activity_user_info_title_above_text"
+                android:textColor="@color/text_color"
+                android:textSize="25sp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:text="@string/activity_user_info_text_our_text"
-            android:textColor="@color/register_account_text_color"
-            android:textSize="18sp"
-            />
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="@string/activity_user_info_text_dec_middle"
+                android:textColor="@color/text_color"
+                android:textSize="16sp"/>
 
-        <include
-            layout="@layout/user_info_sex_select_bt"/>
+            <include
+                layout="@layout/user_info_sex_select_bt"/>
 
-        <TextView
-            android:id="@+id/register_account_activity_edit_birthday"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/shape_input_email_account_bg"
-            android:gravity="center_vertical"
-            android:hint="@string/activity_user_info_birthday"
-            android:paddingLeft="8dp"
-            android:textColor="@color/text_color"
-            android:textSize="20sp"/>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/shape_input_email_account_bg"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:paddingRight="10dp"
+                android:paddingTop="2dp"
+                android:textColorHint="@color/colorAccent"
+                app:hintTextAppearance="@style/hintAppearance">
 
-        <TextView
-            android:id="@+id/register_account_activity_edit_height"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/shape_input_email_account_bg"
-            android:gravity="center_vertical"
-            android:hint="@string/activity_user_info_height"
-            android:paddingLeft="8dp"
-            android:textColor="@color/text_color"
-            android:textSize="20sp"
-            />
+                <EditText
+                    android:id="@+id/register_account_activity_edit_birthday"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/transparent"
+                    android:hint="@string/activity_user_info_birthday"
+                    android:inputType="time"
+                    android:paddingLeft="8dp"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color"
+                    android:textSize="20sp"/>
+            </android.support.design.widget.TextInputLayout>
 
-        <TextView
-            android:id="@+id/register_account_activity_edit_weight"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/shape_input_email_account_bg"
-            android:gravity="center_vertical"
-            android:hint="@string/activity_user_info_weight"
-            android:paddingLeft="8dp"
-            android:textColor="@color/text_color"
-            android:textSize="20sp"
-            />
-    </LinearLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_input_email_account_bg"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:paddingRight="10dp"
+                android:paddingTop="2dp"
+                android:textColorHint="@color/colorAccent"
+                app:hintTextAppearance="@style/hintAppearance">
+
+                <EditText
+                    android:id="@+id/register_account_activity_edit_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/transparent"
+                    android:hint="@string/activity_user_info_height"
+                    android:inputType="time"
+                    android:paddingLeft="8dp"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color"
+                    android:textSize="20sp"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/user_info_weight_title_tl"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_input_email_account_bg"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center_vertical"
+                android:paddingRight="10dp"
+                android:paddingTop="2dp"
+                android:textColorHint="@color/colorAccent"
+                app:hintTextAppearance="@style/hintAppearance">
+
+                <EditText
+                    android:id="@+id/register_account_activity_edit_weight"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/transparent"
+                    android:hint="@string/activity_user_info_weight"
+                    android:paddingLeft="8dp"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color"
+                    android:textSize="20sp"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/register_info_activity_next_tv"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shape_login_button_bg"
+                android:text="@string/tutorial_3_next"
+                android:textColor="@color/text_color"/>
+        </LinearLayout>
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

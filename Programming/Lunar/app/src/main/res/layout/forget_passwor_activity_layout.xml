@@ -1,60 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/login_background"
               android:focusable="true"
-             android:background="@drawable/login_background"
-              android:layout_height="match_parent">
+              android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:text="@string/forget_password_activity_title_dec"
+        android:textColor="@color/text_color"
+        android:textSize="30dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:background="@color/window_background_color"
+        android:orientation="vertical">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/forget_password_activity_title_dec"
-            android:textSize="30dp"
-            android:layout_marginTop="50dp"
-            android:textColor="@color/text_color"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="50dp"
-            android:background="@color/window_background_color">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_marginTop="30dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/forget_password_activity_page_dec"
             android:textColor="@color/text_color"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/forget_password_activity_page_dec"/>
-        <EditText
-            android:id="@+id/forget_password_input_email_edit"
+            android:textSize="13sp"/>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:layout_marginTop="60dp"
-            android:hint="@string/log_in_email"
-            android:textColorHint="@color/text_color"
-            android:textColor="@color/text_color"
-            android:paddingLeft="8dp"
-            android:textSize="20sp"
             android:background="@drawable/shape_input_email_account_bg"
-            />
+            android:gravity="center_vertical"
+            android:paddingTop="2dp"
+            android:textColorHint="@color/colorAccent"
+            app:hintTextAppearance="@style/hintAppearance">
+
+            <EditText
+                android:id="@+id/forget_password_input_email_edit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:hint="@string/log_in_email"
+                android:gravity="center_vertical"
+                android:paddingLeft="8dp"
+                android:textColor="@color/text_color"
+                android:textColorHint="@color/text_color"
+                android:textSize="16sp"
+                />
+        </android.support.design.widget.TextInputLayout>
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/forget_password_send_bt"
             android:layout_width="fill_parent"
             android:layout_height="48dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginRight="50dp"
             android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/shape_login_button_bg"
             android:gravity="center"
             android:text="@string/forget_password_send_request_bt_text"
             android:textColor="@color/text_color"
             android:textSize="20sp"/>
-        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

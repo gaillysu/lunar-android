@@ -18,6 +18,7 @@ import com.medcorp.lunar.model.ChangeSolarGoalEvent;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.model.StepsGoal;
+import com.medcorp.lunar.util.Preferences;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -225,6 +226,7 @@ public class ConfigGoalsActivity extends BaseActivity {
 
     @OnClick(R.id.config_next_button)
     public void next() {
+        Preferences.saveFirstSettingDefValue(this);
         int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
         final int buildingFirmwareVersion = getResources().getInteger(R.integer.launar_version);
         if (currentFirmwareVersion < buildingFirmwareVersion) {

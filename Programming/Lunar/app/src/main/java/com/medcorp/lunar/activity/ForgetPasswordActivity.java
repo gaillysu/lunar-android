@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.widget.EditText;
 
 import com.medcorp.lunar.R;
+import com.medcorp.lunar.activity.login.LoginActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.cloud.med.MedNetworkOperation;
 import com.medcorp.lunar.network.listener.RequestResponseListener;
@@ -99,5 +101,16 @@ public class ForgetPasswordActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            startActivity(LoginActivity.class);
+            finish();
+            overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

@@ -159,7 +159,7 @@
     <string name="tutorial_4_text">按住第三鍵3秒鐘，直到藍燈閃爍.</string>
     <string name="tutorial_4_next">下壹步</string>
 
-    <string name="tutorial_5_title">正在搜索&#8230;</string>
+    <string name="tutorial_5_title">正在搜索</string>
     <string name="tutorial_5_text">保持手表接近您的電話</string>
 
     <string name="tutorial_failed_title">連接手表失敗</string>
@@ -277,9 +277,8 @@
     <string name="activity_user_info_female">女</string>
     <string name="activity_user_info_height">身高</string>
     <string name="activity_user_info_man">男</string>
-    <string name="activity_user_info_text_dec_middle">輸入妳的信息,不用擔心,妳的信息完全受到保護。</string>
-    <string name="activity_user_info_text_our_text">檢查我們的私有策略</string>
-    <string name="activity_user_info_title_above_text">妳的信息</string>
+    <string name="activity_user_info_text_dec_middle">輸入更多關於妳的信息!</string>
+    <string name="activity_user_info_title_above_text">信息</string>
     <string name="activity_user_info_weight">體重</string>
     <string name="add_alarm_index_out">最多支持%1$d個同類型的鬧鐘</string>
     <string name="alarm_set_week_day">設置鬧鐘的星期日期</string>
@@ -305,7 +304,7 @@
     <string name="email_format_error">非法的Email格式</string>
     <string name="alarm_week_day">重復</string>
     <string name="every_day">每天</string>
-    <string name="forget_password_activity_page_dec">別擔心,我們會幫妳找到密碼</string>
+    <string name="forget_password_activity_page_dec">告訴我們妳用來註冊LunaR帳戶的電子郵件地址。在請求之後的幾分鐘內，您將收到壹個新的臨時密碼。</string>
     <string name="forget_password_activity_title_dec">忘記密碼</string>
     <string name="forget_password_result_email_address_text">發送郵件到:</string>
     <string name="forget_password_result_prompt">檢查妳的郵箱</string>
@@ -508,4 +507,6 @@
     <string name="welcome_activity_skip_login">或者不登錄</string>
     <string name="tutorial_out_shipping_mode_title">禁用模式</string>
     <string name="tutorial_shipping_mode_describe_text">按下左鍵退出禁用模式,表盤任意LED燈,亮起代表藍牙開啟!</string>
+    <string name="welcome_activity_facebook_login">使用Facebook</string>
+    <string name="welcome_activity_wechat_login">使用微信</string>
 </resources>

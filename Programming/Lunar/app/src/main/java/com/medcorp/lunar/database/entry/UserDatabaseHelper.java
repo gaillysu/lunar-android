@@ -140,6 +140,7 @@ public class UserDatabaseHelper {
                 if (user == null) {
                     loginUser = new User(0);
                     loginUser.setUserID("0");
+                    loginUser.setIsLogin(true);
                 } else {
                     loginUser = mRealm.copyFromRealm(user);
                 }

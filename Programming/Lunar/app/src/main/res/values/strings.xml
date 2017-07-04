@@ -404,12 +404,12 @@
     <string name="tutorial_1_text">Use your LunaR watch to set, track and analyse\n your personal health and fitness data</string>
     <string name="tutorial_1_lets_activate">Activate LunaR</string>
     <string name="change_select_city">Change city</string>
-    <string name="tutorial_3_text">Pull out the crown out and turn to set the time on\n your LunaR watch. Be aware that LunaR doesn\’t sync time with your phone</string>
+    <string name="tutorial_3_text">Pull out the crown out and turn to set the time on LunR.Be aware that the hands doesn\'t sync with your phone\'s time.</string>
     <string name="tutorial_2_text">Tap the Settings button and turn\n Bluetooth on.</string>
     <string name="tutorial_2_continue">Turn Bluetooth on</string>
     <string name="tutorial_4_title">Turn on LunaR </string>
-    <string name="tutorial_4_text">Push and hold the third button, until the \n LED blinks.</string>
-    <string name="tutorial_5_title">Searching...</string>
+    <string name="tutorial_4_text">Push any of the lower buttons to turn on LunaR. the LED ar 12 o\'clock will blink white.</string>
+    <string name="tutorial_5_title">Searching</string>
     <string name="tutorial_failed_text">Make sure your phone\'s bluetooth is enabled and that the LED on the LunaR is blinking.</string>
     <string name="in_app_notification_found_nevo">Found LunaR!</string>
     <string name="in_app_notification_nevo_disconnected">LunaR disconnected.</string>

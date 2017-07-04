@@ -23,13 +23,15 @@ public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
     private Context mContext;
     private String homeCityName;
     private String homeCityCountry;
+    private boolean flag;
 
-    public ChooseCityAdapter(Context mContext, List<ChooseCityViewModel> list) {
+    public ChooseCityAdapter(Context mContext, List<ChooseCityViewModel> list, boolean flag) {
         this.mContext = mContext;
         this.list = list;
-
+        this.flag = flag;
         homeCityCountry = Preferences.getPositionCountry(mContext);
         homeCityName = Preferences.getPositionCity(mContext);
+
     }
 
     public void updateListView(List<ChooseCityViewModel> list) {
@@ -51,15 +53,26 @@ public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
 
     public View getView(final int position, View view, ViewGroup arg2) {
         ViewHolder viewHolder = null;
-        final ChooseCityViewModel mContent = list.get(position);
         if (view == null) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.choose_city_adapter_item, null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.choose_city_adapter_item, arg2, false);
             viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
 
+        final ChooseCityViewModel mContent = list.get(position);
+        if (!(position != 0 && list.get(position).getSortLetter().equals(list.get(position - 1).getSortLetter()))) {
+            viewHolder.title.setVisibility(View.VISIBLE);
+            viewHolder.title.setText(mContent.getSortLetter());
+        } else {
+            viewHolder.title.setVisibility(View.INVISIBLE);
+        }
+
+        if (flag) {
+            viewHolder.tvTitle.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+            viewHolder.title.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+        }
         viewHolder.tvTitle.setText(mContent.getDisplayName());
         if (mContent.getDisplayName().equals(homeCityName + ", " + homeCityCountry)) {
             viewHolder.isCheck.setVisibility(View.VISIBLE);
@@ -72,6 +85,8 @@ public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
 
 
     final static class ViewHolder {
+        @Bind(R.id.choose_adapter_item_title_tv)
+        TextView title;
         @Bind(R.id.choose_adapter_item_tv)
         TextView tvTitle;
         @Bind(R.id.world_clock_adapter_item_is_check)
@@ -94,7 +109,6 @@ public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
                 return i;
             }
         }
-
         return -1;
     }
 

@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.medcorp.lunar.R;
+import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.activity.config.ConfigTimeSyncActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.ble.model.color.LedLamp;
@@ -13,6 +14,7 @@ import com.medcorp.lunar.model.Alarm;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.model.StepsGoal;
+import com.medcorp.lunar.util.Preferences;
 
 import net.medcorp.library.ble.util.Constants;
 
@@ -20,7 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.functions.Consumer;
 
-/**
+/***
  * Created by Karl on 1/19/16.
  */
 public class TutorialPageSuccessActivity extends BaseActivity {
@@ -123,7 +125,11 @@ public class TutorialPageSuccessActivity extends BaseActivity {
 
     @OnClick(R.id.activity_tutorial_success_next_button)
     public void nextClicked() {
-        startActivity(ConfigTimeSyncActivity.class);
+        if (Preferences.isFirstSettingDefValue(this)) {
+            startActivity(ConfigTimeSyncActivity.class);
+        } else {
+            startActivity(MainActivity.class);
+        }
         finish();
     }
 }

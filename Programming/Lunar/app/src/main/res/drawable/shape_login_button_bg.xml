@@ -3,14 +3,10 @@
        android:shape="rectangle"
     >
 
-    <solid android:color="@color/setting_tint_color_icon"/>
+    <solid android:color="@color/colorAccent"/>
     <corners
         android:bottomLeftRadius="8dp"
         android:bottomRightRadius="8dp"
         android:topLeftRadius="8dp"
         android:topRightRadius="8dp"/>
-    <stroke
-        android:width="1dp"
-        android:color="@color/white"
-        />
 </shape>

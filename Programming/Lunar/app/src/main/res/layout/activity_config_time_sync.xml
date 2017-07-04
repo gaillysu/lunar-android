@@ -32,35 +32,38 @@
 
     <RadioGroup
         android:id="@+id/select_sync_time_rg"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_centerInParent="true">
+        android:layout_centerInParent="true"
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/select_sync_home_time"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:background="@drawable/radio_button_bg"
             android:button="@null"
             android:checked="true"
+            android:drawableTop="@drawable/second_time_home_time_select"
             android:gravity="center"
+            android:paddingTop="40dp"
             android:text="@string/more_setting_place_home"
             android:textAllCaps="false"
-            android:textColor="@color/white"/>
+            android:textColor="@drawable/second_time_radio_button_text_color"/>
 
         <RadioButton
             android:id="@+id/select_sync_local_time"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginLeft="20dp"
             android:background="@drawable/radio_button_bg"
             android:button="@null"
-            android:layout_marginTop="20dp"
+            android:drawableTop="@drawable/second_time_zone_local_select"
             android:gravity="center"
+            android:paddingTop="40dp"
             android:text="@string/more_setting_place_local"
             android:textAllCaps="false"
-            android:textColor="@color/white"/>
+            android:textColor="@drawable/second_time_radio_button_text_color"/>
     </RadioGroup>
 
     <com.medcorp.lunar.view.customfontview.RobotoButton
