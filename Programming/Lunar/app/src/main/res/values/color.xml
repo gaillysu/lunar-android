@@ -88,4 +88,5 @@
     <color name="analysis_sleep_wake_line_color">#848484</color>
     <color name="analysis_sleep_light_line_color">#ac86cb</color>
     <color name="analysis_sleep_deep_line_color">#75b6b2</color>
+    <color name="tab_layout_normal_text_color">#EFEFEF</color>
 </resources>

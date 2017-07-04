@@ -15,7 +15,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
@@ -72,10 +71,8 @@ public class SolarGoalActivity extends BaseActivity implements AdapterView.OnIte
 
     private void initToolbar() {
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        TextView toolbarTitle = (TextView) myToolbar.findViewById(R.id.lunar_tool_bar_title);
-        toolbarTitle.setText(getString(R.string.more_settings_solar_goal));
+        myToolbar.setTitle(getString(R.string.more_settings_solar_goal));
     }
 
     @Override

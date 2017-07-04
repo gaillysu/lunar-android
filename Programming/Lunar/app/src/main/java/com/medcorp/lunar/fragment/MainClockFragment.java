@@ -8,16 +8,14 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.medcorp.lunar.R;
-import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.event.ChangeGoalEvent;
 import com.medcorp.lunar.event.DateSelectChangedEvent;
 import com.medcorp.lunar.event.LocationChangedEvent;
@@ -46,7 +44,6 @@ import net.medcorp.library.worldclock.City;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -147,6 +144,13 @@ public class MainClockFragment extends BaseFragment {
         return mainClockFragmentView;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.findItem(R.id.add_menu).setVisible(false);
+        menu.findItem(R.id.choose_goal_menu).setVisible(false);
+    }
+
     private void initData() {
         Date date = new Date();
         getModel().getStepsHelper().get(user.getUserID(), date).subscribe(new Consumer<Steps>() {
@@ -171,8 +175,8 @@ public class MainClockFragment extends BaseFragment {
             public void accept(Solar solar) throws Exception {
                 if (solar.getTotalHarvestingTime() != 0) {
                     harvestDuration.setText(countTime(solar.getTotalHarvestingTime()));
-                    float percentage = (float) solar.getTotalHarvestingTime()/(float)solar.getGoal();
-                    harvestPercentage.setText((percentage * 100 >= 100f ? 100: (int) (percentage * 100))+"%" + getString(R.string.lunar_steps_percentage));
+                    float percentage = (float) solar.getTotalHarvestingTime() / (float) solar.getGoal();
+                    harvestPercentage.setText((percentage * 100 >= 100f ? 100 : (int) (percentage * 100)) + "%" + getString(R.string.lunar_steps_percentage));
                 } else {
                     harvestDuration.setText("0");
                     harvestPercentage.setText("0%" + getString(R.string.lunar_steps_percentage));
@@ -287,81 +291,6 @@ public class MainClockFragment extends BaseFragment {
                     totalSleepTime = new String("00:00");
                 }
                 lunarSleepTotal.setText(totalSleepTime);
-            }
-        });
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.add_menu).setVisible(false);
-        menu.findItem(R.id.choose_goal_menu).setVisible(true);
-    }
-
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.choose_goal_menu:
-                popupStepsGoalDialog();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void popupStepsGoalDialog() {
-        if (!getModel().isWatchConnected()) {
-            ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_no_watch, false);
-            return;
-        }
-        getModel().getAllGoal(new ObtainGoalListener() {
-            @Override
-            public void obtainGoal(final List<StepsGoal> stepsGoalList) {
-                List<String> stringList = new ArrayList<>();
-                final List<StepsGoal> stepsGoalEnableList = new ArrayList<>();
-                int selectIndex = 0;
-                for (int i = 0; i < stepsGoalList.size(); i++) {
-                    StepsGoal stepsGoal = stepsGoalList.get(i);
-                    if (stepsGoal.isStatus()) {
-                        selectIndex = i;
-                    }
-                    stringList.add(stepsGoal.toString());
-                    stepsGoalEnableList.add(stepsGoal);
-            }
-                CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
-                if (stepsGoalList.size() != 0) {
-                    new MaterialDialog.Builder(getContext())
-                            .title(R.string.steps_goal_title).itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
-                            .items(cs)
-                            .itemsCallbackSingleChoice(selectIndex, new MaterialDialog.ListCallbackSingleChoice() {
-                                @Override
-                                public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                    if (which >= 0) {
-                                        for (int i = 0; i < stepsGoalList.size(); i++) {
-                                            StepsGoal stepsGoal = stepsGoalList.get(i);
-                                            if (i == which) {
-                                                stepsGoal.setStatus(true);
-                                            } else {
-                                                stepsGoal.setStatus(false);
-                                            }
-                                            getModel().updateGoal(stepsGoal);
-                                        }
-                                        getModel().setStepsGoal(stepsGoalEnableList.get(which));
-                                        Preferences.savePreset(getContext(), stepsGoalEnableList.get(which));
-                                        ((MainActivity) getActivity()).showStateString(R.string.goal_syncing_message, false);
-                                        EventBus.getDefault().post(new ChangeGoalEvent(true));
-                                    }
-                                    return true;
-                                }
-                            })
-                            .positiveText(R.string.goal_ok)
-                            .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
-                            .show();
-                } else {
-                    ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_no_goal, false);
-                }
-
             }
         });
     }

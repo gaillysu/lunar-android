@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
@@ -70,10 +69,8 @@ public class StepsGoalsActivity extends BaseActivity implements AdapterView.OnIt
 
     private void initToolbar() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-        toolbarTitle.setText(getString(R.string.more_settings_steps_goal));
+        toolbar.setTitle(getString(R.string.more_settings_steps_goal));
     }
 
     @Override

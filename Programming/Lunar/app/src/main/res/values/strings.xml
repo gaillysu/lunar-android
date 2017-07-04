@@ -301,7 +301,7 @@
     <string name="network_wait_text">Please wait ...</string>
     <string name="user_email_is_error">Please check your account..Please check your email....</string>
     <string name="add_alarm_index_out">The same type of alarm clock can only add %1$d!</string>
-    <string name="lunar_adapter_clock">Clock</string>
+    <string name="lunar_adapter_clock">Progress</string>
     <string name="lunar_adapter_chart">Chart</string>
     <string name="lunar_adapter_solar">Solar</string>
     <string name="lunar_adapter_sunshine" translatable="false">sunshine</string>

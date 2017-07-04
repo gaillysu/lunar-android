@@ -340,7 +340,7 @@
     <string name="login_skip_text">跳過</string>
     <string name="login_title_text">雲服務平臺</string>
     <string name="lunar_adapter_chart">圖表</string>
-    <string name="lunar_adapter_clock">時鐘</string>
+    <string name="lunar_adapter_clock">進度</string>
     <string name="lunar_adapter_sleep">睡眠</string>
     <string name="lunar_adapter_solar">太陽能</string>
     <string name="lunar_fragment_activity_time_text">時間</string>

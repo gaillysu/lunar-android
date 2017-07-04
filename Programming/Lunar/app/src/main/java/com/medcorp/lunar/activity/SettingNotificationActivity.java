@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.SettingNotificationArrayAdapter;
@@ -65,10 +64,7 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         LunarNotificationListener.getNotificationAccessPermission(this);
-
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-        title.setText(R.string.title_notifications);
+        toolbar.setTitle(R.string.title_notifications);
     }
 
     @Override

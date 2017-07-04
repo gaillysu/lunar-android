@@ -62,8 +62,7 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-        title.setText(R.string.settings_other_apps_short);
+        toolbar.setTitle(R.string.settings_other_apps_short);
     }
 
     @Override

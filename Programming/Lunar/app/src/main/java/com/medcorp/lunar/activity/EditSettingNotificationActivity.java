@@ -62,7 +62,6 @@ public class EditSettingNotificationActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         notification = (Notification) getIntent().getExtras().getSerializable(getString(R.string.key_notification));
         watchView.setVisibility(View.GONE);
         lunarWatchIcon.setVisibility(View.VISIBLE);
@@ -72,11 +71,10 @@ public class EditSettingNotificationActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         if (notification instanceof OtherAppNotification) {
-            title.setText(((OtherAppNotification) notification).getAppName(this));
+            toolbar.setTitle(((OtherAppNotification) notification).getAppName(this));
         } else {
-            title.setText(notification.getStringResource());
+            toolbar.setTitle(notification.getStringResource());
         }
         onOffSwitch.setChecked(notification.isOn());
         initView();

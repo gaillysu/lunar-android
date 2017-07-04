@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,6 @@ import com.medcorp.lunar.activity.login.LoginActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.event.ChangeGoalEvent;
 import com.medcorp.lunar.event.DateSelectChangedEvent;
-import com.medcorp.lunar.event.ViewPagerChildChange;
 import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.fragment.AlarmFragment;
 import com.medcorp.lunar.fragment.AnalysisFragment;
@@ -99,7 +99,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     @Bind(R.id.activity_main_navigation_view)
     NavigationView navigationView;
 
-    private TextView toolbarTitle;
     private TextView showUserFirstNameText;
 
     private View rootView;
@@ -141,11 +140,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
         currentTime = simple.format(new Date());
         saveSelectDate(this, currentTime);
-
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbarTitle = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-        toolbarTitle.setText(getString(R.string.title_steps));
-
+        toolbar.setTitle(getString(R.string.title_steps));
         mainStepsFragment = MainFragment.instantiate(this, MainFragment.class.getName());
 
         activeFragment.set(mainStepsFragment);
@@ -289,20 +284,11 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         actionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @Subscribe
-    public void onEvent(ViewPagerChildChange event){
-        if(event.getPosition()==0){
-            toolbarTitle.setText(getString(R.string.title_steps));
-        }else if(event.getPosition()==1){
-            toolbarTitle.setText(getString(R.string.title_sunshine));
-        }
-    }
 
     private void setFragment(MenuItem item) {
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbarTitle.setText(item.getTitle());
-
+        toolbar.setTitle(item.getTitle());
         Button setGoal = (Button) toolbar.findViewById(R.id.toolbar_title_set_goal_button);
         setGoal.setOnClickListener(this);
         BaseObservableFragment fragment = null;
@@ -466,8 +452,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         saveSelectDate(this, strDate);
         try {
             java.util.Date selectDate = format.parse(strDate);
-            toolbarTitle.setText(dayOfMonth + " " +
-                    new SimpleDateFormat("MMM").format(selectDate));
             EventBus.getDefault().post(new DateSelectChangedEvent(selectDate));
         } catch (ParseException e) {
             e.printStackTrace();

@@ -22,7 +22,7 @@ import org.greenrobot.eventbus.Subscribe;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
+/***
  * Created by Administrator on 2016/7/14.
  */
 public class AnalysisFragment extends BaseObservableFragment implements ViewPager.OnPageChangeListener {
@@ -35,10 +35,10 @@ public class AnalysisFragment extends BaseObservableFragment implements ViewPage
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view  = inflater.inflate(R.layout.analysis_fragment_layout,container,false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.analysis_fragment_layout, container, false);
+        ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
-        AnalysisFragmentPagerAdapter adapter = new AnalysisFragmentPagerAdapter(getChildFragmentManager(),this);
+        AnalysisFragmentPagerAdapter adapter = new AnalysisFragmentPagerAdapter(getChildFragmentManager(), this);
         analysisViewpager.setAdapter(adapter);
         analysisTable.setupWithViewPager(analysisViewpager);
         analysisViewpager.addOnPageChangeListener(this);

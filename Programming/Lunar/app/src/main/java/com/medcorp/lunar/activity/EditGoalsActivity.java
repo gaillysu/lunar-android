@@ -13,7 +13,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
@@ -61,10 +60,8 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
 
     private void initToolbar() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-        toolbarTitle.setText(getString(R.string.goal_edit));
+        toolbar.setTitle(R.string.goal_edit);
     }
 
     private void initData() {

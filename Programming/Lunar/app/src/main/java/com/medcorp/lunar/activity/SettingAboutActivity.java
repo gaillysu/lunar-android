@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.base.BaseActivity;
@@ -27,9 +26,7 @@ public class SettingAboutActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-        toolbarTitle.setText(R.string.title_about);
+        toolbar.setTitle(R.string.title_about);
     }
 
     @Override

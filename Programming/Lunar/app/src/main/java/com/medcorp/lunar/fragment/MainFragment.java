@@ -1,6 +1,7 @@
 package com.medcorp.lunar.fragment;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,6 @@ import android.widget.LinearLayout;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.adapter.LunarMainFragmentAdapter;
-import com.medcorp.lunar.event.ViewPagerChildChange;
 import com.medcorp.lunar.event.bluetooth.RequestResponseEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
 import com.medcorp.lunar.model.StepsGoal;
@@ -29,12 +29,13 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
+/***
  * Created by Administrator on 2016/7/19.
  */
 public class MainFragment extends BaseObservableFragment {
 
-
+    @Bind(R.id.main_fragment_title_tab_layout)
+    TabLayout mainFragmentTitleTabLayout;
     @Bind(R.id.fragment_lunar_main_view_pager)
     ViewPager showWatchViewPage;
     @Bind(R.id.ui_page_control_point)
@@ -61,6 +62,7 @@ public class MainFragment extends BaseObservableFragment {
         }
         setHasOptionsMenu(true);
         initUiControl();
+        mainFragmentTitleTabLayout.setupWithViewPager(showWatchViewPage);
         adapter = new LunarMainFragmentAdapter(getChildFragmentManager(), this);
         showWatchViewPage.setAdapter(adapter);
         return view;
@@ -85,24 +87,23 @@ public class MainFragment extends BaseObservableFragment {
         }
 
         showWatchViewPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
+                }
 
-            @Override
-            public void onPageSelected(int position) {
-                int childCount = uiPageControl.getChildCount();
-                for (int i = 0; i < childCount; i++) {
-                    ImageView im = (ImageView) uiPageControl.getChildAt(i);
-                    if (position == i) {
-                        im.setImageResource(R.drawable.ui_page_control_selector);
-                    } else {
-                        im.setImageResource(R.drawable.ui_page_control_unselector);
+                @Override
+                public void onPageSelected(int position) {
+                    int childCount = uiPageControl.getChildCount();
+                    for (int i = 0; i < childCount; i++) {
+                        ImageView im = (ImageView) uiPageControl.getChildAt(i);
+                        if (position == i) {
+                            im.setImageResource(R.drawable.ui_page_control_selector);
+                        } else {
+                            im.setImageResource(R.drawable.ui_page_control_unselector);
+                        }
                     }
                 }
-                EventBus.getDefault().post(new ViewPagerChildChange(position));
-            }
 
             @Override
             public void onPageScrollStateChanged(int state) {

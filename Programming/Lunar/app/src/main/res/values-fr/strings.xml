@@ -95,7 +95,7 @@
     <string name="login_skip_text">Skip</string>
     <string name="login_title_text">Cloud Platform</string>
     <string name="lunar_adapter_chart">Chart</string>
-    <string name="lunar_adapter_clock">Clock</string>
+    <string name="lunar_adapter_clock">Progress</string>
     <string name="lunar_adapter_solar">Solar</string>
     <string name="lunar_adapter_sleep">Sleep</string>
     <string name="lunar_fragment_activity_time_text">Time</string>

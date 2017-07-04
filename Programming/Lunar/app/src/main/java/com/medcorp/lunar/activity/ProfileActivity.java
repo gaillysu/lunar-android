@@ -91,8 +91,7 @@ public class ProfileActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-        title.setText(R.string.profile_title);
+        toolbar.setTitle(R.string.profile_title);
         user = getModel().getUser();
         if (getModel().getUser().isLogin()) {
             userEmail = user.getUserEmail();
