@@ -12,7 +12,7 @@ import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.activity.MyWatchActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.event.ChangeGoalEvent;
-import com.medcorp.lunar.fragment.MainFragment;
+import com.medcorp.lunar.fragment.MainClockFragment;
 import com.medcorp.lunar.model.ChangeSleepGoalEvent;
 import com.medcorp.lunar.model.ChangeSolarGoalEvent;
 import com.medcorp.lunar.model.SleepGoal;
@@ -53,7 +53,7 @@ public class ConfigGoalsActivity extends BaseActivity {
 
     @OnClick(R.id.activity_goals_set_step_goal_bt)
     public void selectStepGoal() {
-        getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
+        getModel().getAllGoal(new MainClockFragment.ObtainGoalListener() {
             @Override
             public void obtainGoal(final List<StepsGoal> stepsGoalList) {
                 List<String> stringList = new ArrayList<>();

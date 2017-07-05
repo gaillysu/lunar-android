@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.fragment.AlarmFragment;
 import com.medcorp.lunar.fragment.AnalysisFragment;
 import com.medcorp.lunar.fragment.HomeClockFragment;
+import com.medcorp.lunar.fragment.MainClockFragment;
 import com.medcorp.lunar.fragment.MainFragment;
 import com.medcorp.lunar.fragment.SettingsFragment;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
@@ -69,11 +71,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.reactivex.functions.Consumer;
 
 import static com.medcorp.lunar.R.id.navigation_header_imageview;
@@ -99,7 +99,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     @Bind(R.id.activity_main_navigation_view)
     NavigationView navigationView;
 
-    private TextView showDateText;
     private TextView showUserFirstNameText;
 
     private View rootView;
@@ -141,13 +140,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
         currentTime = simple.format(new Date());
         saveSelectDate(this, currentTime);
-
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
-        showDateText = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-        showDateText.setText(currentTime.split("-")[2] + " " +
-                new SimpleDateFormat("MMM").format(new Date()));
-
+        toolbar.setTitle(getString(R.string.title_steps));
         mainStepsFragment = MainFragment.instantiate(this, MainFragment.class.getName());
 
         activeFragment.set(mainStepsFragment);
@@ -290,19 +283,11 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         actionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+
     private void setFragment(MenuItem item) {
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        if (item.getItemId() == R.id.nav_steps_fragment) {
-            toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
-            showDateText.setText(currentTime.split("-")[2] + " " +
-                    new SimpleDateFormat("MMM", Locale.US).format(new Date()));
-            //here restore the selected date to today's date, otherwise, will get the wrong record of that day
-            saveSelectDate(this, currentTime);
-        } else {
-            toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.GONE);
-            showDateText.setText(item.getTitle());
-        }
+        toolbar.setTitle(item.getTitle());
         Button setGoal = (Button) toolbar.findViewById(R.id.toolbar_title_set_goal_button);
         setGoal.setOnClickListener(this);
         BaseObservableFragment fragment = null;
@@ -454,16 +439,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         }
     }
 
-    @OnClick(R.id.lunar_tool_bar)
-    public void showDateDialog() {
-        if (selectedMenuItem.getItemId() == R.id.nav_steps_fragment) {
-            final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(MainActivity.this,
-                    mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
-            datePickerDialog.setOnDateSetListener(this);
-            datePickerDialog.show(getFragmentManager(), "calendarDialog");
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -476,8 +451,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         saveSelectDate(this, strDate);
         try {
             java.util.Date selectDate = format.parse(strDate);
-            showDateText.setText(dayOfMonth + " " +
-                    new SimpleDateFormat("MMM").format(selectDate));
             EventBus.getDefault().post(new DateSelectChangedEvent(selectDate));
         } catch (ParseException e) {
             e.printStackTrace();
@@ -504,8 +477,8 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         viewPage = event.getViewPage();
     }
 
-    private void popupStepsGoalDialog( ) {
-        getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
+    private void popupStepsGoalDialog() {
+        getModel().getAllGoal(new MainClockFragment.ObtainGoalListener() {
             @Override
             public void obtainGoal(final List<StepsGoal> stepsGoalList) {
                 List<String> stringList = new ArrayList<>();
@@ -535,7 +508,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                                             StepsGoal stepsGoal = stepsGoalList.get(i);
                                             if (i == which) {
                                                 stepsGoal.setStatus(true);
-                                            }else{
+                                            } else {
                                                 stepsGoal.setStatus(false);
                                             }
                                             getModel().updateGoal(stepsGoal);
@@ -558,8 +531,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     }
 
 
-
-    private void popupSleepGoalDialog( ) {
+    private void popupSleepGoalDialog() {
         getModel().getSleepGoalDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
             @Override
             public void accept(final List<SleepGoal> sleepGoals) throws Exception {
@@ -571,7 +543,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                     if (sleepGoal.isStatus()) {
                         selectIndex = i;
                     }
-                    stringList.add(obtainString(sleepGoal.getGoalName(),sleepGoal.getGoalDuration()));
+                    stringList.add(obtainString(sleepGoal.getGoalName(), sleepGoal.getGoalDuration()));
                     stepsGoalEnableList.add(sleepGoal);
 
                 }
@@ -590,13 +562,13 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                                             SleepGoal sleepGoal = sleepGoals.get(i);
                                             if (i == which) {
                                                 sleepGoal.setStatus(true);
-                                            }else{
+                                            } else {
                                                 sleepGoal.setStatus(false);
                                             }
                                             getModel().getSleepGoalDatabseHelper().update(sleepGoal).subscribe(new Consumer<Boolean>() {
                                                 @Override
                                                 public void accept(Boolean aBoolean) throws Exception {
-                                                    Log.i("jason","change sleep goal");
+                                                    Log.i("jason", "change sleep goal");
                                                 }
                                             });
                                         }
@@ -627,7 +599,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                     if (solarGoal.isStatus()) {
                         selectIndex = i;
                     }
-                    stringList.add(obtainString(solarGoal.getName(),solarGoal.getTime()));
+                    stringList.add(obtainString(solarGoal.getName(), solarGoal.getTime()));
                     stepsGoalEnableList.add(solarGoal);
 
                 }
@@ -646,13 +618,13 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                                             SolarGoal solar = solarGoals.get(i);
                                             if (i == which) {
                                                 solar.setStatus(true);
-                                            }else{
+                                            } else {
                                                 solar.setStatus(false);
                                             }
                                             getModel().getSolarGoalDatabaseHelper().update(solar).subscribe(new Consumer<Boolean>() {
                                                 @Override
                                                 public void accept(Boolean aBoolean) throws Exception {
-                                                    Log.i("jason","change sleep goal");
+                                                    Log.i("jason", "change sleep goal");
                                                 }
                                             });
                                         }
@@ -687,7 +659,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             sb.append(goalDuration / 60 + getString(R.string.sleep_unit_hour)
                     + (goalDuration % 60 != 0 ? goalDuration % 60 + getString(R.string.sleep_unit_minute) : ""));
         } else if (goalDuration == 60) {
-            sb.append(goalDuration / 60 +getString(R.string.sleep_unit_hour));
+            sb.append(goalDuration / 60 + getString(R.string.sleep_unit_hour));
         } else {
             sb.append(goalDuration + getString(R.string.sleep_unit_minute));
         }

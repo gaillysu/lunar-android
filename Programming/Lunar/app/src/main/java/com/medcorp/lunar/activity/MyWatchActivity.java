@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.event.bluetooth.BatteryEvent;
-import com.medcorp.lunar.model.MyNevo;
+import com.medcorp.lunar.model.MyWatch;
 import com.medcorp.lunar.util.Common;
 
 import org.greenrobot.eventbus.EventBus;
@@ -50,7 +50,7 @@ public class MyWatchActivity extends BaseActivity {
     @Bind(R.id.my_watch_update_tv)
     TextView firmwerUpdateInfomation;
 
-    private MyNevo myNevo;
+    private MyWatch myWatch;
     private final int battery_level = 2; //default is 2,  value is [0,1,2], need get later
     private final boolean available_version = false;//need check later
 
@@ -62,9 +62,7 @@ public class MyWatchActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-        title.setText(R.string.title_my_nevo);
+        toolbar.setTitle(R.string.title_my_nevo);
         String app_version = "";
         try {
             app_version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
@@ -72,7 +70,7 @@ public class MyWatchActivity extends BaseActivity {
             e.printStackTrace();
         }
 
-        myNevo = new MyNevo(getModel().getWatchFirmware(), getModel().getWatchSoftware(), app_version, battery_level, available_version, null);
+        myWatch = new MyWatch(getModel().getWatchFirmware(), getModel().getWatchSoftware(), app_version, battery_level, available_version, null);
         myNevoListView.setVisibility(View.GONE);
         showMyDeviceNewsLayout.setVisibility(View.VISIBLE);
         initLunarData();
@@ -114,7 +112,7 @@ public class MyWatchActivity extends BaseActivity {
                 }
             });
         } else {
-            showFirmwerVersion.setText(myNevo.getBleFirmwareVersion());
+            showFirmwerVersion.setText(myWatch.getBleFirmwareVersion());
             firmwerUpdateInfomation.setVisibility(View.INVISIBLE);
         }
     }
@@ -148,22 +146,21 @@ public class MyWatchActivity extends BaseActivity {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                myNevo.setBatteryLevel((int) batteryEvent.getBattery().getBatteryLevel());
+                myWatch.setBatteryLevel((int) batteryEvent.getBattery().getBatteryLevel());
                 initLunarData();
             }
         });
     }
 
-
     private void initLunarData() {
 
         String str_battery = this.getString(R.string.my_nevo_battery_low);
-        if (myNevo.getBatteryLevel() == 2) {
+        if (myWatch.getBatteryLevel() == 2) {
             str_battery = this.getString(R.string.my_nevo_battery_full);
-        } else if (myNevo.getBatteryLevel() == 1) {
+        } else if (myWatch.getBatteryLevel() == 1) {
             str_battery = this.getString(R.string.my_nevo_battery_half);
         }
         showWatchBattery.setText(str_battery);
-        showWatchVersion.setText(myNevo.getAppVersion());
+        showWatchVersion.setText(myWatch.getAppVersion());
     }
 }

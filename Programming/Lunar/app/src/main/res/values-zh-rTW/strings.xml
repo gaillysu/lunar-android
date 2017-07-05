@@ -339,7 +339,7 @@
     <string name="login_skip_text">跳過</string>
     <string name="login_title_text">雲服務平臺</string>
     <string name="lunar_adapter_chart">圖表</string>
-    <string name="lunar_adapter_clock">時鐘</string>
+    <string name="lunar_adapter_clock">進度</string>
     <string name="lunar_adapter_sleep">睡眠</string>
     <string name="lunar_adapter_solar">太陽能</string>
     <string name="lunar_fragment_activity_time_text">時間</string>
@@ -507,6 +507,12 @@
     <string name="welcome_activity_skip_login">或者不登錄</string>
     <string name="tutorial_out_shipping_mode_title">禁用模式</string>
     <string name="tutorial_shipping_mode_describe_text">按下左鍵退出禁用模式,表盤任意LED燈,亮起代表藍牙開啟!</string>
-    <string name="welcome_activity_facebook_login">使用Facebook</string>
-    <string name="welcome_activity_wechat_login">使用微信</string>
+    <string name="lunar_main_clock_solar_harvesting_title">太陽能</string>
+    <string name="main_solar_details_battery_title">電池電量</string>
+    <string name="main_solar_details_history_describe_last_month">過去壹個月</string>
+    <string name="main_solar_details_history_describe_last_week">過去壹周</string>
+    <string name="main_solar_details_history_title">歷史轉換電量</string>
+    <string name="main_solar_details_sun_exposure_describe">今天的太陽能</string>
+    <string name="title_sunshine">太陽能</string>
+    <string name="todays_weather_text">今天天氣 -</string>
 </resources>

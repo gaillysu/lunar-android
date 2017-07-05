@@ -20,7 +20,6 @@ import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisStepsLineChart;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.text.ParseException;
@@ -96,7 +95,7 @@ public class AnalysisStepsFragment extends BaseFragment {
          * In this month this is 30 (or 31) because there are 30 days in a month.
          *
          */
-        getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
+        getModel().getAllGoal(new MainClockFragment.ObtainGoalListener() {
             @Override
             public void obtainGoal(List<StepsGoal> list) {
                 if (list != null) {

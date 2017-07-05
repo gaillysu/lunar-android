@@ -52,6 +52,7 @@
             android:textColor="@drawable/second_time_radio_button_text_color"/>
 
         <RadioButton
+
             android:id="@+id/select_sync_local_time"
             android:layout_width="120dp"
             android:layout_height="120dp"

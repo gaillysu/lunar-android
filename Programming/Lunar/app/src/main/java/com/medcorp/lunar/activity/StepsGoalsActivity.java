@@ -11,13 +11,12 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.PresetArrayAdapter;
 import com.medcorp.lunar.base.BaseActivity;
-import com.medcorp.lunar.fragment.MainFragment;
+import com.medcorp.lunar.fragment.MainClockFragment;
 import com.medcorp.lunar.model.StepsGoal;
 
 import java.util.List;
@@ -56,7 +55,7 @@ public class StepsGoalsActivity extends BaseActivity implements AdapterView.OnIt
         ButterKnife.bind(this);
         initToolbar();
         presetListView.setVisibility(View.VISIBLE);
-        getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
+        getModel().getAllGoal(new MainClockFragment.ObtainGoalListener() {
             @Override
             public void obtainGoal(List<StepsGoal> list) {
                 mStepsGoalList = list;
@@ -70,10 +69,8 @@ public class StepsGoalsActivity extends BaseActivity implements AdapterView.OnIt
 
     private void initToolbar() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-        toolbarTitle.setText(getString(R.string.more_settings_steps_goal));
+        toolbar.setTitle(getString(R.string.more_settings_steps_goal));
     }
 
     @Override
@@ -90,7 +87,7 @@ public class StepsGoalsActivity extends BaseActivity implements AdapterView.OnIt
         super.onActivityResult(requestCode, resultCode, data);
         //delete or update the mStepsGoal, refresh list
         if (resultCode != 0) {
-            getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
+            getModel().getAllGoal(new MainClockFragment.ObtainGoalListener() {
                 @Override
                 public void obtainGoal(List<StepsGoal> stepsGoalList) {
                     presetArrayAdapter.setDataset(stepsGoalList);
@@ -143,7 +140,7 @@ public class StepsGoalsActivity extends BaseActivity implements AdapterView.OnIt
 
                                                                 mStepsGoal = new StepsGoal(lableGoal, true, steps);
                                                                 getModel().addGoal(mStepsGoal);
-                                                                getModel().getAllGoal(new MainFragment.ObtainGoalListener() {
+                                                                getModel().getAllGoal(new MainClockFragment.ObtainGoalListener() {
                                                                     @Override
                                                                     public void obtainGoal(List<StepsGoal> stepsGoalList) {
                                                                         presetArrayAdapter.setDataset(stepsGoalList);

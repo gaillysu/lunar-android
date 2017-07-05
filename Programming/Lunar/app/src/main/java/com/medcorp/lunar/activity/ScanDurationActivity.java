@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.ScanDurationAdapter;
@@ -30,8 +29,6 @@ public class ScanDurationActivity extends BaseActivity {
     Toolbar mToolbar;
     @Bind(R.id.setting_scan_duration_item)
     ListView allDurationList;
-    @Bind(R.id.lunar_tool_bar_title)
-    TextView title;
     private List<ScanDurationItemModel> list;
     private int[] mTime;
     private ScanDurationAdapter mAdapter;
@@ -42,8 +39,7 @@ public class ScanDurationActivity extends BaseActivity {
         setContentView(R.layout.scan_duration_activity);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        title.setText(R.string.settings_bluetooth_scan);
+        mToolbar.setTitle(R.string.settings_bluetooth_scan);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         list = new ArrayList<>();
         mTime = getResources().getIntArray(R.array.scan_duration_time);

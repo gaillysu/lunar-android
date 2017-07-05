@@ -10,8 +10,10 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 
 import com.medcorp.lunar.R;
+import com.medcorp.lunar.application.ApplicationModel;
 import com.medcorp.lunar.listener.OnCheckedChangeInListListener;
 import com.medcorp.lunar.model.SettingsMenuItem;
+import com.medcorp.lunar.view.ToastHelper;
 import com.medcorp.lunar.view.customfontview.RobotoTextView;
 
 import java.util.ArrayList;
@@ -50,7 +52,7 @@ public class SettingMenuAdapter extends ArrayAdapter<SettingsMenuItem> {
         View itemView = inflater.inflate(R.layout.activity_setting_menu_list_view_item, parent, false);
         ImageView menuImage = (ImageView) itemView.findViewById(R.id.activity_setting_menu_image);
         RobotoTextView menuNameTextView = (RobotoTextView) itemView.findViewById(R.id.activity_setting_menu_name);
-        SwitchCompat onOffSwitch = (SwitchCompat) itemView.findViewById(R.id.activity_setting_menu_switch);
+        final SwitchCompat onOffSwitch = (SwitchCompat) itemView.findViewById(R.id.activity_setting_menu_switch);
         RobotoTextView subtitle = (RobotoTextView) itemView.findViewById(R.id.activity_setting_menu_subtitle);
         menuImage.setImageResource(listMenu.get(position).getIcon());
         menuNameTextView.setText(listMenu.get(position).getTitle());
@@ -62,10 +64,16 @@ public class SettingMenuAdapter extends ArrayAdapter<SettingsMenuItem> {
             switchCompatList.add(onOffSwitch);
             onOffSwitch.setVisibility(View.VISIBLE);
             onOffSwitch.setChecked(listMenu.get(position).isSwitchOn());
+            final boolean checked = onOffSwitch.isChecked();
             onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    onCheckedChangeInListListener.onCheckedChange(buttonView, isChecked, position);
+                    if (ApplicationModel.getInstance().isWatchConnected()) {
+                        onCheckedChangeInListListener.onCheckedChange(buttonView, isChecked, position);
+                    } else {
+                        onOffSwitch.setChecked(checked);
+                        ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+                    }
                 }
             });
         } else {

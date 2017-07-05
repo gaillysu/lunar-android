@@ -28,6 +28,7 @@ public class ConfigCityActivity extends BaseActivity {
     TextView localAddress;
     @Bind(R.id.show_select_local_city_country)
     TextView localCountry;
+
     private Address mPositionLocal;
 
     @Override
@@ -86,6 +87,7 @@ public class ConfigCityActivity extends BaseActivity {
         String text = localAddress.getText().toString();
         if (text != null && !text.equals(getString(R.string.config_location_failed))) {
             startActivity(ConfigGoalsActivity.class);
+            finish();
         } else {
             ToastHelper.showShortToast(this, getString(R.string.config_location_city_is_null));
         }

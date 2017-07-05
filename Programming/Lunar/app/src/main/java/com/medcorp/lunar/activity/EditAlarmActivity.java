@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -50,10 +49,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
         setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-        title.setText(R.string.title_alarm);
-
+        toolbar.setTitle(R.string.title_alarm);
         Bundle bundle = getIntent().getExtras();
         getModel().getAlarmById(bundle.getInt(getString(R.string.key_alarm_id)), new ObtainAlarmListener() {
             @Override

@@ -40,7 +40,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
 
-/**
+/***
  * Created by Jason on 2016/8/12.
  */
 public class MainSolarFragment extends BaseFragment {
@@ -93,21 +93,21 @@ public class MainSolarFragment extends BaseFragment {
         }
         getModel().getSolarDatabaseHelper().get(getModel().getUser().getId(), userSelectDate)
                 .subscribe(new Consumer<Solar>() {
-            @Override
-            public void accept(Solar solar) throws Exception {
-                mSolarOptional = solar;
-                if (mSolarOptional != null) {
-                    powerOnSolarPercent = mSolarOptional.getTotalHarvestingTime() * 100f / (powOnBatteryMinutes);
-                    powerOnBatteryPercent = 100f - powerOnSolarPercent;
-                    powerOnSolarMinutes = mSolarOptional.getTotalHarvestingTime();
-                    powOnBatteryMinutes = powOnBatteryMinutes - powerOnSolarMinutes;
-                }
-                float[] solarPieChartDate = {powerOnSolarPercent, powerOnBatteryPercent};
-                setPieChartData(solarPieChartDate);
-                batteryTimeTv.setText(TimeUtil.formatTime(powOnBatteryMinutes));
-                solarTimeTv.setText(TimeUtil.formatTime(powerOnSolarMinutes));
-            }
-        });
+                    @Override
+                    public void accept(Solar solar) throws Exception {
+                        mSolarOptional = solar;
+                        if (mSolarOptional != null) {
+                            powerOnSolarPercent = mSolarOptional.getTotalHarvestingTime() * 100f / (powOnBatteryMinutes);
+                            powerOnBatteryPercent = 100f - powerOnSolarPercent;
+                            powerOnSolarMinutes = mSolarOptional.getTotalHarvestingTime();
+                            powOnBatteryMinutes = powOnBatteryMinutes - powerOnSolarMinutes;
+                        }
+                        float[] solarPieChartDate = {powerOnSolarPercent, powerOnBatteryPercent};
+                        setPieChartData(solarPieChartDate);
+                        batteryTimeTv.setText(TimeUtil.formatTime(powOnBatteryMinutes));
+                        solarTimeTv.setText(TimeUtil.formatTime(powerOnSolarMinutes));
+                    }
+                });
     }
 
     private void setPieChartData(float[] solarPieChartDate) {

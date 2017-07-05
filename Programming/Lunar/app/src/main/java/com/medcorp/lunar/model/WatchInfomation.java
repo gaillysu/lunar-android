@@ -5,13 +5,6 @@ package com.medcorp.lunar.model;
  */
 public class WatchInfomation {
 
-    /**
-     * Watch ID
-     Watch ID
-     1 - Nevo
-     2 - Nevo Solar
-     3- Lunar
-     */
     private byte watchID;
 
     /**

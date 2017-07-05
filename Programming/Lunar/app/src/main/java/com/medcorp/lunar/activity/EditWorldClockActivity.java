@@ -81,9 +81,7 @@ public class EditWorldClockActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-        title.setText(R.string.choose_activity_title_choose_city_tv);
+        toolbar.setTitle(R.string.choose_activity_title_choose_city_tv);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initData();
     }

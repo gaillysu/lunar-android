@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,6 +20,7 @@ import com.medcorp.lunar.event.ChangeGoalEvent;
 import com.medcorp.lunar.event.DateSelectChangedEvent;
 import com.medcorp.lunar.event.LocationChangedEvent;
 import com.medcorp.lunar.event.Timer10sEvent;
+import com.medcorp.lunar.event.bluetooth.GetWatchInfoChangedEvent;
 import com.medcorp.lunar.event.bluetooth.LittleSyncEvent;
 import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.event.bluetooth.PositionAddressChangeEvent;
@@ -24,7 +28,9 @@ import com.medcorp.lunar.event.bluetooth.SolarConvertEvent;
 import com.medcorp.lunar.fragment.base.BaseFragment;
 import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.SleepData;
+import com.medcorp.lunar.model.Solar;
 import com.medcorp.lunar.model.Steps;
+import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.util.Common;
 import com.medcorp.lunar.util.Preferences;
@@ -38,8 +44,6 @@ import net.medcorp.library.worldclock.City;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -49,7 +53,6 @@ import java.util.TimeZone;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
-import io.realm.Realm;
 
 /**
  * Created by Jason on 2016/12/26.
@@ -101,8 +104,11 @@ public class MainClockFragment extends BaseFragment {
 
     @Bind(R.id.lunar_main_clock_battery_status_title)
     TextView solarHarvestTitle;
+    @Bind(R.id.main_clock_solar_harvesting_duration)
+    TextView harvestDuration;
+    @Bind(R.id.main_clock_solar_harvesting_percentage)
+    TextView harvestPercentage;
 
-    private Date userSelectDate;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
     private User user;
 
@@ -110,9 +116,7 @@ public class MainClockFragment extends BaseFragment {
     private String homeCountryName;
     private Address mPositionLocal;
     private SunriseSunsetCalculator calculator;
-    private Realm realm = Realm.getDefaultInstance();
     private String totalSleepTime;
-
     private City mDefaultTimeZoneCity;
 
     private void refreshClock() {
@@ -127,16 +131,6 @@ public class MainClockFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         user = getModel().getUser();
-        String selectDate = Preferences.getSelectDate(this.getContext());
-        if (selectDate == null) {
-            userSelectDate = new Date();
-        } else {
-            try {
-                userSelectDate = new SimpleDateFormat("yyyy-MM-dd").parse(selectDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -144,21 +138,48 @@ public class MainClockFragment extends BaseFragment {
         View mainClockFragmentView = inflater.inflate(R.layout.lunar_main_fragment_adapter_clock_layout, container, false);
         ButterKnife.bind(this, mainClockFragmentView);
         mPositionLocal = Preferences.getLocation(MainClockFragment.this.getContext());
+        setHasOptionsMenu(true);
         refreshClock();
-        initData(userSelectDate);
+        initData();
         return mainClockFragmentView;
     }
 
-    private void initData(final Date date) {
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.findItem(R.id.add_menu).setVisible(false);
+        menu.findItem(R.id.choose_goal_menu).setVisible(false);
+    }
+
+    private void initData() {
+        Date date = new Date();
         getModel().getStepsHelper().get(user.getUserID(), date).subscribe(new Consumer<Steps>() {
             @Override
             public void accept(Steps dailySteps) throws Exception {
-                if (dailySteps != null) {
-                    mDefaultTimeZoneCity = getDefaultTimeZoneCity();
+                mDefaultTimeZoneCity = getDefaultTimeZoneCity();
+                Log.i("ja", dailySteps.getSteps() + "");
+                if (dailySteps.getSteps() != 0) {
                     stepsCount.setText(dailySteps.getSteps() + "");
                     float percent = (float) dailySteps.getSteps() / (float) dailySteps.getGoal();
                     goalProgress.setProgress(percent * 100 >= 100f ? 100 : (int) (percent * 100));
                     goalPercentage.setText((percent * 100 >= 100f ? 100 : (int) (percent * 100)) + "%" + getString(R.string.lunar_steps_percentage));
+                } else {
+                    stepsCount.setText("0");
+                    goalPercentage.setText("0%" + getString(R.string.lunar_steps_percentage));
+                }
+            }
+        });
+
+        getModel().getSolarDatabaseHelper().get(user.getId(), new Date()).subscribe(new Consumer<Solar>() {
+            @Override
+            public void accept(Solar solar) throws Exception {
+                if (solar.getTotalHarvestingTime() != 0) {
+                    harvestDuration.setText(countTime(solar.getTotalHarvestingTime()));
+                    float percentage = (float) solar.getTotalHarvestingTime() / (float) solar.getGoal();
+                    harvestPercentage.setText((percentage * 100 >= 100f ? 100 : (int) (percentage * 100)) + "%" + getString(R.string.lunar_steps_percentage));
+                } else {
+                    harvestDuration.setText("0");
+                    harvestPercentage.setText("0%" + getString(R.string.lunar_steps_percentage));
                 }
             }
         });
@@ -274,13 +295,16 @@ public class MainClockFragment extends BaseFragment {
         });
     }
 
+    public interface ObtainGoalListener {
+        void obtainGoal(List<StepsGoal> list);
+    }
 
     @Subscribe
     public void onEvent(LocationChangedEvent locationChangedEvent) {
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
-                initData(userSelectDate);
+                initData();
             }
         });
     }
@@ -291,7 +315,7 @@ public class MainClockFragment extends BaseFragment {
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
-                initData(userSelectDate);
+                initData();
             }
         });
     }
@@ -311,14 +335,14 @@ public class MainClockFragment extends BaseFragment {
     @Subscribe
     public void onEvent(LittleSyncEvent event) {
         if (event.isSuccess()) {
-            Steps steps = getModel().getDailySteps(getModel().getUser().getUserID(), Common.removeTimeFromDate(userSelectDate));
+            Steps steps = getModel().getDailySteps(getModel().getUser().getUserID(), Common.removeTimeFromDate(new Date()));
             if (steps == null) {
                 return;
             }
             mUiHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    initData(userSelectDate);
+                    initData();
                 }
             });
         }
@@ -329,8 +353,7 @@ public class MainClockFragment extends BaseFragment {
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
-                userSelectDate = event.getDate();
-                initData(userSelectDate);
+                initData();
             }
         });
     }
@@ -351,7 +374,7 @@ public class MainClockFragment extends BaseFragment {
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
-                initData(userSelectDate);
+                initData();
             }
         });
     }
@@ -362,15 +385,25 @@ public class MainClockFragment extends BaseFragment {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    initData(userSelectDate);
+                    initData();
                 }
             });
         }
     }
 
     @Subscribe
+    public void onEvent(GetWatchInfoChangedEvent event) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                initData();
+            }
+        });
+    }
+
+    @Subscribe
     public void onEvent(final SolarConvertEvent event) {
-        solarHarvestStatus.post(new Runnable() {
+        mUiHandler.post(new Runnable() {
             @Override
             public void run() {
                 //NOTICE: nevo solar adc threshold is 200，but lunar is 170
@@ -395,6 +428,19 @@ public class MainClockFragment extends BaseFragment {
             }
         }
         return null;
+    }
+
+    private String countTime(int goalDuration) {
+        StringBuffer sb = new StringBuffer();
+        if (goalDuration > 60) {
+            sb.append(goalDuration / 60 + getString(R.string.sleep_unit_hour)
+                    + (goalDuration % 60 != 0 ? goalDuration % 60 + getString(R.string.sleep_unit_minute) : ""));
+        } else if (goalDuration == 60) {
+            sb.append(goalDuration / 60 + getString(R.string.sleep_unit_hour));
+        } else {
+            sb.append(goalDuration + getString(R.string.sleep_unit_minute));
+        }
+        return sb.toString();
     }
 }
 

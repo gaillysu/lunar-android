@@ -51,8 +51,9 @@
     <string name="other_color_bluetooth_failed" translatable="false">bluetooth is enabled</string>
     <string name="other_color_led_text" translatable="false">LED</string>
     <string name="other_color_blinking" translatable="false">blinking</string>
-    <string name="other_color_turquoise" translatable="false">green</string>
-    <string name="tutorial_4_other_color_text">white</string>
-    <string name="other_color_text" translatable="false">two lower buttons</string>
     <string name="search_city_hint_text">Search your city</string>
+    <string name="other_color_turquoise" translatable="false">turquoise</string>
+    <string name="other_color_white" translatable="false">white</string>
+    <string name="other_color_text" translatable="false">lower left button</string>
+    <string name="main_solar_details_sun_exposure_describe">Todays sun exposure</string>
 </resources>
