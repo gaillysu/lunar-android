@@ -2,6 +2,7 @@ package com.medcorp.lunar.fragment;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,20 +14,29 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.lunar.fragment.base.BaseFragment;
 import com.medcorp.lunar.model.ChangeSleepGoalEvent;
+import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.SleepData;
 import com.medcorp.lunar.model.SleepGoal;
+import com.medcorp.lunar.model.User;
+import com.medcorp.lunar.util.Common;
 import com.medcorp.lunar.util.Preferences;
+import com.medcorp.lunar.util.SleepDataHandler;
+import com.medcorp.lunar.util.SleepDataUtils;
 import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisSleepLineChart;
+import com.medcorp.lunar.view.graphs.SleepTodayChart;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,23 +62,16 @@ public class AnalysisSleepFragment extends BaseFragment {
     @Bind(R.id.analysis_sleep_fragment_title_tv)
     TextView sleepTextView;
 
-    @Bind(R.id.analysis_fragment_des_total_one)
-    TextView totalSleepDes;
-    @Bind(R.id.analysis_fragment_des_total_two)
-    TextView avgSleepDes;
-    @Bind(R.id.analysis_fragment_des_total_three)
-    TextView avgWakeDes;
-    @Bind(R.id.analysis_fragment_des_total_four)
-    TextView sleepQuality;
     @Bind(R.id.ui_page_control_point)
     LinearLayout uiControl;
 
     private List<View> sleepList;
     private Date userSelectDate;
     private View thisWeekView;
-    private View lastWeekView;
+    private View todaySleepViewChart;
     private View lastMonthView;
-    private AnalysisSleepLineChart thisWeekChart, lastWeekChart, lastMonthChart;
+    private AnalysisSleepLineChart thisWeekChart, lastMonthChart;
+    private SleepTodayChart todaySleepChart;
     private TipsView mMv;
     private SleepGoal mActiveSleepGoal;
 
@@ -92,22 +95,18 @@ public class AnalysisSleepFragment extends BaseFragment {
     }
 
     private void initView(LayoutInflater inflater) {
-        totalSleepDes.setText(getString(R.string.analysis_fragment_des_total_sleep));
-        avgSleepDes.setText(getString(R.string.analysis_fragment_des_avg_sleep));
-        avgWakeDes.setText(getString(R.string.analysis_fragment_des_avg_wake));
-        sleepQuality.setText(getString(R.string.analysis_fragment_des_sleep_quality));
-
         sleepList = new ArrayList<>(3);
 
+        todaySleepViewChart = inflater.inflate(R.layout.analysis_sleep_today_chart, null);
         thisWeekView = inflater.inflate(R.layout.analysis_sleep_chart_fragment_layout, null);
-        lastWeekView = inflater.inflate(R.layout.analysis_sleep_chart_fragment_layout, null);
         lastMonthView = inflater.inflate(R.layout.analysis_sleep_chart_fragment_layout, null);
+
+        todaySleepChart = (SleepTodayChart) todaySleepViewChart.findViewById(R.id.analysis_sleep_today_chart);
         thisWeekChart = (AnalysisSleepLineChart) thisWeekView.findViewById(R.id.analysis_sleep_chart);
-        lastWeekChart = (AnalysisSleepLineChart) lastWeekView.findViewById(R.id.analysis_sleep_chart);
         lastMonthChart = (AnalysisSleepLineChart) lastMonthView.findViewById(R.id.analysis_sleep_chart);
 
+        sleepList.add(todaySleepViewChart);
         sleepList.add(thisWeekView);
-        sleepList.add(lastWeekView);
         sleepList.add(lastMonthView);
 
         for (int i = 0; i < sleepList.size(); i++) {
@@ -140,21 +139,12 @@ public class AnalysisSleepFragment extends BaseFragment {
                 }
             }
         });
+
         if (mActiveSleepGoal == null) {
             mActiveSleepGoal = new SleepGoal("Unknown", 360, true);
         }
 
-        getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.TISHWEEK,
-                new ObtainSleepDataListener() {
-                    @Override
-                    public void obtainSleepData(List<SleepData> thisWeekSleepData) {
-                        thisWeekChart.addData(thisWeekSleepData, mActiveSleepGoal, 7);
-                        thisWeekChart.setMarkerView(mMv);
-                        thisWeekChart.animateY(3000);
-                        setThisWeekData(thisWeekSleepData);
-                    }
-                });
-
+        setData(sleepViewPage.getCurrentItem());
         /**
          * 'Sleep' is not the right way to put it into the chart because one evening and one night is spread
          * through 2 'Sleep' Objects.Therefor we have a solution which is 'SleepData' We have therefor
@@ -183,7 +173,6 @@ public class AnalysisSleepFragment extends BaseFragment {
                     }
                 }
                 setData(position);
-
             }
 
             @Override
@@ -194,7 +183,7 @@ public class AnalysisSleepFragment extends BaseFragment {
     }
 
     private void setThisWeekData(List<SleepData> thisWeekSleepData) {
-        String title = getString(R.string.analysis_fragment_this_week_steps);
+        String title = getString(R.string.analysis_fragment_this_week_chart_title);
         int TotalSleep = getTotalSleep(thisWeekSleepData);
         int avgSleep = getTotalSleep(thisWeekSleepData) / thisWeekSleepData.size();
         int avgWake = getAverageWake(thisWeekSleepData) / thisWeekSleepData.size();
@@ -242,20 +231,8 @@ public class AnalysisSleepFragment extends BaseFragment {
         return totalSleep;
     }
 
-    public void setLastWeekData(List<SleepData> lastWeekSleepData) {
-        String lastTitle = getString(R.string.analysis_fragment_last_week_steps);
-        if (lastWeekSleepData.size() != 0) {
-            setAverageText(getTotalSleep(lastWeekSleepData), getTotalSleep(lastWeekSleepData) / lastWeekSleepData.size()
-                    , getAverageWake(lastWeekSleepData) / lastWeekSleepData.size(),
-                    getTotalDeepSleep(lastWeekSleepData) * 100 / (getTotalSleep(lastWeekSleepData) == 0 ? 1
-                            : getTotalSleep(lastWeekSleepData)), lastTitle);
-        } else {
-            setAverageText(0, 0, 0, 0, lastTitle);
-        }
-    }
-
     public void setLastMonthData(List<SleepData> lastMonthSleepData) {
-        String lastMonthTitle = getString(R.string.analysis_fragment_last_month_solar);
+        String lastMonthTitle = getString(R.string.analysis_fragment_last_month_chart_title);
         if (lastMonthSleepData.size() != 0) {
             setAverageText(getTotalSleep(lastMonthSleepData), getTotalSleep(lastMonthSleepData) / lastMonthSleepData.size()
                     , getAverageWake(lastMonthSleepData) / lastMonthSleepData.size(),
@@ -269,6 +246,46 @@ public class AnalysisSleepFragment extends BaseFragment {
     public void setData(int position) {
         switch (position) {
             case 0:
+                sleepTextView.setText(getString(R.string.analysis_fragment_today_chart_title));
+                User user = getModel().getUser();
+                getModel().getDailySleep(user.getUserID(), new Date(), new TodaySleepListener() {
+                    @Override
+                    public void todaySleep(Sleep[] sleeps) {
+                        Log.e("jason", "yesterday Sleep : " + sleeps[0].toString());
+                        SleepDataHandler handler = new SleepDataHandler(Arrays.asList(sleeps));
+                        List<SleepData> sleepDataList = handler.getSleepData(new Date());
+                        if (!sleepDataList.isEmpty()) {
+                            SleepData sleepData = null;
+                            if (sleepDataList.size() == 2) {
+                                sleepData = SleepDataUtils.mergeYesterdayToday(sleepDataList.get(1), sleepDataList.get(0));
+                                DateTime sleepStart = new DateTime(sleepData.getSleepStart() == 0 ?
+                                        Common.removeTimeFromDate(new Date()).getTime() : sleepData.getSleepStart());
+                                Log.w("Karl", "Yo yo : " + sleepData.getTotalSleep());
+
+                                averageSleepText.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
+                                totalSleepText.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
+                            } else {
+                                sleepData = sleepDataList.get(0);
+                                DateTime sleepStart = new DateTime(sleepData.getSleepStart() == 0 ?
+                                        Common.removeTimeFromDate(new Date()).getTime() : sleepData.getSleepStart());
+
+                                averageSleepText.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
+                                totalSleepText.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
+                            }
+                            sleepQualityTv.setText(sleepData.getDeepSleep() * 100 / (sleepData.getTotalSleep() == 0
+                                    ? 1 : sleepData.getTotalSleep()) + "%");
+                            todaySleepChart.setDataInChart(sleepData);
+                            todaySleepChart.animateY(3000);
+                            DateTime sleepEnd = new DateTime(sleepData.getSleepEnd() == 0 ?
+                                    Common.removeTimeFromDate(new Date()).getTime() : sleepData.getSleepEnd());
+                            averageWake.setText(sleepEnd.toString("HH:mm", Locale.ENGLISH));
+                        } else {
+                            setAverageText(0, 0, 0, 0, getString(R.string.analysis_fragment_today_chart_title));
+                        }
+                    }
+                });
+                break;
+            case 1:
                 getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.TISHWEEK,
                         new ObtainSleepDataListener() {
                             @Override
@@ -279,19 +296,6 @@ public class AnalysisSleepFragment extends BaseFragment {
                                 setThisWeekData(thisWeekSleepData);
                             }
                         });
-                break;
-            case 1:
-                getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.LASTWEEK,
-                        new ObtainSleepDataListener() {
-                            @Override
-                            public void obtainSleepData(List<SleepData> lastWeekSleepData) {
-                                lastWeekChart.addData(lastWeekSleepData, mActiveSleepGoal, 7);
-                                lastWeekChart.setMarkerView(mMv);
-                                lastWeekChart.animateY(3000);
-                                setLastWeekData(lastWeekSleepData);
-                            }
-                        });
-
                 break;
             case 2:
                 getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.LASTMONTH
@@ -322,5 +326,9 @@ public class AnalysisSleepFragment extends BaseFragment {
                 }
             });
         }
+    }
+
+    public interface TodaySleepListener {
+        void todaySleep(Sleep[] sleeps);
     }
 }

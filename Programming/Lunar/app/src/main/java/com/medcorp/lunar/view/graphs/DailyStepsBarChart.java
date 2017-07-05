@@ -26,19 +26,19 @@ import static java.lang.Math.abs;
  *
  */
 
-public class MainStepsBarChart extends BarChart implements AxisValueFormatter{
+public class DailyStepsBarChart extends BarChart implements AxisValueFormatter{
     private int[] steps = new int[0];
-    public MainStepsBarChart(Context context) {
+    public DailyStepsBarChart(Context context) {
         super(context);
         initGraph();
     }
 
-    public MainStepsBarChart(Context context, AttributeSet attrs) {
+    public DailyStepsBarChart(Context context, AttributeSet attrs) {
         super(context, attrs);
         initGraph();
     }
 
-    public MainStepsBarChart(Context context, AttributeSet attrs, int defStyle) {
+    public DailyStepsBarChart(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initGraph();
     }

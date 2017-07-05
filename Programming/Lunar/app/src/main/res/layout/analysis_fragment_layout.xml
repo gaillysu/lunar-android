@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/AnalysisTabLayout"
+        app:tabTextColor="@color/tab_layout_normal_text_color"
         app:tabIndicatorColor="@color/white"/>
     <android.support.v4.view.ViewPager
         android:id="@+id/analysis_fragment_content_view_pager"

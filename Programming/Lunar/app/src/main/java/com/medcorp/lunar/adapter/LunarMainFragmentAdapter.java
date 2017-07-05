@@ -11,18 +11,16 @@ import com.medcorp.lunar.fragment.MainFragment;
 import com.medcorp.lunar.fragment.MainSolarDetailsFragment;
 
 
-/**
+/***
  * Created by Administrator on 2016/7/19.
  */
 public class LunarMainFragmentAdapter extends FragmentPagerAdapter {
 
-    private MainFragment mainFragment;
     private Context context;
     private String[] fragmentAdapterArray;
 
     public LunarMainFragmentAdapter(FragmentManager fm, MainFragment fragment) {
         super(fm);
-        this.mainFragment = fragment;
         context = fragment.getContext();
         fragmentAdapterArray = context.getResources().getStringArray(R.array.lunar_main_adapter_fragment);
     }
@@ -34,12 +32,6 @@ public class LunarMainFragmentAdapter extends FragmentPagerAdapter {
                 return MainClockFragment.instantiate(context, MainClockFragment.class.getName());
             case 1:
                 return MainSolarDetailsFragment.instantiate(context,MainSolarDetailsFragment.class.getName());
-//            case 1:
-//                return MainStepsFragment.instantiate(context, MainStepsFragment.class.getName());
-//            case 2:
-//                return MainSleepFragment.instantiate(context, MainSleepFragment.class.getName());
-//            case 3:
-//                return MainSolarFragment.instantiate(context, MainSolarFragment.class.getName());
             default:
                 return null;
         }

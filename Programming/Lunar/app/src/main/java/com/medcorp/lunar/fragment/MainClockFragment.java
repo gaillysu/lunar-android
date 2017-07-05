@@ -273,7 +273,7 @@ public class MainClockFragment extends BaseFragment {
     }
 
     private void countSleepTime(final Date date) {
-        getModel().getDailySleep(user.getUserID(), date, new MainSleepFragment.TodaySleepListener() {
+        getModel().getDailySleep(user.getUserID(), date, new AnalysisSleepFragment.TodaySleepListener() {
             @Override
             public void todaySleep(Sleep[] sleepArray) {
                 SleepDataHandler handler = new SleepDataHandler(Arrays.asList(sleepArray));
