@@ -25,17 +25,9 @@ import com.medcorp.lunar.view.ToastHelper;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.functions.Consumer;
-
-import static com.medcorp.lunar.R.id.use_wechat_account_register_ib;
-import static com.medcorp.lunar.R.style.AppTheme_Dark_Dialog;
 
 public class SignupActivity extends BaseActivity {
     private static final String TAG = "SignupActivity";
@@ -86,11 +78,11 @@ public class SignupActivity extends BaseActivity {
 
     @OnClick(R.id.register_bt)
     public void signUpAction() {
-        progressDialog.show();
         if (!validate()) {
             onSignupFailed();
             return;
         }
+        progressDialog.show();
         CheckEmailRequest request = new CheckEmailRequest(email);
         MedNetworkOperation.getInstance(this).checkEmail(this, request,new RequestResponseListener<CheckEmailResponse>() {
             @Override
@@ -186,218 +178,4 @@ public class SignupActivity extends BaseActivity {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
-
-    @OnClick(R.id.cancel_register_bt)
-    public void cancelClick() {
-        startActivity(WelcomeActivity.class);
-        finish();
-        overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
-    }
-
-
-    /**
-     * create WeChat account
-     */
-    @OnClick(use_wechat_account_register_ib)
-    public void createWeChatAccount() {
-        regToWx();
-        if (!weChatApi.isWXAppInstalled()) {
-            showSnackbar(R.string.wechat_uninstall);
-            return;
-        }
-        SendAuth.Req request = new SendAuth.Req();
-        request.scope = getString(R.string.weixin_scope);
-        request.state = getString(R.string.weixin_package_name);
-        weChatApi.sendReq(request);
-    }
-
-    private void regToWx() {
-        APP_ID = getString(R.string.we_chat_app_id);
-        weChatApi = getModel().getWXApi();
-        weChatApi.registerApp(APP_ID);
-    }
-
-    @Subscribe
-    public void weChatErrorEvent(WeChatEvent event) {
-        showSnackbar(getString(R.string.network_error));
-    }
-
-    @Subscribe
-    public void weChatEvent(final WeChatTokenEvent event) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                if (event != null) {
-                    if (progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
-                    progressDialog.show();
-                    getModel().getWeChatToken(event.getCode());
-                }
-            }
-        });
-    }
-
-    @Subscribe
-    public void userInfoEvent(final ReturnUserInfoEvent event) {
-        if (event != null) {
-            final WeChatUserInfoResponse userInfo = event.getUserInfo();
-            WeChatAccountCheckRequest request = new WeChatAccountCheckRequest(userInfo.getNickname(), userInfo.getUnionid());
-            MedNetworkOperation.getInstance(this).checkWeChat(this, request, new RequestResponseListener<CheckWeChatAccountResponse>() {
-                @Override
-                public void onFailed() {
-                    showSnackbar(getString(R.string.check_wechat_fail));
-                    progressDialog.dismiss();
-                }
-
-                @Override
-                public void onSuccess(CheckWeChatAccountResponse response) {
-                    if (response.getStatus() <= 0) {
-                        createWeChatUser(userInfo);
-                    }
-                }
-            });
-        } else {
-            progressDialog.dismiss();
-            showSnackbar(getString(R.string.wechat_login_fail));
-        }
-    }
-
-    private void createWeChatUser(final WeChatUserInfoResponse userInfo) {
-        WeChatAccountRegisterRequest request = new WeChatAccountRegisterRequest(userInfo.getNickname(), userInfo.getUnionid());
-        MedNetworkOperation.getInstance(this).createWeChatAccount(this, request, new RequestResponseListener<CreateWeChatAccountResponse>() {
-            @Override
-            public void onFailed() {
-                showSnackbar(getString(R.string.wechat_create_account_fail));
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onSuccess(CreateWeChatAccountResponse response) {
-                if (response.getStatus() == 1) {
-                    WeChatLoginRequest request = new WeChatLoginRequest(userInfo.getUnionid());
-                    weChatStartLogin(request);
-                } else {
-                    showSnackbar(response.getMessage());
-                }
-            }
-        });
-    }
-
-    private void weChatStartLogin(WeChatLoginRequest request) {
-        MedNetworkOperation.getInstance(this).weChatLogin(this, request, new RequestResponseListener<WeChatLoginResponse>() {
-            @Override
-            public void onFailed() {
-                showSnackbar(getString(R.string.wechat_login_fail));
-            }
-
-            @Override
-            public void onSuccess(WeChatLoginResponse response) {
-                if (response.getStatus() == 1) {
-                    WeChatLoginResponse.UserBean user = response.getUser();
-                    final User lunarUser = getModel().getUser();
-                    lunarUser.setFirstName(user.getFirst_name());
-                    lunarUser.setUserID("" + user.getId());
-                    lunarUser.setWechat(user.getWechat());
-                    lunarUser.setIsLogin(true);
-                    lunarUser.setCreatedDate(new Date().getTime());
-                    //save it and sync with watch and cloud server
-                    getModel().saveUser(lunarUser);
-                    getModel().getSyncController().getDailyTrackerInfo(true);
-                    getModel().getNeedSyncSteps(lunarUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
-                        @Override
-                        public void accept(final List<Steps> stepses) throws Exception {
-                            getModel().getNeedSyncSleep(lunarUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
-                                @Override
-                                public void accept(List<Sleep> sleeps) throws Exception {
-                                    getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses, sleeps);
-                                }
-                            });
-                        }
-                    });
-                    onLoginSuccess();
-                } else {
-                    onFailed();
-                    showSnackbar(getString(R.string.wechat_login_fail));
-                }
-            }
-        });
-    }
-
-
-    public void onLoginSuccess() {
-        showSnackbar(R.string.log_in_success);
-        getModel().getUser().setUserEmail(_emailText.getText().toString());
-        getModel().saveUser(getModel().getUser());
-        setResult(RESULT_OK, null);
-        Preferences.saveIsFirstLogin(this, false);
-        if ((getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) &&
-                getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, false)) | !getModel().isWatchConnected()) {
-            startActivity(TutorialPage1Activity.class);
-        } else {
-            startActivity(MainActivity.class);
-        }
-        finish();
-    }
-
-    @OnClick(R.id.use_facebook_account_register_ib)
-    public void createFacebookAccount() {
-        LoginManager.getInstance().logInWithReadPermissions(this,
-                Arrays.asList(getString(R.string.facebook_public_profile)
-                        , getString(R.string.facebook_user_email), getString(R.string.facebook_user_birthday)));
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_SIGN_UP) {
-            if (resultCode == RESULT_OK) {
-                setResult(RESULT_OK, null);
-                this.finish();
-            }
-        }
-    }
-
-    public void showSnackbar(int id) {
-        if (snackbar != null) {
-            if (snackbar.isShown()) {
-                snackbar.dismiss();
-            }
-        }
-        snackbar = Snackbar.make(registerLayout, "", Snackbar.LENGTH_SHORT);
-        TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
-        tv.setTextColor(Color.WHITE);
-        tv.setText(getString(id));
-        Snackbar.SnackbarLayout ve = (Snackbar.SnackbarLayout) snackbar.getView();
-        ve.setBackgroundColor(getResources().getColor(R.color.snackbar_bg_color));
-        snackbar.show();
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                snackbar.dismiss();
-            }
-        }, 1000);
-    }
-
-    public void showSnackbar(String msg) {
-        if (snackbar != null) {
-            if (snackbar.isShown()) {
-                snackbar.dismiss();
-            }
-        }
-        snackbar = Snackbar.make(registerLayout, "", Snackbar.LENGTH_SHORT);
-        TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
-        tv.setTextColor(Color.WHITE);
-        tv.setText(msg);
-        Snackbar.SnackbarLayout ve = (Snackbar.SnackbarLayout) snackbar.getView();
-        ve.setBackgroundColor(getResources().getColor(R.color.snackbar_bg_color));
-        snackbar.show();
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                snackbar.dismiss();
-            }
-        }, 1000);
-    }
-
 }

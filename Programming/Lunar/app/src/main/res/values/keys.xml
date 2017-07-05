@@ -94,5 +94,5 @@
     <string name="solar_goal_id" translatable="false">solarGoalId</string>
     <string name="launch_edit_goal_activity_flag" translatable="false">launch_flag</string>
     <string name="cityName" translatable="false">cityName</string>
-
+    <string name="tutorial_4_other_color_text">white</string>
 </resources>

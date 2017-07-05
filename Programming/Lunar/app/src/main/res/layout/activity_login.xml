@@ -62,7 +62,7 @@
                         app:hintTextAppearance="@style/hintAppearance">
 
                         <EditText
-                            android:id="@+id/input_email"
+                            android:id="@+id/input_email_ed"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:background="@color/transparent"
@@ -86,7 +86,7 @@
                         app:hintTextAppearance="@style/hintAppearance">
 
                         <EditText
-                            android:id="@+id/input_password"
+                            android:id="@+id/input_password_ed"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:background="@color/transparent"
@@ -99,7 +99,7 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/btn_login"
+                        android:id="@+id/login_activity_login_bt"
                         android:layout_width="fill_parent"
                         android:layout_height="48dp"
                         android:layout_marginBottom="20dp"

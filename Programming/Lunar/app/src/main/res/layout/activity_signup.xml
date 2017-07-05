@@ -11,9 +11,9 @@
         android:id="@+id/register_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
+        android:orientation="vertical"
         android:layout_alignParentTop="true"
-        android:orientation="vertical">
+        android:layout_alignParentStart="true">
 
         <TextView
             android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                     app:hintTextAppearance="@style/hintAppearance">
 
                     <EditText
-                        android:id="@+id/input_email"
+                        android:id="@+id/input_email_ed"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
                         android:layout_gravity="center_vertical"
@@ -78,7 +78,7 @@
                     app:hintTextAppearance="@style/hintAppearance">
 
                     <EditText
-                        android:id="@+id/register_account_activity_edit_first_name"
+                        android:id="@+id/register_account_activity_edit_first_name_ed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -104,7 +104,7 @@
                     >
 
                     <EditText
-                        android:id="@+id/register_account_activity_edit_last_name"
+                        android:id="@+id/register_account_activity_edit_last_name_ed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -132,7 +132,7 @@
                     app:hintTextAppearance="@style/hintAppearance">
 
                     <EditText
-                        android:id="@+id/input_password"
+                        android:id="@+id/register_account_activity_edit_password_ed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -158,7 +158,7 @@
                     app:hintTextAppearance="@style/hintAppearance">
 
                     <EditText
-                        android:id="@+id/input_password_confirm"
+                        android:id="@+id/register_account_activity_edit_password_confirm_ed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -172,7 +172,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn_signup"
+                    android:id="@+id/register_bt"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_gravity="center_horizontal"

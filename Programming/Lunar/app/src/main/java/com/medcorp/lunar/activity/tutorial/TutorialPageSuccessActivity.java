@@ -8,6 +8,8 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.activity.config.ConfigTimeSyncActivity;
 import com.medcorp.lunar.base.BaseActivity;
+import com.medcorp.lunar.util.Preferences;
+
 import net.medcorp.library.ble.util.Constants;
 
 import butterknife.ButterKnife;
