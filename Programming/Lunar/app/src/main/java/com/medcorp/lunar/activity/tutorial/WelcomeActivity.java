@@ -252,6 +252,7 @@ public class WelcomeActivity extends BaseActivity {
 
     @OnClick(R.id.welcome_activity_facebook_login)
     public void facebookLogin() {
+        LoginManager.getInstance().logOut();
         LoginManager.getInstance().logInWithReadPermissions(this,
                 Arrays.asList(getString(R.string.facebook_public_profile)
                         , getString(R.string.facebook_user_email), getString(R.string.facebook_user_birthday)));

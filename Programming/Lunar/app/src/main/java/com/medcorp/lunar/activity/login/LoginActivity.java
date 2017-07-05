@@ -8,8 +8,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.AppCompatButton;
 import android.view.KeyEvent;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -55,8 +55,8 @@ public class LoginActivity extends BaseActivity {
     EditText _emailText;
     @Bind(R.id.input_password_ed)
     EditText _passwordText;
-    @Bind(R.id.login_bt)
-    Button _loginButton;
+    @Bind(R.id.login_activity_login_bt)
+    AppCompatButton _loginButton;
     @Bind(R.id.login_activity_layout)
     CoordinatorLayout loginLayout;
 
@@ -85,7 +85,7 @@ public class LoginActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    @OnClick(R.id.login_bt)
+    @OnClick(R.id.login_activity_login_bt)
     public void loginAction() {
         if (!validate()) {
             onLoginFailed();

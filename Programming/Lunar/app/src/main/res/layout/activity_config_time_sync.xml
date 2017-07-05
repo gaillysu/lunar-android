@@ -38,7 +38,7 @@
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/select_sync_home_time"
+            android:id="@+id/select_sync_home_time_rb"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:background="@drawable/radio_button_bg"
@@ -53,7 +53,7 @@
 
         <RadioButton
 
-            android:id="@+id/select_sync_local_time"
+            android:id="@+id/select_sync_local_time_rb"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginLeft="20dp"

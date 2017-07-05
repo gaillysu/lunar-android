@@ -44,9 +44,9 @@ public class TutorialPage2Activity extends BaseActivity {
             ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.colorPrimary));
             ForegroundColorSpan span2 = new ForegroundColorSpan(Color.WHITE);
             String describe = getString(R.string.tutorial_shipping_mode_describe_text);
-            int index = describe.indexOf(getString(R.string.other_color_turquoise));
+            int index = describe.indexOf(getString(R.string.other_color_green));
             int indexTv = describe.indexOf(getString(R.string.other_color_text));
-            ss.setSpan(span, index, index + getString(R.string.other_color_turquoise).length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            ss.setSpan(span, index, index + getString(R.string.other_color_green).length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             ss.setSpan(span2, indexTv, indexTv + getString(R.string.other_color_text).length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             describeTv.setText(ss);
         }
