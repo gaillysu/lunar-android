@@ -304,7 +304,7 @@
     <string name="lunar_adapter_clock">Progress</string>
     <string name="lunar_adapter_chart">Chart</string>
     <string name="lunar_adapter_solar">Solar</string>
-    <string name="lunar_adapter_sunshine" translatable="false">sunshine</string>
+    <string name="lunar_adapter_sunshine">Sunshine</string>
     <string name="main_sleep_fragment_title">Sleep</string>
     <string name="main_steps_fragment_title">Steps</string>
     <string name="main_clock_fragment_title">Clock</string>

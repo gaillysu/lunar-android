@@ -515,4 +515,8 @@
     <string name="main_solar_details_sun_exposure_describe">今天的太陽能</string>
     <string name="title_sunshine">太陽能</string>
     <string name="todays_weather_text">今天天氣 -</string>
+    <string name="lunar_adapter_sunshine">太陽能</string>
+    <string name="search_city_hint_text">收索城市</string>
+    <string name="welcome_activity_facebook_login">使用Facebook</string>
+    <string name="welcome_activity_wechat_login">微信登錄</string>
 </resources>
