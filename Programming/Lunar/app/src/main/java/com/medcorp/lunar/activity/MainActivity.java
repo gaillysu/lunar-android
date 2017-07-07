@@ -11,6 +11,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -64,7 +66,7 @@ import static com.medcorp.lunar.util.Preferences.getUserHeardPicturePath;
  * Created by Karl on 12/10/15.
  */
 public class MainActivity extends BaseActivity implements DrawerLayout.DrawerListener,
-        NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener{
+        NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
@@ -110,7 +112,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         MenuItem firstItem = navigationView.getMenu().getItem(0);
         onNavigationItemSelected(firstItem);
         firstItem.setChecked(true);
-        toolbar.setTitle(firstItem.getTitle());
         mainStepsFragment = MainFragment.instantiate(this, MainFragment.class.getName());
         activeFragment.set(mainStepsFragment);
         fragmentManager = getSupportFragmentManager();
@@ -162,6 +163,8 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             }
         });
     }
+
+
 
     @Override
     protected void onResume() {
@@ -244,6 +247,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         actionBarDrawerToggle.syncState();
+        toolbar.setTitle(getString(R.string.title_steps));
     }
 
     @Override

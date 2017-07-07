@@ -521,4 +521,5 @@
     <string name="search_city_hint_text">Search your city</string>
     <string name="welcome_activity_facebook_login">Continue with Facebook</string>
     <string name="welcome_activity_wechat_login">Continue with WeChat</string>
+    <string name="menu_drawer_find">Find Watch</string>
 </resources>

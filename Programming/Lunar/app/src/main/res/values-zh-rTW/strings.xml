@@ -519,4 +519,5 @@
     <string name="search_city_hint_text">收索城市</string>
     <string name="welcome_activity_facebook_login">使用Facebook</string>
     <string name="welcome_activity_wechat_login">微信登錄</string>
+    <string name="menu_drawer_find">尋找手錶</string>
 </resources>

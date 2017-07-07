@@ -4,6 +4,7 @@ import android.location.Address;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -81,11 +82,8 @@ public class EditWorldClockActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle(R.string.choose_activity_title_choose_city_tv);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initData();
     }
-
 
     private void initData() {
         resultList = new ArrayList<>();
@@ -124,7 +122,7 @@ public class EditWorldClockActivity extends BaseActivity {
             }
         });
 
-        allCityAdapter = new ChooseCityAdapter(this, chooseCityViewModelsList,false);
+        allCityAdapter = new ChooseCityAdapter(this, chooseCityViewModelsList, false);
         showAllCityList.setAdapter(allCityAdapter);
         sortCityBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
             @Override
@@ -181,6 +179,12 @@ public class EditWorldClockActivity extends BaseActivity {
         });
     }
 
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toolbar.setTitle(R.string.choose_activity_title_choose_city_tv);
+    }
 
     @Override
     public void onStart() {

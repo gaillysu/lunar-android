@@ -521,5 +521,6 @@
     <string name="tutorial_4_other_color_text"></string>
     <string name="welcome_activity_facebook_login">Continue with Facebook</string>
     <string name="welcome_activity_wechat_login">Continue with WeChat</string>
+    <string name="menu_drawer_find">Find Watch</string>
 
 </resources>
