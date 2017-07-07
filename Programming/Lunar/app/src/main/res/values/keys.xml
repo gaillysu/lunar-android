@@ -31,7 +31,6 @@
     <string name="key_prefs_step_preset_id" translatable="false">steps_preset_id</string>
     <string name="key_prefs_link_loss" translatable="false">link_loss_enable</string>
     <string name="key_prefs_google_fit" translatable="false">google_fit_status</string>
-    <string name="key_prefs_select_date" translatable="false">select_date</string>
     <string name="key_prefs_is_first_login" translatable="false">is_not_first_login</string>
     <string name="key_prefs_is_metrics" translatable="false">is_not_metrics</string>
     <string name="key_prefs_is_home" translatable="false">is_select_city</string>

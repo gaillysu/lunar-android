@@ -115,7 +115,6 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             }
 
         } else if (position == 3) {
-
             if (getModel().isWatchConnected()) {
                 getModel().blinkWatch();
 

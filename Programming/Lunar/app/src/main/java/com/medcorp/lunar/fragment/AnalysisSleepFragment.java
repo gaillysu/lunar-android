@@ -13,13 +13,11 @@ import android.widget.TextView;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.lunar.fragment.base.BaseFragment;
-import com.medcorp.lunar.model.ChangeSleepGoalEvent;
 import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.SleepData;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.util.Common;
-import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.SleepDataHandler;
 import com.medcorp.lunar.util.SleepDataUtils;
 import com.medcorp.lunar.util.TimeUtil;
@@ -27,11 +25,8 @@ import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisSleepLineChart;
 import com.medcorp.lunar.view.graphs.SleepTodayChart;
 
-import org.greenrobot.eventbus.Subscribe;
 import org.joda.time.DateTime;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -66,7 +61,6 @@ public class AnalysisSleepFragment extends BaseFragment {
     LinearLayout uiControl;
 
     private List<View> sleepList;
-    private Date userSelectDate;
     private View thisWeekView;
     private View todaySleepViewChart;
     private View lastMonthView;
@@ -79,17 +73,6 @@ public class AnalysisSleepFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View sleepView = inflater.inflate(R.layout.analysis_fragment_child_sleep_fragment, container, false);
         ButterKnife.bind(this, sleepView);
-        String selectDate = Preferences.getSelectDate(this.getContext());
-        if (selectDate == null) {
-            userSelectDate = new Date();
-        } else {
-            try {
-                userSelectDate = new SimpleDateFormat("yyyy-MM-dd").parse(selectDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-
         initView(inflater);
         return sleepView;
     }
@@ -286,7 +269,7 @@ public class AnalysisSleepFragment extends BaseFragment {
                 });
                 break;
             case 1:
-                getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.TISHWEEK,
+                getModel().getSleep(getModel().getUser().getUserID(), new Date(), WeekData.TISHWEEK,
                         new ObtainSleepDataListener() {
                             @Override
                             public void obtainSleepData(List<SleepData> thisWeekSleepData) {
@@ -298,7 +281,7 @@ public class AnalysisSleepFragment extends BaseFragment {
                         });
                 break;
             case 2:
-                getModel().getSleep(getModel().getUser().getUserID(), userSelectDate, WeekData.LASTMONTH
+                getModel().getSleep(getModel().getUser().getUserID(), new Date(), WeekData.LASTMONTH
                         , new ObtainSleepDataListener() {
                             @Override
                             public void obtainSleepData(List<SleepData> lastMonthSleepData) {
@@ -314,18 +297,6 @@ public class AnalysisSleepFragment extends BaseFragment {
 
     public interface ObtainSleepDataListener {
         void obtainSleepData(List<SleepData> sleepDatas);
-    }
-
-    @Subscribe
-    public void onEvent(ChangeSleepGoalEvent event) {
-        if (event.isChange()) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setData(sleepViewPage.getCurrentItem());
-                }
-            });
-        }
     }
 
     public interface TodaySleepListener {

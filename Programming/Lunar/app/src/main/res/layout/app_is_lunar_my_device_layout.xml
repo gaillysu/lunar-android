@@ -50,7 +50,7 @@
             android:layout_height="match_parent"
             android:background="?android:attr/selectableItemBackground"
             android:drawablePadding="5dp"
-            android:drawableRight="@drawable/right_arrow"
+            android:drawableRight="@drawable/ic_right"
             android:drawableTint="@color/text_color"
             android:gravity="center|right"
             android:text="@string/my_nevo_new_update_available"

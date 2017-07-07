@@ -39,7 +39,7 @@
     <string name="analysis_fragment_des_sleep_quality">Quality</string>
     <string name="analysis_fragment_des_total_sleep">TOTAL SLEEP</string>
     <string name="analysis_fragment_last_month_chart_title">LAST 30 DAYS</string>
-    <string name="analysis_fragment_today_chart_title">LAST WEEK</string>
+    <string name="analysis_fragment_today_chart_title">TODAY</string>
     <string name="analysis_fragment_solar_page_time_on_solar_text">Average Time On Solar</string>
     <string name="analysis_fragment_solar_page_time_on_battery_text">Average Time On Battery</string>
     <string name="analysis_fragment_table_sleep">Inactivity</string>
@@ -123,7 +123,7 @@
     <string name="main_fragment_solar_page_time_on_solar_text">Time On Solar</string>
     <string name="main_steps_fragment_title">Steps</string>
     <string name="main_sleep_fragment_title">Sleep</string>
-    <string name="menu_drawer_hometime">Home Time</string>
+    <string name="menu_drawer_hometime">Digital Time</string>
     <string name="more_setting_place_home">Home Time</string>
     <string name="monday">Mon</string>
     <string name="more_setting_place_local">Local Time</string>

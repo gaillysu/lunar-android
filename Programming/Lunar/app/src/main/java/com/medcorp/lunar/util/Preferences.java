@@ -43,18 +43,6 @@ public class Preferences {
         return preferences.getString(userEmail, null);
     }
 
-    public static void saveSelectDate(Context context, String selectDate) {
-        init(context);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(context.getString(R.string.key_prefs_select_date), selectDate).apply();
-    }
-
-    public static String getSelectDate(Context context) {
-        init(context);
-        return preferences.getString(context.getString(R.string.key_prefs_select_date),
-                null);
-    }
-
     public static void saveIsFirstLogin(Context context, boolean isNotFirst) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();

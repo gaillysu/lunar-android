@@ -36,9 +36,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/fragment_steps_window_bg"
+        android:background="@color/white"
+        app:itemBackground="@color/transparent"
         app:headerLayout="@layout/navigation_header"
-        app:itemBackground="@drawable/navigation_drawer_selected_background"
         app:menu="@menu/menu_drawer"
         app:theme="@style/NevoTheme"/>
 

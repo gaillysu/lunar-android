@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="menu_drawer_hometime">家鄉時間</string>
+    <string name="menu_drawer_hometime">數字時間</string>
     <string name="password_change_failure">修改密碼出錯.在來一次!</string>
     <string name="password_change_success">修改密碼成功!</string>
     <string name="password_is_not_empty">密碼不能爲空!</string>
@@ -288,7 +288,7 @@
     <string name="analysis_fragment_des_sleep_quality">質量</string>
     <string name="analysis_fragment_des_total_sleep">總睡眠</string>
     <string name="analysis_fragment_last_month_chart_title">過去30天</string>
-    <string name="analysis_fragment_today_chart_title">過去壹周</string>
+    <string name="analysis_fragment_today_chart_title">今天</string>
     <string name="analysis_fragment_solar_page_time_on_battery_text">平均電池時間</string>
     <string name="analysis_fragment_solar_page_time_on_solar_text">平均太陽能時間</string>
     <string name="analysis_fragment_table_sleep">睡眠</string>

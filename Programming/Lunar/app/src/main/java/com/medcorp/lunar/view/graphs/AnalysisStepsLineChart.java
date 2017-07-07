@@ -18,8 +18,8 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.medcorp.lunar.R;
-import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.model.Steps;
+import com.medcorp.lunar.model.StepsGoal;
 
 import org.joda.time.DateTime;
 

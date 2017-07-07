@@ -3,7 +3,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <com.medcorp.lunar.view.graphs.DailyStepsBarChart
+    <com.medcorp.lunar.view.graphs.DailySolarChart
         android:id="@+id/analysis_solar_today_chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
-import com.medcorp.lunar.event.ChangeGoalEvent;
 import com.medcorp.lunar.fragment.base.BaseFragment;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.StepsGoal;
@@ -19,8 +18,6 @@ import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisStepsLineChart;
 import com.medcorp.lunar.view.graphs.DailyStepsBarChart;
-
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -147,6 +144,7 @@ public class AnalysisStepsFragment extends BaseFragment {
                         imageView.setImageResource(R.drawable.ui_page_control_unselector);
                     }
                 }
+                setDataInChart(position);
             }
 
             @Override
@@ -230,7 +228,12 @@ public class AnalysisStepsFragment extends BaseFragment {
         switch (dataInChart) {
             case 0:
                 Steps dailySteps = getModel().getDailySteps(getModel().getUser().getUserID(), new Date());
-                //TODO set data for chart
+                String[] hourlySteps = dailySteps.getHourlySteps().replace("[", "").replace("]", "").replace(" ","").split(",");
+                int[] dailyStepsArray = new int[hourlySteps.length];
+                for (int i = 0; i < 24; i++) {
+                    dailyStepsArray[i] = new Integer(hourlySteps[i]).intValue();
+                }
+                todayStepsChart.setDataInChart(dailyStepsArray,dailySteps.getGoal());
                 todayStepsChart.animateY(3000);
                 break;
             case 1:
@@ -262,17 +265,5 @@ public class AnalysisStepsFragment extends BaseFragment {
 
     public interface OnStepsGetListener {
         void onStepsGet(List<Steps> stepsList);
-    }
-
-    @Subscribe
-    public void onEvent(ChangeGoalEvent event) {
-        if (event.isChangeGoal()) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    initData();
-                }
-            });
-        }
     }
 }

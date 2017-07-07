@@ -19,42 +19,40 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.medcorp.lunar.R;
-
-import org.joda.time.DateTime;
+import com.medcorp.lunar.util.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.abs;
-
-/**
- * Created by karl-john on 18/8/2016.
+/***
+ * Created by Jason on 2017/7/7.
  */
 
-public class DailyStepsBarChart extends LineChart {
+public class DailySolarChart extends LineChart {
 
-    public DailyStepsBarChart(Context context) {
+    public DailySolarChart(Context context) {
         super(context);
         initGraph();
     }
 
-    public DailyStepsBarChart(Context context, AttributeSet attrs) {
+    public DailySolarChart(Context context, AttributeSet attrs) {
         super(context, attrs);
         initGraph();
     }
 
-    public DailyStepsBarChart(Context context, AttributeSet attrs, int defStyle) {
+    public DailySolarChart(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initGraph();
     }
 
-    public void initGraph() {
+    private void initGraph() {
         setContentDescription("");
         setDescription("");
         setNoDataTextDescription("");
         setNoDataText("");
         setDragEnabled(false);
         setScaleEnabled(false);
+        //        setTouchEnabled(true);
         setPinchZoom(false);
         setClickable(false);
         setHighlightPerTapEnabled(false);
@@ -67,60 +65,42 @@ public class DailyStepsBarChart extends LineChart {
         leftAxis.setAxisLineColor(getResources().getColor(R.color.colorPrimary));
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawLabels(true);
+        leftAxis.setDrawLimitLinesBehindData(true);
         leftAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         leftAxis.setAxisMinValue(0.0f);
-        leftAxis.setDrawLimitLinesBehindData(true);
 
         YAxis rightAxis = getAxisRight();
         rightAxis.setEnabled(false);
-        rightAxis.setAxisLineColor(getResources().getColor(R.color.colorPrimary));
+        rightAxis.setAxisLineColor(Color.BLACK);
         rightAxis.setDrawGridLines(false);
         rightAxis.setDrawLimitLinesBehindData(false);
         rightAxis.setDrawLabels(false);
 
         XAxis xAxis = getXAxis();
-        xAxis.setAxisLineColor(Color.BLACK);
+        xAxis.setAxisLineColor(getResources().getColor(R.color.colorPrimary));
         xAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         xAxis.setDrawLimitLinesBehindData(false);
         xAxis.setDrawLabels(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
     }
 
-    public void setDataInChart(int[] ChartData,int goal) {
+    public void setDataInChart(int[] solarData, int goal) {
         List<Entry> yValue = new ArrayList<>();
         int maxValue = 0;
-        final int stepsModulo = 200;
-        for (int i = 0; i < ChartData.length; i++) {
-            BarEntry entry = new BarEntry(i, ChartData[i], i + ":???");
+        for (int i = 0; i < solarData.length; i++) {
+            BarEntry entry = new BarEntry(i, solarData[i], i + ":???");
             yValue.add(entry);
-            if (ChartData[i] > maxValue) {
-                maxValue = ChartData[i];
+            if (solarData[i] > maxValue) {
+                maxValue = solarData[i];
             }
         }
-        int labelCount = 6;
-        if (maxValue == 0) {
-            maxValue = 500;
-            labelCount = 6;
-        } else {
-            maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo));
-            if (maxValue < 500) {
-                labelCount = (maxValue / 50) + 1;
-            } else {
-                labelCount = (maxValue / stepsModulo) + 1;
-            }
-        }
-        getAxisLeft().setAxisMaxValue(maxValue);
-        getAxisLeft().setLabelCount(labelCount, true);
 
-        LimitLine limitLine = new LimitLine(goal, "Goal");
-        limitLine.setLineWidth(1.50f);
-        limitLine.setLineColor(getResources().getColor(R.color.colorPrimary));
-        limitLine.setTextSize(18f);
-        limitLine.setTextColor(getResources().getColor(R.color.colorPrimary));
+        maxValue += 120;
         LineDataSet set = new LineDataSet(yValue, "");
-        set.setColor(getContext().getResources().getColor(R.color.colorPrimary));
+        set.setColor(Color.BLACK);
         set.setCircleColor(R.color.transparent);
-        set.setLineWidth(0.5f);
+        set.setLineWidth(1.5f);
         set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         set.setDrawCircles(false);
         set.setFillAlpha(128);
@@ -131,14 +111,22 @@ public class DailyStepsBarChart extends LineChart {
 
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.chart_gradient);
         set.setFillDrawable(drawable);
-        List<ILineDataSet> dataSets = new ArrayList<>();
-        //        getXAxis().setValueFormatter(new XAxisValueFormatter(dailyStepsArray.length, stepsArray));
+        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+
+        getXAxis().setValueFormatter(new XAxisValueFormatter());
         dataSets.add(set);
+
+        LimitLine limitLine = new LimitLine(goal, "Goal");
+        limitLine.setLineWidth(1.50f);
+        limitLine.setLineColor(getResources().getColor(R.color.colorPrimary));
+        limitLine.setTextSize(18f);
+        limitLine.setTextColor(getResources().getColor(R.color.colorPrimary));
 
         YAxis leftAxis = getAxisLeft();
         leftAxis.setValueFormatter(new YValueFormatter());
-        leftAxis.addLimitLine(limitLine);
         leftAxis.setAxisMaxValue(maxValue * 1.0f);
+        leftAxis.setLabelCount(maxValue / 30);
+        leftAxis.addLimitLine(limitLine);
         LineData data = new LineData(dataSets);
         setData(data);
 
@@ -147,22 +135,14 @@ public class DailyStepsBarChart extends LineChart {
         setOnClickListener(null);
     }
 
-
     private class XAxisValueFormatter implements AxisValueFormatter {
 
-        private final int size;
-        private final DateTime startDate;
-
-        XAxisValueFormatter(int size, DateTime startDate) {
-            this.size = size;
-            this.startDate = startDate;
+        XAxisValueFormatter() {
         }
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-
-            DateTime newDate = startDate.plusHours((int) (value));
-            return String.valueOf(newDate.getHourOfDay()) + ":00";
+            return String.valueOf(Math.round(value) / 60 + " hours");
         }
 
         @Override
@@ -175,7 +155,8 @@ public class DailyStepsBarChart extends LineChart {
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            return String.valueOf(Math.round(value));
+            int minutes = Math.round(value);
+            return TimeUtil.formatTime(minutes);
         }
 
         @Override

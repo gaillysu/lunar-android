@@ -11,16 +11,11 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.activity.MyWatchActivity;
 import com.medcorp.lunar.base.BaseActivity;
-import com.medcorp.lunar.event.ChangeGoalEvent;
 import com.medcorp.lunar.fragment.MainClockFragment;
-import com.medcorp.lunar.model.ChangeSleepGoalEvent;
-import com.medcorp.lunar.model.ChangeSolarGoalEvent;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.util.Preferences;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +84,6 @@ public class ConfigGoalsActivity extends BaseActivity {
                                             getModel().updateGoal(stepsGoal);
                                         }
                                         getModel().setStepsGoal(stepsGoalEnableList.get(which));
-                                        EventBus.getDefault().post(new ChangeGoalEvent(true));
                                         stepGoal.setText(getString(R.string.more_settings_sleep_goal) +
                                                 " : " + stepsGoalList.get(which).getSteps());
                                     } else {
@@ -148,7 +142,6 @@ public class ConfigGoalsActivity extends BaseActivity {
                                                 }
                                             });
                                         }
-                                        EventBus.getDefault().post(new ChangeSleepGoalEvent(true));
                                         sleepGoal.setText(getString(R.string.more_settings_sleep_goal) +
                                                 " : " + countTime(sleepGoals.get(which).getGoalDuration()));
                                     } else {
@@ -207,7 +200,6 @@ public class ConfigGoalsActivity extends BaseActivity {
                                                 }
                                             });
                                         }
-                                        EventBus.getDefault().post(new ChangeSolarGoalEvent(true));
                                         solarGoal.setText(getString(R.string.more_settings_solar_goal) + " : "
                                                 + countTime(solarGoals.get(which).getTime()));
                                     } else {
@@ -227,10 +219,14 @@ public class ConfigGoalsActivity extends BaseActivity {
     @OnClick(R.id.config_next_button)
     public void next() {
         Preferences.saveFirstSettingDefValue(this);
-        int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
-        final int buildingFirmwareVersion = getResources().getInteger(R.integer.launar_version);
-        if (currentFirmwareVersion < buildingFirmwareVersion) {
-            startActivity(MyWatchActivity.class);
+        if (getModel().isWatchConnected()) {
+            int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
+            final int buildingFirmwareVersion = getResources().getInteger(R.integer.launar_version);
+            if (currentFirmwareVersion < buildingFirmwareVersion) {
+                startActivity(MyWatchActivity.class);
+            } else {
+                startActivity(MainActivity.class);
+            }
         } else {
             startActivity(MainActivity.class);
         }
