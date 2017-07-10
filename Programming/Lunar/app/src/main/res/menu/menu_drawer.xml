@@ -6,29 +6,32 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_steps_fragment"
-            android:icon="@drawable/main_activity_dashboard_icon"
+            android:icon="@drawable/drawable_left_menu_icon"
             android:title="@string/menu_drawer_activity"/>
         <item
-            android:id="@+id/nav_sleep_fragment"
-            android:icon="@drawable/analysis_icon"
-            android:title="@string/analysis_fragment_title_string"
-                        />
-        <item
             android:id="@+id/nav_alarm_fragment"
-            android:icon="@drawable/ios_alarm"
+            android:icon="@drawable/ic_left_menu_alarm"
             android:title="@string/menu_drawer_alarm"/>
         <item
-            android:id="@+id/nav_world_clock"
-            android:icon="@drawable/drawable_left_menu_icon"
-            android:title="@string/menu_drawer_hometime"/>
+            android:id="@+id/nav_sleep_fragment"
+            android:icon="@drawable/ic_left_menu_analysis"
+            android:title="@string/analysis_fragment_title_string"/>
+        <item
+            android:id="@+id/nav_settings_fragment"
+            android:icon="@drawable/ic_left_menu_setting"
+            android:title="@string/menu_drawer_settings"/>
     </group>
 
     <group
         android:id="@+id/settings_section"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_settings_fragment"
-            android:icon="@drawable/ios_setting"
-            android:title="@string/menu_drawer_settings"/>
+            android:id="@+id/nav_find_watch_fragment"
+            android:icon="@drawable/ic_left_menu_find"
+            android:title="@string/menu_drawer_find"/>
+        <item
+            android:id="@+id/nav_world_clock"
+            android:icon="@drawable/ic_left_menu_digital_time"
+            android:title="@string/menu_drawer_hometime"/>
     </group>
 </menu>

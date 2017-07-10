@@ -74,42 +74,41 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="38dp"
+                android:layout_height="28dp"
                 android:background="@color/analysis_fragment_tablayout_background_color"
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
                 android:text="@string/edit_home_position_city"
                 android:textColor="@color/colorAccent"
-                android:textSize="20dp"
+                android:textSize="16sp"
                 />
 
             <TextView
                 android:id="@+id/edit_home_city_tv"
                 android:layout_width="match_parent"
-                android:layout_height="38dp"
+                android:layout_height="28dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
                 android:text="@string/edit_home_position_city"
                 android:textColor="@color/text_color"
-                android:textSize="20dp"
-                />
+                android:layout_marginStart="60dp"
+                android:textSize="14sp"/>
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="38dp"
+                android:layout_height="28dp"
                 android:background="@color/analysis_fragment_tablayout_background_color"
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
                 android:text="@string/edit_home_all_city"
                 android:textColor="@color/colorAccent"
-                android:textSize="20dp"
+                android:textSize="16sp"
                 />
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
                 <ListView
                     android:id="@+id/show_all_city_list"

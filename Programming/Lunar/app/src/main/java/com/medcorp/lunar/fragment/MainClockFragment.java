@@ -16,8 +16,6 @@ import android.widget.TextView;
 
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.medcorp.lunar.R;
-import com.medcorp.lunar.event.ChangeGoalEvent;
-import com.medcorp.lunar.event.DateSelectChangedEvent;
 import com.medcorp.lunar.event.LocationChangedEvent;
 import com.medcorp.lunar.event.Timer10sEvent;
 import com.medcorp.lunar.event.bluetooth.GetWatchInfoChangedEvent;
@@ -273,7 +271,7 @@ public class MainClockFragment extends BaseFragment {
     }
 
     private void countSleepTime(final Date date) {
-        getModel().getDailySleep(user.getUserID(), date, new MainSleepFragment.TodaySleepListener() {
+        getModel().getDailySleep(user.getUserID(), date, new AnalysisSleepFragment.TodaySleepListener() {
             @Override
             public void todaySleep(Sleep[] sleepArray) {
                 SleepDataHandler handler = new SleepDataHandler(Arrays.asList(sleepArray));
@@ -349,32 +347,12 @@ public class MainClockFragment extends BaseFragment {
     }
 
     @Subscribe
-    public void onEvent(final DateSelectChangedEvent event) {
-        mUiHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                initData();
-            }
-        });
-    }
-
-    @Subscribe
     public void onEvent(final Timer10sEvent event) {
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
                 refreshClock();
                 setHomeCityTime();
-            }
-        });
-    }
-
-    @Subscribe
-    public void onEvent(ChangeGoalEvent cahngeGoal) {
-        mUiHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                initData();
             }
         });
     }

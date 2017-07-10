@@ -3,53 +3,73 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="165dp"
-                android:background="@drawable/nevo_watch"
+                android:background="@drawable/lunar_heard_bg"
                 android:gravity="bottom"
                 android:orientation="vertical"
-                android:paddingTop="10dp"
-                android:paddingLeft="14dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="15dp"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-
-    <ImageButton
-        android:id="@+id/navigation_header_imageview"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="25dp"
-        android:scaleType="fitXY"
-        android:background="@android:color/transparent"
-        android:src="@drawable/user"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/navigation_header_spinner"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:fabSize="mini"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:src="@mipmap/menu_heard_floating_action_bt_src"
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="165dp"
+        android:alpha="0.7"
+        android:src="@drawable/left_menu_heard_shape"
         />
-    <TextView
-        android:id="@+id/drawable_left_show_user_name_tv"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="18sp"
-        android:maxLines="1"
-        android:textColor="@color/text_color"
-        android:layout_below="@id/navigation_header_imageview"
-        />
-    <TextView
-        android:id="@+id/navigation_header_textview"
-        android:layout_width="200dp"
-        android:maxLines="1"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:textColor="@color/text_color"
-        android:textSize="18sp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="165dp"
+        android:paddingBottom="15dp"
+        android:paddingLeft="14dp"
+        android:paddingRight="16dp"
+        android:paddingTop="10dp">
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/ic_nevo_logo_image_03"/>
+
+
+        <ImageButton
+            android:id="@+id/navigation_header_imageview"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="25dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:src="@drawable/user"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/navigation_header_spinner"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/menu_heard_floating_action_bt_src"
+            app:fabSize="mini"
+            />
+
+        <TextView
+            android:id="@+id/drawable_left_show_user_name_tv"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/navigation_header_imageview"
+            android:layout_marginTop="8dp"
+            android:maxLines="1"
+            android:textColor="@color/text_color"
+            android:textSize="18sp"
+            />
+
+        <TextView
+            android:id="@+id/navigation_header_textview"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:maxLines="1"
+            android:textColor="@color/text_color"
+            android:textSize="18sp"/>
+    </RelativeLayout>
 </RelativeLayout>

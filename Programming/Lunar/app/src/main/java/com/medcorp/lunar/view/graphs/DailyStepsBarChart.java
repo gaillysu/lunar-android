@@ -12,46 +12,43 @@ import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.medcorp.lunar.R;
-import com.medcorp.lunar.model.Steps;
-import com.medcorp.lunar.model.StepsGoal;
 
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.abs;
+
 /**
- * Created by Karl on 8/24/16.
+ * Created by karl-john on 18/8/2016.
  */
 
-public class AnalysisStepsLineChart extends LineChart {
+public class DailyStepsBarChart extends LineChart {
 
-    private List<Steps> stepsList;
-    private int maxDays;
-
-    public AnalysisStepsLineChart(Context context) {
+    public DailyStepsBarChart(Context context) {
         super(context);
         initGraph();
-
     }
 
-    public AnalysisStepsLineChart(Context context, AttributeSet attrs) {
+    public DailyStepsBarChart(Context context, AttributeSet attrs) {
         super(context, attrs);
         initGraph();
     }
 
-    public AnalysisStepsLineChart(Context context, AttributeSet attrs, int defStyle) {
+    public DailyStepsBarChart(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initGraph();
     }
 
-    private void initGraph() {
+    public void initGraph() {
         setContentDescription("");
         setDescription("");
         setNoDataTextDescription("");
@@ -89,44 +86,33 @@ public class AnalysisStepsLineChart extends LineChart {
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
     }
 
-    public void addData(List<Steps> stepsList, StepsGoal stepsGoal, int maxDays) {
-        this.stepsList = stepsList;
-        this.maxDays = maxDays;
+    public void setDataInChart(int[] ChartData,int goal) {
         List<Entry> yValue = new ArrayList<>();
         int maxValue = 0;
-
-        final int stepsModulo = 1000;
-        for (int i = 0; i < stepsList.size(); i++) {
-            if (i < stepsList.size()) {
-                Steps steps = stepsList.get(i);
-                if (steps.getSteps() > maxValue) {
-                    maxValue = steps.getSteps();
-                }
-                yValue.add(new Entry(i, steps.getSteps()));
-            } else {
-                yValue.add(new Entry(i, 0));
+        final int stepsModulo = 200;
+        for (int i = 0; i < ChartData.length; i++) {
+            BarEntry entry = new BarEntry(i, ChartData[i], i + ":???");
+            yValue.add(entry);
+            if (ChartData[i] > maxValue) {
+                maxValue = ChartData[i];
             }
         }
-
-        //Log.w("Karl", "Max vlaue = " + maxValue);
-        if (maxValue == 0 || maxValue < stepsGoal.getSteps()) {
-            maxValue = stepsGoal.getSteps() + stepsModulo;
+        int labelCount = 6;
+        if (maxValue == 0) {
+            maxValue = 500;
+            labelCount = 6;
         } else {
-            String formatValue = maxValue + "";
-            char[] newValue = formatValue.toCharArray();
-            StringBuffer str = new StringBuffer();
-            for (int i = 0; i < newValue.length; i++) {
-                if (i == 0) {
-                    str.append(Integer.parseInt(newValue[0] + "") + 1);
-                } else {
-                    str.append(newValue[i]);
-                }
+            maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo));
+            if (maxValue < 500) {
+                labelCount = (maxValue / 50) + 1;
+            } else {
+                labelCount = (maxValue / stepsModulo) + 1;
             }
-            maxValue = Integer.parseInt(str.toString());
-            //            maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo));
         }
-        //        "Goal: " + goal.getSteps()
-        LimitLine limitLine = new LimitLine(stepsGoal.getSteps(), "Goal");
+        getAxisLeft().setAxisMaxValue(maxValue);
+        getAxisLeft().setLabelCount(labelCount, true);
+
+        LimitLine limitLine = new LimitLine(goal, "Goal");
         limitLine.setLineWidth(1.50f);
         limitLine.setLineColor(getResources().getColor(R.color.colorPrimary));
         limitLine.setTextSize(18f);
@@ -146,10 +132,7 @@ public class AnalysisStepsLineChart extends LineChart {
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.chart_gradient);
         set.setFillDrawable(drawable);
         List<ILineDataSet> dataSets = new ArrayList<>();
-        if (stepsList.size() > 7) {
-            getXAxis().setLabelCount(stepsList.size());
-        }
-        getXAxis().setValueFormatter(new XValueFormatter());
+        //        getXAxis().setValueFormatter(new XAxisValueFormatter(dailyStepsArray.length, stepsArray));
         dataSets.add(set);
 
         YAxis leftAxis = getAxisLeft();
@@ -165,51 +148,21 @@ public class AnalysisStepsLineChart extends LineChart {
     }
 
 
-    private class XValueFormatter implements AxisValueFormatter {
+    private class XAxisValueFormatter implements AxisValueFormatter {
 
-        private int count = 0;
+        private final int size;
+        private final DateTime startDate;
 
-        private XValueFormatter() {
+        XAxisValueFormatter(int size, DateTime startDate) {
+            this.size = size;
+            this.startDate = startDate;
         }
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
 
-            if (stepsList.isEmpty()) {
-                if (count >= maxDays) {
-                    count = 0;
-                }
-                DateTime time = new DateTime(stepsList.get(count).getCreatedDate()).plusDays(count);
-                count += 1;
-                return time.toString("dd/MM");
-            }
-
-            if (stepsList.size() < 11) {
-                if (count >= stepsList.size()) {
-                    count = 0;
-                }
-                Steps steps = stepsList.get(count);
-                count++;
-                DateTime time = new DateTime(steps.getDate());
-                return time.toString("dd/MM");
-            } else {
-                if (count == 0 || count % 5 == 0 || count == (stepsList.size() - 1)) {
-                    if (count >= stepsList.size()) {
-                        count = 0;
-                    }
-                    Steps steps = stepsList.get(count);
-                    count++;
-
-                    DateTime time = new DateTime(steps.getDate());
-                    return time.toString("dd/MM");
-                } else {
-                    if (count >= stepsList.size()) {
-                        count = 0;
-                    }
-                    count++;
-                    return "";
-                }
-            }
+            DateTime newDate = startDate.plusHours((int) (value));
+            return String.valueOf(newDate.getHourOfDay()) + ":00";
         }
 
         @Override
@@ -230,5 +183,4 @@ public class AnalysisStepsLineChart extends LineChart {
             return 0;
         }
     }
-
 }

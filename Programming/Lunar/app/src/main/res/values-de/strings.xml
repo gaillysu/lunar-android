@@ -38,14 +38,14 @@
     <string name="analysis_fragment_des_avg_wake">Avg Wake</string>
     <string name="analysis_fragment_des_sleep_quality">Quality</string>
     <string name="analysis_fragment_des_total_sleep">TOTAL SLEEP</string>
-    <string name="analysis_fragment_last_month_solar">LAST 30 DAYS</string>
-    <string name="analysis_fragment_last_week_steps">LAST WEEK</string>
+    <string name="analysis_fragment_last_month_chart_title">LAST 30 DAYS</string>
+    <string name="analysis_fragment_today_chart_title">TODAY</string>
     <string name="analysis_fragment_solar_page_time_on_solar_text">Average Time On Solar</string>
     <string name="analysis_fragment_solar_page_time_on_battery_text">Average Time On Battery</string>
-    <string name="analysis_fragment_table_sleep">Sleep</string>
-    <string name="analysis_fragment_table_solar">Solar</string>
-    <string name="analysis_fragment_table_steps">Steps</string>
-    <string name="analysis_fragment_this_week_steps">THIS WEEK</string>
+    <string name="analysis_fragment_table_sleep">Inactivity</string>
+    <string name="analysis_fragment_table_solar">Sunshine</string>
+    <string name="analysis_fragment_table_steps">Activity</string>
+    <string name="analysis_fragment_this_week_chart_title">THIS WEEK</string>
     <string name="analysis_fragment_title_string">Analysis</string>
     <string name="dfu_update_available">An update is available for your watch.</string>
     <string name="edit_alarm_sleep">Sleep Alarm</string>
@@ -123,7 +123,7 @@
     <string name="main_fragment_solar_page_time_on_solar_text">Time On Solar</string>
     <string name="main_steps_fragment_title">Steps</string>
     <string name="main_sleep_fragment_title">Sleep</string>
-    <string name="menu_drawer_hometime">Home Time</string>
+    <string name="menu_drawer_hometime">Digital Time</string>
     <string name="more_setting_place_home">Home Time</string>
     <string name="monday">Mon</string>
     <string name="more_setting_place_local">Local Time</string>
@@ -521,5 +521,6 @@
     <string name="tutorial_4_other_color_text"></string>
     <string name="welcome_activity_facebook_login">Continue with Facebook</string>
     <string name="welcome_activity_wechat_login">Continue with WeChat</string>
+    <string name="menu_drawer_find">Find Watch</string>
 
 </resources>

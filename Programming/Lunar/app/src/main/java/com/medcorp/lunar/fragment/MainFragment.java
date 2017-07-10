@@ -16,13 +16,10 @@ import com.medcorp.lunar.event.bluetooth.RequestResponseEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
 import com.medcorp.lunar.model.StepsGoal;
 import com.medcorp.lunar.util.Common;
-import com.medcorp.lunar.util.Preferences;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -44,22 +41,11 @@ public class MainFragment extends BaseObservableFragment {
     private boolean showSyncGoal;
     private LunarMainFragmentAdapter adapter;
     private String[] fragmentAdapterArray;
-    private Date userSelectDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.lunar_main_fragment_layout, container, false);
         ButterKnife.bind(this, view);
-        String selectDate = Preferences.getSelectDate(this.getContext());
-        if (selectDate == null) {
-            userSelectDate = new Date();
-        } else {
-            try {
-                userSelectDate = new SimpleDateFormat("yyyy-MM-dd").parse(selectDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
         setHasOptionsMenu(true);
         initUiControl();
         mainFragmentTitleTabLayout.setupWithViewPager(showWatchViewPage);
@@ -117,7 +103,7 @@ public class MainFragment extends BaseObservableFragment {
         super.onStart();
         EventBus.getDefault().register(this);
         //NOTICE: if do full big sync, that will consume more battery power and more time (MAX 7 days data),so only big sync today's data
-        if (Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime()) {
+        if (Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(new Date()).getTime()) {
             getModel().getSyncController().getDailyTrackerInfo(false);
         }
     }

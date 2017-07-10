@@ -22,6 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/steps_fragment_total_steps"
+                android:textAllCaps="false"
                 android:textColor="@color/text_color"
                 android:textSize="16sp"/>
 
@@ -30,6 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
+                android:textAllCaps="false"
                 android:text="@string/steps_fragment_average_calories"
                 android:textColor="@color/text_color"
                 android:textSize="16sp"/>
@@ -83,6 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/this_week_steps_identification_two"
+                android:textAllCaps="false"
                 android:textColor="@color/text_color"
                 android:textSize="16sp"/>
 
@@ -92,6 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/steps_fragment_average_time"
+                android:textAllCaps="false"
                 android:textColor="@color/text_color"
                 android:textSize="16sp"/>
         </LinearLayout>

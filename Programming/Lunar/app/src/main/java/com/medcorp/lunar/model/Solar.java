@@ -28,7 +28,7 @@ public class Solar extends RealmObject {
 
     private int userId;
     //"[0,0,0,....0]", 24 length array, unit is in minutes
-    private String hourlyHarvestingTime;
+    private String hourlyHarvestingTime = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
     //unit is in minutes
     private int totalHarvestingTime;
 

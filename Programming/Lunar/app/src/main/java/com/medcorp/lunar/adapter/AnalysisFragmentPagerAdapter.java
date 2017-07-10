@@ -25,14 +25,7 @@ public class AnalysisFragmentPagerAdapter extends FragmentPagerAdapter {
         super(fm);
         this.analysisFragment = fragment;
         context = fragment.getContext();
-        int watchID = analysisFragment.getModel().getSyncController().getWatchInfomation().getWatchID();
-        if(watchID==1|| watchID == 0) {
-            analysisTableArray = fragment.getResources().getStringArray(R.array.nevo_analysis_fragment_table_array);
-        }else if(watchID == 2 || watchID ==3 ){
-            analysisTableArray = fragment.getResources().getStringArray(R.array.analysis_fragment_table_array);
-        }else{
-            analysisTableArray = fragment.getResources().getStringArray(R.array.nevo_analysis_fragment_table_array);
-        }
+        analysisTableArray = fragment.getResources().getStringArray(R.array.analysis_fragment_table_array);
     }
 
     @Override

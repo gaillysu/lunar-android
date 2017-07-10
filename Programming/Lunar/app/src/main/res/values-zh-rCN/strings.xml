@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="menu_drawer_hometime">家乡时间</string>
+    <string name="menu_drawer_hometime">数字时间</string>
     <string name="password_change_failure">修改密码出错.在来一次!</string>
     <string name="password_change_success">修改密码成功!</string>
     <string name="password_is_not_empty">密码不能为空!</string>
@@ -272,14 +272,14 @@
     <string name="analysis_fragment_des_avg_wake">平均在床</string>
     <string name="analysis_fragment_des_sleep_quality">质量</string>
     <string name="analysis_fragment_des_total_sleep">总睡眠</string>
-    <string name="analysis_fragment_last_month_solar">过去30天</string>
-    <string name="analysis_fragment_last_week_steps">过去一周</string>
+    <string name="analysis_fragment_last_month_chart_title">过去30天</string>
+    <string name="analysis_fragment_today_chart_title">今天</string>
     <string name="analysis_fragment_solar_page_time_on_battery_text">平均电池时间</string>
     <string name="analysis_fragment_solar_page_time_on_solar_text">平均太阳能时间</string>
     <string name="analysis_fragment_table_sleep">睡眠</string>
     <string name="analysis_fragment_table_solar">太阳能</string>
     <string name="analysis_fragment_table_steps">步数</string>
-    <string name="analysis_fragment_this_week_steps">本周</string>
+    <string name="analysis_fragment_this_week_chart_title">本周</string>
     <string name="analysis_fragment_title_string">分析</string>
     <string name="edit_alarm_name">闹钟名字</string>
     <string name="edit_alarm_repeat">重复</string>
@@ -516,4 +516,5 @@
     <string name="search_city_hint_text">收索城市</string>
     <string name="welcome_activity_facebook_login">使用Facebook</string>
     <string name="welcome_activity_wechat_login">微信登录</string>
+    <string name="menu_drawer_find">寻找手表</string>
 </resources>

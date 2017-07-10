@@ -14,7 +14,6 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisFragmentPagerAdapter;
 import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
-import com.medcorp.lunar.model.ChangeFragmentPageModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -25,7 +24,7 @@ import butterknife.ButterKnife;
 /***
  * Created by Administrator on 2016/7/14.
  */
-public class AnalysisFragment extends BaseObservableFragment implements ViewPager.OnPageChangeListener {
+public class AnalysisFragment extends BaseObservableFragment{
 
     @Bind(R.id.analysis_fragment_indicator_tab)
     TabLayout analysisTable;
@@ -41,7 +40,6 @@ public class AnalysisFragment extends BaseObservableFragment implements ViewPage
         AnalysisFragmentPagerAdapter adapter = new AnalysisFragmentPagerAdapter(getChildFragmentManager(), this);
         analysisViewpager.setAdapter(adapter);
         analysisTable.setupWithViewPager(analysisViewpager);
-        analysisViewpager.addOnPageChangeListener(this);
         return view;
     }
 
@@ -78,21 +76,6 @@ public class AnalysisFragment extends BaseObservableFragment implements ViewPage
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.choose_goal_menu).setVisible(false);
         menu.findItem(R.id.add_menu).setVisible(false);
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        EventBus.getDefault().post(new ChangeFragmentPageModel(position));
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
     }
 }
 

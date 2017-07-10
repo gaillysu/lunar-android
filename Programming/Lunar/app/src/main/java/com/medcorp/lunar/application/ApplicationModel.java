@@ -61,7 +61,6 @@ import com.medcorp.lunar.fragment.AnalysisSleepFragment;
 import com.medcorp.lunar.fragment.AnalysisSolarFragment;
 import com.medcorp.lunar.fragment.AnalysisStepsFragment;
 import com.medcorp.lunar.fragment.MainClockFragment;
-import com.medcorp.lunar.fragment.MainSleepFragment;
 import com.medcorp.lunar.fragment.WeekData;
 import com.medcorp.lunar.googlefit.GoogleFitManager;
 import com.medcorp.lunar.googlefit.GoogleFitStepsDataHandler;
@@ -513,7 +512,7 @@ public class ApplicationModel extends Application {
         }
     }
 
-    public void getDailySleep(final String userId, final Date todayDate, final MainSleepFragment.TodaySleepListener listener) {
+    public void getDailySleep(final String userId, final Date todayDate, final AnalysisSleepFragment.TodaySleepListener listener) {
         final Date yesterdayDate = new Date(todayDate.getTime() - 24 * 60 * 60 * 1000l);
         sleepDatabaseHelper.get(userId, todayDate).subscribe(new Consumer<Sleep>() {
             @Override
