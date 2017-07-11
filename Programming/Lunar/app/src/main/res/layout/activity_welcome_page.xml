@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout android:id="@+id/welcome_activity_root_view"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/welcome_activity_root_view"
                 android:background="@drawable/login_background"
                 android:gravity="bottom"
                 android:orientation="vertical">
@@ -32,11 +32,9 @@
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/welcome_activity_facebook_login"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="50dp"
                 android:background="@drawable/facebook_button_bg"
-                android:button="@null"
-                android:checked="true"
-                android:drawableLeft="@drawable/ic_facebook_login"
+                android:drawableLeft="@drawable/ic_facebook"
                 android:text="@string/welcome_activity_facebook_login"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
@@ -45,42 +43,54 @@
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/welcome_activity_wechat_login_bt"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/wechat_button_bg"
                 android:button="@null"
-                android:drawableLeft="@drawable/ic_wechat_green"
                 android:checked="true"
+                android:drawableLeft="@drawable/ic_wechart"
                 android:text="@string/welcome_activity_wechat_login"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="16sp"/>
 
-            <android.support.v7.widget.AppCompatButton
+
+            <LinearLayout
                 android:id="@+id/create_account_bt"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/normal_button_bg"
-                android:button="@null"
-                android:drawableLeft="@drawable/ic_envelope_open"
-                android:text="@string/welcome_activity_create_account"
-                android:textAllCaps="false"
-                android:paddingLeft="10dp"
-                android:textColor="@color/white"
-                android:textSize="16sp"/>
+                android:orientation="horizontal">
+
+                <com.medcorp.lunar.view.XCRoundRectImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/email_bt"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:button="@null"
+                    android:gravity="center_horizontal"
+                    android:text="@string/welcome_activity_create_account"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"/>
+            </LinearLayout>
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/login_bt"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/button_normal_shape"
                 android:button="@null"
+                android:paddingLeft="10dp"
                 android:text="@string/log_in"
                 android:textAllCaps="false"
-                android:paddingLeft="10dp"
-                android:textColor="@color/white"
+                android:textColor="@color/input_account_shape_color"
                 android:textSize="16sp"/>
         </LinearLayout>
 

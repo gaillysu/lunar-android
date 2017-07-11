@@ -230,7 +230,7 @@
     <string name="menu_drawer_alarm">Alarm</string>
     <string name="menu_drawer_sleep">Schlaf</string>
     <string name="menu_drawer_settings">Einstellungen</string>
-    <string name="settings_more">More settings</string>
+    <string name="settings_more">Goals</string>
     <string name="drawer_open">Navigationsleiste öffnen</string>
     <string name="drawer_close">Navigationsleiste schließen</string>
 

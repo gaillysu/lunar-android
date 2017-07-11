@@ -67,7 +67,7 @@
     <string name="dfu_update_prepare">Prepare for update&#8230;</string>
     <string name="dfu_firmware_updated">Firmware updated</string>
     <string name="dfu_continue">Continue</string>
-    <string name="dfu_back">Back</string>
+    <string name="dfu_back">Finish</string>
     <string name="dfu_press_third_button">Press the third button</string>
     <string name="dfu_press_third_button_description">Don’t exit this screen while reactivating your bluetooth!</string>
     <string name="dfu_failed_preparing">Failed to prepare the update, please restart the BT of lunar or reinstall battery.</string>
@@ -220,14 +220,15 @@
     <string name="my_nevo_battery_low">Battery Low</string>
     <string name="my_nevo_battery_half">Battery Sufficient</string>
     <string name="my_nevo_battery_full">Battery Full</string>
-    <string name="my_nevo_application">Application</string>
+    <string name="my_nevo_application">App</string>
+    <string name="setting_fragment_app_goal_subtitle">Set preset-goals for(in)activity and sunshine</string>
     <string name="settings_link_loss_notification">Link loss notification</string>
     <string name="settings_notifications">Notifications</string>
+    <string name="setting_fragment_notification_subtitle">Set a unique LED -color for each notification</string>
     <string name="settings_notifications_active_title">Active Notifications</string>
     <string name="settings_notifications_inactive_title">Inactive Notifications</string>
     <string name="settings_find_my_watch">Find my watch</string>
     <string name="settings_goals">Goals</string>
-    <string name="settings_more">More Settings</string>
     <string name="settings_support">Support</string>
     <string name="settings_about">About</string>
     <string name="settings_forget_watch">Forget watch</string>
@@ -423,6 +424,7 @@
     <string name="title_steps">Dashboard</string>
     <string name="title_sunshine">Sunshine</string>
     <string name="settings_my_nevo">My LunaR</string>
+    <string name="settings_more">Goals</string>
     <string name="settings_bluetooth_scan">Scan duration</string>
     <string name="detection_battery">Low Battery Alert</string>
     <string name="low_detection_battery_title">Low Battery Notifications</string>
@@ -495,4 +497,14 @@
     <string name="main_solar_details_history_title">gathered electricity</string>
     <string name="main_solar_details_history_describe_last_week">Last week</string>
     <string name="main_solar_details_history_describe_last_month">Last month</string>
+    <string name="fragment_setting_app_list_title">App</string>
+    <string name="fragment_setting_device_list_title">Device</string>
+    <string name="fragment_setting_local_list_title">Local</string>
+    <string name="ready_update_describe_title">Please note</string>
+    <string name="ready_update_firmware_title">Upgrade firmware</string>
+    <string name="ready_update_to_update_button_tv">Got it,update my LunaR</string>
+    <string name="ready_update_describe_subtitle">You are about to update the firmware of your LunaR watch.</string>
+    <string name="update_watch_firmware_careful_one">- Keep LunaR close to your phone.</string>
+    <string name="update_watch_firmware_careful_second">- Don\'t turn off the bluetooth  </string>
+    <string name="update_watch_firmware_careful_third">Don\'t press and buttons on LunaR while upgrading</string>
 </resources>

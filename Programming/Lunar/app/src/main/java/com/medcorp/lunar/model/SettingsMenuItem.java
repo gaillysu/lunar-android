@@ -22,6 +22,11 @@ public class SettingsMenuItem {
         this.switchStatus = switchStatus;
     }
 
+    public SettingsMenuItem(String title, String subtitle, int icon) {
+        this.title = title;
+        this.icon = icon;
+        this.subtitle = subtitle;
+    }
     public SettingsMenuItem(String title, String subtitle, int icon, boolean switchStatus) {
         this.title = title;
         this.icon = icon;

@@ -31,8 +31,6 @@ public class MoreSettingActivity extends BaseActivity {
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
-    @Bind(R.id.more_setting_select_unit_spinner)
-    Spinner selectUnitSpinner;
     @Bind(R.id.more_setting_select_sync_time_spinner)
     Spinner selectPlaceSpinner;
 
@@ -43,8 +41,13 @@ public class MoreSettingActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle(R.string.settings_more);
         initData();
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toolbar.setTitle(R.string.settings_more);
     }
 
     private void initData() {
@@ -59,25 +62,8 @@ public class MoreSettingActivity extends BaseActivity {
         MySpinnerAdapter placeAdapter = new MySpinnerAdapter(this, placeList);
         MySpinnerAdapter unitAdapter = new MySpinnerAdapter(this, unitList);
         selectPlaceSpinner.setAdapter(placeAdapter);
-        selectUnitSpinner.setAdapter(unitAdapter);
-        selectUnitSpinner.setSelection(Preferences.getUnitSelect(this) ? 1 : 0);
         selectPlaceSpinner.setSelection(Preferences.getPlaceSelect(this) ? 0 : 1);
 
-        selectUnitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    Preferences.saveUnitSelect(MoreSettingActivity.this, false);
-                } else {
-                    Preferences.saveUnitSelect(MoreSettingActivity.this, true);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         selectPlaceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

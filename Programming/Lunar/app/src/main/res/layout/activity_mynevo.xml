@@ -6,7 +6,10 @@
               android:background="@color/window_background_color"
               android:orientation="vertical">
 
-    <include layout="@layout/toolbar"/>
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,56 +24,157 @@
             android:src="@drawable/firmware_clock"/>
     </RelativeLayout>
 
-    <ScrollView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="15dp"
         android:layout_weight="2"
-        android:fadeScrollbars="false"
-        >
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
-        <LinearLayout
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_setting_device_list_title"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"/>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:layout_height="64dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/firmware_icon"
+                android:layout_width="14dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/firmware_version_icon"/>
 
-                <include
-                    android:id="@+id/my_device_watch_version_news_layout_root"
-                    layout="@layout/app_is_lunar_my_device_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    />
-
-                <com.medcorp.lunar.view.ListViewForScrollView
-                    android:id="@+id/activity_mynevo_list_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/window_background_color"
-                    android:divider="@drawable/alarm_list_view_divider"
-                    android:dividerHeight="1dp"
-                    />
-            </FrameLayout>
-
-            <com.medcorp.lunar.view.customfontview.RobotoTextView
-                android:id="@+id/activity_mynevo_notice_label"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/window_background_color"
-                android:gravity="center"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:text="@string/my_nevo_notice_message"
-                android:textColor="@color/profile_fragment_text_color"
-                android:textSize="13sp"
-                roboto:thin="true"/>
-        </LinearLayout>
-    </ScrollView>
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="56dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/firmware"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_nevo_firmware"
+                    android:textColor="@color/text_color"
+                    android:textSize="16sp"
+                    />
+
+                <TextView
+                    android:id="@+id/my_watch_update_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/firmware"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/register_account_text_color"
+                    android:textSize="14sp"
+                    />
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/my_watch_version_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:drawablePadding="5dp"
+                android:drawableRight="@drawable/ic_right"
+                android:drawableTint="@color/text_color"
+                android:gravity="center_vertical"
+                android:text="@string/my_nevo_new_update_available"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="54dp">
+
+            <ImageView
+                android:id="@+id/battery_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_low_detection_alert"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="56dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/my_device_battery_title_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_nevo_battery"
+                    android:textColor="@color/text_color"
+                    android:textSize="16sp"
+                    />
+
+                <TextView
+                    android:id="@+id/my_device_battery_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/my_device_right_show_version_text_color"
+                    android:textSize="14sp"
+                    />
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_scan_bluetooth"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="56dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_nevo_application"
+                    android:textColor="@color/text_color"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/my_device_version_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/my_device_right_show_version_text_color"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
 </LinearLayout>

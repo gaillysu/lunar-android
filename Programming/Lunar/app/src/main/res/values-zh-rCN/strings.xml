@@ -50,7 +50,7 @@
     <string name="menu_drawer_alarm">闹钟</string>
     <string name="menu_drawer_sleep">睡眠</string>
     <string name="menu_drawer_settings">设置</string>
-    <string name="settings_more">更多设置</string>
+    <string name="settings_more">目标</string>
     <string name="drawer_open">打开导航栏</string>
     <string name="drawer_close">关闭导航栏</string>
 

@@ -15,37 +15,39 @@
         android:gravity="center"
         android:text="@string/tutorial_4_title"
         android:textColor="@color/black"
-        android:textSize="36sp"
+        android:textSize="45sp"
         roboto:bold="true"/>
 
     <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page4_notice_textview"
         android:layout_width="275dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/activity_tutorial_page4_start_textview"
-        android:layout_centerHorizontal="true"
+        android:layout_alignStart="@+id/activity_tutorial_page4_open_bt_image"
+        android:layout_below="@+id/activity_tutorial_page4_start_textview"
         android:gravity="center"
         android:paddingTop="20dp"
         android:text="@string/tutorial_4_text"
         android:textColor="@color/left_menu_item_text_color"
-        android:textSize="12sp"/>
-
-    <com.medcorp.lunar.view.customfontview.RobotoButton
-        android:id="@+id/activity_tutorial_4_next_button"
-        style="@style/TutorialButton"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
-        android:text="@string/tutorial_next_step_text"/>
+        android:textSize="15sp"/>
 
     <ImageView
         android:id="@+id/activity_tutorial_page4_open_bt_image"
         android:layout_width="260dp"
         android:layout_height="260dp"
         android:layout_centerInParent="true"
-        android:padding="20dp"
+        android:layout_marginTop="20dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_dial_press_both"/>
+        android:src="@drawable/ic_dial_press_left"/>
+
+    <com.medcorp.lunar.view.customfontview.RobotoButton
+        android:id="@+id/activity_tutorial_4_next_button"
+        style="@style/TutorialButton"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="62dp"
+        android:text="@string/tutorial_next_step_text"/>
+
 
 </RelativeLayout>

@@ -53,6 +53,7 @@
     <string name="other_color_blinking" translatable="false">blinking</string>
     <string name="search_city_hint_text">Search your city</string>
     <string name="other_color_green" translatable="false">green</string>
+    <string name="other_color_gray" translatable="false">or</string>
     <string name="other_color_white" translatable="false">white</string>
     <string name="other_color_text" translatable="false">two lower buttons</string>
     <string name="main_solar_details_sun_exposure_describe">Todays sun exposure</string>

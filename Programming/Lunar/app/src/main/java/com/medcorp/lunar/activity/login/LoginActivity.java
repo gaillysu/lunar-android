@@ -158,9 +158,7 @@ public class LoginActivity extends BaseActivity {
                 _loginButton.setEnabled(true);
                 setResult(RESULT_OK, null);
                 Preferences.saveIsFirstLogin(LoginActivity.this, false);
-                if ((getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) &&
-                        getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, false))
-                        | !getModel().isWatchConnected()) {
+                if (getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, false)) {
                     startActivity(TutorialPage1Activity.class);
                 } else {
                     startActivity(MainActivity.class);

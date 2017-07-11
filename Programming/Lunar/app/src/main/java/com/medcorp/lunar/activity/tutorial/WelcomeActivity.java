@@ -8,6 +8,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -48,6 +52,7 @@ import com.medcorp.lunar.network.model.response.FacebookUserInfoResponse;
 import com.medcorp.lunar.network.model.response.WeChatLoginResponse;
 import com.medcorp.lunar.network.model.response.WeChatUserInfoResponse;
 import com.medcorp.lunar.util.Preferences;
+import com.medcorp.lunar.util.PublicUtils;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 
@@ -74,6 +79,8 @@ public class WelcomeActivity extends BaseActivity {
 
     @Bind(R.id.welcome_activity_root_view)
     RelativeLayout relativeLayout;
+    @Bind(R.id.login_skip_bt)
+    Button skipBt;
 
     private Snackbar snackbar;
     private ProgressDialog progressDialog;
@@ -93,6 +100,18 @@ public class WelcomeActivity extends BaseActivity {
         progressDialog.setCancelable(false);
         progressDialog.setMessage(getString(R.string.log_in_popup_message));
         registerFacebookCallBack();
+        initView();
+    }
+
+    private void initView() {
+        if (!PublicUtils.isLocaleChinese()) {
+            SpannableString span = new SpannableString(getString(R.string.welcome_activity_skip_login));
+            String describe = getString(R.string.welcome_activity_skip_login);
+            int index = describe.indexOf(getString(R.string.other_color_gray));
+            ForegroundColorSpan textColor = new ForegroundColorSpan(getResources().getColor(R.color.welcome_other_text_color));
+            span.setSpan(textColor, index, index + getString(R.string.other_color_gray).length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            skipBt.setText(span);
+        }
     }
 
     @OnClick(R.id.create_account_bt)
