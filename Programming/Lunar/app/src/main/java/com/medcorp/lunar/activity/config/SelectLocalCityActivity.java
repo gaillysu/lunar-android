@@ -44,8 +44,6 @@ public class SelectLocalCityActivity extends BaseActivity {
     ListView searchResultListView;
     @Bind(R.id.show_all_city_list)
     ListView showAllCityList;
-    @Bind(R.id.index_slide_dialog)
-    TextView firstShowCity;
 
     private ChooseCityAdapter allCityAdapter;
     private SearchWorldAdapter searchResultAdapter;
@@ -101,7 +99,6 @@ public class SelectLocalCityActivity extends BaseActivity {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                firstShowCity.setText(allCitesList.get(showAllCityList.getFirstVisiblePosition()).getSortLetter());
             }
         });
 

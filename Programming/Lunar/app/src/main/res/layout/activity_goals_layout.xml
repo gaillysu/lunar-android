@@ -15,12 +15,14 @@
         android:gravity="center"
         android:text="@string/activity_goals_title"
         android:textColor="@color/black"
-        android:textSize="36sp"
+        android:textSize="45sp"
         roboto:bold="true"/>
 
     <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_goals_describe"
-        android:layout_width="275dp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/activity_goals_title"
         android:layout_centerHorizontal="true"
@@ -28,7 +30,7 @@
         android:paddingTop="5dp"
         android:text="@string/activity_goals_describe"
         android:textColor="@color/left_menu_item_text_color"
-        android:textSize="12sp"/>
+        android:textSize="15sp"/>
 
     <RelativeLayout
         android:id="@+id/activity_goals_step_goal_ll"
@@ -43,6 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:textSize="15sp"
             android:text="@string/more_settings_steps_goal"
             android:textColor="@color/alarm_repeat_text_color"/>
 
@@ -54,10 +57,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:background="@color/transparent"
-            android:src="@drawable/ic_down"
-            android:text="@string/more_setting_place_home"
-            android:textAllCaps="false"
-            android:textColor="@color/white"/>
+            android:src="@drawable/ic_down"/>
 
     </RelativeLayout>
 
@@ -74,6 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:textSize="15sp"
             android:text="@string/more_settings_sleep_goal"
             android:textColor="@color/alarm_repeat_text_color"/>
 
@@ -85,10 +86,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:background="@color/transparent"
-            android:src="@drawable/ic_down"
-            android:text="@string/more_setting_place_home"
-            android:textAllCaps="false"
-            android:textColor="@color/white"/>
+            android:src="@drawable/ic_down"/>
 
     </RelativeLayout>
 
@@ -105,6 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:textSize="15sp"
             android:text="@string/more_settings_solar_goal"
             android:textColor="@color/alarm_repeat_text_color"/>
 
@@ -116,10 +115,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:background="@color/transparent"
-            android:src="@drawable/ic_down"
-            android:text="@string/more_setting_place_home"
-            android:textAllCaps="false"
-            android:textColor="@color/white"/>
+            android:src="@drawable/ic_down"/>
     </RelativeLayout>
 
     <com.medcorp.lunar.view.customfontview.RobotoButton

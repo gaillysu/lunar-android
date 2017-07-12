@@ -11,15 +11,15 @@
         android:id="@+id/register_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="80dp"
             android:gravity="center_horizontal"
             android:singleLine="true"
             android:text="@string/register_account_page_title"
@@ -38,42 +38,39 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:paddingLeft="50dp"
-                android:paddingRight="50dp"
+                android:layout_marginTop="20dp"
                 android:orientation="vertical"
-                >
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp">
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="50dp"
                     android:background="@drawable/shape_input_email_account_bg"
-                    android:gravity="center_vertical"
-                    android:paddingTop="2dp"
+                    android:paddingTop="4dp"
                     android:textColorHint="@color/colorAccent"
                     app:hintTextAppearance="@style/hintAppearance">
 
                     <EditText
                         android:id="@+id/input_email_ed"
                         android:layout_width="match_parent"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:background="@android:color/transparent"
                         android:gravity="center_vertical"
                         android:hint="@string/log_in_email"
                         android:inputType="textPersonName"
-                        android:paddingLeft="12dp"
+                        android:paddingLeft="8dp"
                         android:textColor="@color/text_color"
                         android:textSize="14sp"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="50dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/shape_input_email_account_bg"
-                    android:gravity="center_vertical"
-                    android:paddingTop="2dp"
+                    android:paddingTop="4dp"
                     android:textColorHint="@color/colorAccent"
                     app:hintTextAppearance="@style/hintAppearance">
 
@@ -86,7 +83,7 @@
                         android:hint="@string/register_first_name_hint"
                         android:imeOptions="actionNext"
                         android:inputType="textPersonName"
-                        android:paddingLeft="12dp"
+                        android:paddingLeft="8dp"
                         android:textColor="@color/text_color"
                         android:textSize="14sp"/>
                 </android.support.design.widget.TextInputLayout>
@@ -94,11 +91,10 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="50dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/shape_input_email_account_bg"
-                    android:gravity="center_vertical"
-                    android:paddingTop="2dp"
+                    android:paddingTop="4dp"
                     android:textColorHint="@color/colorAccent"
                     app:hintTextAppearance="@style/hintAppearance"
                     >
@@ -112,7 +108,7 @@
                         android:hint="@string/register_last_name_hint"
                         android:imeOptions="actionNext"
                         android:inputType="textPersonName"
-                        android:paddingLeft="12dp"
+                        android:paddingLeft="8dp"
                         android:textColor="@color/text_color"
                         android:textSize="14sp"
                         />
@@ -122,13 +118,13 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="50dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/shape_input_email_account_bg"
-                    android:gravity="center_vertical"
                     android:paddingRight="10dp"
-                    android:paddingTop="2dp"
+                    android:paddingTop="4dp"
                     android:textColorHint="@color/colorAccent"
+                    app:hintTextAppearance="@style/hintAppearance">
                     app:hintTextAppearance="@style/hintAppearance">
 
                     <EditText
@@ -141,19 +137,18 @@
                         android:hint="@string/log_in_password"
                         android:imeOptions="actionNext"
                         android:inputType="textPassword"
-                        android:paddingLeft="12dp"
+                        android:paddingLeft="8dp"
                         android:textColor="@color/text_color"
                         android:textSize="14sp"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="50dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/shape_input_email_account_bg"
-                    android:gravity="center_vertical"
                     android:paddingRight="10dp"
-                    android:paddingTop="2dp"
+                    android:paddingTop="4dp"
                     android:textColorHint="@color/colorAccent"
                     app:hintTextAppearance="@style/hintAppearance">
 
@@ -166,7 +161,7 @@
                         android:hint="@string/register_password_confirm"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
-                        android:paddingLeft="12dp"
+                        android:paddingLeft="8dp"
                         android:textColor="@color/text_color"
                         android:textSize="14sp"/>
                 </android.support.design.widget.TextInputLayout>
@@ -174,7 +169,7 @@
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/register_bt"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="24dp"

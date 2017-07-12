@@ -48,23 +48,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_marginTop="20dp"
                     android:orientation="vertical"
                     >
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="50dp"
                         android:background="@drawable/shape_input_email_account_bg"
-                        android:gravity="center_vertical"
-                        android:paddingTop="2dp"
+                        android:paddingTop="4dp"
                         android:textColorHint="@color/colorAccent"
                         app:hintTextAppearance="@style/hintAppearance">
 
                         <EditText
                             android:id="@+id/input_email_ed"
                             android:layout_width="match_parent"
-                            android:layout_height="40dp"
+                            android:layout_height="wrap_content"
                             android:background="@color/transparent"
                             android:hint="@string/log_in_email"
                             android:imeOptions="actionNext"
@@ -77,24 +76,22 @@
                     <!--  Password Label -->
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_height="50dp"
                         android:background="@drawable/shape_input_email_account_bg"
-                        android:gravity="center_vertical"
-                        android:paddingTop="2dp"
+                        android:layout_marginTop="10dp"
+                        android:paddingRight="4dp"
                         android:textColorHint="@color/colorAccent"
                         app:hintTextAppearance="@style/hintAppearance">
 
                         <EditText
                             android:id="@+id/input_password_ed"
                             android:layout_width="match_parent"
-                            android:layout_height="40dp"
+                            android:layout_height="wrap_content"
                             android:background="@color/transparent"
                             android:hint="@string/log_in_password"
                             android:imeOptions="actionDone"
                             android:inputType="textPassword"
                             android:paddingLeft="8dp"
-                            android:textColor="@color/text_color"
                             android:textColorHint="@color/text_color"/>
                     </android.support.design.widget.TextInputLayout>
 

@@ -63,27 +63,6 @@
                 android:divider="@android:color/transparent"
                 android:dividerHeight="@null"/>
 
-            <TextView
-                android:id="@+id/index_slide_dialog"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_above="@+id/right_line_view"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/right_line_view"
-                android:background="@drawable/select_city_index_tv_bg"
-                android:gravity="center"
-                android:text="A"
-                android:textColor="@color/text_color"
-                android:textSize="20dp"/>
-
-            <ImageView
-                android:id="@+id/right_line_view"
-                android:layout_width="4dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/select_city_view_bg"/>
         </RelativeLayout>
 
         <ListView
