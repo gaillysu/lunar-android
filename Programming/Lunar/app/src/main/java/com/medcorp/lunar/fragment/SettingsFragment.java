@@ -3,6 +3,7 @@ package com.medcorp.lunar.fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -17,7 +18,6 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.ConnectToOtherAppsActivity;
 import com.medcorp.lunar.activity.MoreSettingActivity;
 import com.medcorp.lunar.activity.MyWatchActivity;
-import com.medcorp.lunar.activity.ScanDurationActivity;
 import com.medcorp.lunar.activity.SettingNotificationActivity;
 import com.medcorp.lunar.activity.login.LoginActivity;
 import com.medcorp.lunar.activity.tutorial.TutorialPage1Activity;
@@ -29,6 +29,7 @@ import com.medcorp.lunar.model.SettingsMenuItem;
 import com.medcorp.lunar.util.LinklossNotificationUtils;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.view.ToastHelper;
+import com.xw.repo.BubbleSeekBar;
 
 import net.medcorp.library.ble.util.Constants;
 
@@ -57,6 +58,9 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
     private List<SettingsMenuItem> deviceListMenu;
     private List<SettingsMenuItem> localListMenu;
     private SettingMenuAdapter mSettingDeviceAdapter;
+    private int scanTime;
+    private SettingMenuAdapter mSettingAppAdapter;
+    private SettingMenuAdapter mSettingLocalAdapter;
 
 
     @Override
@@ -64,10 +68,35 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
 
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
         initAppData();
         initDeviceData();
         initLocalData();
-        setHasOptionsMenu(true);
+        mSettingAppAdapter = new SettingMenuAdapter(getContext(), appListMenu, this);
+        settingAppListView.setAdapter(mSettingAppAdapter);
+        settingAppListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                appListItemClick(position);
+            }
+        });
+
+        mSettingLocalAdapter = new SettingMenuAdapter(getContext(), localListMenu, this);
+        settingLocalListView.setAdapter(mSettingLocalAdapter);
+        settingLocalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                localListItemClick(position);
+            }
+        });
+        mSettingDeviceAdapter = new SettingMenuAdapter(getContext(), deviceListMenu, this);
+        settingDeviceLIstView.setAdapter(mSettingDeviceAdapter);
+        settingDeviceLIstView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                deviceListItemClick(position);
+            }
+        });
         return view;
     }
 
@@ -77,28 +106,24 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
         String unitSubtitle = Preferences.getUnitSelect(getContext()) ? getString(R.string.more_setting_place_home) : getString(R.string.more_setting_place_local);
         appListMenu.add(new SettingsMenuItem(getString(R.string.settings_more), getString(R.string.setting_fragment_app_goal_subtitle), R.drawable.setting_goals));
         appListMenu.add(new SettingsMenuItem(getString(R.string.more_setting_unit), unitSubtitle, R.drawable.ic_setting_fragment_unit_icon));
-        SettingMenuAdapter settingAppAdapter = new SettingMenuAdapter(getContext(), appListMenu, this);
-        settingAppListView.setAdapter(settingAppAdapter);
-        settingAppListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                appListItemClick(position);
-            }
-        });
+
     }
 
     private void initDeviceData() {
         int mSelectIndex = Preferences.getDetectionBattery(SettingsFragment.this.getActivity());
         String value = getResources().getStringArray(R.array.detection_battery)[mSelectIndex];
+
         Preferences.getBatterySwitch(SettingsFragment.this.getActivity());
         deviceListMenu = new ArrayList<>();
         int scanDuration = Preferences.getScanDuration(getContext());
+
         String scanDurationSubTitle = null;
         if (scanDuration == 60) {
             scanDurationSubTitle = " " + getString(R.string.scan_duration_item_select_one_hour);
         } else {
             scanDurationSubTitle = scanDuration + " " + getString(R.string.scan_duration_time_unit);
         }
+
         deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_notifications), getString(R.string.setting_fragment_notification_subtitle),
                 R.drawable.setting_notfications));
 
@@ -106,15 +131,10 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                 getString(R.string.originally_chosen_value) + " : " + value,
                 R.drawable.ic_low_detection_alert,
                 Preferences.getBatterySwitch(SettingsFragment.this.getContext())));
-        deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_bluetooth_scan), scanDurationSubTitle, R.drawable.ic_scan_bluetooth));
-        mSettingDeviceAdapter = new SettingMenuAdapter(getContext(), deviceListMenu, this);
-        settingDeviceLIstView.setAdapter(mSettingDeviceAdapter);
-        settingDeviceLIstView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                deviceListItemClick(position);
-            }
-        });
+
+        deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_bluetooth_scan),
+                scanDurationSubTitle, R.drawable.ic_scan_bluetooth));
+
     }
 
     private void initLocalData() {
@@ -131,14 +151,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
         } else {
             localListMenu.add(new SettingsMenuItem(getString(R.string.login_page_activity_title), R.drawable.ic_login_setting_page));
         }
-        SettingMenuAdapter settingLocalAdapter = new SettingMenuAdapter(getContext(), localListMenu, this);
-        settingLocalListView.setAdapter(settingLocalAdapter);
-        settingLocalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                localListItemClick(position);
-            }
-        });
+
     }
 
     private void appListItemClick(int position) {
@@ -151,7 +164,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
         }
     }
 
-    private void deviceListItemClick(int position) {
+    private void deviceListItemClick(final int position) {
         switch (position) {
             case 0:
                 startActivity(SettingNotificationActivity.class);
@@ -167,7 +180,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                                 Preferences.saveDetectionBattery(SettingsFragment.this.getActivity(), which);
-                                deviceListMenu.get(2).setSubtitle(getString(R.string.originally_chosen_value) + " : "
+                                deviceListMenu.get(1).setSubtitle(getString(R.string.originally_chosen_value) + " : "
                                         + getResources().getStringArray(R.array.detection_battery)[which]);
                                 mSettingDeviceAdapter.notifyDataSetChanged();
                                 return true;
@@ -179,10 +192,49 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                 break;
             case 2:
                 if (getModel().isWatchConnected()) {
+                    LayoutInflater inflater = LayoutInflater.from(getContext());
+                    View dialogView = inflater.inflate(R.layout.scan_duration_dialog_view, null);
+                    final BubbleSeekBar seekBar = (BubbleSeekBar) dialogView.findViewById(R.id.scan_duration_time_seek_bar);
+                    seekBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
+                        @Override
+                        public void onProgressChanged(int progress, float progressFloat) {
+                            scanTime = progress;
+                        }
+
+                        @Override
+                        public void getProgressOnActionUp(int progress, float progressFloat) {
+
+                        }
+
+                        @Override
+                        public void getProgressOnFinally(int progress, float progressFloat) {
+
+                        }
+                    });
                     int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
-                    if (currentFirmwareVersion >= 14) {
-                        startActivity(ScanDurationActivity.class);
-                    } else {
+                    seekBar.setProgress(Preferences.getScanDuration(getContext()));
+                    if (currentFirmwareVersion >= 14)
+                        new MaterialDialog.Builder(getContext())
+                                .customView(dialogView, true)
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        Preferences.saveScanDuration(getContext(), scanTime);
+                                        getModel().getSyncController().setBleConnectTimeout(scanTime);
+                                        String scanDurationSubTitle = null;
+                                        if (scanTime == 60) {
+                                            scanDurationSubTitle = " " + getString(R.string.scan_duration_item_select_one_hour);
+                                        } else {
+                                            scanDurationSubTitle = scanTime + " " + getString(R.string.scan_duration_time_unit);
+                                        }
+                                        deviceListMenu.get(2).setSubtitle(scanDurationSubTitle);
+                                        mSettingDeviceAdapter.notifyDataSetChanged();
+                                    }
+                                }).positiveText(R.string.goal_ok)
+                                .negativeText(R.string.goal_cancel)
+                                .negativeColor(getResources().getColor(R.color.left_menu_item_text_color))
+                                .show();
+                    else {
                         askUserIsUpdate();
                     }
                 } else {

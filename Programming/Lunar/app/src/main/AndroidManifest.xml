@@ -155,9 +155,6 @@
             android:name=".activity.NotificationActivity"
             android:label="Dfu"/>
         <activity
-            android:name=".activity.ScanDurationActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.config.ConfigTimeSyncActivity"
             android:screenOrientation="portrait"/>
         <activity

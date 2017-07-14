@@ -1,14 +1,16 @@
 package com.medcorp.lunar.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.l4digital.fastscroll.FastScroller;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.model.ChooseCityViewModel;
 import com.medcorp.lunar.util.Preferences;
@@ -18,12 +20,13 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
+public class ChooseCityAdapter extends RecyclerView.Adapter<ChooseCityAdapter.ViewHolder> implements SectionIndexer, FastScroller.SectionIndexer, View.OnClickListener {
     private List<ChooseCityViewModel> list = null;
     private Context mContext;
     private String homeCityName;
     private String homeCityCountry;
     private boolean flag;
+    private RecyclerViewItemClick clickListener;
 
     public ChooseCityAdapter(Context mContext, List<ChooseCityViewModel> list, boolean flag) {
         this.mContext = mContext;
@@ -34,33 +37,14 @@ public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
 
     }
 
-    public void updateListView(List<ChooseCityViewModel> list) {
-        this.list = list;
-        notifyDataSetChanged();
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(mContext).inflate(R.layout.choose_city_adapter_item, parent, false);
+        return new ViewHolder(itemView);
     }
 
-    public int getCount() {
-        return this.list.size();
-    }
-
-    public Object getItem(int position) {
-        return list.get(position);
-    }
-
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public View getView(final int position, View view, ViewGroup arg2) {
-        ViewHolder viewHolder = null;
-        if (view == null) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.choose_city_adapter_item, arg2, false);
-            viewHolder = new ViewHolder(view);
-            view.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) view.getTag();
-        }
-
+    @Override
+    public void onBindViewHolder(ViewHolder viewHolder, int position) {
         final ChooseCityViewModel mContent = list.get(position);
         if (!(position != 0 && list.get(position).getSortLetter().equals(list.get(position - 1).getSortLetter()))) {
             viewHolder.title.setVisibility(View.VISIBLE);
@@ -79,12 +63,36 @@ public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
         } else {
             viewHolder.isCheck.setVisibility(View.GONE);
         }
-        return view;
-
+        viewHolder.rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) {
+                    clickListener.onRecyclerViewItemClick(mContent);
+                }
+            }
+        });
     }
 
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
 
-    final static class ViewHolder {
+    @Override
+    public void onClick(View v) {
+        if (clickListener != null) {
+            clickListener.onRecyclerViewItemClick((ChooseCityViewModel) v.getTag());
+        }
+    }
+
+    @Override
+    public String getSectionText(int position) {
+        return list.get(position).getSortLetter();
+    }
+
+    final static class ViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.choose_city_item_root)
+        RelativeLayout rootView;
         @Bind(R.id.choose_adapter_item_title_tv)
         TextView title;
         @Bind(R.id.choose_adapter_item_tv)
@@ -93,6 +101,7 @@ public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
         ImageView isCheck;
 
         public ViewHolder(View view) {
+            super(view);
             ButterKnife.bind(this, view);
         }
     }
@@ -102,7 +111,7 @@ public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
     }
 
     public int getPositionForSection(int section) {
-        for (int i = 0; i < getCount(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             String sortStr = list.get(i).getSortLetter();
             char firstChar = sortStr.toUpperCase().charAt(0);
             if (firstChar == section) {
@@ -124,5 +133,13 @@ public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
     @Override
     public Object[] getSections() {
         return null;
+    }
+
+    public void setRecyclerViewItemClick(RecyclerViewItemClick listener) {
+        clickListener = listener;
+    }
+
+    public interface RecyclerViewItemClick {
+        void onRecyclerViewItemClick(ChooseCityViewModel data);
     }
 }

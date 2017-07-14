@@ -428,7 +428,7 @@
     <string name="settings_bluetooth_scan">Scan duration</string>
     <string name="detection_battery">Low Battery Alert</string>
     <string name="low_detection_battery_title">Low Battery Notifications</string>
-    <string name="originally_chosen_value">Notification at </string>
+    <string name="originally_chosen_value">Alert at </string>
     <string name="set_detection_battery_alerts">Set low power alerts!</string>
     <string name="my_nevo_notice_message"> To save battery power, Bluetooth disconnects automatically when away from the phone for more than 1 hour. You will not receive notifications on LunaR when disconnected.</string>
     <string name="notification_access_message">Do you want to enable notifications for LunaR ?</string>

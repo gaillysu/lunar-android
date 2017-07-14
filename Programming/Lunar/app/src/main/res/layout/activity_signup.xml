@@ -96,8 +96,7 @@
                     android:background="@drawable/shape_input_email_account_bg"
                     android:paddingTop="4dp"
                     android:textColorHint="@color/colorAccent"
-                    app:hintTextAppearance="@style/hintAppearance"
-                    >
+                    app:hintTextAppearance="@style/hintAppearance">
 
                     <EditText
                         android:id="@+id/register_account_activity_edit_last_name_ed"
@@ -110,8 +109,7 @@
                         android:inputType="textPersonName"
                         android:paddingLeft="8dp"
                         android:textColor="@color/text_color"
-                        android:textSize="14sp"
-                        />
+                        android:textSize="14sp"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <!-- Password Label -->
