@@ -109,6 +109,7 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.21.1'
     compile 'com.xw.repo:bubbleseekbar:3.5-lite'
     compile 'com.l4digital.fastscroll:fastscroll:1.0.4'
+    compile 'net.i2p.android.ext:floatingactionbutton:1.9.0'
 }
 
 repositories {

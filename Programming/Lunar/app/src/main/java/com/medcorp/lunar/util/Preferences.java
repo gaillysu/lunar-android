@@ -245,7 +245,7 @@ public class Preferences {
 
     public static int getScanDuration(Context context) {
         init(context);
-        return preferences.getInt(context.getString(R.string.key_prefs_scan_duration_time), -1);
+        return preferences.getInt(context.getString(R.string.key_prefs_scan_duration_time), 0);
     }
 
     public static void saveDetectionBattery(Context context, int time) {

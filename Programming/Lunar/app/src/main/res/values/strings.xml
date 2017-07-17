@@ -27,6 +27,7 @@
     <string name="menu_drawer_sleep">Sleep</string>
     <string name="menu_drawer_settings">Settings</string>
     <string name="menu_drawer_find">Find Watch</string>
+    <string name="find_watch_subtitle">press to send a alert-signal to LunaR</string>
     <string name="choose_activity_title_choose_city_tv">Choose a City</string>
     <string name="provider_file_string" translatable="false">com.med.lunar.fileprovider</string>
     <string name="drawer_open">Open navigation drawer</string>
@@ -223,6 +224,7 @@
     <string name="my_nevo_application">App</string>
     <string name="setting_fragment_app_goal_subtitle">Set preset-goals for(in)activity and sunshine</string>
     <string name="settings_link_loss_notification">Link loss notification</string>
+    <string name="loss_notification_subtitle">Receive an alert once LunaR gets disconnected</string>
     <string name="settings_notifications">Notifications</string>
     <string name="setting_fragment_notification_subtitle">Set a unique LED -color for each notification</string>
     <string name="settings_notifications_active_title">Active Notifications</string>
@@ -507,4 +509,12 @@
     <string name="update_watch_firmware_careful_one">- Keep LunaR close to your phone.</string>
     <string name="update_watch_firmware_careful_second">- Don\'t turn off the bluetooth  </string>
     <string name="update_watch_firmware_careful_third">Don\'t press and buttons on LunaR while upgrading</string>
+    <string name="add_new_activity_goal_fb">ACTIVITY GOAL</string>
+    <string name="add_new_inactivity_goal_fb">INACTIVITY GOAL</string>
+    <string name="and_new_sunshine_fb">SUNSHINE GOAL</string>
+    <string name="more_setting_activity_title">Activity</string>
+    <string name="more_setting_inactivity_title">Inactivity</string>
+    <string name="more_setting_sunshine_title">Sunshine</string>
+    <string name="save_filed">Save Filed</string>
+    <string name="snack_title">Actions</string>
 </resources>

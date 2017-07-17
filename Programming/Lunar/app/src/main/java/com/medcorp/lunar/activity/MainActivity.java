@@ -92,7 +92,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private Snackbar snackbar = null;
     private boolean bigSyncStart = false;
     private BaseObservableFragment mainStepsFragment;
-    private int viewPage = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -277,13 +276,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
                 toolbar.setTitle(item.getTitle());
                 break;
-            case R.id.nav_find_watch_fragment:
-                if (getModel().isWatchConnected()) {
-                    getModel().blinkWatch();
-                } else {
-                    ToastHelper.showShortToast(this, R.string.in_app_notification_no_watch);
-                }
-                return;
             case R.id.nav_world_clock:
                 fragment = HomeClockFragment.instantiate(MainActivity.this, HomeClockFragment.class.getName());
                 toolbar.setTitle(item.getTitle());

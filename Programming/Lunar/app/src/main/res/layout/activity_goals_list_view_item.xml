@@ -2,24 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:roboto="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="54dp"
                 android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="10dp">
+                android:gravity="center_vertical"
+                android:paddingRight="15dp">
 
     <RelativeLayout
         android:id="@+id/activity_goals_list_view_item_goal_steps_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        >
         <com.medcorp.lunar.view.customfontview.RobotoTextView
-            android:id="@+id/activity_goals_list_view_item_goal_steps"
+            android:id="@+id/activity_goals_list_view_item_goals_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:paddingTop="5dp"
             android:textColor="@color/text_color"
-            android:textSize="25sp"
-            roboto:thin="true"/>
+            android:textSize="16sp"
+            roboto:bold="true"/>
+
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/activity_goals_list_view_item_goals_switch"
@@ -33,15 +34,12 @@
     </RelativeLayout>
 
     <com.medcorp.lunar.view.customfontview.RobotoTextView
-        android:id="@+id/activity_goals_list_view_item_goals_label"
+        android:id="@+id/activity_goals_list_view_item_goal_steps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/activity_goals_list_view_item_goal_steps_wrapper"
-        android:paddingBottom="10dp"
-        android:paddingLeft="5dp"
-        android:paddingTop="5dp"
-        android:textColor="@color/text_color"
-        android:textSize="18sp"
-        roboto:bold="true"/>
-
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/more_setting_sub_text_color"
+        android:textSize="14sp"
+        roboto:thin="true"/>
 </RelativeLayout>

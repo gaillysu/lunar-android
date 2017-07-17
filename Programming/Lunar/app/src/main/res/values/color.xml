@@ -39,6 +39,7 @@
     <color name="green_normal">#0DAB67</color>
     <color name="purple_normal">#FF7ED8D1</color>
     <color name="purple_pressed">#997ED8D1</color>
+    <color name="half_blue">#507ED8D1</color>
 
     <color name="register_account_text_color">#7ED8D1</color>
     <color name="input_account_shape_color">#54575A</color>
@@ -74,7 +75,7 @@
     <color name="navigation_drawer_selected_background_color">#F2F2F2</color>
     <color name="list_item_header_text_color">@android:color/white</color>
     <color name="notification_list_text_color">@android:color/white</color>
-    <color name="list_item_sub_text">#000</color>
+    <color name="list_item_sub_text">#aa000000</color>
     <color name="customGray">@android:color/white</color>
     <color name="tab_unselected_font_color">#BCBCBC</color>
     <color name="toolbar_center_date_text_color">@android:color/white</color>
@@ -90,4 +91,5 @@
     <color name="analysis_sleep_deep_line_color">#75b6b2</color>
     <color name="tab_layout_normal_text_color">#ccFFFFFF</color>
     <color name="welcome_other_text_color">#DFCFCF</color>
+    <color name="more_setting_sub_text_color">#858384</color>
 </resources>

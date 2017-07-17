@@ -72,6 +72,15 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
         initAppData();
         initDeviceData();
         initLocalData();
+        return view;
+    }
+
+    private void initAppData() {
+        appListMenu = new ArrayList<>();
+        String unitSubtitle = Preferences.getUnitSelect(getContext()) ? getString(R.string.user_select_metrics) : getString(R.string.user_select_imperial);
+        appListMenu.add(new SettingsMenuItem(getString(R.string.settings_more), getString(R.string.setting_fragment_app_goal_subtitle), R.drawable.setting_goals));
+        appListMenu.add(new SettingsMenuItem(getString(R.string.more_setting_unit), unitSubtitle, R.drawable.ic_setting_fragment_unit_icon));
+
         mSettingAppAdapter = new SettingMenuAdapter(getContext(), appListMenu, this);
         settingAppListView.setAdapter(mSettingAppAdapter);
         settingAppListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -80,33 +89,6 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                 appListItemClick(position);
             }
         });
-
-        mSettingLocalAdapter = new SettingMenuAdapter(getContext(), localListMenu, this);
-        settingLocalListView.setAdapter(mSettingLocalAdapter);
-        settingLocalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                localListItemClick(position);
-            }
-        });
-        mSettingDeviceAdapter = new SettingMenuAdapter(getContext(), deviceListMenu, this);
-        settingDeviceLIstView.setAdapter(mSettingDeviceAdapter);
-        settingDeviceLIstView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                deviceListItemClick(position);
-            }
-        });
-        return view;
-    }
-
-    private void initAppData() {
-
-        appListMenu = new ArrayList<>();
-        String unitSubtitle = Preferences.getUnitSelect(getContext()) ? getString(R.string.more_setting_place_home) : getString(R.string.more_setting_place_local);
-        appListMenu.add(new SettingsMenuItem(getString(R.string.settings_more), getString(R.string.setting_fragment_app_goal_subtitle), R.drawable.setting_goals));
-        appListMenu.add(new SettingsMenuItem(getString(R.string.more_setting_unit), unitSubtitle, R.drawable.ic_setting_fragment_unit_icon));
-
     }
 
     private void initDeviceData() {
@@ -135,12 +117,23 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
         deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_bluetooth_scan),
                 scanDurationSubTitle, R.drawable.ic_scan_bluetooth));
 
+        mSettingDeviceAdapter = new SettingMenuAdapter(getContext(), deviceListMenu, this);
+        settingDeviceLIstView.setAdapter(mSettingDeviceAdapter);
+        settingDeviceLIstView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                deviceListItemClick(position);
+            }
+        });
     }
 
     private void initLocalData() {
         localListMenu = new ArrayList<>();
+        localListMenu.add(new SettingsMenuItem(getString(R.string.menu_drawer_find)
+                , getString(R.string.find_watch_subtitle), R.drawable.ic_left_menu_find));
         localListMenu.add(new SettingsMenuItem(getString(R.string.settings_link_loss_notification),
-                R.drawable.setting_linkloss, Preferences.getLinklossNotification(getActivity())));
+                getString(R.string.loss_notification_subtitle), R.drawable.setting_linkloss,
+                Preferences.getLinklossNotification(getActivity())));
         localListMenu.add(new SettingsMenuItem(getString(R.string.settings_my_nevo), R.drawable.setting_mynevo));
         localListMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
         localListMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
@@ -152,6 +145,14 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
             localListMenu.add(new SettingsMenuItem(getString(R.string.login_page_activity_title), R.drawable.ic_login_setting_page));
         }
 
+        mSettingLocalAdapter = new SettingMenuAdapter(getContext(), localListMenu, this);
+        settingLocalListView.setAdapter(mSettingLocalAdapter);
+        settingLocalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                localListItemClick(position);
+            }
+        });
     }
 
     private void appListItemClick(int position) {
@@ -160,6 +161,29 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                 startActivity(MoreSettingActivity.class);
                 break;
             case 1:
+                boolean unitSelect = Preferences.getUnitSelect(getContext());
+                new MaterialDialog.Builder(getContext())
+                        .title(R.string.more_setting_unit)
+                        .itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
+                        .items(getResources().getStringArray(R.array.config_unit))
+                        .itemsCallbackSingleChoice(unitSelect ? 0 : 1, new MaterialDialog.ListCallbackSingleChoice() {
+                            @Override
+                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                if (which == 0) {
+                                    appListMenu.get(1).setSubtitle(getString(R.string.user_select_metrics));
+                                    Preferences.saveUnitSelect(getContext(), true);
+                                } else {
+                                    appListMenu.get(1).setSubtitle(getString(R.string.user_select_imperial));
+                                    Preferences.saveUnitSelect(getContext(), false);
+                                }
+                                mSettingAppAdapter.notifyDataSetChanged();
+                                return true;
+                            }
+                        })
+                        .positiveText(R.string.goal_ok)
+                        .negativeText(R.string.goal_cancel)
+                        .negativeColor(getResources().getColor(R.color.left_menu_item_text_color))
+                        .show();
                 break;
         }
     }
@@ -247,6 +271,13 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
 
     private void localListItemClick(int position) {
         switch (position) {
+            case 0:
+                if (getModel().isWatchConnected()) {
+                    getModel().blinkWatch();
+                } else {
+                    ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+                }
+                break;
             case 1:
                 if (getModel().isWatchConnected()) {
                     startActivity(MyWatchActivity.class);

@@ -82,9 +82,6 @@
             android:screenOrientation="portrait"
             />
         <activity
-            android:name=".activity.StepsGoalsActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.EditGoalsActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -248,15 +245,7 @@
         <activity
             android:name=".activity.MoreSettingActivity"
             android:screenOrientation="portrait"
-            />
-        <activity
-            android:name=".activity.SolarGoalActivity"
-            android:screenOrientation="portrait"
-            />
-
-        <activity
-            android:name=".activity.SleepGoalActivity"
-            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden"
             />
         <activity
             android:name=".wxapi.WXEntryActivity"

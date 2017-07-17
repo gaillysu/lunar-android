@@ -708,15 +708,8 @@ public class ApplicationModel extends Application {
         });
     }
 
-    public void addGoal(StepsGoal stepsGoal) {
-        mStepsGoalDatabaseHelper.add(stepsGoal).subscribe(new Consumer<Boolean>() {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception {
-                if (aBoolean) {
-                    Log.i("jason", "append success");
-                }
-            }
-        });
+    public Observable<Boolean> addGoal(StepsGoal stepsGoal) {
+       return mStepsGoalDatabaseHelper.add(stepsGoal);
     }
 
     public boolean updateGoal(StepsGoal stepsGoal) {

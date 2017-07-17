@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +49,10 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
     private int mFlag;
     private int selectHour = 0;
     private int selectMinutes = 0;
+
+    public static final int SLEEP_RESULT_CODE = 0X02 << 1;
+    public static final int SOLAR_RESULT_CODE = 0X02 << 2;
+    public static final int STEPS_RESULT_CODE = 0X02 << 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -228,7 +233,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
             for (int i = 5; i <= 12; i++) {
                 hourList.add(i + "");
             }
-            startSettingGoalTime(hourList,minutes);
+            startSettingGoalTime(hourList, minutes);
         } else if (position == 1) {
             new MaterialDialog.Builder(EditGoalsActivity.this)
                     .title(R.string.goal_edit)
@@ -258,7 +263,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                 public void accept(Boolean aBoolean) throws Exception {
                     if (aBoolean) {
                         ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_deleted);
-                        setResult(-1);
+                        setResult(SLEEP_RESULT_CODE);
                         finish();
                     }
                 }
@@ -271,6 +276,20 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                switch (mFlag) {
+                    case 0x01:
+                        EditGoalsActivity.this.setResult(STEPS_RESULT_CODE);
+                        EditGoalsActivity.this.finish();
+                        break;
+                    case 0x02:
+                        EditGoalsActivity.this.setResult(SOLAR_RESULT_CODE);
+                        EditGoalsActivity.this.finish();
+                        break;
+                    case 0x03:
+                        EditGoalsActivity.this.setResult(SLEEP_RESULT_CODE);
+                        EditGoalsActivity.this.finish();
+                        break;
+                }
                 EditGoalsActivity.this.setResult(0);
                 EditGoalsActivity.this.finish();
                 return true;
@@ -316,7 +335,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 dialog.dismiss();
                 if (mFlag == 0x02) {
-                    solarGoal.setTime(selectHour*60+selectMinutes);
+                    solarGoal.setTime(selectHour * 60 + selectMinutes);
                     getModel().getSolarGoalDatabaseHelper().update(solarGoal).subscribe(new Consumer<Boolean>() {
                         @Override
                         public void accept(Boolean aBoolean) throws Exception {
@@ -327,7 +346,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                         }
                     });
                 } else if (mFlag == 0x03) {
-                    sleepGoal.setGoalDuration(selectHour*60+selectMinutes);
+                    sleepGoal.setGoalDuration(selectHour * 60 + selectMinutes);
                     getModel().getSleepGoalDatabseHelper().update(sleepGoal).subscribe(new Consumer<Boolean>() {
                         @Override
                         public void accept(Boolean aBoolean) throws Exception {
@@ -340,5 +359,26 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            switch (mFlag) {
+                case 0x01:
+                    setResult(STEPS_RESULT_CODE);
+                    EditGoalsActivity.this.finish();
+                    break;
+                case 0x02:
+                    setResult(SOLAR_RESULT_CODE);
+                    EditGoalsActivity.this.finish();
+                    break;
+                case 0x03:
+                    setResult(SLEEP_RESULT_CODE);
+                    EditGoalsActivity.this.finish();
+                    break;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

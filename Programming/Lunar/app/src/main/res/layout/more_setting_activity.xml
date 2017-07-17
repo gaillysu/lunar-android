@@ -1,155 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<RelativeLayout android:id="@+id/more_setting_activity_root_view"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-    <include layout="@layout/toolbar"/>
+    <include
+        android:id="@+id/more_setting_tool_bar"
+        layout="@layout/toolbar"/>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="10dp">
-
+        android:layout_below="@+id/more_setting_tool_bar"
+        android:paddingBottom="40dp"
+        android:scrollbars="none">
 
         <RelativeLayout
-            android:id="@+id/more_setting_go_setting_goal"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            >
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="10dp">
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/more_setting_activity_title_tv"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_centerVertical="true"
-                android:text="@string/more_settings_steps_goal"
-                android:textColor="@color/text_color"
+                android:layout_height="54dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="@string/more_setting_activity_title"
+                android:textColor="@color/more_setting_sub_text_color"
                 android:textSize="16sp"/>
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignBottom="@+id/textView8"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_right"
-                android:tint="@color/colorPrimary"/>
+            <com.medcorp.lunar.view.ListViewForScrollView
+                android:id="@+id/activity_goals_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/more_setting_activity_title_tv"
+                android:background="@color/window_background_color"
+                android:divider="@null"
+                android:scrollbars="none"/>
 
             <View
+                android:id="@+id/split_line_view"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/activity_goals_list_view"
                 android:background="@color/my_device_right_show_version_text_color"
                 />
-        </RelativeLayout>
-
-        //set sleep stepsGoal
-
-        <RelativeLayout
-            android:id="@+id/more_setting_sleep_goal"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical">
-
+            <!--set sleep stepsGoal-->
             <TextView
-                android:id="@+id/more_settings_sleep_goal_describe"
+                android:id="@+id/more_setting_sleep_title_tv"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="@string/more_settings_sleep_goal"
-                android:textColor="@color/text_color"
+                android:layout_height="54dp"
+                android:layout_below="@+id/split_line_view"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="@string/more_setting_inactivity_title"
+                android:textColor="@color/more_setting_sub_text_color"
                 android:textSize="16sp"/>
 
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignBottom="@+id/more_settings_sleep_goal_describe"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_right"
-                android:tint="@color/colorPrimary"/>
+            <com.medcorp.lunar.view.ListViewForScrollView
+
+                android:id="@+id/activity_sleep_goals_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/more_setting_sleep_title_tv"
+                android:background="@color/window_background_color"
+                android:divider="@null"
+                android:scrollbars="none"/>
 
             <View
+                android:id="@+id/split_line_view_two"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/activity_sleep_goals_list_view"
                 android:background="@color/my_device_right_show_version_text_color"
                 />
-        </RelativeLayout>
 
-        //set sleep stepsGoal
 
-        <RelativeLayout
-            android:id="@+id/more_setting_solar_goal"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            >
-
+            <!--set solarGoal-->
             <TextView
-                android:id="@+id/more_settings_solar_goal_describe"
+                android:id="@+id/more_setting_solar_goal_title_tv"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="@string/more_settings_solar_goal"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"/>
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignBottom="@+id/more_settings_solar_goal_describe"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_right"
-                android:tint="@color/colorPrimary"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/my_device_right_show_version_text_color"
-                />
-        </RelativeLayout>
-        <!--select sync home time or local time-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="@string/more_setting_place_time"
-                android:textColor="@color/text_color"
+                android:layout_height="54dp"
+                android:layout_below="@+id/split_line_view_two"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="@string/more_setting_sunshine_title"
+                android:textColor="@color/more_setting_sub_text_color"
                 android:textSize="16sp"
                 />
 
-            <Spinner
-                android:id="@+id/more_setting_select_sync_time_spinner"
+            <com.medcorp.lunar.view.ListViewForScrollView
+                android:id="@+id/activity_solar_goals_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:overlapAnchor="false"/>
-        </LinearLayout>
+                android:layout_below="@+id/more_setting_solar_goal_title_tv"
+                android:background="@color/window_background_color"
+                android:divider="@null"
+                android:scrollbars="none"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/my_device_right_show_version_text_color"
-            />
-    </LinearLayout>
 
-    <include layout="@layout/toolbar"/>
+            <!--select sync home time or local time-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_below="@+id/activity_solar_goals_list_view"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
-</LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/more_setting_place_time"
+                    android:textColor="@color/text_color"
+                    android:textSize="16sp"
+                    />
+
+                <Spinner
+                    android:id="@+id/more_setting_select_sync_time_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:overlapAnchor="false"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+    <net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/more_setting_floating_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        fab:fab_addButtonColorNormal="@color/purple_normal"
+        fab:fab_addButtonColorPressed="@color/purple_normal"
+        fab:fab_addButtonPlusIconColor="@color/white">
+
+        <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
+            android:id="@+id/more_setting_add_new_activity"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            fab:fab_colorNormal="@color/purple_normal"
+            fab:fab_colorPressed="@color/half_blue"
+            fab:fab_size="mini"
+            fab:fab_title="ACTIVITY GOAL"/>
+
+        <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
+            android:id="@+id/more_setting_add_new_inactivity"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            fab:fab_colorNormal="@color/purple_normal"
+            fab:fab_colorPressed="@color/half_blue"
+            fab:fab_icon="@drawable/moon_icon"
+            fab:fab_size="mini"
+            fab:fab_title="INACTIVITY GOAL"/>
+
+        <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
+            android:id="@+id/more_setting_add_new_sunshine"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            fab:fab_colorNormal="@color/purple_normal"
+            fab:fab_colorPressed="@color/half_blue"
+            fab:fab_icon="@drawable/sun_white"
+            fab:fab_size="mini"
+            fab:fab_title="@string/more_setting_sunshine_title"/>
+    </net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu>
+</RelativeLayout>
