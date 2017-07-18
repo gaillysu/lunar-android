@@ -18,7 +18,7 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:textSize="16sp"
-            android:textColor="@color/text_color"
+            android:textColor="@color/graph_grid_line_color"
             />
 
         <com.medcorp.lunar.view.ListViewForScrollView
@@ -46,7 +46,7 @@
             android:paddingBottom="10dp"
             android:textSize="16sp"
             android:text="@string/fragment_setting_device_list_title"
-            android:textColor="@color/text_color"
+            android:textColor="@color/graph_grid_line_color"
             />
 
         <com.medcorp.lunar.view.ListViewForScrollView
@@ -74,7 +74,7 @@
             android:paddingTop="10dp"
             android:textSize="16sp"
             android:text="@string/fragment_setting_local_list_title"
-            android:textColor="@color/text_color"/>
+            android:textColor="@color/graph_grid_line_color"/>
 
         <com.medcorp.lunar.view.ListViewForScrollView
             android:id="@+id/fragment_setting_local_list_view"

@@ -77,13 +77,20 @@ public class StepsGoalDatabaseHelper {
     public Observable<Boolean> remove(final int presetId) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
-            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+            public void subscribe(final ObservableEmitter<Boolean> e) throws Exception {
                 final StepsGoal stepsGoal = mRealm.where(StepsGoal.class).equalTo(mContext.getString(R.string.database_id)
                         , presetId).findFirst();
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        stepsGoal.deleteFromRealm();
+                        if(stepsGoal!=null) {
+                            stepsGoal.deleteFromRealm();
+                            e.onNext(true);
+                        }else{
+                            e.onNext(false);
+                        }
+                        e.onComplete();
+
                     }
                 });
             }

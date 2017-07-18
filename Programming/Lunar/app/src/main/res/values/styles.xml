@@ -148,7 +148,7 @@
     </style>
 
     <style name="Animation_profile_popupwindow">
-        <item name="android:windowEnterAnimation">@anim/profile_use_picture_popupwindow_anim</item>
+        <item name="android:windowEnterAnimation">@anim/popupwindow_entry_anim</item>
         <item name="android:windowExitAnimation">@anim/popupwindow_out_anim</item>
     </style>
 
@@ -172,5 +172,11 @@
 
     <style name="hintAppearance" parent="TextAppearance.AppCompat">
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="pop_window_animation_style">
+        <item name="android:windowEnterAnimation">@anim/popupwindow_entry_anim</item>
+        <item name="android:windowExitAnimation">@anim/popupwindow_out_anim</item>
+
     </style>
 </resources>

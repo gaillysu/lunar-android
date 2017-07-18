@@ -12,7 +12,7 @@ import com.medcorp.lunar.R;
 
 import java.util.List;
 
-/**
+/***
  * Created by dengxiongcai on 16/12/27.
  */
 public class MySpinnerAdapter implements SpinnerAdapter {

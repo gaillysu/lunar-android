@@ -105,7 +105,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
         } else {
             scanDurationSubTitle = scanDuration + " " + getString(R.string.scan_duration_time_unit);
         }
-
+        deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_my_nevo), R.drawable.setting_mynevo));
         deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_notifications), getString(R.string.setting_fragment_notification_subtitle),
                 R.drawable.setting_notfications));
 
@@ -116,7 +116,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
 
         deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_bluetooth_scan),
                 scanDurationSubTitle, R.drawable.ic_scan_bluetooth));
-
+        deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
         mSettingDeviceAdapter = new SettingMenuAdapter(getContext(), deviceListMenu, this);
         settingDeviceLIstView.setAdapter(mSettingDeviceAdapter);
         settingDeviceLIstView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -134,10 +134,8 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
         localListMenu.add(new SettingsMenuItem(getString(R.string.settings_link_loss_notification),
                 getString(R.string.loss_notification_subtitle), R.drawable.setting_linkloss,
                 Preferences.getLinklossNotification(getActivity())));
-        localListMenu.add(new SettingsMenuItem(getString(R.string.settings_my_nevo), R.drawable.setting_mynevo));
         localListMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
         localListMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
-        localListMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
         //listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getUser().isLogin()));
         if (getModel().getUser().isLogin()) {
             localListMenu.add(new SettingsMenuItem(getString(R.string.google_fit_log_out), R.drawable.logout_icon));
@@ -191,9 +189,16 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
     private void deviceListItemClick(final int position) {
         switch (position) {
             case 0:
-                startActivity(SettingNotificationActivity.class);
+                if (getModel().isWatchConnected()) {
+                    startActivity(MyWatchActivity.class);
+                } else {
+                    ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+                }
                 break;
             case 1:
+                startActivity(SettingNotificationActivity.class);
+                break;
+            case 2:
                 int selectIndex = Preferences.getDetectionBattery(SettingsFragment.this.getActivity());
                 new MaterialDialog.Builder(getContext())
                         .title(R.string.low_detection_battery_title)
@@ -214,7 +219,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                         .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
                         .show();
                 break;
-            case 2:
+            case 3:
                 if (getModel().isWatchConnected()) {
                     LayoutInflater inflater = LayoutInflater.from(getContext());
                     View dialogView = inflater.inflate(R.layout.scan_duration_dialog_view, null);
@@ -265,33 +270,6 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                     ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
                 }
                 break;
-        }
-    }
-
-
-    private void localListItemClick(int position) {
-        switch (position) {
-            case 0:
-                if (getModel().isWatchConnected()) {
-                    getModel().blinkWatch();
-                } else {
-                    ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-                }
-                break;
-            case 1:
-                if (getModel().isWatchConnected()) {
-                    startActivity(MyWatchActivity.class);
-                } else {
-                    ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-                }
-                break;
-            case 2:
-                startActivity(ConnectToOtherAppsActivity.class);
-                break;
-            case 3:
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.support_url)));
-                getActivity().startActivity(intent);
-                break;
             case 4:
                 new MaterialDialog.Builder(getContext())
                         .content(R.string.settings_sure)
@@ -308,7 +286,27 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                         .cancelable(false)
                         .show();
                 break;
-            case 5:
+        }
+    }
+
+
+    private void localListItemClick(int position) {
+        switch (position) {
+            case 0:
+                if (getModel().isWatchConnected()) {
+                    getModel().blinkWatch();
+                } else {
+                    ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+                }
+                break;
+            case 2:
+                startActivity(ConnectToOtherAppsActivity.class);
+                break;
+            case 3:
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.support_url)));
+                getActivity().startActivity(intent);
+                break;
+            case 4:
                 if (!getModel().getUser().isLogin()) {
                     getModel().removeUser(getModel().getUser());
                     Intent newIntent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
@@ -332,104 +330,6 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
         menu.findItem(R.id.add_menu).setVisible(false);
         menu.findItem(R.id.choose_goal_menu).setVisible(false);
     }
-    //
-    //    @Override
-    //    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    //        if (position == 1) {
-    //            startActivity(SettingNotificationActivity.class);
-    //        } else if (position == 2) {
-    //
-    //            if (getModel().isWatchConnected()) {
-    //                startActivity(MyWatchActivity.class);
-    //            } else {
-    //                ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-    //            }
-    //
-    //        } else if (position == 3) {
-    //            if (getModel().isWatchConnected()) {
-    //                getModel().blinkWatch();
-    //
-    //            } else {
-    //
-    //                ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-    //            }
-    //
-    //        } else if (position == 4) {
-    //            if (getModel().isWatchConnected()) {
-    //                int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
-    //                if (currentFirmwareVersion >= 14) {
-    //                    startActivity(ScanDurationActivity.class);
-    //                } else {
-    //                    askUserIsUpdate();
-    //                }
-    //            } else {
-    //                ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-    //            }
-    //        } else if (position == 5) {
-    //            int selectIndex = Preferences.getDetectionBattery(SettingsFragment.this.getActivity());
-    //            new MaterialDialog.Builder(getContext())
-    //                    .title(R.string.low_detection_battery_title)
-    //                    .itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
-    //                    .content(getString(R.string.set_detection_battery_alerts))
-    //                    .items(getResources().getStringArray(R.array.detection_battery))
-    //                    .itemsCallbackSingleChoice(selectIndex, new MaterialDialog.ListCallbackSingleChoice() {
-    //                        @Override
-    //                        public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-    //                            Preferences.saveDetectionBattery(SettingsFragment.this.getActivity(), which);
-    //                            listMenu.get(5).setSubtitle(getString(R.string.originally_chosen_value) + " : "
-    //                                    + getResources().getStringArray(R.array.detection_battery)[which]);
-    //                            settingAdapter.notifyDataSetChanged();
-    //
-    //                            return true;
-    //                        }
-    //                    })
-    //                    .positiveText(R.string.goal_ok)
-    //                    .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
-    //                    .show();
-    //
-    //        } else if (position == 6) {
-    //            startActivity(MoreSettingActivity.class);
-    //
-    //        } else if (position == 7) {
-    //            startActivity(ConnectToOtherAppsActivity.class);
-    //        } else if (position == 8) {
-    //            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.support_url)));
-    //            getActivity().startActivity(intent);
-    //
-    //        } else if (position == 9) {
-    //
-    //            new MaterialDialog.Builder(getContext())
-    //                    .content(R.string.settings_sure)
-    //                    .negativeText(android.R.string.no)
-    //                    .positiveText(android.R.string.yes)
-    //                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-    //                        @Override
-    //                        public void onClick(MaterialDialog dialog, DialogAction which) {
-    //                            getModel().forgetDevice();
-    //                            startActivity(TutorialPage1Activity.class);
-    //                            SettingsFragment.this.getActivity().finish();
-    //                        }
-    //                    })
-    //                    .cancelable(false)
-    //                    .show();
-    //
-    //        } else if (position == 10) {
-    //            if (!getModel().getUser().isLogin()) {
-    //                getModel().removeUser(getModel().getUser());
-    //                Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
-    //                intent.putExtra("isTutorialPage", false);
-    //                SettingsFragment.this.getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, true);
-    //                startActivity(intent);
-    //            } else {
-    //                Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
-    //                intent.putExtra("isTutorialPage", false);
-    //                getModel().getUser().setIsLogin(false);
-    //                getModel().saveUser(getModel().getUser());
-    //                startActivity(intent);
-    //            }
-    //            SettingsFragment.this.getActivity().finish();
-    //        }
-    //    }
 
     private void askUserIsUpdate() {
         new MaterialDialog.Builder(getContext())

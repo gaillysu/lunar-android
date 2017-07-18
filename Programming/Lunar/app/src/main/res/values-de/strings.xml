@@ -294,7 +294,7 @@
     <string name="notification_position">Position</string>
     <string name="notification_ok">OK</string>
     <string name="notification_cancel">Abbrechen</string>
-    <string name="notification_deactivated">Deaktiviert</string>
+    <string name="notification_deactivated">Inactive</string>
     <string name="notification_access_title">Benachrichtigungszugriff</string>
     <string name="notification_access_message">Möchten Sie Benachrichtigungen für LunaR aktivieren?</string>
     <string name="notification_connect_title">LunaR ist verbunden</string>

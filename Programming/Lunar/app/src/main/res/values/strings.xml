@@ -97,7 +97,7 @@
     <string name="notification_position">Position</string>
     <string name="notification_ok">OK</string>
     <string name="notification_cancel">Cancel</string>
-    <string name="notification_deactivated">Deactivated</string>
+    <string name="notification_deactivated">Inactive</string>
     <string name="notification_access_title">Notification Access</string>
     <string name="notification_connect_title">Nevo connected</string>
     <string name="notification_connect_content">your Nevo has got connected</string>

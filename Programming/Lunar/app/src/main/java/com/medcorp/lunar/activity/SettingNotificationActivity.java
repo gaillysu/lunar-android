@@ -121,11 +121,14 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
 
         if (activeNotificationList.size() == 0) {
             active.setVisibility(View.GONE);
+            lineView.setVisibility(View.GONE);
         } else {
             active.setVisibility(View.VISIBLE);
+            lineView.setVisibility(View.VISIBLE);
         }
         if (inactiveNotificationList.size() == 0) {
             inactive.setVisibility(View.GONE);
+            lineView.setVisibility(View.GONE);
         } else {
             inactive.setVisibility(View.VISIBLE);
         }

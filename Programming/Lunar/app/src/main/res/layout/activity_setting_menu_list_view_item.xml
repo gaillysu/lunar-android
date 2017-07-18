@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="56dp"
+              android:background="?android:attr/selectableItemBackground"
+              android:gravity="center_vertical"
+              android:paddingBottom="8dp"
+              android:paddingTop="8dp">
 
     <ImageView
         android:id="@+id/activity_setting_menu_image"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
-        android:layout_centerVertical="true"
         android:src="@drawable/ic_login_setting_page"
         android:tint="@color/setting_tint_color_icon"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="56dp"
+        android:layout_marginLeft="33dp"
+        android:layout_marginRight="5dp"
+        android:layout_weight="1"
         android:orientation="vertical">
+
         <com.medcorp.lunar.view.customfontview.RobotoTextView
             android:id="@+id/activity_setting_menu_name"
             android:layout_width="wrap_content"
@@ -33,15 +35,16 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@drawable/setting_fragment_menu_adapter_select"
             android:textSize="16sp"/>
+
         <com.medcorp.lunar.view.customfontview.RobotoTextView
             android:id="@+id/activity_setting_menu_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/activity_setting_menu_name"
-            android:visibility="gone"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/graph_grid_line_color"
-            android:textSize="12sp"/>
+            android:textSize="12sp"
+            android:visibility="gone"/>
     </LinearLayout>
 
 
@@ -54,4 +57,4 @@
         android:focusable="false"
         android:shadowColor="@color/colorPrimary"
         android:theme="@style/my_switch_color"/>
-</RelativeLayout>
+</LinearLayout>

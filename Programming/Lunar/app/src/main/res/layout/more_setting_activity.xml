@@ -30,7 +30,7 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
                 android:text="@string/more_setting_activity_title"
-                android:textColor="@color/more_setting_sub_text_color"
+                android:textColor="@color/graph_grid_line_color"
                 android:textSize="16sp"/>
 
             <com.medcorp.lunar.view.ListViewForScrollView
@@ -58,7 +58,7 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
                 android:text="@string/more_setting_inactivity_title"
-                android:textColor="@color/more_setting_sub_text_color"
+                android:textColor="@color/graph_grid_line_color"
                 android:textSize="16sp"/>
 
             <com.medcorp.lunar.view.ListViewForScrollView
@@ -89,7 +89,7 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
                 android:text="@string/more_setting_sunshine_title"
-                android:textColor="@color/more_setting_sub_text_color"
+                android:textColor="@color/graph_grid_line_color"
                 android:textSize="16sp"
                 />
 
@@ -104,32 +104,32 @@
 
 
             <!--select sync home time or local time-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:layout_below="@+id/activity_solar_goals_list_view"
-                android:background="?android:attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="64dp"-->
+                <!--android:layout_below="@+id/activity_solar_goals_list_view"-->
+                <!--android:background="?android:attr/selectableItemBackground"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:orientation="vertical"-->
+                <!--android:paddingLeft="16dp"-->
+                <!--android:paddingRight="16dp">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/more_setting_place_time"
-                    android:textColor="@color/text_color"
-                    android:textSize="16sp"
-                    />
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:text="@string/more_setting_place_time"-->
+                    <!--android:textColor="@color/text_color"-->
+                    <!--android:textSize="16sp"-->
+                    <!--/>-->
 
-                <Spinner
-                    android:id="@+id/more_setting_select_sync_time_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:overlapAnchor="false"/>
-            </LinearLayout>
+                <!--<Spinner-->
+                    <!--android:id="@+id/more_setting_select_sync_time_spinner"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginBottom="3dp"-->
+                    <!--android:overlapAnchor="false"/>-->
+            <!--</LinearLayout>-->
         </RelativeLayout>
     </ScrollView>
 

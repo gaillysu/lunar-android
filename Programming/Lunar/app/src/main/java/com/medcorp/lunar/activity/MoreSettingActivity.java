@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Gravity;
@@ -15,33 +14,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
-import com.medcorp.lunar.adapter.MySpinnerAdapter;
 import com.medcorp.lunar.adapter.PresetArrayAdapter;
 import com.medcorp.lunar.adapter.SleepGoalListAdapter;
 import com.medcorp.lunar.adapter.SolarGoalListAdapter;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.database.entry.SleepGoalDatabaseHelper;
-import com.medcorp.lunar.event.bluetooth.DigitalTimeChangedEvent;
 import com.medcorp.lunar.fragment.MainClockFragment;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.model.StepsGoal;
-import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.view.PickerView;
 import com.medcorp.lunar.view.ToastHelper;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +50,8 @@ public class MoreSettingActivity extends BaseActivity {
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
-    @Bind(R.id.more_setting_select_sync_time_spinner)
-    Spinner selectPlaceSpinner;
+    //    @Bind(R.id.more_setting_select_sync_time_spinner)
+    //    Spinner selectPlaceSpinner;
     @Bind(R.id.activity_goals_list_view)
     ListView activityGoalsList;
     @Bind(R.id.activity_sleep_goals_list_view)
@@ -97,7 +88,7 @@ public class MoreSettingActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        initData();
+        //        initData();
         showPopupWindow(0, 0);
         initSunshineData();
         initSleepData();
@@ -106,14 +97,15 @@ public class MoreSettingActivity extends BaseActivity {
 
     private void showPopupWindow(final int type, final int id) {
         LayoutInflater inflater = LayoutInflater.from(this);
-        View popupWindownView = inflater.inflate(R.layout.more_setting_bottom_view, null);
-        mPopupWindow = new PopupWindow(popupWindownView,
+        View popupWindowView = inflater.inflate(R.layout.more_setting_bottom_view, null);
+        mPopupWindow = new PopupWindow(popupWindowView,
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         mPopupWindow.setFocusable(true);
         mPopupWindow.getContentView().setFocusable(true);
         mPopupWindow.setOutsideTouchable(true);
-        popupWindownView.findViewById(R.id.more_setting_action_edit).setOnClickListener(new View.OnClickListener() {
+        mPopupWindow.setAnimationStyle(R.style.pop_window_animation_style);
+        popupWindowView.findViewById(R.id.more_setting_action_edit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (type != 0) {
@@ -122,7 +114,7 @@ public class MoreSettingActivity extends BaseActivity {
                 }
             }
         });
-        popupWindownView.findViewById(R.id.more_setting_action_delete).setOnClickListener(new View.OnClickListener() {
+        popupWindowView.findViewById(R.id.more_setting_action_delete).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (type != 0) {
@@ -321,40 +313,31 @@ public class MoreSettingActivity extends BaseActivity {
         toolbar.setTitle(R.string.settings_more);
     }
 
-    private void initData() {
-        List<String> placeList = new ArrayList<>();
-        placeList.add(getString(R.string.more_setting_place_home));
-        placeList.add(getString(R.string.more_setting_place_local));
-        MySpinnerAdapter placeAdapter = new MySpinnerAdapter(this, placeList);
-        selectPlaceSpinner.setAdapter(placeAdapter);
-        selectPlaceSpinner.setSelection(Preferences.getPlaceSelect(this) ? 0 : 1);
-
-        selectPlaceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    Preferences.savePlaceSelect(MoreSettingActivity.this, true);
-                } else {
-                    Preferences.savePlaceSelect(MoreSettingActivity.this, false);
-                }
-                EventBus.getDefault().post(new DigitalTimeChangedEvent(position == 0));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
-    public static void SnackbarAddView(Snackbar snackbar, int layoutId, int index) {
-        View snackbarView = snackbar.getView();
-        Snackbar.SnackbarLayout snackbarLayout = (Snackbar.SnackbarLayout) snackbarView;
-        View add_view = LayoutInflater.from(snackbarView.getContext()).inflate(layoutId, null);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.gravity = Gravity.CENTER_VERTICAL;
-        snackbarLayout.addView(add_view, index, params);
-    }
+    //    private void initData() {
+    //        List<String> placeList = new ArrayList<>();
+    //        placeList.add(getString(R.string.more_setting_place_home));
+    //        placeList.add(getString(R.string.more_setting_place_local));
+    //        MySpinnerAdapter placeAdapter = new MySpinnerAdapter(this, placeList);
+    //        selectPlaceSpinner.setAdapter(placeAdapter);
+    //        selectPlaceSpinner.setSelection(Preferences.getPlaceSelect(this) ? 0 : 1);
+    //
+    //        selectPlaceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    //            @Override
+    //            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    //                if (position == 0) {
+    //                    Preferences.savePlaceSelect(MoreSettingActivity.this, true);
+    //                } else {
+    //                    Preferences.savePlaceSelect(MoreSettingActivity.this, false);
+    //                }
+    //                EventBus.getDefault().post(new DigitalTimeChangedEvent(position == 0));
+    //            }
+    //
+    //            @Override
+    //            public void onNothingSelected(AdapterView<?> parent) {
+    //
+    //            }
+    //        });
+    //    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

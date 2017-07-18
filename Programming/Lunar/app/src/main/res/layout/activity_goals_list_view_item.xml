@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/activity_goals_list_view_item_goal_steps_wrapper"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/more_setting_sub_text_color"
+        android:textColor="@color/graph_grid_line_color"
         android:textSize="14sp"
         roboto:thin="true"/>
 </RelativeLayout>
