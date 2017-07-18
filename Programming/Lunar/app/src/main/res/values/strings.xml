@@ -99,6 +99,7 @@
     <string name="notification_cancel">Cancel</string>
     <string name="notification_deactivated">Inactive</string>
     <string name="notification_access_title">Notification Access</string>
+    <string name="notification_choose_color_dialog_title">Notification Color</string>
     <string name="notification_connect_title">Nevo connected</string>
     <string name="notification_connect_content">your Nevo has got connected</string>
     <string name="notification_disconnect_title">Nevo disconnect</string>

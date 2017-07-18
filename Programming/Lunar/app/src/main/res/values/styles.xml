@@ -157,6 +157,9 @@
         <item name="colorSwitchThumbNormal">@android:color/white</item>
         <item name="android:colorForeground">@android:color/white</item>
     </style>
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/colorAccent</item>
+    </style>
 
     <style name="NevoDialogStyle" parent="Base.V7.Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">#7ED8D1</item>

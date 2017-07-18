@@ -56,5 +56,7 @@
     <string name="other_color_gray" translatable="false">or</string>
     <string name="other_color_white" translatable="false">white</string>
     <string name="other_color_text" translatable="false">two lower buttons</string>
+    <string name="add_new_color_name_prompt">Create a label</string>
     <string name="main_solar_details_sun_exposure_describe">Todays sun exposure</string>
+    <string name="prompt_user_set_color_name">Please input color label!</string>
 </resources>
