@@ -20,13 +20,4 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/window_background_color"/>
-
-    <LinearLayout
-        android:id="@+id/ui_page_control_point"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-    </LinearLayout>
-
 </LinearLayout>

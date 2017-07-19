@@ -1,21 +1,18 @@
 package com.medcorp.lunar.activity;
 
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -49,8 +46,6 @@ import java.util.Set;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static android.R.attr.type;
-
 /**
  * Created by gaillysu on 15/12/31.
  */
@@ -81,7 +76,6 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
     private MaterialDialog mDialog;
     private final static int ACTIVITY_FLAG = 0x01;
     private final static int INACTIVITY_FLAG = 0x02;
-    private PopupWindow mPopupWindow;
     private NotificationDataHelper helper;
 
     @Override
@@ -94,7 +88,6 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         LunarNotificationListener.getNotificationAccessPermission(this);
         toolbar.setTitle(R.string.title_notifications);
         helper = new NotificationDataHelper(SettingNotificationActivity.this);
-        showPopupWindow(0, 0);
     }
 
     @Override
@@ -170,55 +163,65 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
 
     @Override
     public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
-        //        Intent intent = new Intent(this, EditSettingNotificationActivity.class);
         if (parent.getId() == activeListView.getId()) {
             selectNotification = activeNotificationList.get(position);
-            if (mPopupWindow.isShowing()) {
-                mPopupWindow.dismiss();
-            }
-            showPopupWindow(ACTIVITY_FLAG, position);
+            showBottomDialog(ACTIVITY_FLAG, position);
         }
         if (parent.getId() == inactiveListView.getId()) {
             selectNotification = inactiveNotificationList.get(position);
-            if (mPopupWindow.isShowing()) {
-                mPopupWindow.dismiss();
-            }
-            showPopupWindow(INACTIVITY_FLAG, position);
+            showBottomDialog(INACTIVITY_FLAG, position);
         }
 
 
     }
 
-    private void showPopupWindow(final int type, final int position) {
+    private void showBottomDialog(final int type, final int position) {
         LayoutInflater inflater = LayoutInflater.from(this);
-        View popupWindowView = inflater.inflate(R.layout.more_setting_bottom_view, null);
-        mPopupWindow = new PopupWindow(popupWindowView,
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-        mPopupWindow.setFocusable(true);
-        mPopupWindow.getContentView().setFocusable(true);
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setAnimationStyle(R.style.pop_window_animation_style);
-        popupWindowView.findViewById(R.id.more_setting_action_edit).setOnClickListener(new View.OnClickListener() {
+        View contentView = inflater.inflate(R.layout.setting_notification_bottom_dialog_layout, null);
+        final BottomSheetDialog dialog = new BottomSheetDialog(this);
+        dialog.setContentView(contentView);
+        dialog.show();
+        if (type == INACTIVITY_FLAG) {
+            contentView.findViewById(R.id.setting_notification_item_active_bt).setVisibility(View.VISIBLE);
+            contentView.findViewById(R.id.setting_notification_item_inactive_bt).setVisibility(View.GONE);
+        } else if (type == ACTIVITY_FLAG) {
+            contentView.findViewById(R.id.setting_notification_item_active_bt).setVisibility(View.GONE);
+            contentView.findViewById(R.id.setting_notification_item_inactive_bt).setVisibility(View.VISIBLE);
+        }
+
+        contentView.findViewById(R.id.setting_notification_item_active_bt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPopupWindow.dismiss();
+                dialog.dismiss();
+                selectNotification.setState(true);
+                helper.saveState(selectNotification);
+                initData();
+            }
+        });
+
+        contentView.findViewById(R.id.setting_notification_item_inactive_bt).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                selectNotification.setState(false);
+                helper.saveState(selectNotification);
+                initData();
+            }
+        });
+
+        contentView.findViewById(R.id.setting_notification_item_edit_bt).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
                 showEditColorDialog(type, position);
             }
         });
-        popupWindowView.findViewById(R.id.more_setting_action_delete).setOnClickListener(new View.OnClickListener() {
+        contentView.findViewById(R.id.setting_notification_item_delete_bt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPopupWindow.dismiss();
-                if (type == ACTIVITY_FLAG) {
-                    selectNotification.setState(false);
-                    helper.saveState(selectNotification);
-                }
+                dialog.dismiss();
             }
         });
-        if (type != 0) {
-            mPopupWindow.showAtLocation(rootView, Gravity.BOTTOM, 0, 0);
-        }
     }
 
     private void showEditColorDialog(final int type, int position) {
@@ -269,10 +272,6 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
                             if (type == ACTIVITY_FLAG) {
                                 initData();
                             }
-                            if (type == INACTIVITY_FLAG) {
-                                selectNotification.setState(true);
-                                helper.saveState(selectNotification);
-                            }
                         }
                     }
                 });
@@ -281,7 +280,6 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
     }
 
     private void addNewColorForNotification() {
-
         LayoutInflater inflater = LayoutInflater.from(this);
         View inflateView = inflater.inflate(R.layout.add_new_color_to_notification, null);
         ColorPickerView pickerView = (ColorPickerView) inflateView.findViewById(R.id.color_picker_view);
@@ -311,10 +309,6 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
                             getModel().addLedLamp(mLedLamp);
                         } else {
                             ToastHelper.showShortToast(SettingNotificationActivity.this, getString(R.string.prompt_user_set_color_name));
-                        }
-                        if (type == INACTIVITY_FLAG) {
-                            selectNotification.setState(true);
-                            helper.saveState(selectNotification);
                         }
                     }
                 }).show();

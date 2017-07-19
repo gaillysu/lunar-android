@@ -36,8 +36,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="260dp"
-        android:layout_height="260dp"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
         android:layout_below="@+id/activity_tutorial_page1_notice_textview"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"

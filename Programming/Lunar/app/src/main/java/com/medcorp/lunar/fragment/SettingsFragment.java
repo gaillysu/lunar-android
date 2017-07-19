@@ -16,7 +16,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.ConnectToOtherAppsActivity;
-import com.medcorp.lunar.activity.MoreSettingActivity;
+import com.medcorp.lunar.activity.GoalsSettingActivity;
 import com.medcorp.lunar.activity.MyWatchActivity;
 import com.medcorp.lunar.activity.SettingNotificationActivity;
 import com.medcorp.lunar.activity.login.LoginActivity;
@@ -42,7 +42,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
+/***
  * Created by karl-john on 14/12/15.
  */
 public class SettingsFragment extends BaseObservableFragment implements OnCheckedChangeInListListener {
@@ -156,7 +156,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
     private void appListItemClick(int position) {
         switch (position) {
             case 0:
-                startActivity(MoreSettingActivity.class);
+                startActivity(GoalsSettingActivity.class);
                 break;
             case 1:
                 boolean unitSelect = Preferences.getUnitSelect(getContext());

@@ -3,21 +3,18 @@ package com.medcorp.lunar.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -46,12 +43,10 @@ import io.reactivex.functions.Consumer;
  * Created by Jason on 2016/12/14.
  */
 
-public class MoreSettingActivity extends BaseActivity {
+public class GoalsSettingActivity extends BaseActivity {
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
-    //    @Bind(R.id.more_setting_select_sync_time_spinner)
-    //    Spinner selectPlaceSpinner;
     @Bind(R.id.activity_goals_list_view)
     ListView activityGoalsList;
     @Bind(R.id.activity_sleep_goals_list_view)
@@ -75,7 +70,6 @@ public class MoreSettingActivity extends BaseActivity {
     private String solarLableGoal;
     private int selectHour = 0;
     private int selectMinutes = 0;
-    private PopupWindow mPopupWindow;
     private static final int STEPS_FLAG = 0X01;
     private static final int SOLAR_FLAG = 0X02;
     private static final int SLEEP_FLAG = 0X03;
@@ -88,44 +82,35 @@ public class MoreSettingActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //        initData();
-        showPopupWindow(0, 0);
         initSunshineData();
         initSleepData();
         initStepsData();
     }
 
-    private void showPopupWindow(final int type, final int id) {
+    private void showBottomDialog(final int type, final int id) {
         LayoutInflater inflater = LayoutInflater.from(this);
-        View popupWindowView = inflater.inflate(R.layout.more_setting_bottom_view, null);
-        mPopupWindow = new PopupWindow(popupWindowView,
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-        mPopupWindow.setFocusable(true);
-        mPopupWindow.getContentView().setFocusable(true);
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setAnimationStyle(R.style.pop_window_animation_style);
-        popupWindowView.findViewById(R.id.more_setting_action_edit).setOnClickListener(new View.OnClickListener() {
+        View contentView = inflater.inflate(R.layout.more_setting_bottom_view, null);
+        final BottomSheetDialog dialog = new BottomSheetDialog(this);
+        dialog.setContentView(contentView);
+        dialog.show();
+        contentView.findViewById(R.id.more_setting_action_edit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (type != 0) {
-                    mPopupWindow.dismiss();
+                    dialog.dismiss();
                     editGoal(type, id);
                 }
             }
         });
-        popupWindowView.findViewById(R.id.more_setting_action_delete).setOnClickListener(new View.OnClickListener() {
+        contentView.findViewById(R.id.more_setting_action_delete).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (type != 0) {
-                    mPopupWindow.dismiss();
+                    dialog.dismiss();
                     deleteGoal(type, id);
                 }
             }
         });
-        if (type != 0) {
-            mPopupWindow.showAtLocation(rootView, Gravity.BOTTOM, 0, 0);
-        }
     }
 
     private void initStepsData() {
@@ -133,7 +118,7 @@ public class MoreSettingActivity extends BaseActivity {
             @Override
             public void obtainGoal(List<StepsGoal> list) {
                 mStepsGoalList = list;
-                presetArrayAdapter = new PresetArrayAdapter(MoreSettingActivity.this, getModel(), mStepsGoalList);
+                presetArrayAdapter = new PresetArrayAdapter(GoalsSettingActivity.this, getModel(), mStepsGoalList);
                 activityGoalsList.setAdapter(presetArrayAdapter);
 
             }
@@ -141,10 +126,7 @@ public class MoreSettingActivity extends BaseActivity {
         activityGoalsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mPopupWindow.isShowing()) {
-                    mPopupWindow.dismiss();
-                }
-                showPopupWindow(STEPS_FLAG, mStepsGoalList.get(position).getId());
+                showBottomDialog(STEPS_FLAG, mStepsGoalList.get(position).getId());
             }
         });
     }
@@ -155,7 +137,7 @@ public class MoreSettingActivity extends BaseActivity {
         sleepDatabaseHelper.getAll().subscribe(new Consumer<List<SleepGoal>>() {
             @Override
             public void accept(List<SleepGoal> sleepGoals) throws Exception {
-                sleepAdapter = new SleepGoalListAdapter(MoreSettingActivity.this, getModel(), sleepGoals);
+                sleepAdapter = new SleepGoalListAdapter(GoalsSettingActivity.this, getModel(), sleepGoals);
                 sleepGoalsList.setAdapter(sleepAdapter);
                 allSleep = sleepGoals;
             }
@@ -163,10 +145,7 @@ public class MoreSettingActivity extends BaseActivity {
         sleepGoalsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mPopupWindow.isShowing()) {
-                    mPopupWindow.dismiss();
-                }
-                showPopupWindow(SLEEP_FLAG, allSleep.get(position).getSleepGoalId());
+                showBottomDialog(SLEEP_FLAG, allSleep.get(position).getSleepGoalId());
             }
         });
     }
@@ -175,7 +154,7 @@ public class MoreSettingActivity extends BaseActivity {
         getModel().getSolarGoalDatabaseHelper().getAll().subscribe(new Consumer<List<SolarGoal>>() {
             @Override
             public void accept(List<SolarGoal> solarGoals) throws Exception {
-                SolarAdapter = new SolarGoalListAdapter(MoreSettingActivity.this, getModel(), solarGoals);
+                SolarAdapter = new SolarGoalListAdapter(GoalsSettingActivity.this, getModel(), solarGoals);
                 sunshineGoalsList.setAdapter(SolarAdapter);
                 allSolar = solarGoals;
             }
@@ -183,10 +162,7 @@ public class MoreSettingActivity extends BaseActivity {
         sunshineGoalsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mPopupWindow.isShowing()) {
-                    mPopupWindow.dismiss();
-                }
-                showPopupWindow(SOLAR_FLAG, allSolar.get(position).getSolarGoalId());
+                showBottomDialog(SOLAR_FLAG, allSolar.get(position).getSolarGoalId());
             }
         });
     }
@@ -325,9 +301,9 @@ public class MoreSettingActivity extends BaseActivity {
     //            @Override
     //            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
     //                if (position == 0) {
-    //                    Preferences.savePlaceSelect(MoreSettingActivity.this, true);
+    //                    Preferences.savePlaceSelect(GoalsSettingActivity.this, true);
     //                } else {
-    //                    Preferences.savePlaceSelect(MoreSettingActivity.this, false);
+    //                    Preferences.savePlaceSelect(GoalsSettingActivity.this, false);
     //                }
     //                EventBus.getDefault().post(new DigitalTimeChangedEvent(position == 0));
     //            }
@@ -390,7 +366,7 @@ public class MoreSettingActivity extends BaseActivity {
                                             mStepsGoalList.add(stepsGoal);
                                             presetArrayAdapter.notifyDataSetChanged();
                                         } else {
-                                            ToastHelper.showShortToast(MoreSettingActivity.this, getString(R.string.save_filed));
+                                            ToastHelper.showShortToast(GoalsSettingActivity.this, getString(R.string.save_filed));
                                         }
                                     }
                                 });
@@ -469,7 +445,7 @@ public class MoreSettingActivity extends BaseActivity {
                             public void accept(Boolean aBoolean) throws Exception {
                                 if (aBoolean) {
                                     allSleep.add(sleepGoal);
-                                    MoreSettingActivity.this.runOnUiThread(new Runnable() {
+                                    GoalsSettingActivity.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             sleepAdapter.notifyDataSetChanged();

@@ -229,6 +229,8 @@
     <string name="settings_notifications">Notifications</string>
     <string name="setting_fragment_notification_subtitle">Set a unique LED -color for each notification</string>
     <string name="settings_notifications_active_title">Active Notifications</string>
+    <string name="settings_notifications_active_button_tv">Active </string>
+    <string name="settings_notifications_inactive_button_tv">Inactive </string>
     <string name="settings_notifications_inactive_title">Inactive Notifications</string>
     <string name="settings_find_my_watch">Find my watch</string>
     <string name="settings_goals">Goals</string>

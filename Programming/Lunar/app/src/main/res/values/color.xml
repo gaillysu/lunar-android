@@ -92,4 +92,5 @@
     <color name="tab_layout_normal_text_color">#ccFFFFFF</color>
     <color name="welcome_other_text_color">#DFCFCF</color>
     <color name="more_setting_sub_text_color">#858384</color>
+    <color name="bottom_dialog_icon_color">#727272</color>
 </resources>

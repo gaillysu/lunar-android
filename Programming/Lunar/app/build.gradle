@@ -96,7 +96,6 @@ dependencies {
     compile 'com.wdullaer:materialdatetimepicker:2.4.0'
     compile 'no.nordicsemi.android:dfu:1.0.4'
     compile 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
-    compile 'com.yanzhenjie:recyclerview-swipe:1.0.2'
     compile project(path: ':multi-image-selector')
     compile 'com.github.QuadFlask:colorpicker:0.0.12'
     compile files('libs/libammsdk.jar')

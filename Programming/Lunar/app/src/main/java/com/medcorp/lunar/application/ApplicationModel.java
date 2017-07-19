@@ -1094,9 +1094,24 @@ public class ApplicationModel extends Application {
     }
 
     private void setStepDefGoal() {
-        addGoal(new StepsGoal(getString(R.string.startup_goal_light), false, 7000));
-        addGoal(new StepsGoal(getString(R.string.startup_goal_moderate), true, 10000));
-        addGoal(new StepsGoal(getString(R.string.startup_goal_heavy), false, 20000));
+        addGoal(new StepsGoal(getString(R.string.startup_goal_light), false, 7000)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                Log.i("jason","add def steps goal success");
+            }
+        });
+        addGoal(new StepsGoal(getString(R.string.startup_goal_moderate), true, 10000)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                Log.i("jason","add def steps goal success");
+            }
+        });
+        addGoal(new StepsGoal(getString(R.string.startup_goal_heavy), false, 20000)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                Log.i("jason","add def steps goal success");
+            }
+        });
     }
 
     private void addDefNotificationColor() {

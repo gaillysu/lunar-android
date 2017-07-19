@@ -37,13 +37,13 @@
 
     <ImageView
         android:id="@+id/activity_tutorial_page2_image"
-        android:layout_width="260dp"
-        android:layout_height="260dp"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
         android:layout_centerInParent="true"
         android:layout_below="@+id/activity_tutorial_page2_notice_textview"
         android:layout_marginTop="20dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_dial_press_both"/>
+        android:src="@drawable/ic_dial_press_left"/>
 
     <com.medcorp.lunar.view.customfontview.RobotoButton
         android:id="@+id/activity_tutorial_2_continue_button"

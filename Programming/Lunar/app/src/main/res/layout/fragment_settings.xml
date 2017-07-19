@@ -2,8 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/window_background_color"
-    >
+            android:background="@color/window_background_color">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,24 +11,22 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="54dp"
+            android:gravity="center_vertical"
             android:paddingLeft="16dp"
             android:text="@string/fragment_setting_app_list_title"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:textSize="16sp"
             android:textColor="@color/graph_grid_line_color"
-            />
+            android:textSize="16sp"/>
 
         <com.medcorp.lunar.view.ListViewForScrollView
             android:id="@+id/fragment_setting_app_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
             android:divider="@null"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:scrollbars="none"/>
 
         <View
@@ -40,13 +37,12 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="54dp"
+            android:gravity="center_vertical"
             android:paddingLeft="16dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textSize="16sp"
             android:text="@string/fragment_setting_device_list_title"
             android:textColor="@color/graph_grid_line_color"
+            android:textSize="16sp"
             />
 
         <com.medcorp.lunar.view.ListViewForScrollView
@@ -54,10 +50,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
             android:divider="@null"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:scrollbars="none"/>
 
         <View
@@ -68,23 +64,22 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="54dp"
+            android:gravity="center_vertical"
             android:paddingLeft="16dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:textSize="16sp"
             android:text="@string/fragment_setting_local_list_title"
-            android:textColor="@color/graph_grid_line_color"/>
+            android:textColor="@color/graph_grid_line_color"
+            android:textSize="16sp"/>
 
         <com.medcorp.lunar.view.ListViewForScrollView
             android:id="@+id/fragment_setting_local_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
             android:divider="@null"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:scrollbars="none"/>
     </LinearLayout>
 </ScrollView>

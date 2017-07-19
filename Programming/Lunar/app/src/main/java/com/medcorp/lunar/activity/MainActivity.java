@@ -133,9 +133,12 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         } else {
             userEmail = getString(R.string.watch_med_profile);
         }
-        Bitmap bt = BitmapFactory.decodeFile(getUserHeardPicturePath(this, userEmail));
-        if (bt != null) {
-            userImageView.setImageBitmap(PublicUtils.drawCircleView(bt));
+        String userHeardPicturePath = getUserHeardPicturePath(this, userEmail);
+        if (userHeardPicturePath != null) {
+            Bitmap bt = BitmapFactory.decodeFile(userHeardPicturePath);
+            if (bt != null) {
+                userImageView.setImageBitmap(PublicUtils.drawCircleView(bt));
+            }
         } else {
             userImageView.setImageResource(R.drawable.user);
         }
@@ -162,7 +165,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             }
         });
     }
-
 
 
     @Override

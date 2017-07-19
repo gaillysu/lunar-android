@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/text_color"
+              android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="@string/snack_title"
+        android:textColor="@color/more_setting_sub_text_color"
+        android:textSize="16sp"
+        />
+
+    <RelativeLayout
+        android:id="@+id/setting_notification_item_edit_bt"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:clickable="true"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:src="@drawable/ic_snackbar_action_edit"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="72dp"
+            android:text="@string/edit_notification_item_name"
+            android:textAllCaps="false"
+            android:textColor="@color/list_item_sub_text"
+            android:textSize="16sp"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/setting_notification_item_active_bt"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:tint="@color/bottom_dialog_icon_color"
+            android:src="@drawable/ic_done"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="72dp"
+            android:text="@string/settings_notifications_active_button_tv"
+            android:textAllCaps="false"
+            android:textColor="@color/list_item_sub_text"
+            android:textSize="16sp"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/setting_notification_item_inactive_bt"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:src="@drawable/ic_inactive_icon"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="72dp"
+            android:text="@string/settings_notifications_inactive_button_tv"
+            android:textAllCaps="false"
+            android:textColor="@color/list_item_sub_text"
+            android:textSize="16sp"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/setting_notification_item_delete_bt"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:src="@drawable/ic_snackbar_edit_delete"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="72dp"
+            android:text="@string/edit_notification_delete_item"
+            android:textAllCaps="false"
+            android:textColor="@color/list_item_sub_text"
+            android:textSize="16sp"
+            />
+    </RelativeLayout>
+</LinearLayout>

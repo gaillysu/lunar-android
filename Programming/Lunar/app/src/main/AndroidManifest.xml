@@ -93,9 +93,6 @@
         <activity
             android:name=".activity.SettingNotificationActivity"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.EditSettingNotificationActivity"
-            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".activity.SettingAboutActivity"
@@ -181,12 +178,6 @@
             android:name="com.octo.android.robospice.JacksonSpringAndroidSpiceService"
             android:exported="false"/>
         <service
-            android:name=".network.validic.service.BaseValidicRetroService"
-            android:exported="false"/>
-        <service
-            android:name=".network.med.service.BaseMedRetroService"
-            android:exported="false"/>
-        <service
             android:name=".ble.dfu.DfuService"
             android:exported="true"
             android:label="Dfu">
@@ -235,15 +226,7 @@
             android:configChanges="orientation|screenSize"/>
 
         <activity
-            android:name=".activity.EditNotificationLampActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity
-            android:name=".activity.EditNotificationAttributeActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity
-            android:name=".activity.MoreSettingActivity"
+            android:name=".activity.GoalsSettingActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"
             />
