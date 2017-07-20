@@ -432,6 +432,7 @@
     <string name="settings_more">Goals</string>
     <string name="settings_bluetooth_scan">Scan duration</string>
     <string name="detection_battery">Low Battery Alert</string>
+    <string name="battery_low_alert_dialog_title">Battery alert</string>
     <string name="low_detection_battery_title">Low Battery Notifications</string>
     <string name="originally_chosen_value">Alert at </string>
     <string name="set_detection_battery_alerts">Set low power alerts!</string>
@@ -488,6 +489,7 @@
     <string name="def_sleep_text">0 min</string>
     <string name="scan_duration_item_select_one_hour">1 hour</string>
     <string name="scan_duration_time_unit"> minutes</string>
+    <string name="battery_low_alert_percent">PERCENT</string>
     <string name="prompt_user_have_new_version">Update your Lunar to use this feature</string>
     <string name="scan_duration_title_title">LUNAR SCAN DURATION</string>
     <string name="scan_duration_describe">When the watch gets disconnected it will scan for the selected duration. Note that the watch will drain more battery it scans longer. we suggest not to let it scan for longer then 15 minutes.</string>

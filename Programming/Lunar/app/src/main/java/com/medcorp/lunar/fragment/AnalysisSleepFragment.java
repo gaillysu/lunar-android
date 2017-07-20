@@ -1,6 +1,7 @@
 package com.medcorp.lunar.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,7 +38,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
 
-/**
+/***
  * Created by Administrator on 2016/7/21.
  */
 public class AnalysisSleepFragment extends BaseFragment {
@@ -50,13 +51,10 @@ public class AnalysisSleepFragment extends BaseFragment {
     TextView averageWake;
     @Bind(R.id.steps_fragment_average_time_tv)
     TextView sleepQualityTv;
-
     @Bind(R.id.analysis_sleep_fragment_view_page)
     ViewPager sleepViewPage;
-
     @Bind(R.id.analysis_sleep_fragment_title_tv)
     TextView sleepTextView;
-
     @Bind(R.id.ui_page_control_point)
     LinearLayout uiControl;
 
@@ -68,6 +66,11 @@ public class AnalysisSleepFragment extends BaseFragment {
     private SleepTodayChart todaySleepChart;
     private TipsView mMv;
     private SleepGoal mActiveSleepGoal;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

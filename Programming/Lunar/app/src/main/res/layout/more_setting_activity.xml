@@ -135,8 +135,8 @@
 
     <net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/more_setting_floating_action_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
@@ -153,6 +153,7 @@
             android:layout_height="20dp"
             fab:fab_colorNormal="@color/purple_normal"
             fab:fab_colorPressed="@color/half_blue"
+            fab:fab_icon="@drawable/ic_icon_activity"
             fab:fab_size="mini"
             fab:fab_title="ACTIVITY GOAL"/>
 

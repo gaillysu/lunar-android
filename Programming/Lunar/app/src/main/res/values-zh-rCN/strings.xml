@@ -542,4 +542,8 @@
     <string name="update_watch_firmware_careful_one">- 让LunaR靠近你的手机。</string>
     <string name="update_watch_firmware_careful_second">- 不要关掉蓝牙</string>
     <string name="update_watch_firmware_careful_third">升级是不要使用LunaR的按钮</string>
+    <string name="battery_low_alert_dialog_title">低电量提示</string>
+    <string name="battery_low_alert_percent">百分比</string>
+    <string name="settings_notifications_active_button_tv">打开通知</string>
+    <string name="settings_notifications_inactive_button_tv">关闭通知</string>
 </resources>

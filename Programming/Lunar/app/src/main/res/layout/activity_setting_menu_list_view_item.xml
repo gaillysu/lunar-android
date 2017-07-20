@@ -5,6 +5,7 @@
               android:background="?android:attr/selectableItemBackground"
               android:gravity="center_vertical"
               android:paddingBottom="8dp"
+              android:paddingLeft="16dp"
               android:paddingTop="8dp">
 
     <ImageView
@@ -23,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="33dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginRight="10dp"
         android:layout_weight="1"
         android:orientation="vertical">
 

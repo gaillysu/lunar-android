@@ -59,6 +59,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
     private List<SettingsMenuItem> localListMenu;
     private SettingMenuAdapter mSettingDeviceAdapter;
     private int scanTime;
+    private int batteryPercent;
     private SettingMenuAdapter mSettingAppAdapter;
     private SettingMenuAdapter mSettingLocalAdapter;
 
@@ -92,8 +93,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
     }
 
     private void initDeviceData() {
-        int mSelectIndex = Preferences.getDetectionBattery(SettingsFragment.this.getActivity());
-        String value = getResources().getStringArray(R.array.detection_battery)[mSelectIndex];
+        int batteryAlertPercent = Preferences.getDetectionBattery(SettingsFragment.this.getActivity());
 
         Preferences.getBatterySwitch(SettingsFragment.this.getActivity());
         deviceListMenu = new ArrayList<>();
@@ -110,7 +110,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                 R.drawable.setting_notfications));
 
         deviceListMenu.add(new SettingsMenuItem(getString(R.string.detection_battery),
-                getString(R.string.originally_chosen_value) + " : " + value,
+                getString(R.string.originally_chosen_value) + " : " + batteryAlertPercent + "%",
                 R.drawable.ic_low_detection_alert,
                 Preferences.getBatterySwitch(SettingsFragment.this.getContext())));
 
@@ -200,23 +200,38 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                 break;
             case 2:
                 int selectIndex = Preferences.getDetectionBattery(SettingsFragment.this.getActivity());
-                new MaterialDialog.Builder(getContext())
-                        .title(R.string.low_detection_battery_title)
-                        .itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
-                        .content(getString(R.string.set_detection_battery_alerts))
-                        .items(getResources().getStringArray(R.array.detection_battery))
-                        .itemsCallbackSingleChoice(selectIndex, new MaterialDialog.ListCallbackSingleChoice() {
+                View batteryLowAlert = LayoutInflater.from(getContext()).inflate(R.layout.battery_low_alert_dialog_view, null);
+                BubbleSeekBar batterySeekBar = (BubbleSeekBar) batteryLowAlert.findViewById(R.id.battery_low_alert__seek_bar);
+                batterySeekBar.setProgress(selectIndex);
+                batterySeekBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
+                    @Override
+                    public void onProgressChanged(int progress, float progressFloat) {
+                        batteryPercent = progress;
+                    }
+
+                    @Override
+                    public void getProgressOnActionUp(int progress, float progressFloat) {
+
+                    }
+
+                    @Override
+                    public void getProgressOnFinally(int progress, float progressFloat) {
+
+                    }
+                });
+                new MaterialDialog.Builder(getContext()).customView(batteryLowAlert, true)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
-                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                Preferences.saveDetectionBattery(SettingsFragment.this.getActivity(), which);
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                Preferences.saveDetectionBattery(SettingsFragment.this.getActivity()
+                                        , batteryPercent);
                                 deviceListMenu.get(1).setSubtitle(getString(R.string.originally_chosen_value) + " : "
-                                        + getResources().getStringArray(R.array.detection_battery)[which]);
+                                        + batteryPercent + "%");
                                 mSettingDeviceAdapter.notifyDataSetChanged();
-                                return true;
                             }
-                        })
-                        .positiveText(R.string.goal_ok)
-                        .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
+                        }).positiveText(R.string.goal_ok)
+                        .negativeText(R.string.goal_cancel)
+                        .negativeColor(getResources().getColor(R.color.left_menu_item_text_color))
                         .show();
                 break;
             case 3:

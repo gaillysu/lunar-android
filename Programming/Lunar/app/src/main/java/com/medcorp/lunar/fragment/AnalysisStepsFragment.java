@@ -47,12 +47,9 @@ public class AnalysisStepsFragment extends BaseFragment {
     @Bind(R.id.ui_page_control_point)
     LinearLayout uiPageControl;
 
-    private View todayWeek;
-    private View thisWeekView;
-    private View lastMonthView;
+    private View todayWeek, thisWeekView, lastMonthView;
     private DailyStepsBarChart todayStepsChart;
-    private AnalysisStepsLineChart thisWeekChart;
-    private AnalysisStepsLineChart lastMonthChart;
+    private AnalysisStepsLineChart thisWeekChart, lastMonthChart;
     private StepsGoal mActiveStepsGoal;
     private List<Steps> thisWeekData = new ArrayList<>();
     private List<Steps> lastWeekData = new ArrayList<>();
@@ -228,12 +225,12 @@ public class AnalysisStepsFragment extends BaseFragment {
         switch (dataInChart) {
             case 0:
                 Steps dailySteps = getModel().getDailySteps(getModel().getUser().getUserID(), new Date());
-                String[] hourlySteps = dailySteps.getHourlySteps().replace("[", "").replace("]", "").replace(" ","").split(",");
+                String[] hourlySteps = dailySteps.getHourlySteps().replace("[", "").replace("]", "").replace(" ", "").split(",");
                 int[] dailyStepsArray = new int[hourlySteps.length];
                 for (int i = 0; i < 24; i++) {
                     dailyStepsArray[i] = new Integer(hourlySteps[i]).intValue();
                 }
-                todayStepsChart.setDataInChart(dailyStepsArray,dailySteps.getGoal());
+                todayStepsChart.setDataInChart(dailyStepsArray, dailySteps.getGoal());
                 todayStepsChart.animateY(3000);
                 break;
             case 1:

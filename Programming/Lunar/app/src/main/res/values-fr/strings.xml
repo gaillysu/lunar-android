@@ -415,8 +415,8 @@
 
     <string name="settings_link_loss_notification">Notification de perte de lien</string>
     <string name="settings_notifications">Notifications</string>
-    <string name="settings_notifications_active_title">Notifications actives</string>
-    <string name="settings_notifications_inactive_title">Notifications inactives</string>
+    <string name="settings_notifications_active_title">Notifications active</string>
+    <string name="settings_notifications_inactive_title">Notifications inactive</string>
     <string name="settings_my_nevo">Ma LunaR</string>
     <string name="settings_find_my_watch">Trouver ma montre</string>
     <string name="settings_goals">Objectifs</string>
@@ -547,4 +547,8 @@
     <string name="update_watch_firmware_careful_one">- Keep LunaR close to your phone.</string>
     <string name="update_watch_firmware_careful_second">"- Don't turn off the bluetooth  "</string>
     <string name="update_watch_firmware_careful_third">Don\'t press and buttons on LunaR while upgrading</string>
+    <string name="battery_low_alert_dialog_title">Battery alert</string>
+    <string name="battery_low_alert_percent">PERCENT</string>
+    <string name="settings_notifications_active_button_tv">Active</string>
+    <string name="settings_notifications_inactive_button_tv">Inactive</string>
 </resources>

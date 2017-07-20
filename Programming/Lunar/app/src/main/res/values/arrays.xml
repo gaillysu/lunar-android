@@ -43,11 +43,4 @@
         <item>Solar</item>
         <item>Battery</item>
     </string-array>
-    <string-array name="detection_battery" translatable="false">
-        <item>5%</item>
-        <item>10%</item>
-        <item>15%</item>
-        <item>20%</item>
-        <item>30%</item>
-    </string-array>
 </resources>
