@@ -151,7 +151,7 @@
     <string name="profile_fragment_input_surname_edit_hint">Surname</string>
     <string name="profile_fragment_input_user_surname_dialog_title">Input Surname</string>
     <string name="profile_fragment_last_name_text">Surname</string>
-    <string name="profile_fragment_user_birthday_text">Date of Birth</string>
+    <string name="profile_fragment_user_birthday_text">Birthday</string>
     <string name="profile_fragment_user_height_text">Height</string>
     <string name="profile_fragment_user_weight_text">Weight</string>
     <string name="profile_input_age">Input age</string>
