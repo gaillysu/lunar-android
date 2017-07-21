@@ -46,7 +46,7 @@ import io.reactivex.functions.Consumer;
  * Created by karl-john on 11/12/15.
  */
 public class AlarmFragment extends BaseObservableFragment
-        implements OnAlarmSwitchListener, BedtimeAdapter.OnBedtimeSwitchListener {
+        implements OnAlarmSwitchListener, BedtimeAdapter.OnBedtimeSwitchListener, BedtimeAdapter.OnBedtimeDeleteListener {
 
     @Bind(R.id.fragment_alarm_list_view)
     ListView alarmListView;
@@ -119,7 +119,7 @@ public class AlarmFragment extends BaseObservableFragment
                 }
                 allBedtimeModels = bedtimeModels;
                 Log.e("jason", allBedtimeModels.toString());
-                bedtimeAdapter = new BedtimeAdapter(getContext(), bedtimeModels, AlarmFragment.this);
+                bedtimeAdapter = new BedtimeAdapter(AlarmFragment.this, AlarmFragment.this, getContext(), bedtimeModels);
                 bedtimeListView.setAdapter(bedtimeAdapter);
                 bedtimeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -205,7 +205,8 @@ public class AlarmFragment extends BaseObservableFragment
                 } else {
                     bedtime.setVisibility(View.VISIBLE);
                 }
-                bedtimeAdapter = new BedtimeAdapter(getContext(), allBedtimeModels, AlarmFragment.this);
+                bedtimeAdapter = new BedtimeAdapter(AlarmFragment.this, AlarmFragment.this, getContext()
+                        , allBedtimeModels);
                 bedtimeListView.setAdapter(bedtimeAdapter);
             }
         });
@@ -235,11 +236,11 @@ public class AlarmFragment extends BaseObservableFragment
 
     @Override
     public void onAlarmSwitch(SwitchCompat alarmSwitch, Alarm alarm) {
-        //        if (!getModel().isWatchConnected()) {
-        //            alarmSwitch.setChecked(!alarmSwitch.isChecked());
-        //            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-        //            return;
-        //        }
+        if (!getModel().isWatchConnected()) {
+            alarmSwitch.setChecked(!alarmSwitch.isChecked());
+            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+            return;
+        }
         alarmSwitch.setChecked(alarmSwitch.isChecked());
         //save weekday to low 4 bit,bit 7 to save enable or disable
         alarm.setEnable(alarmSwitch.isChecked());
@@ -307,7 +308,7 @@ public class AlarmFragment extends BaseObservableFragment
         getModel().getBedTimeDatabaseHelper().update(bedtime).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
-                Log.i("jason","success bedtime");
+                Log.i("jason", "success bedtime");
             }
         });
         for (int i = 0; i < alarmNumber.length; i++) {
@@ -327,5 +328,10 @@ public class AlarmFragment extends BaseObservableFragment
             });
         }
         ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
+    }
+
+    @Override
+    public void onBedtimeDelete(int position) {
+        //TODO
     }
 }

@@ -20,7 +20,8 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="64dp"
+                android:gravity="center_vertical"
                 android:text="@string/append_new_alarm_bedtime"
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp"/>
@@ -46,7 +47,8 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="64dp"
+                android:gravity="center_vertical"
                 android:text="@string/append_new_alarm_normal"
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp"/>

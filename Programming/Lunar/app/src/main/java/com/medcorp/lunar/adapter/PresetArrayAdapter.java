@@ -16,7 +16,7 @@ import com.medcorp.lunar.view.customfontview.RobotoTextView;
 
 import java.util.List;
 
-/**
+/***
  * Created by gaillysu on 15/12/23.
  */
 public class PresetArrayAdapter extends ArrayAdapter<StepsGoal> {
