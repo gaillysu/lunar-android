@@ -1,66 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/window_background_color"
-            android:scrollbars="none">
+<android.support.v7.widget.RecyclerView
+    android:id="@+id/all_alarm_recycler_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/window_background_color"
+    android:scrollbars="none">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical">-->
 
-        <LinearLayout
-            android:id="@+id/show_bedtime_alarm_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:orientation="vertical">
+    <!--<LinearLayout-->
+    <!--android:id="@+id/show_bedtime_alarm_view"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="64dp"
-                android:gravity="center_vertical"
-                android:text="@string/append_new_alarm_bedtime"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp"/>
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="54dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:text="@string/append_new_alarm_bedtime"-->
+    <!--android:layout_marginLeft="16dp"-->
+    <!--android:textColor="@color/colorAccent"-->
+    <!--android:textSize="18sp"/>-->
 
-            <com.medcorp.lunar.view.ListViewForScrollView
-                android:id="@+id/fragment_alarm_list_view_bedtime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@color/my_device_right_show_version_text_color"
-                android:dividerHeight="1dp"
-                android:listSelector="?android:attr/selectableItemBackground"
-                android:scrollbars="none"/>
-        </LinearLayout>
+    <!--<com.medcorp.lunar.view.ListViewForScrollView-->
+    <!--android:id="@+id/fragment_alarm_list_view_bedtime"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:divider="@null"-->
+    <!--android:scrollbars="none"/>-->
+    <!--&lt;!&ndash;android:listSelector="?android:attr/selectableItemBackground"&ndash;&gt;-->
+    <!--</LinearLayout>-->
 
-        <LinearLayout
-            android:id="@+id/show_normal_alarm_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="16dp"
-            android:orientation="vertical">
+    <!--<LinearLayout-->
+    <!--android:id="@+id/show_normal_alarm_view"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="16dp"-->
+    <!--android:layout_marginTop="20dp"-->
+    <!--android:layout_marginRight="16dp"-->
+    <!--android:orientation="vertical">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="64dp"
-                android:gravity="center_vertical"
-                android:text="@string/append_new_alarm_normal"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp"/>
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="64dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:text="@string/append_new_alarm_normal"-->
+    <!--android:textColor="@color/colorAccent"-->
+    <!--android:textSize="18sp"/>-->
 
-            <com.medcorp.lunar.view.ListViewForScrollView
-                android:id="@+id/fragment_alarm_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@color/my_device_right_show_version_text_color"
-                android:dividerHeight="1dp"
-                android:listSelector="?android:attr/selectableItemBackground"
-                android:scrollbars="none"/>
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    <!--<com.medcorp.lunar.view.ListViewForScrollView-->
+    <!--android:id="@+id/fragment_alarm_list_view"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:divider="@null"-->
+    <!--android:listSelector="?android:attr/selectableItemBackground"-->
+    <!--android:scrollbars="none"/>-->
+    <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
+</android.support.v7.widget.RecyclerView>

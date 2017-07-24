@@ -46,6 +46,7 @@
     <color name="baseBackground">#54575A</color>
     <color name="black">@android:color/white</color>
     <color name="bedtime_icon_tint_color">#95989A</color>
+    <color name="bedtime_item_background_color">#312E30</color>
     <color name="customBlack">#7ED8D1</color>
     <color name="tutorial_next_text_color">#7ED8D1</color>
     <color name="tutorial_progress_bar_color">#7ED8D1</color>

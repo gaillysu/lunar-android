@@ -361,7 +361,7 @@
     <string name="main_fragment_solar_page_time_on_solar_text">太陽能時間</string>
     <string name="main_sleep_fragment_title">睡眠</string>
     <string name="main_steps_fragment_title">步數</string>
-    <string name="monday">星期壹</string>
+    <string name="monday">壹</string>
     <string name="my_device_version_text">手表版本</string>
     <string name="my_nevo_new_update_available">有可用的新版本</string>
     <string name="network_wait_text">請等待...</string>
@@ -424,7 +424,7 @@
     <string name="steps_goal_one">4500 步</string>
     <string name="steps_goal_three">8000 步</string>
     <string name="steps_goal_two">6000 步</string>
-    <string name="sunday">星期日</string>
+    <string name="sunday">日</string>
     <string name="this_week_steps_identification_average">平均</string>
     <string name="this_week_steps_identification_one">妳</string>
     <string name="this_week_steps_identification_two">平均步數</string>
