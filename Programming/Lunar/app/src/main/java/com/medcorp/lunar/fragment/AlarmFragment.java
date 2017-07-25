@@ -14,7 +14,7 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.EditAlarmActivity;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.adapter.AlarmArrayAdapter;
-import com.medcorp.lunar.adapter.BedtimeAdapter;
+import com.medcorp.lunar.adapter.AlarmRecyclerViewAdapter;
 import com.medcorp.lunar.ble.controller.SyncControllerImpl;
 import com.medcorp.lunar.event.bluetooth.RequestResponseEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
@@ -37,7 +37,7 @@ import io.reactivex.functions.Consumer;
  * Created by karl-john on 11/12/15.
  */
 public class AlarmFragment extends BaseObservableFragment
-        implements OnAlarmSwitchListener, BedtimeAdapter.OnBedtimeSwitchListener, BedtimeAdapter.OnBedtimeDeleteListener {
+        implements OnAlarmSwitchListener, AlarmRecyclerViewAdapter.OnBedtimeSwitchListener, AlarmRecyclerViewAdapter.OnBedtimeDeleteListener {
 
     //    @Bind(R.id.fragment_alarm_list_view)
     //    ListView alarmListView;
@@ -50,7 +50,7 @@ public class AlarmFragment extends BaseObservableFragment
     @Bind(R.id.all_alarm_recycler_view)
     RecyclerView allAlarm;
     private List<Alarm> alarmList;
-    private BedtimeAdapter bedtimeAdapter;
+    private AlarmRecyclerViewAdapter mAlarmRecyclerViewAdapter;
     private List<BedtimeModel> allBedtimeModels;
     private AlarmArrayAdapter normalAlarmAdapter;
     private boolean showSyncAlarm = false;
@@ -83,9 +83,9 @@ public class AlarmFragment extends BaseObservableFragment
                         allBedtimeModels.clear();
                         allBedtimeModels.addAll(bedtimeModels);
                         allAlarm.setLayoutManager(new LinearLayoutManager(AlarmFragment.this.getContext()));
-                        bedtimeAdapter = new BedtimeAdapter(AlarmFragment.this, AlarmFragment.this,
-                                getModel(), AlarmFragment.this.getContext(), alarmList, bedtimeModels);
-                        allAlarm.setAdapter(bedtimeAdapter);
+                        mAlarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter(AlarmFragment.this, AlarmFragment.this,
+                                getModel(), alarmList, bedtimeModels);
+                        allAlarm.setAdapter(mAlarmRecyclerViewAdapter);
                     }
                 });
 

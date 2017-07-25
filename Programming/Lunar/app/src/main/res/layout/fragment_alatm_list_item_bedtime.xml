@@ -124,7 +124,7 @@
         android:id="@+id/bedtime_item_expandable_edit_layout"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:orientation="vertical"
         app:ael_duration="400"
         app:ael_expanded="false">
@@ -134,92 +134,135 @@
             android:layout_height="54dp"
             android:orientation="horizontal">
 
-            <CheckBox
-                android:id="@+id/bedtime_sunday"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:background="@drawable/toggle_btn_repeat_week"
-                android:button="@null"
-                android:gravity="center"
-                android:text="@string/sunday"
-                android:textColor="@drawable/text_color_toggle_btn_circle"/>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
-            <CheckBox
-                android:id="@+id/bedtime_monday"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="12dp"
-                android:background="@drawable/toggle_btn_repeat_week"
-                android:button="@null"
-                android:gravity="center"
-                android:text="@string/monday"
-                android:textColor="@drawable/text_color_toggle_btn_circle"
-                />
+                <CheckBox
+                    android:id="@+id/bedtime_sunday"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/toggle_btn_repeat_week"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/sunday"
+                    android:textColor="@drawable/text_color_toggle_btn_circle"/>
+            </RelativeLayout>
 
-            <CheckBox
-                android:id="@+id/bedtime_tuesday"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="12dp"
-                android:background="@drawable/toggle_btn_repeat_week"
-                android:button="@null"
-                android:gravity="center"
-                android:text="@string/tuesday"
-                android:textColor="@drawable/text_color_toggle_btn_circle"
-                />
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
-            <CheckBox
-                android:id="@+id/bedtime_wednesday"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="15dp"
-                android:background="@drawable/toggle_btn_repeat_week"
-                android:button="@null"
-                android:gravity="center"
-                android:text="@string/wednesday"
-                android:textColor="@drawable/text_color_toggle_btn_circle"
-                />
+                <CheckBox
+                    android:id="@+id/bedtime_monday"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/toggle_btn_repeat_week"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/monday"
+                    android:textColor="@drawable/text_color_toggle_btn_circle"
+                    />
+            </RelativeLayout>
 
-            <CheckBox
-                android:id="@+id/bedtime_thursday"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="15dp"
-                android:background="@drawable/toggle_btn_repeat_week"
-                android:button="@null"
-                android:gravity="center"
-                android:text="@string/thursday"
-                android:textColor="@drawable/text_color_toggle_btn_circle"
-                />
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
-            <CheckBox
-                android:id="@+id/bedtime_friday"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="15dp"
-                android:background="@drawable/toggle_btn_repeat_week"
-                android:button="@null"
-                android:gravity="center"
-                android:text="@string/friday"
-                android:textColor="@drawable/text_color_toggle_btn_circle"
-                />
+                <CheckBox
+                    android:id="@+id/bedtime_tuesday"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/toggle_btn_repeat_week"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/tuesday"
+                    android:textColor="@drawable/text_color_toggle_btn_circle"
+                    />
+            </RelativeLayout>
 
-            <CheckBox
-                android:id="@+id/bedtime_saturday"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="15dp"
-                android:background="@drawable/toggle_btn_repeat_week"
-                android:button="@null"
-                android:gravity="center"
-                android:text="@string/saturday"
-                android:textColor="@drawable/text_color_toggle_btn_circle"/>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <CheckBox
+                    android:id="@+id/bedtime_wednesday"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/toggle_btn_repeat_week"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/wednesday"
+                    android:textColor="@drawable/text_color_toggle_btn_circle"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <CheckBox
+                    android:id="@+id/bedtime_thursday"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/toggle_btn_repeat_week"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/thursday"
+                    android:textColor="@drawable/text_color_toggle_btn_circle"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <CheckBox
+                    android:id="@+id/bedtime_friday"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/toggle_btn_repeat_week"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/friday"
+                    android:textColor="@drawable/text_color_toggle_btn_circle"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <CheckBox
+                    android:id="@+id/bedtime_saturday"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/toggle_btn_repeat_week"
+                    android:button="@null"
+                    android:text="@string/saturday"
+                    android:gravity="center"
+                    android:textColor="@drawable/text_color_toggle_btn_circle"/>
+            </RelativeLayout>
         </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/edit_bedtime_alarm_goal_ll"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="48dp"
             android:gravity="center_vertical">
 
             <ImageView
@@ -239,7 +282,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="48dp"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:gravity="center_vertical">
@@ -256,8 +299,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                app:hintTextAppearance="@android:style/TextAppearance.Medium"
-                android:hint="@string/alarm_label">
+                android:hint="@string/alarm_label"
+                app:hintTextAppearance="@android:style/TextAppearance.Medium">
 
                 <EditText
                     android:id="@+id/edit_bedtime_alarm_label_tv"
@@ -273,7 +316,7 @@
         <RelativeLayout
             android:id="@+id/edit_bedtime_delete_alarm_ll"
             android:layout_width="match_parent"
-            android:layout_height="54dp">
+            android:layout_height="48dp">
 
             <ImageView
                 android:layout_width="20dp"
@@ -306,5 +349,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="8dp"
         android:background="@color/bedtime_icon_tint_color"/>
 </LinearLayout>

@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.aakira.expandablelayout.ExpandableLayout;
 import com.github.aakira.expandablelayout.ExpandableLayoutListenerAdapter;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
 import com.github.aakira.expandablelayout.Utils;
@@ -35,7 +36,7 @@ import io.reactivex.functions.Consumer;
 /***
  * Created by karl-john on 17/12/15.
  */
-public class BedtimeAdapter extends RecyclerView.Adapter<BedtimeAdapter.ViewHolder>
+public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecyclerViewAdapter.ViewHolder>
         implements CompoundButton.OnCheckedChangeListener {
 
     private OnBedtimeSwitchListener onAlarmSwitchedListener;
@@ -47,35 +48,29 @@ public class BedtimeAdapter extends RecyclerView.Adapter<BedtimeAdapter.ViewHold
     private ApplicationModel model;
     private List<Alarm> normalAlarmList;
 
-    public BedtimeAdapter(OnBedtimeSwitchListener onAlarmSwitchedListener, OnBedtimeDeleteListener listener,
-                          ApplicationModel model,Context context, List<Alarm> normalAlarmList, List<BedtimeModel> bedtimeAllList) {
+    public AlarmRecyclerViewAdapter(OnBedtimeSwitchListener onAlarmSwitchedListener, OnBedtimeDeleteListener listener,
+                                    ApplicationModel model, List<Alarm> normalAlarmList, List<BedtimeModel> bedtimeAllList) {
         this.listener = listener;
         this.onAlarmSwitchedListener = onAlarmSwitchedListener;
         this.model = model;
         this.normalAlarmList = normalAlarmList;
-        this.context = context;
         this.bedtimeList = bedtimeAllList;
         manyWeekday = new ArrayList<>();
+        for (int i = 0; i < normalAlarmList.size() + bedtimeAllList.size(); i++) {
+            expandState.append(i, true);
+        }
     }
-
-    //    @Override
-    //    public int getCount() {
-    //        return bedtimeList.size();
-    //    }
-    //
-    //    @Override
-    //    public Object getItem(int position) {
-    //        return bedtimeList.get(position) != null ? bedtimeList.get(position) : null;
-    //    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        this.context = parent.getContext();
         return new ViewHolder(LayoutInflater.from(context)
                 .inflate(R.layout.fragment_alatm_list_item_bedtime, parent, false));
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.expandable.initLayout();
         setDataForItem(holder, position);
     }
 
@@ -88,21 +83,6 @@ public class BedtimeAdapter extends RecyclerView.Adapter<BedtimeAdapter.ViewHold
     public int getItemCount() {
         return bedtimeList.size() + normalAlarmList.size();
     }
-
-    //    @Override
-    //    public View getView(int position, View convertView, ViewGroup parent) {
-    //        ViewHolder viewHolder = null;
-    //        if (convertView == null) {
-    //            convertView = LayoutInflater.from(context).inflate(R.layout.fragment_alatm_list_item_bedtime, parent, false);
-    //            viewHolder = new ViewHolder(convertView);
-    //            convertView.setTag(viewHolder);
-    //        } else {
-    //            viewHolder = (ViewHolder) convertView.getTag();
-    //        }
-    //        setDataForItem(viewHolder, position);
-    //
-    //        return convertView;
-    //    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.fragment_alarm_list_view_sleep_time_item)
@@ -225,9 +205,8 @@ public class BedtimeAdapter extends RecyclerView.Adapter<BedtimeAdapter.ViewHold
         } else if (position > bedtimeList.size() - 1 && normalAlarmList.size() > 0) {
             setNormalAlarmData(viewHolder, position);
         }
-
-
-        viewHolder.expandable.setInRecyclerView(false);
+        viewHolder.setIsRecyclable(false);
+        viewHolder.expandable.setInRecyclerView(true);
         viewHolder.expandable.setExpanded(expandState.get(position));
         viewHolder.expandable.setInterpolator(Utils.createInterpolator(Utils.LINEAR_OUT_SLOW_IN_INTERPOLATOR));
         viewHolder.expandable.setListener(new ExpandableLayoutListenerAdapter() {
@@ -235,35 +214,39 @@ public class BedtimeAdapter extends RecyclerView.Adapter<BedtimeAdapter.ViewHold
             public void onPreOpen() {
                 viewHolder.showInfoRl.setVisibility(View.GONE);
                 viewHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.bedtime_item_background_color));
-                expandState.put(position, false);
+                expandState.put(position, true);
             }
 
             @Override
             public void onPreClose() {
                 viewHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.window_background_color));
                 viewHolder.showInfoRl.setVisibility(View.VISIBLE);
-                expandState.put(position, true);
+                expandState.put(position, false);
             }
         });
         viewHolder.openExpandableIb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewHolder.expandable.toggle();
+                onClickButton(viewHolder.expandable);
             }
         });
         viewHolder.closeExpandableIb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewHolder.expandable.toggle();
+                onClickButton(viewHolder.expandable);
             }
         });
-        viewHolder.monday.setOnCheckedChangeListener(this);
         viewHolder.sunday.setOnCheckedChangeListener(this);
+        viewHolder.monday.setOnCheckedChangeListener(this);
         viewHolder.tuesday.setOnCheckedChangeListener(this);
         viewHolder.wednesday.setOnCheckedChangeListener(this);
         viewHolder.thursday.setOnCheckedChangeListener(this);
         viewHolder.friday.setOnCheckedChangeListener(this);
         viewHolder.saturday.setOnCheckedChangeListener(this);
+    }
+
+    private void onClickButton(final ExpandableLayout expandableLayout) {
+        expandableLayout.toggle();
     }
 
     private void setNormalAlarmData(ViewHolder viewHolder, int position) {
@@ -280,7 +263,7 @@ public class BedtimeAdapter extends RecyclerView.Adapter<BedtimeAdapter.ViewHold
             viewHolder.alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                    onAlarmSwitchedListener.onBedtimeSwitch((SwitchCompat) buttonView, alarm);
+                    //                    onAlarmSwitchedListener.onBedtimeSwitch((SwitchCompat) buttonView, alarm);
                 }
             });
 
