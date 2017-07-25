@@ -139,7 +139,7 @@ public class Preferences {
         editor.putInt(notification.getTag(), ledColor).apply();
     }
 
-    public static NevoLed getNotificationColor(Context context, Notification notification, ApplicationModel model) {
+    public static NevoLed  getNotificationColor(Context context, Notification notification, ApplicationModel model) {
         init(context);
         return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()), model);
     }

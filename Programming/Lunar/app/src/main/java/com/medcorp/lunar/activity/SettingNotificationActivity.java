@@ -2,6 +2,7 @@ package com.medcorp.lunar.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
@@ -86,7 +87,6 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         LunarNotificationListener.getNotificationAccessPermission(this);
-        toolbar.setTitle(R.string.title_notifications);
         helper = new NotificationDataHelper(SettingNotificationActivity.this);
     }
 
@@ -94,6 +94,12 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
     protected void onResume() {
         super.onResume();
         initData();
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toolbar.setTitle(R.string.title_notifications);
     }
 
     private void initData() {
@@ -180,7 +186,6 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         View contentView = inflater.inflate(R.layout.setting_notification_bottom_dialog_layout, null);
         final BottomSheetDialog dialog = new BottomSheetDialog(this);
         dialog.setContentView(contentView);
-        dialog.show();
         if (type == INACTIVITY_FLAG) {
             contentView.findViewById(R.id.setting_notification_item_active_bt).setVisibility(View.VISIBLE);
             contentView.findViewById(R.id.setting_notification_item_inactive_bt).setVisibility(View.GONE);
@@ -188,14 +193,17 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
             contentView.findViewById(R.id.setting_notification_item_active_bt).setVisibility(View.GONE);
             contentView.findViewById(R.id.setting_notification_item_inactive_bt).setVisibility(View.VISIBLE);
         }
-
+        dialog.show();
         contentView.findViewById(R.id.setting_notification_item_active_bt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
                 selectNotification.setState(true);
                 helper.saveState(selectNotification);
-                initData();
+                inactiveNotificationList.remove(position);
+                activeNotificationList.add(selectNotification);
+                activeNotificationArrayAdapter.notifyDataSetChanged();
+                inactiveNotificationArrayAdapter.notifyDataSetChanged();
             }
         });
 
@@ -205,7 +213,10 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
                 dialog.dismiss();
                 selectNotification.setState(false);
                 helper.saveState(selectNotification);
-                initData();
+                activeNotificationList.remove(position);
+                activeNotificationArrayAdapter.notifyDataSetChanged();
+                inactiveNotificationList.add(selectNotification);
+                inactiveNotificationArrayAdapter.notifyDataSetChanged();
             }
         });
 
@@ -224,7 +235,7 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         });
     }
 
-    private void showEditColorDialog(final int type, int position) {
+    private void showEditColorDialog(final int type, final int position) {
 
         LayoutInflater inflater = LayoutInflater.from(this);
         View inflateView = inflater.inflate(R.layout.cnotification_choose_color_dialog, null);
@@ -241,10 +252,10 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         allColors.setAdapter(chooseColorAdapter);
         allColors.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == allLamp.size()) {
+            public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+                if (pos == allLamp.size()) {
                     mDialog.dismiss();
-                    addNewColorForNotification();
+                    addNewColorForNotification(type, position);
                 } else {
                     selectLedLamp = allLamp.get(position);
                     for (int i = 0; i < allLamp.size(); i++) {
@@ -259,7 +270,10 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
             }
         });
         MaterialDialog.Builder builder = new MaterialDialog.Builder(this);
-        builder.customView(inflateView, true)
+
+        builder.title(getString(R.string.notification_choose_color_dialog_title))
+                .titleColor(getResources().getColor(R.color.colorPrimary))
+                .customView(inflateView, true)
                 .positiveText(R.string.goal_ok)
                 .negativeText(R.string.goal_cancel)
                 .positiveColor(getResources().getColor(R.color.colorPrimary))
@@ -270,7 +284,11 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
                         if (selectLedLamp != null) {
                             Preferences.saveNotificationColor(SettingNotificationActivity.this, selectNotification, selectLedLamp.getColor());
                             if (type == ACTIVITY_FLAG) {
-                                initData();
+                                LedLamp currentColor = (LedLamp) Preferences.getNotificationColor(SettingNotificationActivity.this, selectNotification, getModel());
+                                currentColor.setColor(selectLedLamp.getColor());
+                                activeNotificationList.remove(position);
+                                activeNotificationList.add(selectNotification);
+                                activeNotificationArrayAdapter.notifyDataSetChanged();
                             }
                         }
                     }
@@ -279,7 +297,7 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         mDialog.show();
     }
 
-    private void addNewColorForNotification() {
+    private void addNewColorForNotification(final int type, final int position) {
         LayoutInflater inflater = LayoutInflater.from(this);
         View inflateView = inflater.inflate(R.layout.add_new_color_to_notification, null);
         ColorPickerView pickerView = (ColorPickerView) inflateView.findViewById(R.id.color_picker_view);
@@ -292,7 +310,10 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
                 selectedColor = color;
             }
         });
-        new MaterialDialog.Builder(this).customView(inflateView, true)
+        new MaterialDialog.Builder(this)
+                .titleColor(getResources().getColor(R.color.colorPrimary))
+                .title(getString(R.string.notification_choose_color_dialog_title))
+                .customView(inflateView, true)
                 .positiveText(R.string.goal_ok)
                 .negativeText(R.string.goal_cancel)
                 .positiveColor(getResources().getColor(R.color.colorPrimary))
@@ -302,11 +323,20 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         String name = textLayout.getEditText().getText().toString();
                         if (!TextUtils.isEmpty(name) && selectedColor != 0) {
-                            LedLamp mLedLamp = new LedLamp();
-                            mLedLamp.setSelect(false);
-                            mLedLamp.setName(name);
-                            mLedLamp.setColor(selectedColor);
-                            getModel().addLedLamp(mLedLamp);
+                            if (type == ACTIVITY_FLAG) {
+                                LedLamp currentColor = (LedLamp) Preferences.getNotificationColor(SettingNotificationActivity.this, selectNotification, getModel());
+                                currentColor.setColor(selectedColor);
+                                currentColor.setName(name);
+                                activeNotificationList.remove(position);
+                                activeNotificationList.add(selectNotification);
+                                activeNotificationArrayAdapter.notifyDataSetChanged();
+                            }else {
+                                LedLamp mLedLamp = new LedLamp();
+                                mLedLamp.setSelect(false);
+                                mLedLamp.setName(name);
+                                mLedLamp.setColor(selectedColor);
+                                getModel().addLedLamp(mLedLamp);
+                            }
                         } else {
                             ToastHelper.showShortToast(SettingNotificationActivity.this, getString(R.string.prompt_user_set_color_name));
                         }

@@ -15,7 +15,7 @@
     </string-array>
     <string-array name="config_unit" translatable="false">
         <item>metrics(km/h)</item>
-        <item>Imperial(miles)</item>
+        <item>Imperial(mph)</item>
     </string-array>
     <string-array name="profile_unit_values" translatable="false">
         <item>0</item>

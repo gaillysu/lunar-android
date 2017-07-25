@@ -2,27 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="16dp"
                 android:minHeight="150dp"
                 android:orientation="vertical">
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/choose_color_dialog_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/notification_choose_color_dialog_title"
-        android:textColor="@color/colorAccent"
-        android:textSize="20sp"/>
 
     <com.medcorp.lunar.view.MyGridView
         android:id="@+id/notification_choose_color_all_colors_gd"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:minHeight="100dp"
-        android:verticalSpacing="10dp"
-        android:layout_below="@+id/choose_color_dialog_title"
         android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
+        android:layout_marginTop="20dp"
+        android:minHeight="100dp"
         android:numColumns="4"
-        android:scrollbars="none"/>
+        android:scrollbars="none"
+        android:verticalSpacing="10dp"/>
 </RelativeLayout>

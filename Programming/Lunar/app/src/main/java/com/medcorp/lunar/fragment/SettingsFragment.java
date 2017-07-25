@@ -225,7 +225,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 Preferences.saveDetectionBattery(SettingsFragment.this.getActivity()
                                         , batteryPercent);
-                                deviceListMenu.get(1).setSubtitle(getString(R.string.originally_chosen_value) + " : "
+                                deviceListMenu.get(2).setSubtitle(getString(R.string.originally_chosen_value) + " : "
                                         + batteryPercent + "%");
                                 mSettingDeviceAdapter.notifyDataSetChanged();
                             }
@@ -271,7 +271,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                                         } else {
                                             scanDurationSubTitle = scanTime + " " + getString(R.string.scan_duration_time_unit);
                                         }
-                                        deviceListMenu.get(2).setSubtitle(scanDurationSubTitle);
+                                        deviceListMenu.get(3).setSubtitle(scanDurationSubTitle);
                                         mSettingDeviceAdapter.notifyDataSetChanged();
                                     }
                                 }).positiveText(R.string.goal_ok)

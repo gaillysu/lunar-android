@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -93,7 +94,8 @@ public class GoalsSettingActivity extends BaseActivity {
         final BottomSheetDialog dialog = new BottomSheetDialog(this);
         dialog.setContentView(contentView);
         dialog.show();
-        contentView.findViewById(R.id.more_setting_action_edit).setOnClickListener(new View.OnClickListener() {
+        Button editButton = (Button) contentView.findViewById(R.id.more_setting_action_edit);
+        editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (type != 0) {
@@ -102,11 +104,17 @@ public class GoalsSettingActivity extends BaseActivity {
                 }
             }
         });
-        contentView.findViewById(R.id.more_setting_action_delete).setOnClickListener(new View.OnClickListener() {
+        Button deleteButton = (Button) contentView.findViewById(R.id.more_setting_action_delete);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (type != 0) {
                     dialog.dismiss();
+//                    new MaterialDialog.Builder(GoalsSettingActivity.this)
+//                            .title(getString(R.string.goal_delete))
+//                            .content(getString(R.string.settings_sure))
+//                            .negativeText(R.string.goal_cancel)
+//                            .positiveText(R.string.)
                     deleteGoal(type, id);
                 }
             }
@@ -204,6 +212,7 @@ public class GoalsSettingActivity extends BaseActivity {
                             for (int i = 0; i < mStepsGoalList.size(); i++) {
                                 if (mStepsGoalList.get(i).getId() == id) {
                                     mStepsGoalList.remove(i);
+                                    break;
                                 }
                             }
                             presetArrayAdapter.notifyDataSetChanged();
@@ -219,6 +228,7 @@ public class GoalsSettingActivity extends BaseActivity {
                             for (int i = 0; i < allSleep.size(); i++) {
                                 if (allSleep.get(i).getSleepGoalId() == id) {
                                     allSleep.remove(i);
+                                    break;
                                 }
                             }
                             sleepAdapter.notifyDataSetChanged();
@@ -231,9 +241,11 @@ public class GoalsSettingActivity extends BaseActivity {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
                         if (aBoolean) {
+                            Log.e("jason", "delete solar goal");
                             for (int i = 0; i < allSolar.size(); i++) {
                                 if (allSolar.get(i).getSolarGoalId() == id) {
                                     allSolar.remove(i);
+                                    break;
                                 }
                             }
                             SolarAdapter.notifyDataSetChanged();
@@ -375,8 +387,64 @@ public class GoalsSettingActivity extends BaseActivity {
                 .show();
     }
 
+
     @OnClick(R.id.more_setting_add_new_inactivity)
-    public void addNewInactivity() {
+    public void startSettingGoalTime() {
+        selectHour = 0;
+        selectMinutes = 0;
+        View selectTimeDialog = LayoutInflater.from(this).inflate(R.layout.select_time_dialog_layou, null);
+        final Dialog dialog = new AlertDialog.Builder(this).create();
+        List<String> hourList = new ArrayList<>();
+        List<String> minutes = new ArrayList<>();
+        minutes.add(0 + "");
+        minutes.add(30 + "");
+        for (int i = 5; i <= 12; i++) {
+            hourList.add(i + "");
+        }
+        PickerView hourPickerView = (PickerView) selectTimeDialog.findViewById(R.id.hour_pv);
+        hourPickerView.setData(hourList);
+        hourPickerView.setSelected(3);
+        PickerView minutePickerView = (PickerView) selectTimeDialog.findViewById(R.id.minute_pv);
+        minutePickerView.setData(minutes);
+        minutePickerView.setSelected(0);
+        Button cancelButton = (Button) selectTimeDialog.findViewById(R.id.select_time_cancel_bt);
+        final Button selectButton = (Button) selectTimeDialog.findViewById(R.id.select_time_select_bt);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setContentView(selectTimeDialog);
+        hourPickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                selectHour = new Integer(text).intValue();
+            }
+        });
+
+        minutePickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                selectMinutes = new Integer(text).intValue();
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        selectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                if (selectHour == 0 && selectMinutes == 0) {
+                    selectHour = 8;
+                }
+                addNewInactivity(selectHour, selectMinutes);
+            }
+        });
+    }
+
+
+    public void addNewInactivity(final int hour, final int minute) {
         new MaterialDialog.Builder(this)
                 .title(R.string.goal_add)
                 .content(R.string.goal_label_sleep)
@@ -390,96 +458,32 @@ public class GoalsSettingActivity extends BaseActivity {
                                 } else {
                                     sleepLableGoal = input.toString();
                                 }
-                                startSettingGoalTime();
+                                final SleepGoal sleepGoal = new SleepGoal(sleepLableGoal, hour * 60 + minute, false);
+                                sleepDatabaseHelper.add(sleepGoal)
+                                        .subscribe(new Consumer<Boolean>() {
+                                            @Override
+                                            public void accept(Boolean aBoolean) throws Exception {
+                                                if (aBoolean) {
+                                                    allSleep.add(sleepGoal);
+                                                    GoalsSettingActivity.this.runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            sleepAdapter.notifyDataSetChanged();
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        });
                             }
                         }).negativeText(R.string.goal_cancel)
                 .show();
     }
 
-    private void startSettingGoalTime() {
-        View selectTimeDialog = LayoutInflater.from(this).inflate(R.layout.select_time_dialog_layou, null);
-        final Dialog dialog = new AlertDialog.Builder(this).create();
-        List<String> hourList = new ArrayList<>();
-        List<String> minutes = new ArrayList<>();
-        minutes.add(0 + "");
-        minutes.add(30 + "");
-        for (int i = 5; i <= 12; i++) {
-            hourList.add(i + "");
-        }
-        PickerView hourPickerView = (PickerView) selectTimeDialog.findViewById(R.id.hour_pv);
-        hourPickerView.setData(hourList);
-        PickerView minutePickerView = (PickerView) selectTimeDialog.findViewById(R.id.minute_pv);
-        minutePickerView.setData(minutes);
-        Button cancelButton = (Button) selectTimeDialog.findViewById(R.id.select_time_cancel_bt);
-        Button selectButton = (Button) selectTimeDialog.findViewById(R.id.select_time_select_bt);
-        dialog.show();
-        Window window = dialog.getWindow();
-        window.setContentView(selectTimeDialog);
-        hourPickerView.setOnSelectListener(new PickerView.onSelectListener() {
-            @Override
-            public void onSelect(String text) {
-                selectHour = new Integer(text).intValue();
-            }
-        });
-
-        minutePickerView.setOnSelectListener(new PickerView.onSelectListener() {
-            @Override
-            public void onSelect(String text) {
-                selectMinutes = new Integer(text).intValue();
-            }
-        });
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        selectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                final SleepGoal sleepGoal = new SleepGoal(sleepLableGoal, selectHour * 60 + selectMinutes, false);
-                sleepDatabaseHelper.add(sleepGoal)
-                        .subscribe(new Consumer<Boolean>() {
-                            @Override
-                            public void accept(Boolean aBoolean) throws Exception {
-                                if (aBoolean) {
-                                    allSleep.add(sleepGoal);
-                                    GoalsSettingActivity.this.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            sleepAdapter.notifyDataSetChanged();
-                                        }
-                                    });
-                                }
-                            }
-                        });
-            }
-        });
-    }
 
     @OnClick(R.id.more_setting_add_new_sunshine)
-    public void addNewSunshine() {
-        new MaterialDialog.Builder(this)
-                .title(R.string.goal_add)
-                .content(R.string.goal_label_solar)
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input(getString(R.string.goal_name_goal_solar), "",
-                        new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(MaterialDialog dialog, CharSequence input) {
-                                if (input.length() == 0) {
-                                    solarLableGoal = getString(R.string.def_goal_solar_name) + " " + (allSolar.size() + 1);
-                                } else {
-                                    solarLableGoal = input.toString();
-                                }
-                                editSolarGoalTime();
-                            }
-                        }).negativeText(R.string.goal_cancel)
-                .show();
-    }
-
-    private void editSolarGoalTime() {
+    public void editSolarGoalTime() {
+        selectHour = 0;
+        selectMinutes = 0;
         View selectTimeDialog = LayoutInflater.from(this).inflate(R.layout.select_time_dialog_layou, null);
         final Dialog dialog = new AlertDialog.Builder(this).create();
         List<String> hourList = new ArrayList<>();
@@ -493,8 +497,10 @@ public class GoalsSettingActivity extends BaseActivity {
         hourPickerView.setData(hourList);
         PickerView minutePickerView = (PickerView) selectTimeDialog.findViewById(R.id.minute_pv);
         minutePickerView.setData(minutes);
+        minutePickerView.setSelected(1);
+        hourPickerView.setSelected(0);
         Button cancelButton = (Button) selectTimeDialog.findViewById(R.id.select_time_cancel_bt);
-        Button selectButton = (Button) selectTimeDialog.findViewById(R.id.select_time_select_bt);
+        final Button selectButton = (Button) selectTimeDialog.findViewById(R.id.select_time_select_bt);
         dialog.show();
         Window window = dialog.getWindow();
         window.setContentView(selectTimeDialog);
@@ -521,15 +527,40 @@ public class GoalsSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                final SolarGoal solarGoal = new SolarGoal(solarLableGoal, selectHour * 60 + selectMinutes, false);
-                getModel().getSolarGoalDatabaseHelper().add(solarGoal).subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean aBoolean) throws Exception {
-                        allSolar.add(solarGoal);
-                        SolarAdapter.notifyDataSetChanged();
-                    }
-                });
+                if (selectHour == 0 && selectMinutes == 0) {
+                    selectHour = 0;
+                    selectMinutes = 30;
+                }
+                addNewSunshine(selectHour, selectMinutes);
+
             }
         });
+    }
+
+    public void addNewSunshine(final int hour, final int minute) {
+        new MaterialDialog.Builder(this)
+                .title(R.string.goal_add)
+                .content(R.string.goal_label_solar)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(getString(R.string.goal_name_goal_solar), "",
+                        new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                                if (input.length() == 0) {
+                                    solarLableGoal = getString(R.string.def_goal_solar_name) + " " + (allSolar.size() + 1);
+                                } else {
+                                    solarLableGoal = input.toString();
+                                }
+                                final SolarGoal solarGoal = new SolarGoal(solarLableGoal, hour * 60 + minute, false);
+                                getModel().getSolarGoalDatabaseHelper().add(solarGoal).subscribe(new Consumer<Boolean>() {
+                                    @Override
+                                    public void accept(Boolean aBoolean) throws Exception {
+                                        allSolar.add(solarGoal);
+                                        SolarAdapter.notifyDataSetChanged();
+                                    }
+                                });
+                            }
+                        }).negativeText(R.string.goal_cancel)
+                .show();
     }
 }

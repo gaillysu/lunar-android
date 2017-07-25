@@ -182,7 +182,8 @@ public class LoginActivity extends BaseActivity {
             new MaterialDialog.Builder(this).backgroundColor(getResources().getColor(R.color.window_background_color))
                     .contentColor(getResources().getColor(R.color.text_color)).titleColor(getResources().getColor(R.color.text_color))
                     .title(getString(R.string.open_forget_password_dialog_title))
-                    .content(getString(R.string.prompt_is_not_forget_password)).negativeText(R.string.tutorial_failed_try_again)
+                    .content(getString(R.string.prompt_is_not_forget_password))
+                    .negativeText(R.string.tutorial_failed_try_again)
                     .positiveText(android.R.string.ok).onPositive(new MaterialDialog.SingleButtonCallback() {
                 @Override
                 public void onClick(MaterialDialog dialog, DialogAction which) {

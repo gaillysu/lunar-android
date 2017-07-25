@@ -83,6 +83,7 @@
                 android:divider="@null"
                 android:scrollbars="none"
                 android:dividerHeight="1dp"
+                android:layout_marginBottom="20dp"
                 android:visibility="visible"
                 />
         </LinearLayout>
