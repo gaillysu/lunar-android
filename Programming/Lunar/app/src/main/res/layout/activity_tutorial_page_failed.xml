@@ -36,9 +36,9 @@
         android:id="@+id/activity_tutorial_retry_button"
         style="@style/TutorialButton"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/activity_tutorial_page6_image"
-        android:layout_marginTop="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
         android:text="@string/tutorial_failed_try_again"
         />
 

@@ -55,6 +55,17 @@ public class Preferences {
         editor.putBoolean(context.getString(R.string.key_prefs_is_metrics), isMetrics).apply();
     }
 
+    public static void alreadyConnect(Context context,boolean isConnect){
+        init(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(context.getString(R.string.key_is_already_connect), isConnect).apply();
+    }
+
+    public static boolean isAlreadyConnect(Context context){
+        init(context);
+        return preferences.getBoolean(context.getString(R.string.key_is_already_connect),false);
+    }
+
     public static boolean getUnitSelect(Context context) {
         init(context);
         return preferences.getBoolean(context.getString(R.string.key_prefs_is_metrics), false);
@@ -245,7 +256,7 @@ public class Preferences {
 
     public static int getScanDuration(Context context) {
         init(context);
-        return preferences.getInt(context.getString(R.string.key_prefs_scan_duration_time), 0);
+        return preferences.getInt(context.getString(R.string.key_prefs_scan_duration_time),5);
     }
 
     public static void saveDetectionBattery(Context context, int time) {
@@ -256,7 +267,7 @@ public class Preferences {
 
     public static int getDetectionBattery(Context context) {
         init(context);
-        return preferences.getInt(context.getString(R.string.key_prefs_detection_battery),0);
+        return preferences.getInt(context.getString(R.string.key_prefs_detection_battery),5);
     }
 
     public static boolean getBatterySwitch(Context context) {

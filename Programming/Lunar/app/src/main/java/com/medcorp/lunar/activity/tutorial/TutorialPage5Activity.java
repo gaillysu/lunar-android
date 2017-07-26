@@ -5,6 +5,7 @@ import android.view.WindowManager;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.base.BaseActivity;
+import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.view.RoundProgressBar;
 
 import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
@@ -56,6 +57,7 @@ public class TutorialPage5Activity extends BaseActivity {
     }
     private void startConnectedActivity()
     {
+        Preferences.alreadyConnect(this,true);
         startActivity(TutorialPageSuccessActivity.class);
         finish();
     }

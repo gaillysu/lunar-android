@@ -56,14 +56,14 @@ public class ChooseColorAdapter extends BaseAdapter {
         viewHolder.isChoose = (ImageView) convertView.findViewById(R.id.choose_color_adapter_is_choose);
         if (position < allList.size()) {
             LedLamp ledLamp = allList.get(position);
-            if(ledLamp.isSelect()){
+            if (ledLamp.isSelect()) {
                 viewHolder.isChoose.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 viewHolder.isChoose.setVisibility(View.GONE);
             }
             viewHolder.colorIv.setColorFilter(ledLamp.getColor());
         } else {
-            viewHolder.colorIv.setImageResource(R.drawable.ic_choose_color_icon);
+            viewHolder.colorIv.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_choose_color_icon));
         }
         return convertView;
     }

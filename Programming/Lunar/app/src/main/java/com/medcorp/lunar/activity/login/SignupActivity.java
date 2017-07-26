@@ -17,6 +17,7 @@ import com.medcorp.lunar.activity.tutorial.WelcomeActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.cloud.med.MedNetworkOperation;
 import com.medcorp.lunar.event.SignUpEvent;
+import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.network.listener.RequestResponseListener;
 import com.medcorp.lunar.network.model.request.CheckEmailRequest;
 import com.medcorp.lunar.network.model.response.CheckEmailResponse;
@@ -28,6 +29,7 @@ import org.greenrobot.eventbus.Subscribe;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 
 public class SignupActivity extends BaseActivity {
     private static final String TAG = "SignupActivity";
@@ -84,7 +86,7 @@ public class SignupActivity extends BaseActivity {
         }
         progressDialog.show();
         CheckEmailRequest request = new CheckEmailRequest(email);
-        MedNetworkOperation.getInstance(this).checkEmail(this, request,new RequestResponseListener<CheckEmailResponse>() {
+        MedNetworkOperation.getInstance(this).checkEmail(this, request, new RequestResponseListener<CheckEmailResponse>() {
             @Override
             public void onFailed() {
                 progressDialog.dismiss();
@@ -121,10 +123,15 @@ public class SignupActivity extends BaseActivity {
                     case SUCCESS:
                         Toast.makeText(getBaseContext(), R.string.register_success, Toast.LENGTH_SHORT).show();
                         _signupButton.setEnabled(true);
-                        getModel().getUser().setUserEmail(_emailText.getText().toString());
-                        getModel().saveUser(getModel().getUser());
-                        setResult(RESULT_OK, null);
-                        finish();
+                        getModel().getUser().subscribe(new Consumer<User>() {
+                            @Override
+                            public void accept(User user) throws Exception {
+                                user.setUserEmail(_emailText.getText().toString());
+                                getModel().saveUser(user);
+                                setResult(RESULT_OK, null);
+                                finish();
+                            }
+                        });
                         break;
                 }
             }

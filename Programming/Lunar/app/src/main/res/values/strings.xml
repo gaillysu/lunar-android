@@ -514,9 +514,9 @@
     <string name="update_watch_firmware_careful_one">- Keep LunaR close to your phone.</string>
     <string name="update_watch_firmware_careful_second">- Don\'t turn off the bluetooth  </string>
     <string name="update_watch_firmware_careful_third">Don\'t press and buttons on LunaR while upgrading</string>
-    <string name="add_new_activity_goal_fb">ACTIVITY GOAL</string>
-    <string name="add_new_inactivity_goal_fb">INACTIVITY GOAL</string>
-    <string name="and_new_sunshine_fb">SUNSHINE GOAL</string>
+    <string name="add_new_activity_goal_fb">Activity goal</string>
+    <string name="add_new_inactivity_goal_fb">Inactivity goal</string>
+    <string name="and_new_sunshine_fb">Sunshine goal</string>
     <string name="more_setting_activity_title">Activity</string>
     <string name="more_setting_inactivity_title">Inactivity</string>
     <string name="more_setting_sunshine_title">Sunshine</string>

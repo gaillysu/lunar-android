@@ -89,7 +89,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="28dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="16dp"
                 android:text="@string/edit_home_position_city"
                 android:textColor="@color/text_color"
                 android:layout_marginStart="60dp"

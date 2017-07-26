@@ -38,7 +38,7 @@
     <string name="edit_home_all_city">全部城市</string>
     <string name="edit_home_position_city">定位城市</string>
     <string name="edit_notification_delete_item">刪除</string>
-    <string name="edit_notification_item_name">設置</string>
+    <string name="edit_notification_item_name">编辑</string>
     <string name="lunar_home_clock_steps_title_tv">步數</string>
     <string name="lunar_main_clock_charging_status_title">太陽能狀態</string>
     <string name="lunar_main_clock_home_city_sunrise">日出</string>
@@ -261,7 +261,7 @@
     <string name="settings_support">在線支持</string>
     <string name="settings_about">關於</string>
     <string name="settings_forget_watch">解綁手表</string>
-    <string name="settings_sure">您確認解除已綁定的手表嗎?</string>
+    <string name="settings_sure">您确认您当前操作嗎?</string>
 
     <string name="google_fit_could_not_login">不能登錄,請稍後重試</string>
     <string name="google_fit_connecting">連接谷歌賬戶失敗</string>
@@ -549,4 +549,5 @@
     <string name="battery_low_alert_percent">百分比</string>
     <string name="settings_notifications_active_button_tv">打開通知</string>
     <string name="settings_notifications_inactive_button_tv">關閉通知</string>
+
 </resources>

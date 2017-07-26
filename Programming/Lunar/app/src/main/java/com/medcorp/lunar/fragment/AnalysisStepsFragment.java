@@ -14,6 +14,7 @@ import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.lunar.fragment.base.BaseFragment;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.StepsGoal;
+import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisStepsLineChart;
@@ -25,6 +26,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 
 /***
  * Created by Administrator on 2016/7/21.
@@ -55,6 +57,7 @@ public class AnalysisStepsFragment extends BaseFragment {
     private List<Steps> lastWeekData = new ArrayList<>();
     private List<Steps> lastMonthData = new ArrayList<>();
     private TipsView marker;
+    private int userWeight;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -169,7 +172,12 @@ public class AnalysisStepsFragment extends BaseFragment {
     }
 
     private String getWeekCalories(List<Steps> thisWeekData, int weekCountDay) {
-        int userWeight = getModel().getUser().getWeight();
+        getModel().getUser().subscribe(new Consumer<User>() {
+            @Override
+            public void accept(User user) throws Exception {
+                userWeight = user.getWeight();
+            }
+        });
         if (weekCountDay == 30) {
             return (int) ((2.0 * userWeight * 3.5) / 200 * getAvgDurationTime(thisWeekData)) / weekCountDay / 1000 + "";
         } else {
@@ -221,43 +229,49 @@ public class AnalysisStepsFragment extends BaseFragment {
         }
     }
 
-    public void setDataInChart(int dataInChart) {
-        switch (dataInChart) {
-            case 0:
-                Steps dailySteps = getModel().getDailySteps(getModel().getUser().getUserID(), new Date());
-                String[] hourlySteps = dailySteps.getHourlySteps().replace("[", "").replace("]", "").replace(" ", "").split(",");
-                int[] dailyStepsArray = new int[hourlySteps.length];
-                for (int i = 0; i < 24; i++) {
-                    dailyStepsArray[i] = new Integer(hourlySteps[i]).intValue();
+    public void setDataInChart(final int dataInChart) {
+        getModel().getUser().subscribe(new Consumer<User>() {
+            @Override
+            public void accept(User user) throws Exception {
+                switch (dataInChart) {
+                    case 0:
+                        Steps dailySteps = getModel().getDailySteps(user.getUserID(), new Date());
+                        String[] hourlySteps = dailySteps.getHourlySteps().replace("[", "").replace("]", "").replace(" ", "").split(",");
+                        int[] dailyStepsArray = new int[hourlySteps.length];
+                        for (int i = 0; i < 24; i++) {
+                            dailyStepsArray[i] = new Integer(hourlySteps[i]).intValue();
+                        }
+                        todayStepsChart.setDataInChart(dailyStepsArray, dailySteps.getGoal());
+                        todayStepsChart.animateY(3000);
+
+                        break;
+                    case 1:
+                        getModel().getSteps(user.getUserID(), new Date()
+                                , WeekData.TISHWEEK, new OnStepsGetListener() {
+                                    @Override
+                                    public void onStepsGet(List<Steps> stepsList) {
+                                        thisWeekData = stepsList;
+                                        thisWeekChart.addData(thisWeekData, mActiveStepsGoal, 7);
+                                        thisWeekChart.setMarkerView(marker);
+                                        thisWeekChart.animateY(3000);
+                                    }
+                                });
+                        break;
+                    case 2:
+                        getModel().getSteps(user.getUserID(), new Date(), WeekData.LASTMONTH,
+                                new OnStepsGetListener() {
+                                    @Override
+                                    public void onStepsGet(List<Steps> stepsList) {
+                                        lastMonthData = stepsList;
+                                        lastMonthChart.addData(lastMonthData, mActiveStepsGoal, 30);
+                                        lastMonthChart.setMarkerView(marker);
+                                        lastMonthChart.animateY(3000);
+                                    }
+                                });
+                        break;
                 }
-                todayStepsChart.setDataInChart(dailyStepsArray, dailySteps.getGoal());
-                todayStepsChart.animateY(3000);
-                break;
-            case 1:
-                getModel().getSteps(getModel().getUser().getUserID(), new Date()
-                        , WeekData.TISHWEEK, new OnStepsGetListener() {
-                            @Override
-                            public void onStepsGet(List<Steps> stepsList) {
-                                thisWeekData = stepsList;
-                                thisWeekChart.addData(thisWeekData, mActiveStepsGoal, 7);
-                                thisWeekChart.setMarkerView(marker);
-                                thisWeekChart.animateY(3000);
-                            }
-                        });
-                break;
-            case 2:
-                getModel().getSteps(getModel().getUser().getUserID(), new Date(), WeekData.LASTMONTH,
-                        new OnStepsGetListener() {
-                            @Override
-                            public void onStepsGet(List<Steps> stepsList) {
-                                lastMonthData = stepsList;
-                                lastMonthChart.addData(lastMonthData, mActiveStepsGoal, 30);
-                                lastMonthChart.setMarkerView(marker);
-                                lastMonthChart.animateY(3000);
-                            }
-                        });
-                break;
-        }
+            }
+        });
     }
 
     public interface OnStepsGetListener {

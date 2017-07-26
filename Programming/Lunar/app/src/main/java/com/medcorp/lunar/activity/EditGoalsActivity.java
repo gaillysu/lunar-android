@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -59,8 +60,13 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goals);
         ButterKnife.bind(this);
-        initToolbar();
         initData();
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        initToolbar();
     }
 
     private void initToolbar() {
@@ -72,6 +78,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
     private void initData() {
         Intent intent = getIntent();
         mFlag = intent.getIntExtra(getString(R.string.launch_edit_goal_activity_flag), -1);
+
         switch (mFlag) {
             case 0x01:
                 stepsGoal = getModel().getGoalById(intent.getIntExtra(getString(R.string.key_preset_id), -1));
@@ -121,9 +128,15 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                 editStepsGoal(position);
                 break;
             case 0x02:
+                int time = solarGoal.getTime();
+                selectMinutes = time % 60;
+                selectHour = time / 60;
                 editSolarGoal(position);
                 break;
             case 0x03:
+                int goalDuration = sleepGoal.getGoalDuration();
+                selectMinutes = goalDuration % 60;
+                selectHour = goalDuration / 60;
                 editSleepGoal(position);
                 break;
         }
@@ -306,6 +319,8 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
         hourPickerView.setData(hourList);
         PickerView minutePickerView = (PickerView) selectTimeDialog.findViewById(R.id.minute_pv);
         minutePickerView.setData(minutes);
+        hourPickerView.setSelected(hourList.indexOf(selectHour + ""));
+        minutePickerView.setSelected(minutes.indexOf(selectMinutes + ""));
         Button cancelButton = (Button) selectTimeDialog.findViewById(R.id.select_time_cancel_bt);
         Button selectButton = (Button) selectTimeDialog.findViewById(R.id.select_time_select_bt);
         dialog.show();

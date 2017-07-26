@@ -102,47 +102,4 @@
                 android:scrollbars="none"/>
         </RelativeLayout>
     </ScrollView>
-
-    <net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/more_setting_floating_action_button"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="15dp"
-        android:layout_alignParentRight="true"
-        fab:fab_expandDirection="down"
-        android:layout_marginRight="16dp"
-        fab:fab_addButtonColorNormal="@color/purple_normal"
-        fab:fab_addButtonColorPressed="@color/purple_normal"
-        fab:fab_addButtonPlusIconColor="@color/white">
-
-        <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
-            android:id="@+id/more_setting_add_new_activity"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            fab:fab_colorNormal="@color/purple_normal"
-            fab:fab_colorPressed="@color/half_blue"
-            fab:fab_icon="@drawable/ic_icon_activity"
-            fab:fab_size="mini"
-            fab:fab_title="ACTIVITY GOAL"/>
-
-        <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
-            android:id="@+id/more_setting_add_new_inactivity"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            fab:fab_colorNormal="@color/purple_normal"
-            fab:fab_colorPressed="@color/half_blue"
-            fab:fab_icon="@drawable/moon_icon"
-            fab:fab_size="mini"
-            fab:fab_title="INACTIVITY GOAL"/>
-
-        <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
-            android:id="@+id/more_setting_add_new_sunshine"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            fab:fab_colorNormal="@color/purple_normal"
-            fab:fab_colorPressed="@color/half_blue"
-            fab:fab_icon="@drawable/sun_white"
-            fab:fab_size="mini"
-            fab:fab_title="@string/more_setting_sunshine_title"/>
-    </net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu>
 </RelativeLayout>

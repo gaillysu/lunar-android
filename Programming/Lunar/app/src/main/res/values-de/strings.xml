@@ -521,10 +521,10 @@
     <string name="welcome_activity_facebook_login">Continue with Facebook</string>
     <string name="welcome_activity_wechat_login">Continue with WeChat</string>
     <string name="menu_drawer_find">Find Watch</string>
-    <string name="add_new_activity_goal_fb">ACTIVITY GOAL</string>
+    <string name="add_new_activity_goal_fb">Acitvity goal</string>
     <string name="add_new_color_name_prompt">Create a label</string>
-    <string name="add_new_inactivity_goal_fb">INACTIVITY GOAL</string>
-    <string name="and_new_sunshine_fb">SUNSHINE GOAL</string>
+    <string name="add_new_inactivity_goal_fb">Inactivity goal</string>
+    <string name="and_new_sunshine_fb">Sunshine goal</string>
     <string name="find_watch_subtitle">press to send a alert-signal to LunaR</string>
     <string name="fragment_setting_app_list_title">App</string>
     <string name="fragment_setting_device_list_title">Device</string>

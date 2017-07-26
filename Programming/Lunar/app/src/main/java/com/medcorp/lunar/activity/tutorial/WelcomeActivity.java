@@ -237,30 +237,35 @@ public class WelcomeActivity extends BaseActivity {
             }
 
             @Override
-            public void onSuccess(WeChatLoginResponse response) {
+            public void onSuccess(final WeChatLoginResponse response) {
                 if (response.getStatus() == 1) {
-                    WeChatLoginResponse.UserBean user = response.getUser();
-                    final User lunarUser = getModel().getUser();
-                    lunarUser.setFirstName(user.getFirst_name());
-                    lunarUser.setUserID("" + user.getId());
-                    lunarUser.setWechat(user.getWechat());
-                    lunarUser.setIsLogin(true);
-                    lunarUser.setCreatedDate(new Date().getTime());
-                    //save it and sync with watch and cloud server
-                    getModel().saveUser(lunarUser);
-                    getModel().getSyncController().getDailyTrackerInfo(true);
-                    getModel().getNeedSyncSteps(lunarUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
+                    getModel().getUser().subscribe(new Consumer<User>() {
                         @Override
-                        public void accept(final List<Steps> stepses) throws Exception {
-                            getModel().getNeedSyncSleep(lunarUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
+                        public void accept(final User lunarUser) throws Exception {
+                            WeChatLoginResponse.UserBean user = response.getUser();
+                            lunarUser.setFirstName(user.getFirst_name());
+                            lunarUser.setUserID("" + user.getId());
+                            lunarUser.setWechat(user.getWechat());
+                            lunarUser.setIsLogin(true);
+                            lunarUser.setCreatedDate(new Date().getTime());
+                            //save it and sync with watch and cloud server
+                            getModel().saveUser(lunarUser);
+                            getModel().getSyncController().getDailyTrackerInfo(true);
+                            getModel().getNeedSyncSteps(lunarUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
                                 @Override
-                                public void accept(List<Sleep> sleeps) throws Exception {
-                                    getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses, sleeps);
+                                public void accept(final List<Steps> stepses) throws Exception {
+                                    getModel().getNeedSyncSleep(lunarUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
+                                        @Override
+                                        public void accept(List<Sleep> sleeps) throws Exception {
+                                            getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses, sleeps);
+                                        }
+                                    });
                                 }
                             });
+                            onLoginSuccess();
+
                         }
                     });
-                    onLoginSuccess();
                 } else {
                     onFailed();
                     showSnackbar(getString(R.string.wechat_login_fail));
@@ -407,31 +412,35 @@ public class WelcomeActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 if (response.getStatus() == 1) {
-                                    FacebookLoginResponse.UserBean user = response.getUser();
-                                    final User lunarUser = getModel().getUser();
-                                    lunarUser.setFirstName(user.getFirst_name());
-                                    lunarUser.setUserID("" + user.getId());
-                                    lunarUser.setUserEmail(user.getEmail());
-                                    lunarUser.setIsLogin(true);
-                                    lunarUser.setCreatedDate(new Date().getTime());
-                                    //save it and sync with watch and cloud server
-                                    getModel().saveUser(lunarUser);
-                                    getModel().getSyncController().getDailyTrackerInfo(true);
-                                    getModel().getNeedSyncSteps(lunarUser.getUserID())
-                                            .subscribe(new Consumer<List<Steps>>() {
-                                                @Override
-                                                public void accept(final List<Steps> stepses) throws Exception {
-                                                    getModel().getNeedSyncSleep(lunarUser.getUserID())
-                                                            .subscribe(new Consumer<List<Sleep>>() {
-                                                                @Override
-                                                                public void accept(List<Sleep> sleeps) throws Exception {
-                                                                    getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses
-                                                                            , sleeps);
-                                                                }
-                                                            });
-                                                }
-                                            });
-                                    onLoginSuccess();
+                                    getModel().getUser().subscribe(new Consumer<User>() {
+                                        @Override
+                                        public void accept(final User lunarUser) throws Exception {
+                                            FacebookLoginResponse.UserBean user = response.getUser();
+                                            lunarUser.setFirstName(user.getFirst_name());
+                                            lunarUser.setUserID("" + user.getId());
+                                            lunarUser.setUserEmail(user.getEmail());
+                                            lunarUser.setIsLogin(true);
+                                            lunarUser.setCreatedDate(new Date().getTime());
+                                            //save it and sync with watch and cloud server
+                                            getModel().saveUser(lunarUser);
+                                            getModel().getSyncController().getDailyTrackerInfo(true);
+                                            getModel().getNeedSyncSteps(lunarUser.getUserID())
+                                                    .subscribe(new Consumer<List<Steps>>() {
+                                                        @Override
+                                                        public void accept(final List<Steps> stepses) throws Exception {
+                                                            getModel().getNeedSyncSleep(lunarUser.getUserID())
+                                                                    .subscribe(new Consumer<List<Sleep>>() {
+                                                                        @Override
+                                                                        public void accept(List<Sleep> sleeps) throws Exception {
+                                                                            getModel().getCloudSyncManager().launchSyncAll(lunarUser, stepses
+                                                                                    , sleeps);
+                                                                        }
+                                                                    });
+                                                        }
+                                                    });
+                                            onLoginSuccess();
+                                        }
+                                    });
                                 } else {
                                     showSnackbar(getString(R.string.log_in_failed));
                                 }

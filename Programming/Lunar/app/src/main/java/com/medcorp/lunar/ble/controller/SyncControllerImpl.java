@@ -80,6 +80,7 @@ import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.Solar;
 import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.model.Steps;
+import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.model.WatchInfomation;
 import com.medcorp.lunar.util.BatteryLowNotificationUtils;
 import com.medcorp.lunar.util.Common;
@@ -124,6 +125,8 @@ import java.util.TimerTask;
 
 import io.reactivex.functions.Consumer;
 import io.realm.Realm;
+
+import static com.medcorp.lunar.R.drawable.user;
 
 public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<Void> {
     private final static String TAG = "SyncControllerImpl";
@@ -233,274 +236,287 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     @Subscribe
     public void onEvent(BLEResponseDataEvent eventData) {
-        BLEResponseData data = eventData.getData();
+        final BLEResponseData data = eventData.getData();
         if (data.getType().equals(MEDRawData.TYPE)) {
-            final MEDRawData lunarData = (MEDRawData) data;
-            packetsBuffer.add(lunarData);
+            ((ApplicationModel) mContext).getUser().subscribe(new Consumer<User>() {
+                @Override
+                public void accept(User user) throws Exception {
+                    final MEDRawData lunarData = (MEDRawData) data;
+                    packetsBuffer.add(lunarData);
+                    if ((byte) 0xFF == lunarData.getRawData()[0]) {
+                        Packet packet = new Packet(packetsBuffer);
+                        //if packets invaild, discard them, and reset buffer
+                        if (!packet.isVaildPackets()) {
+                            Log.e("Nevo Error", "InVaild Packets Received!");
+                            packetsBuffer.clear();
+                            QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
+                            return;
+                        }
 
-            if ((byte) 0xFF == lunarData.getRawData()[0]) {
-                Packet packet = new Packet(packetsBuffer);
-                //if packets invaild, discard them, and reset buffer
-                if (!packet.isVaildPackets()) {
-                    Log.e("Nevo Error", "InVaild Packets Received!");
-                    packetsBuffer.clear();
-                    QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
-                    return;
-                }
-
-                if ((byte) SetRtcRequest.HEADER == lunarData.getRawData()[1]) {
-                    //setp2:start set user profile
-                    sendRequest(new SetProfileRequest(mContext, ((ApplicationModel) mContext).getUser()));
-                } else if ((byte) SetProfileRequest.HEADER == lunarData.getRawData()[1]) {
-                    //step3:WriteSetting
-                    sendRequest(new WriteSettingRequest(mContext));
-                } else if ((byte) WriteSettingRequest.HEADER == lunarData.getRawData()[1]) {
-                    EventBus.getDefault().post(new InitializeEvent(InitializeEvent.INITIALIZE_STATUS.END));
-                    //because we have a "SyncController" queue to send request, so here we can send many requests one by one.
-                    //step4: sync notifications, app-->watch
-                    setNotification(true);
-                    //step5:sync alarms, app-->watch
-                    //firstly clean all alarms
-                    resetAllAlarms();
-                    ((ApplicationModel) mContext).getAllAlarm(new SyncAlarmToWatchListener() {
-                        @Override
-                        public void syncAlarmToWatch(List<Alarm> alarms) {
-                            Calendar calendar = Calendar.getInstance();
-                            calendar.setTime(new Date());
-                            for (Alarm alarm : alarms) {
-                                if ((alarm.getWeekDay() & 0x80) == 0x80) {
-                                    //NOTICE: here we only disable it in the watch, but keep its status(on or off) in the app.
-                                    if (alarm.getAlarmNumber() >= 13) {
-                                        //discard today 's sleep alarm when it comes in active mode (BT connected)
-                                        if ((alarm.getWeekDay() & 0x0F) == calendar.get(Calendar.DAY_OF_WEEK)
-                                                && (alarm.getHour() < calendar.get(Calendar.HOUR_OF_DAY) || (alarm.getHour() == calendar.get(Calendar.HOUR_OF_DAY) && alarm.getMinute() < calendar.get(Calendar.MINUTE)))) {
-                                            continue;
-                                        }
-                                        //discard yesterday 's sleep alarm when it comes in active mode (BT connected)
-                                        else if ((((alarm.getWeekDay() & 0x0F) + 1) == calendar.get(Calendar.DAY_OF_WEEK))
-                                                || ((alarm.getWeekDay() & 0x0F) == 7 && calendar.get(Calendar.DAY_OF_WEEK) == 1)) {
-                                            continue;
+                        if ((byte) SetRtcRequest.HEADER == lunarData.getRawData()[1]) {
+                            //setp2:start set user profile
+                            ((ApplicationModel) mContext).getUser().subscribe(new Consumer<User>() {
+                                @Override
+                                public void accept(User user) throws Exception {
+                                    sendRequest(new SetProfileRequest(mContext, user));
+                                }
+                            });
+                        } else if ((byte) SetProfileRequest.HEADER == lunarData.getRawData()[1]) {
+                            //step3:WriteSetting
+                            sendRequest(new WriteSettingRequest(mContext));
+                        } else if ((byte) WriteSettingRequest.HEADER == lunarData.getRawData()[1]) {
+                            EventBus.getDefault().post(new InitializeEvent(InitializeEvent.INITIALIZE_STATUS.END));
+                            //because we have a "SyncController" queue to send request, so here we can send many requests one by one.
+                            //step4: sync notifications, app-->watch
+                            setNotification(true);
+                            //step5:sync alarms, app-->watch
+                            //firstly clean all alarms
+                            resetAllAlarms();
+                            ((ApplicationModel) mContext).getAllAlarm(new SyncAlarmToWatchListener() {
+                                @Override
+                                public void syncAlarmToWatch(List<Alarm> alarms) {
+                                    Calendar calendar = Calendar.getInstance();
+                                    calendar.setTime(new Date());
+                                    for (Alarm alarm : alarms) {
+                                        if ((alarm.getWeekDay() & 0x80) == 0x80) {
+                                            //NOTICE: here we only disable it in the watch, but keep its status(on or off) in the app.
+                                            if (alarm.getAlarmNumber() >= 13) {
+                                                //discard today 's sleep alarm when it comes in active mode (BT connected)
+                                                if ((alarm.getWeekDay() & 0x0F) == calendar.get(Calendar.DAY_OF_WEEK)
+                                                        && (alarm.getHour() < calendar.get(Calendar.HOUR_OF_DAY) || (alarm.getHour() == calendar.get(Calendar.HOUR_OF_DAY) && alarm.getMinute() < calendar.get(Calendar.MINUTE)))) {
+                                                    continue;
+                                                }
+                                                //discard yesterday 's sleep alarm when it comes in active mode (BT connected)
+                                                else if ((((alarm.getWeekDay() & 0x0F) + 1) == calendar.get(Calendar.DAY_OF_WEEK))
+                                                        || ((alarm.getWeekDay() & 0x0F) == 7 && calendar.get(Calendar.DAY_OF_WEEK) == 1)) {
+                                                    continue;
+                                                }
+                                            }
+                                            setAlarm(alarm);
                                         }
                                     }
-                                    setAlarm(alarm);
+                                    //step6: start sync data, nevo-->phone
+                                    syncActivityData();
+                                }
+                            });
+                        } else if ((byte) ReadWatchInfoRequest.HEADER == lunarData.getRawData()[1]) {
+                            //get watch ID and model type
+                            WatchInfoPacket watchInfoPacket = new WatchInfoPacket(packet.getPackets());
+                            //save watch infomation into preference
+                            Preferences.setWatchId(mContext, watchInfoPacket.getWatchID());
+                            Preferences.setWatchModel(mContext, watchInfoPacket.getWatchModel());
+                            EventBus.getDefault().post(new GetWatchInfoChangedEvent(getWatchInfomation()));
+                        } else if ((byte) ReadDailyTrackerInfoRequest.HEADER == lunarData.getRawData()[1]) {
+                            if (!mSyncAllFlag) {
+                                DailyTrackerInfoPacket infopacket = new DailyTrackerInfoPacket(packet.getPackets());
+                                mCurrentDay = 0;
+                                savedDailyHistory = infopacket.getDailyTrackerInfo();
+                                if (!savedDailyHistory.isEmpty()) {
+                                    mSyncAllFlag = true;
+                                    getDailyTracker(mCurrentDay);
                                 }
                             }
-                            //step6: start sync data, nevo-->phone
-                            syncActivityData();
-                        }
-                    });
-                } else if ((byte) ReadWatchInfoRequest.HEADER == lunarData.getRawData()[1]) {
-                    //get watch ID and model type
-                    WatchInfoPacket watchInfoPacket = new WatchInfoPacket(packet.getPackets());
-                    //save watch infomation into preference
-                    Preferences.setWatchId(mContext, watchInfoPacket.getWatchID());
-                    Preferences.setWatchModel(mContext, watchInfoPacket.getWatchModel());
-                    EventBus.getDefault().post(new GetWatchInfoChangedEvent(getWatchInfomation()));
-                } else if ((byte) ReadDailyTrackerInfoRequest.HEADER == lunarData.getRawData()[1]) {
-                    if (!mSyncAllFlag) {
-                        DailyTrackerInfoPacket infopacket = new DailyTrackerInfoPacket(packet.getPackets());
-                        mCurrentDay = 0;
-                        savedDailyHistory = infopacket.getDailyTrackerInfo();
-                        if (!savedDailyHistory.isEmpty()) {
-                            mSyncAllFlag = true;
-                            getDailyTracker(mCurrentDay);
-                        }
-                    }
-                } else if ((byte) ReadDailyTrackerRequest.HEADER == lunarData.getRawData()[1]) {
-                    DailyTrackerPacket thispacket = new DailyTrackerPacket(packet.getPackets());
+                        } else {
+                            if ((byte) ReadDailyTrackerRequest.HEADER == lunarData.getRawData()[1]) {
+                                final DailyTrackerPacket thispacket = new DailyTrackerPacket(packet.getPackets());
 
-                    if (savedDailyHistory.isEmpty()) {
-                        mCurrentDay = 0;
-                        savedDailyHistory.add(mCurrentDay, new DailyHistory(thispacket.getDate()));
-                    } else {
-                        savedDailyHistory.get(mCurrentDay).setDate(thispacket.getDate());
-                    }
-                    savedDailyHistory.get(mCurrentDay).setTotalSteps(thispacket.getDailySteps());
-                    savedDailyHistory.get(mCurrentDay).setHourlySteps(thispacket.getHourlySteps());
-                    //                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + savedDailyHistory.get(mCurrentDay).getHourlySteps().toString());
+                                if (savedDailyHistory.isEmpty()) {
+                                    mCurrentDay = 0;
+                                    savedDailyHistory.add(mCurrentDay, new DailyHistory(thispacket.getDate()));
+                                } else {
+                                    savedDailyHistory.get(mCurrentDay).setDate(thispacket.getDate());
+                                }
+                                savedDailyHistory.get(mCurrentDay).setTotalSteps(thispacket.getDailySteps());
+                                savedDailyHistory.get(mCurrentDay).setHourlySteps(thispacket.getHourlySteps());
+                                //                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + savedDailyHistory.get(mCurrentDay).getHourlySteps().toString());
 
-                    savedDailyHistory.get(mCurrentDay).setTotalSleepTime(thispacket.getTotalSleepTime());
-                    savedDailyHistory.get(mCurrentDay).setHourlySleepTime(thispacket.getHourlySleepTime());
+                                savedDailyHistory.get(mCurrentDay).setTotalSleepTime(thispacket.getTotalSleepTime());
+                                savedDailyHistory.get(mCurrentDay).setHourlySleepTime(thispacket.getHourlySleepTime());
 
-                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Sleep time:" + savedDailyHistory.get(mCurrentDay).getTotalSleepTime());
-                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Sleep time:" + savedDailyHistory.get(mCurrentDay).getHourlySleepTime().toString());
+                                Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Sleep time:" + savedDailyHistory.get(mCurrentDay).getTotalSleepTime());
+                                Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Sleep time:" + savedDailyHistory.get(mCurrentDay).getHourlySleepTime().toString());
 
-                    savedDailyHistory.get(mCurrentDay).setTotalWakeTime(thispacket.getTotalWakeTime());
-                    savedDailyHistory.get(mCurrentDay).setHourlyWakeTime(thispacket.getHourlyWakeTime());
+                                savedDailyHistory.get(mCurrentDay).setTotalWakeTime(thispacket.getTotalWakeTime());
+                                savedDailyHistory.get(mCurrentDay).setHourlyWakeTime(thispacket.getHourlyWakeTime());
 
-                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Wake time:" + savedDailyHistory.get(mCurrentDay).getTotalWakeTime());
-                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Wake time:" + savedDailyHistory.get(mCurrentDay).getHourlyWakeTime().toString());
+                                Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Wake time:" + savedDailyHistory.get(mCurrentDay).getTotalWakeTime());
+                                Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Wake time:" + savedDailyHistory.get(mCurrentDay).getHourlyWakeTime().toString());
 
-                    savedDailyHistory.get(mCurrentDay).setTotalLightTime(thispacket.getTotalLightTime());
-                    savedDailyHistory.get(mCurrentDay).setHourlyLightTime(thispacket.getHourlyLightTime());
+                                savedDailyHistory.get(mCurrentDay).setTotalLightTime(thispacket.getTotalLightTime());
+                                savedDailyHistory.get(mCurrentDay).setHourlyLightTime(thispacket.getHourlyLightTime());
 
-                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily light time:" + savedDailyHistory.get(mCurrentDay).getTotalLightTime());
-                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly light time:" + savedDailyHistory.get(mCurrentDay).getHourlyLightTime().toString());
+                                Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily light time:" + savedDailyHistory.get(mCurrentDay).getTotalLightTime());
+                                Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly light time:" + savedDailyHistory.get(mCurrentDay).getHourlyLightTime().toString());
 
 
-                    savedDailyHistory.get(mCurrentDay).setTotalDeepTime(thispacket.getTotalDeepTime());
-                    savedDailyHistory.get(mCurrentDay).setHourlDeepTime(thispacket.getHourlDeepTime());
+                                savedDailyHistory.get(mCurrentDay).setTotalDeepTime(thispacket.getTotalDeepTime());
+                                savedDailyHistory.get(mCurrentDay).setHourlDeepTime(thispacket.getHourlDeepTime());
 
-                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily deep time:" + savedDailyHistory.get(mCurrentDay).getTotalDeepTime());
-                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly deep time:" + savedDailyHistory.get(mCurrentDay).getHourlDeepTime().toString());
+                                Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily deep time:" + savedDailyHistory.get(mCurrentDay).getTotalDeepTime());
+                                Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly deep time:" + savedDailyHistory.get(mCurrentDay).getHourlDeepTime().toString());
 
-                    savedDailyHistory.get(mCurrentDay).setTotalDist(thispacket.getTotalDist());
-                    savedDailyHistory.get(mCurrentDay).setHourlyDist(thispacket.getHourlyDist());
-                    savedDailyHistory.get(mCurrentDay).setTotalCalories(thispacket.getTotalCalories());
-                    savedDailyHistory.get(mCurrentDay).setHourlyCalories(thispacket.getHourlyCalories());
+                                savedDailyHistory.get(mCurrentDay).setTotalDist(thispacket.getTotalDist());
+                                savedDailyHistory.get(mCurrentDay).setHourlyDist(thispacket.getHourlyDist());
+                                savedDailyHistory.get(mCurrentDay).setTotalCalories(thispacket.getTotalCalories());
+                                savedDailyHistory.get(mCurrentDay).setHourlyCalories(thispacket.getHourlyCalories());
 
-                    IDailyHistory history = new IDailyHistory(savedDailyHistory.get(mCurrentDay));
-                    //DatabaseHelper.getInstance(mContext).SaveDailyHistory(history);
-                    //Log.i(TAG, savedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
-                    //update steps/sleep tables
-                    Steps steps = new Steps(history.getCreated());
-                    steps.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
-                    steps.setUserID(((ApplicationModel) mContext).getUser().getUserID());
-                    steps.setSteps(history.getSteps());
-                    steps.setCalories((int) history.getCalories());
-                    steps.setDistance((int) history.getDistance());
-                    steps.setHourlyCalories(history.getHourlycalories());
-                    steps.setHourlyDistance(history.getHourlydistance());
-                    steps.setHourlySteps(history.getHourlysteps());
+                                IDailyHistory history = new IDailyHistory(savedDailyHistory.get(mCurrentDay));
+                                //DatabaseHelper.getInstance(mContext).SaveDailyHistory(history);
+                                //Log.i(TAG, savedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
+                                //update steps/sleep tables
+                                Steps steps = new Steps(history.getCreated());
+                                steps.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
+                                steps.setUserID(user.getUserID());
+                                steps.setSteps(history.getSteps());
+                                steps.setCalories((int) history.getCalories());
+                                steps.setDistance((int) history.getDistance());
+                                steps.setHourlyCalories(history.getHourlycalories());
+                                steps.setHourlyDistance(history.getHourlydistance());
+                                steps.setHourlySteps(history.getHourlysteps());
 
-                    steps.setGoal(thispacket.getStepsGoal());
-                    steps.setWalkSteps(thispacket.getDailyWalkSteps());
-                    steps.setRunSteps(thispacket.getDailyRunSteps());
-                    steps.setWalkDistance(thispacket.getDailyWalkDistance());
-                    steps.setRunDistance(thispacket.getDailyRunDistance());
-                    steps.setWalkDuration(thispacket.getDailyWalkDuration());
-                    steps.setRunDuration(thispacket.getDailyRunDuration());
-                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total Steps:" + steps.getSteps());
-                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + steps.getHourlySteps());
-                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total active time: " + (steps.getWalkDuration() + steps.getRunDuration()) + ",walk time: " + steps.getWalkDuration() + ",run time: " + steps.getRunDuration());
-                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total distance: " + steps.getDistance() + ",walk distance: " + steps.getWalkDistance() + ",run distance: " + steps.getRunDistance());
-                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total calories: " + steps.getCalories());
-                    try {
-                        steps.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(steps.getDate()))).toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    //update  the day 's "steps" table
-                    //why here add if(), because sometimes 0x24 cmd returns duplicated date(this should be a bug of firmware), the next record will override the previous record with the same date
-                    if (steps.getSteps() > 0) {
-                        ((ApplicationModel) mContext).saveDailySteps(steps);
-                    }
-                    //for maintaining data consistency,here save sleep
-                    final Sleep sleep = new Sleep(history.getCreated());
-                    sleep.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
-                    sleep.setHourlySleep(history.getHourlySleepTime());
-                    sleep.setHourlyWake(history.getHourlyWakeTime());
-                    sleep.setHourlyLight(history.getHourlyLightTime());
-                    sleep.setHourlyDeep(history.getHourlDeepTime());
-                    sleep.setTotalSleepTime(history.getTotalSleepTime());
-                    sleep.setTotalWakeTime(history.getTotalWakeTime());
-                    sleep.setTotalLightTime(history.getTotalLightTime());
-                    sleep.setTotalDeepTime(history.getTotalDeepTime());
-                    //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
-                    sleep.setStart(0);
-                    sleep.setEnd(0);
-                    ((ApplicationModel) mContext).getSleepGoalDatabseHelper().getSelectedGoal().subscribe(new Consumer<SleepGoal>() {
-                        @Override
-                        public void accept(SleepGoal sleepGoal) throws Exception {
-                            sleep.setGoal(sleepGoal.getGoalDuration());
-                        }
-                    });
+                                steps.setGoal(thispacket.getStepsGoal());
+                                steps.setWalkSteps(thispacket.getDailyWalkSteps());
+                                steps.setRunSteps(thispacket.getDailyRunSteps());
+                                steps.setWalkDistance(thispacket.getDailyWalkDistance());
+                                steps.setRunDistance(thispacket.getDailyRunDistance());
+                                steps.setWalkDuration(thispacket.getDailyWalkDuration());
+                                steps.setRunDuration(thispacket.getDailyRunDuration());
+                                Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total Steps:" + steps.getSteps());
+                                Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + steps.getHourlySteps());
+                                Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total active time: " + (steps.getWalkDuration() + steps.getRunDuration()) + ",walk time: " + steps.getWalkDuration() + ",run time: " + steps.getRunDuration());
+                                Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total distance: " + steps.getDistance() + ",walk distance: " + steps.getWalkDistance() + ",run distance: " + steps.getRunDistance());
+                                Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total calories: " + steps.getCalories());
+                                try {
+                                    steps.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(steps.getDate()))).toString());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                //update  the day 's "steps" table
+                                //why here add if(), because sometimes 0x24 cmd returns duplicated date(this should be a bug of firmware), the next record will override the previous record with the same date
+                                if (steps.getSteps() > 0) {
+                                    ((ApplicationModel) mContext).saveDailySteps(steps);
+                                }
+                                //for maintaining data consistency,here save sleep
 
-                    sleep.setUserID(((ApplicationModel) mContext).getUser().getUserID());
-                    try {
-                        sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    //why here add if(), because sometimes 0x24 cmd returns duplicated date(this should be a bug of firmware), the next record will override the previous record with the same date
-                    if (sleep.getTotalSleepTime() > 0) {
-                        ((ApplicationModel) mContext).saveDailySleep(sleep);
-                    }
-                    //end update
-                    //here save solar time to local database when watch ID>1
-                    if (getWatchInfomation().getWatchID() > 1) {
-                        final Solar solar = new Solar(new Date(history.getCreated()));
-                        solar.setDate((Common.removeTimeFromDate(solar.getCreatedDate())).getTime());
-                        solar.setUserId(Integer.parseInt(((ApplicationModel) mContext).getUser().getUserID()));
-                        solar.setTotalHarvestingTime(thispacket.getSolarHarvestingTime());
-                        solar.setHourlyHarvestingTime(thispacket.getHourlyHarvestTime().toString());
-                        ((ApplicationModel) mContext).getSolarGoalDatabaseHelper().getSelectedGoal().subscribe(new Consumer<SolarGoal>() {
-                            @Override
-                            public void accept(SolarGoal solarGoal) throws Exception {
-                                solar.setGoal(solarGoal.getTime());
+                                final Sleep sleep = new Sleep(history.getCreated());
+                                sleep.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
+                                sleep.setHourlySleep(history.getHourlySleepTime());
+                                sleep.setHourlyWake(history.getHourlyWakeTime());
+                                sleep.setHourlyLight(history.getHourlyLightTime());
+                                sleep.setHourlyDeep(history.getHourlDeepTime());
+                                sleep.setTotalSleepTime(history.getTotalSleepTime());
+                                sleep.setTotalWakeTime(history.getTotalWakeTime());
+                                sleep.setTotalLightTime(history.getTotalLightTime());
+                                sleep.setTotalDeepTime(history.getTotalDeepTime());
+                                //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
+                                sleep.setStart(0);
+                                sleep.setEnd(0);
+                                ((ApplicationModel) mContext).getSleepGoalDatabseHelper().getSelectedGoal().subscribe(new Consumer<SleepGoal>() {
+                                    @Override
+                                    public void accept(SleepGoal sleepGoal) throws Exception {
+                                        sleep.setGoal(sleepGoal.getGoalDuration());
+                                    }
+                                });
+
+                                sleep.setUserID(user.getUserID());
+
+
+                                try {
+                                    sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                //why here add if(), because sometimes 0x24 cmd returns duplicated date(this should be a bug of firmware), the next record will override the previous record with the same date
+                                if (sleep.getTotalSleepTime() > 0) {
+                                    ((ApplicationModel) mContext).saveDailySleep(sleep);
+                                }
+                                //end update
+                                //here save solar time to local database when watch ID>1
+                                if (getWatchInfomation().getWatchID() > 1) {
+                                    final Solar solar = new Solar(new Date(history.getCreated()));
+                                    solar.setDate((Common.removeTimeFromDate(solar.getCreatedDate())).getTime());
+                                    solar.setUserId(Integer.parseInt(user.getUserID()));
+                                    solar.setTotalHarvestingTime(thispacket.getSolarHarvestingTime());
+                                    solar.setHourlyHarvestingTime(thispacket.getHourlyHarvestTime().toString());
+                                    ((ApplicationModel) mContext).getSolarGoalDatabaseHelper().getSelectedGoal().subscribe(new Consumer<SolarGoal>() {
+                                        @Override
+                                        public void accept(SolarGoal solarGoal) throws Exception {
+                                            solar.setGoal(solarGoal.getTime());
+                                        }
+                                    });
+                                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "hourly solar time:" + solar.getHourlyHarvestingTime());
+                                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total solar time:" + solar.getTotalHarvestingTime());
+                                    ((ApplicationModel) mContext).getSolarDatabaseHelper().update(solar);
+                                }
+                                mCurrentDay++;
+                                if (mCurrentDay < savedDailyHistory.size() && mSyncAllFlag) {
+                                    getDailyTracker(mCurrentDay);
+                                } else {
+                                    mCurrentDay = 0;
+                                    //DatabaseHelper.outPutDatabase(mContext);
+                                    syncFinished();
+                                }
+
+                            } else if ((byte) TestModeRequest.MODE_F4 == packet.getHeader()) {
+                                int battery_adc = HexUtils.bytesToInt(new byte[]{packet.getPackets().get(0).getRawData()[2], packet.getPackets().get(0).getRawData()[3]});
+                                int pv_adc = HexUtils.bytesToInt(new byte[]{packet.getPackets().get(0).getRawData()[4], packet.getPackets().get(0).getRawData()[5]});
+                                float battery_voltage = ((battery_adc + 1) * 360f / 1024) / 100;
+                                float pv_voltage = ((pv_adc + 1) * 360f / 1024) / 100;
+                                Log.i(TAG, "battery_adc= " + battery_adc + ",battery_voltage= " + battery_voltage + ",pv_adc= " + pv_adc + ",pv_voltage= " + pv_voltage);
+                                EventBus.getDefault().post(new SolarConvertEvent(pv_adc));
+                            } else if ((byte) FindPhoneRequest.HEADER == lunarData.getRawData()[1]) {
+                                if (mLocalService != null) {
+                                    mLocalService.findCellPhone();
+                                    //let all LED light on, means that find CellPhone is successful.
+                                    sendRequest(new TestModeRequest(mContext, 0xFFFFFF, false, TestModeRequest.MODE_F0));
+                                }
+                            } else if ((byte) GetStepsGoalRequest.HEADER == lunarData.getRawData()[1]) {
+                                //save current day's step count to "Steps" table
+                                DailyStepsPacket stepPacket = new DailyStepsPacket(packet.getPackets());
+                                Log.i(TAG, "little sync,Date:" + stepPacket.getDailyDate().toString() + ",steps:" + stepPacket.getDailySteps() + ",goal:" + stepPacket.getDailyStepsGoal());
+                                Steps steps = ((ApplicationModel) mContext).getDailySteps(user.getUserID(), Common.removeTimeFromDate(new Date()));
+                                steps.setCreatedDate(new Date().getTime());
+                                steps.setDate(Common.removeTimeFromDate(new Date()).getTime());
+                                steps.setSteps(stepPacket.getDailySteps());
+                                steps.setGoal(stepPacket.getDailyStepsGoal());
+                                steps.setUserID(user.getUserID());
+                                //I can't calculator these value from this packet, they should come from CMD 0x25 cmd
+                                ((ApplicationModel) mContext).saveDailySteps(steps);
+                                //end save
+                            } else if ((byte) NewApplicationArrivedPacket.HEADER == lunarData.getRawData()[1]) {
+                                NewApplicationArrivedPacket newApplicationArrivedPacket = new NewApplicationArrivedPacket(packet.getPackets());
+                                Log.i(TAG, "new Application arrived,total:" + newApplicationArrivedPacket.getTotalApplications());
+                                Log.i(TAG, "new Application arrived,ID: " + newApplicationArrivedPacket.getApplicationInfomation().getData());
+                                //TODO send AddApplicationRequest ???
+                                sendRequest(new AddApplicationRequest(mContext, newApplicationArrivedPacket.getApplicationInfomation()));
                             }
-                        });
-                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "hourly solar time:" + solar.getHourlyHarvestingTime());
-                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total solar time:" + solar.getTotalHarvestingTime());
-                        ((ApplicationModel) mContext).getSolarDatabaseHelper().update(solar);
+                        }
+                        //process done(such as save local db), then notify top layer to get or refresh screen
+                        if (packet.getHeader() == (byte) GetStepsGoalRequest.HEADER) {
+                            EventBus.getDefault().post(new LittleSyncEvent(true));
+                        } else if ((byte) GetBatteryLevelRequest.HEADER == packet.getHeader()) {
+                            EventBus.getDefault().post(new BatteryEvent(new Battery(new BatteryLevelPacket(packet.getPackets()).getBatteryLevel(), new BatteryLevelPacket(packet.getPackets()).getBatteryCapacity())));
+                        } else if ((byte) FindWatchRequest.HEADER == packet.getHeader()) {
+                            EventBus.getDefault().post(new FindWatchEvent(true));
+                        } else if ((byte) SetAlarmWithTypeRequest.HEADER == packet.getHeader()
+                                || (byte) SetNotificationRequest.HEADER == packet.getHeader()
+                                || (byte) SetGoalRequest.HEADER == packet.getHeader()) {
+                            EventBus.getDefault().post(new RequestResponseEvent(true));
+                        } else if (packet.getHeader() == (byte) SetSunriseAndSunsetTimeRequest.HEADER) {
+                            setSunriseAndSunsetSuccess = true;
+                            // Notify waiting thread
+                            synchronized (lockObject) {
+                                lockObject.notifyAll();
+                            }
+                            EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.SUCCESS));
+                        } else if ((byte) ChargingNotificationPacket.HEADER == packet.getHeader()) {
+                            BatteryLowNotificationUtils.sendNotification(mContext);
+                        }
+                        packetsBuffer.clear();
+                        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
                     }
-                    mCurrentDay++;
-                    if (mCurrentDay < savedDailyHistory.size() && mSyncAllFlag) {
-                        getDailyTracker(mCurrentDay);
-                    } else {
-                        mCurrentDay = 0;
-                        //DatabaseHelper.outPutDatabase(mContext);
-                        syncFinished();
-                    }
-                } else if ((byte) TestModeRequest.MODE_F4 == packet.getHeader()) {
-                    int battery_adc = HexUtils.bytesToInt(new byte[]{packet.getPackets().get(0).getRawData()[2], packet.getPackets().get(0).getRawData()[3]});
-                    int pv_adc = HexUtils.bytesToInt(new byte[]{packet.getPackets().get(0).getRawData()[4], packet.getPackets().get(0).getRawData()[5]});
-                    float battery_voltage = ((battery_adc + 1) * 360f / 1024) / 100;
-                    float pv_voltage = ((pv_adc + 1) * 360f / 1024) / 100;
-                    Log.i(TAG, "battery_adc= " + battery_adc + ",battery_voltage= " + battery_voltage + ",pv_adc= " + pv_adc + ",pv_voltage= " + pv_voltage);
-                    EventBus.getDefault().post(new SolarConvertEvent(pv_adc));
-                } else if ((byte) FindPhoneRequest.HEADER == lunarData.getRawData()[1]) {
-                    if (mLocalService != null) {
-                        mLocalService.findCellPhone();
-                        //let all LED light on, means that find CellPhone is successful.
-                        sendRequest(new TestModeRequest(mContext, 0xFFFFFF, false, TestModeRequest.MODE_F0));
-                    }
-                } else if ((byte) GetStepsGoalRequest.HEADER == lunarData.getRawData()[1]) {
-                    //save current day's step count to "Steps" table
-                    final DailyStepsPacket stepPacket = new DailyStepsPacket(packet.getPackets());
-                    Log.i(TAG, "little sync,Date:" + stepPacket.getDailyDate().toString() + ",steps:" + stepPacket.getDailySteps() + ",goal:" + stepPacket.getDailyStepsGoal());
-                    Steps steps = ((ApplicationModel) mContext).getDailySteps(((ApplicationModel) mContext)
-                            .getUser().getUserID(), Common.removeTimeFromDate(new Date()));
-                    steps.setCreatedDate(new Date().getTime());
-                    steps.setDate(Common.removeTimeFromDate(new Date()).getTime());
-                    steps.setSteps(stepPacket.getDailySteps());
-                    steps.setGoal(stepPacket.getDailyStepsGoal());
-                    steps.setUserID(((ApplicationModel) mContext).getUser().getUserID());
-                    //I can't calculator these value from this packet, they should come from CMD 0x25 cmd
-                    ((ApplicationModel) mContext).saveDailySteps(steps);
-                    //end save
-                } else if ((byte) NewApplicationArrivedPacket.HEADER == lunarData.getRawData()[1]) {
-                    NewApplicationArrivedPacket newApplicationArrivedPacket = new NewApplicationArrivedPacket(packet.getPackets());
-                    Log.i(TAG, "new Application arrived,total:" + newApplicationArrivedPacket.getTotalApplications());
-                    Log.i(TAG, "new Application arrived,ID: " + newApplicationArrivedPacket.getApplicationInfomation().getData());
-                    //TODO send AddApplicationRequest ???
-                    sendRequest(new AddApplicationRequest(mContext, newApplicationArrivedPacket.getApplicationInfomation()));
                 }
-                //process done(such as save local db), then notify top layer to get or refresh screen
-                if (packet.getHeader() == (byte) GetStepsGoalRequest.HEADER) {
-                    EventBus.getDefault().post(new LittleSyncEvent(true));
-                } else if ((byte) GetBatteryLevelRequest.HEADER == packet.getHeader()) {
-                    EventBus.getDefault().post(new BatteryEvent(new Battery(new BatteryLevelPacket(packet.getPackets()).getBatteryLevel(),new BatteryLevelPacket(packet.getPackets()).getBatteryCapacity())));
-                } else if ((byte) FindWatchRequest.HEADER == packet.getHeader()) {
-                    EventBus.getDefault().post(new FindWatchEvent(true));
-                } else if ((byte) SetAlarmWithTypeRequest.HEADER == packet.getHeader()
-                        || (byte) SetNotificationRequest.HEADER == packet.getHeader()
-                        || (byte) SetGoalRequest.HEADER == packet.getHeader()) {
-                    EventBus.getDefault().post(new RequestResponseEvent(true));
-                } else if (packet.getHeader() == (byte) SetSunriseAndSunsetTimeRequest.HEADER) {
-                    setSunriseAndSunsetSuccess = true;
-                    // Notify waiting thread
-                    synchronized (lockObject) {
-                        lockObject.notifyAll();
-                    }
-                    EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.SUCCESS));
-                }
-                else if ((byte) ChargingNotificationPacket.HEADER == packet.getHeader()) {
-                    BatteryLowNotificationUtils.sendNotification(mContext);
-                }
-                packetsBuffer.clear();
-                QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
-            }
+            });
         }
     }
 
@@ -682,9 +698,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     private void resetAllAlarms() {
         //pls refer to R12 command 0x41, use 0x225588bb to reset all alarms
-        Alarm resetAlarm = new Alarm(0xbb, 0x88, (byte)0x22, "", (byte)0, (byte)0x55);
+        Alarm resetAlarm = new Alarm(0xbb, 0x88, (byte) 0x22, "", (byte) 0, (byte) 0x55);
         setAlarm(resetAlarm);
     }
+
     @Override
     public void getStepsAndGoal() {
         sendRequest(new GetStepsGoalRequest(mContext));
@@ -1001,12 +1018,12 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     @Override
     public void setBleConnectTimeout(int timeoutInminutes) {
-        sendRequest(new SetBleConnectTimeoutRequest(mContext,timeoutInminutes));
+        sendRequest(new SetBleConnectTimeoutRequest(mContext, timeoutInminutes));
     }
 
     @Override
     public void setChargingNotification(byte chargingThreshold, boolean enablePhoneNotification) {
-        sendRequest(new SetChargingNotificationRequest(mContext,chargingThreshold,enablePhoneNotification));
+        sendRequest(new SetChargingNotificationRequest(mContext, chargingThreshold, enablePhoneNotification));
     }
 
     public interface SyncAlarmToWatchListener {

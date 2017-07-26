@@ -63,24 +63,29 @@ public class CloudSyncManager {
             }
 
             @Override
-            public void onRequestSuccess(RegisterNewAccountResponse createUserModel) {
+            public void onRequestSuccess(final RegisterNewAccountResponse createUserModel) {
                 if (createUserModel.getStatus() == 1 && createUserModel.getUser() != null) {
                     //save user ID and other profile infomation to local database
-                    User nevoUser = getModel().getUser();
-                    RegisterNewAccountResponse.UserBean user = createUserModel.getUser();
-                    try {
-                        nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd")
-                                .parse(user.getBirthday().getDate()).getTime());
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    nevoUser.setFirstName(user.getFirst_name());
-                    nevoUser.setHeight(user.getLength());
-                    nevoUser.setLastName(user.getLast_name());
-                    nevoUser.setWeight(user.getWeight());
-                    nevoUser.setUserID("" + user.getId());
-                    nevoUser.setUserEmail(user.getEmail());
-                    getModel().saveUser(nevoUser);
+                    getModel().getUser().subscribe(new Consumer<User>() {
+                        @Override
+                        public void accept(User nevoUser) throws Exception {
+                            RegisterNewAccountResponse.UserBean user = createUserModel.getUser();
+                            try {
+                                nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd")
+                                        .parse(user.getBirthday().getDate()).getTime());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            nevoUser.setFirstName(user.getFirst_name());
+                            nevoUser.setHeight(user.getLength());
+                            nevoUser.setLastName(user.getLast_name());
+                            nevoUser.setWeight(user.getWeight());
+                            nevoUser.setUserID("" + user.getId());
+                            nevoUser.setUserEmail(user.getEmail());
+                            getModel().saveUser(nevoUser);
+                        }
+                    });
+
                 }
             }
         });
@@ -95,37 +100,42 @@ public class CloudSyncManager {
             }
 
             @Override
-            public void onRequestSuccess(UserLoginResponse loginUserModel) {
+            public void onRequestSuccess(final UserLoginResponse loginUserModel) {
                 if (loginUserModel.getStatus() == 1) {
-                    UserLoginResponse.UserBean user = loginUserModel.getUser();
-                    final User nevoUser = getModel().getUser();
-                    try {
-                        nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday().getDate()).getTime());
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    nevoUser.setFirstName(user.getFirst_name());
-                    nevoUser.setHeight(user.getLength());
-                    nevoUser.setLastName(user.getLast_name());
-                    nevoUser.setWeight(user.getWeight());
-                    nevoUser.setUserID("" + user.getId());
-                    nevoUser.setUserEmail(user.getEmail());
-                    nevoUser.setIsLogin(true);
-                    nevoUser.setCreatedDate(new Date().getTime());
-                    //save it and sync with watch and cloud server
-                    getModel().saveUser(nevoUser);
-                    getModel().getSyncController().getDailyTrackerInfo(true);
-                    getModel().getNeedSyncSteps(nevoUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
+                    getModel().getUser().subscribe(new Consumer<User>() {
                         @Override
-                        public void accept(final List<Steps> stepses) throws Exception {
-                            getModel().getNeedSyncSleep(nevoUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
+                        public void accept(final User nevoUser) throws Exception {
+                            UserLoginResponse.UserBean user = loginUserModel.getUser();
+                            try {
+                                nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday().getDate()).getTime());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            nevoUser.setFirstName(user.getFirst_name());
+                            nevoUser.setHeight(user.getLength());
+                            nevoUser.setLastName(user.getLast_name());
+                            nevoUser.setWeight(user.getWeight());
+                            nevoUser.setUserID("" + user.getId());
+                            nevoUser.setUserEmail(user.getEmail());
+                            nevoUser.setIsLogin(true);
+                            nevoUser.setCreatedDate(new Date().getTime());
+                            //save it and sync with watch and cloud server
+                            getModel().saveUser(nevoUser);
+                            getModel().getSyncController().getDailyTrackerInfo(true);
+                            getModel().getNeedSyncSteps(nevoUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
                                 @Override
-                                public void accept(List<Sleep> sleeps) throws Exception {
-                                    launchSyncAll(nevoUser, stepses, sleeps);
+                                public void accept(final List<Steps> stepses) throws Exception {
+                                    getModel().getNeedSyncSleep(nevoUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
+                                        @Override
+                                        public void accept(List<Sleep> sleeps) throws Exception {
+                                            launchSyncAll(nevoUser, stepses, sleeps);
+                                        }
+                                    });
                                 }
                             });
                         }
                     });
+
                 }
             }
         });
@@ -191,7 +201,7 @@ public class CloudSyncManager {
      * when today's steps got change, invoke it
      */
     public void launchSyncDaily(User user, Steps steps) {
-            MedNetworkOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(), null);
+        MedNetworkOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(), null);
     }
 
     /**
@@ -199,11 +209,11 @@ public class CloudSyncManager {
      */
     public void launchSyncWeekly(User user, List<Steps> stepsList, List<Sleep> sleepList) {
         for (Steps steps : stepsList) {
-                MedNetworkOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(steps.getDate()), null);
+            MedNetworkOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(steps.getDate()), null);
         }
 
         for (Sleep sleep : sleepList) {
-                MedNetworkOperation.getInstance(context).addMedSleepRecord(user, sleep, new Date(sleep.getDate()), null);
+            MedNetworkOperation.getInstance(context).addMedSleepRecord(user, sleep, new Date(sleep.getDate()), null);
         }
     }
 }

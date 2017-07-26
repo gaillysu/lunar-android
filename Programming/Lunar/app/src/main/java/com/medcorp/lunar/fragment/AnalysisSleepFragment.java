@@ -229,73 +229,77 @@ public class AnalysisSleepFragment extends BaseFragment {
         }
     }
 
-    public void setData(int position) {
-        switch (position) {
-            case 0:
-                sleepTextView.setText(getString(R.string.analysis_fragment_today_chart_title));
-                User user = getModel().getUser();
-                getModel().getDailySleep(user.getUserID(), new Date(), new TodaySleepListener() {
-                    @Override
-                    public void todaySleep(Sleep[] sleeps) {
-                        Log.e("jason", "yesterday Sleep : " + sleeps[0].toString());
-                        SleepDataHandler handler = new SleepDataHandler(Arrays.asList(sleeps));
-                        List<SleepData> sleepDataList = handler.getSleepData(new Date());
-                        if (!sleepDataList.isEmpty()) {
-                            SleepData sleepData = null;
-                            if (sleepDataList.size() == 2) {
-                                sleepData = SleepDataUtils.mergeYesterdayToday(sleepDataList.get(1), sleepDataList.get(0));
-                                DateTime sleepStart = new DateTime(sleepData.getSleepStart() == 0 ?
-                                        Common.removeTimeFromDate(new Date()).getTime() : sleepData.getSleepStart());
-                                Log.w("Karl", "Yo yo : " + sleepData.getTotalSleep());
-
-                                averageSleepText.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
-                                totalSleepText.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
-                            } else {
-                                sleepData = sleepDataList.get(0);
-                                DateTime sleepStart = new DateTime(sleepData.getSleepStart() == 0 ?
-                                        Common.removeTimeFromDate(new Date()).getTime() : sleepData.getSleepStart());
-
-                                averageSleepText.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
-                                totalSleepText.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
-                            }
-                            sleepQualityTv.setText(sleepData.getDeepSleep() * 100 / (sleepData.getTotalSleep() == 0
-                                    ? 1 : sleepData.getTotalSleep()) + "%");
-                            todaySleepChart.setDataInChart(sleepData);
-                            todaySleepChart.animateY(3000);
-                            DateTime sleepEnd = new DateTime(sleepData.getSleepEnd() == 0 ?
-                                    Common.removeTimeFromDate(new Date()).getTime() : sleepData.getSleepEnd());
-                            averageWake.setText(sleepEnd.toString("HH:mm", Locale.ENGLISH));
-                        } else {
-                            setAverageText(0, 0, 0, 0, getString(R.string.analysis_fragment_today_chart_title));
-                        }
-                    }
-                });
-                break;
-            case 1:
-                getModel().getSleep(getModel().getUser().getUserID(), new Date(), WeekData.TISHWEEK,
-                        new ObtainSleepDataListener() {
+    public void setData(final int position) {
+        getModel().getUser().subscribe(new Consumer<User>() {
+            @Override
+            public void accept(User user) throws Exception {
+                switch (position) {
+                    case 0:
+                        sleepTextView.setText(getString(R.string.analysis_fragment_today_chart_title));
+                        getModel().getDailySleep(user.getUserID(), new Date(), new TodaySleepListener() {
                             @Override
-                            public void obtainSleepData(List<SleepData> thisWeekSleepData) {
-                                thisWeekChart.addData(thisWeekSleepData, mActiveSleepGoal, 7);
-                                thisWeekChart.setMarkerView(mMv);
-                                thisWeekChart.animateY(3000);
-                                setThisWeekData(thisWeekSleepData);
+                            public void todaySleep(Sleep[] sleeps) {
+                                Log.e("jason", "yesterday Sleep : " + sleeps[0].toString());
+                                SleepDataHandler handler = new SleepDataHandler(Arrays.asList(sleeps));
+                                List<SleepData> sleepDataList = handler.getSleepData(new Date());
+                                if (!sleepDataList.isEmpty()) {
+                                    SleepData sleepData = null;
+                                    if (sleepDataList.size() == 2) {
+                                        sleepData = SleepDataUtils.mergeYesterdayToday(sleepDataList.get(1), sleepDataList.get(0));
+                                        DateTime sleepStart = new DateTime(sleepData.getSleepStart() == 0 ?
+                                                Common.removeTimeFromDate(new Date()).getTime() : sleepData.getSleepStart());
+                                        Log.w("Karl", "Yo yo : " + sleepData.getTotalSleep());
+
+                                        averageSleepText.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
+                                        totalSleepText.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
+                                    } else {
+                                        sleepData = sleepDataList.get(0);
+                                        DateTime sleepStart = new DateTime(sleepData.getSleepStart() == 0 ?
+                                                Common.removeTimeFromDate(new Date()).getTime() : sleepData.getSleepStart());
+
+                                        averageSleepText.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
+                                        totalSleepText.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
+                                    }
+                                    sleepQualityTv.setText(sleepData.getDeepSleep() * 100 / (sleepData.getTotalSleep() == 0
+                                            ? 1 : sleepData.getTotalSleep()) + "%");
+                                    todaySleepChart.setDataInChart(sleepData);
+                                    todaySleepChart.animateY(3000);
+                                    DateTime sleepEnd = new DateTime(sleepData.getSleepEnd() == 0 ?
+                                            Common.removeTimeFromDate(new Date()).getTime() : sleepData.getSleepEnd());
+                                    averageWake.setText(sleepEnd.toString("HH:mm", Locale.ENGLISH));
+                                } else {
+                                    setAverageText(0, 0, 0, 0, getString(R.string.analysis_fragment_today_chart_title));
+                                }
                             }
                         });
-                break;
-            case 2:
-                getModel().getSleep(getModel().getUser().getUserID(), new Date(), WeekData.LASTMONTH
-                        , new ObtainSleepDataListener() {
-                            @Override
-                            public void obtainSleepData(List<SleepData> lastMonthSleepData) {
-                                lastMonthChart.addData(lastMonthSleepData, mActiveSleepGoal, 30);
-                                lastMonthChart.setMarkerView(mMv);
-                                lastMonthChart.animateY(3000);
-                                setLastMonthData(lastMonthSleepData);
-                            }
-                        });
-                break;
-        }
+                        break;
+                    case 1:
+                        getModel().getSleep(user.getUserID(), new Date(), WeekData.TISHWEEK,
+                                new ObtainSleepDataListener() {
+                                    @Override
+                                    public void obtainSleepData(List<SleepData> thisWeekSleepData) {
+                                        thisWeekChart.addData(thisWeekSleepData, mActiveSleepGoal, 7);
+                                        thisWeekChart.setMarkerView(mMv);
+                                        thisWeekChart.animateY(3000);
+                                        setThisWeekData(thisWeekSleepData);
+                                    }
+                                });
+                        break;
+                    case 2:
+                        getModel().getSleep(user.getUserID(), new Date(), WeekData.LASTMONTH
+                                , new ObtainSleepDataListener() {
+                                    @Override
+                                    public void obtainSleepData(List<SleepData> lastMonthSleepData) {
+                                        lastMonthChart.addData(lastMonthSleepData, mActiveSleepGoal, 30);
+                                        lastMonthChart.setMarkerView(mMv);
+                                        lastMonthChart.animateY(3000);
+                                        setLastMonthData(lastMonthSleepData);
+                                    }
+                                });
+                        break;
+                }
+            }
+        });
     }
 
     public interface ObtainSleepDataListener {

@@ -26,6 +26,7 @@ import com.medcorp.lunar.event.bluetooth.FindWatchEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
 import com.medcorp.lunar.listener.OnCheckedChangeInListListener;
 import com.medcorp.lunar.model.SettingsMenuItem;
+import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.util.LinklossNotificationUtils;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.view.ToastHelper;
@@ -41,6 +42,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 
 /***
  * Created by karl-john on 14/12/15.
@@ -70,11 +72,9 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
-        initAppData();
-        initDeviceData();
-        initLocalData();
         return view;
     }
+
 
     private void initAppData() {
         appListMenu = new ArrayList<>();
@@ -128,29 +128,35 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
     }
 
     private void initLocalData() {
-        localListMenu = new ArrayList<>();
-        localListMenu.add(new SettingsMenuItem(getString(R.string.menu_drawer_find)
-                , getString(R.string.find_watch_subtitle), R.drawable.ic_left_menu_find));
-        localListMenu.add(new SettingsMenuItem(getString(R.string.settings_link_loss_notification),
-                getString(R.string.loss_notification_subtitle), R.drawable.setting_linkloss,
-                Preferences.getLinklossNotification(getActivity())));
-        localListMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
-        localListMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
-        //listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getUser().isLogin()));
-        if (getModel().getUser().isLogin()) {
-            localListMenu.add(new SettingsMenuItem(getString(R.string.google_fit_log_out), R.drawable.logout_icon));
-        } else {
-            localListMenu.add(new SettingsMenuItem(getString(R.string.login_page_activity_title), R.drawable.ic_login_setting_page));
-        }
-
-        mSettingLocalAdapter = new SettingMenuAdapter(getContext(), localListMenu, this);
-        settingLocalListView.setAdapter(mSettingLocalAdapter);
-        settingLocalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        getModel().getUser().subscribe(new Consumer<User>() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                localListItemClick(position);
+            public void accept(User user) throws Exception {
+                localListMenu = new ArrayList<>();
+                localListMenu.add(new SettingsMenuItem(getString(R.string.menu_drawer_find)
+                        , getString(R.string.find_watch_subtitle), R.drawable.ic_left_menu_find));
+                localListMenu.add(new SettingsMenuItem(getString(R.string.settings_link_loss_notification),
+                        getString(R.string.loss_notification_subtitle), R.drawable.setting_linkloss,
+                        Preferences.getLinklossNotification(getActivity())));
+                localListMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
+                localListMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
+                //listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getUser().isLogin()));
+                if (user.isLogin()) {
+                    localListMenu.add(new SettingsMenuItem(getString(R.string.google_fit_log_out), R.drawable.logout_icon));
+                } else {
+                    localListMenu.add(new SettingsMenuItem(getString(R.string.login_page_activity_title), R.drawable.ic_login_setting_page));
+                }
+
+                mSettingLocalAdapter = new SettingMenuAdapter(getContext(), localListMenu, SettingsFragment.this);
+                settingLocalListView.setAdapter(mSettingLocalAdapter);
+                settingLocalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        localListItemClick(position);
+                    }
+                });
             }
         });
+
     }
 
     private void appListItemClick(int position) {
@@ -322,19 +328,36 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                 getActivity().startActivity(intent);
                 break;
             case 4:
-                if (!getModel().getUser().isLogin()) {
-                    getModel().removeUser(getModel().getUser());
-                    Intent newIntent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
-                    SettingsFragment.this.getContext().getSharedPreferences(Constants.PREF_NAME, 0)
-                            .edit().putBoolean(Constants.FIRST_FLAG, true);
-                    startActivity(newIntent);
-                } else {
-                    Intent newIntent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
-                    getModel().getUser().setIsLogin(false);
-                    getModel().saveUser(getModel().getUser());
-                    startActivity(newIntent);
-                }
-                SettingsFragment.this.getActivity().finish();
+                getModel().getUser().subscribe(new Consumer<User>() {
+                    @Override
+                    public void accept(final User lunarUser) throws Exception {
+                        if (!lunarUser.isLogin()) {
+                            getModel().removeUser(lunarUser);
+                            Intent newIntent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
+                            SettingsFragment.this.getContext().getSharedPreferences(Constants.PREF_NAME, 0)
+                                    .edit().putBoolean(Constants.FIRST_FLAG, true);
+                            startActivity(newIntent);
+                        } else {
+                            new MaterialDialog.Builder(SettingsFragment.this.getContext())
+                                    .title(getString(R.string.google_fit_log_out))
+                                    .content(getString(R.string.settings_sure))
+                                    .positiveText(R.string.goal_ok)
+                                    .negativeText(R.string.goal_cancel)
+                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            Intent newIntent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
+                                            lunarUser.setIsLogin(false);
+                                            getModel().saveUser(lunarUser);
+                                            startActivity(newIntent);
+                                            SettingsFragment.this.getActivity().finish();
+                                        }
+                                    }).show();
+
+                        }
+                    }
+                });
+
                 break;
         }
     }
@@ -378,6 +401,9 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        initAppData();
+        initDeviceData();
+        initLocalData();
     }
 
     @Override

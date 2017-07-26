@@ -4,12 +4,15 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -18,6 +21,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.PresetArrayAdapter;
@@ -37,7 +41,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.reactivex.functions.Consumer;
 
 /***
@@ -71,9 +74,9 @@ public class GoalsSettingActivity extends BaseActivity {
     private String solarLableGoal;
     private int selectHour = 0;
     private int selectMinutes = 0;
-    private static final int STEPS_FLAG = 0X01;
-    private static final int SOLAR_FLAG = 0X02;
-    private static final int SLEEP_FLAG = 0X03;
+    public static final int STEPS_FLAG = 0X01;
+    public static final int SOLAR_FLAG = 0X02;
+    public static final int SLEEP_FLAG = 0X03;
     private static final int MORE_SETTING_REQUEST_CODE = 0X01 << 1;
 
     @Override
@@ -86,6 +89,63 @@ public class GoalsSettingActivity extends BaseActivity {
         initSunshineData();
         initSleepData();
         initStepsData();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_add, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.add_menu).setVisible(true);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        switch (item.getItemId()) {
+            case R.id.add_menu:
+                showAddNewGoalBottomDialog();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showAddNewGoalBottomDialog() {
+        View addNewGoalLayout = LayoutInflater.from(this).inflate(R.layout.add_new_goal_layout, null);
+        final BottomSheetDialog dialog = new BottomSheetDialog(this);
+        dialog.setContentView(addNewGoalLayout);
+        dialog.show();
+        AppCompatButton activeButton = (AppCompatButton) addNewGoalLayout.findViewById(R.id.more_setting_add_new_activity);
+        AppCompatButton inactiveButton = (AppCompatButton) addNewGoalLayout.findViewById(R.id.more_setting_add_new_inactivity);
+        AppCompatButton sunshineButton = (AppCompatButton) addNewGoalLayout.findViewById(R.id.more_setting_add_new_sunshine);
+        activeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                addNewActivity();
+            }
+        });
+        inactiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                startSettingGoalTime();
+            }
+        });
+        sunshineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                editSolarGoalTime();
+            }
+        });
+
     }
 
     private void showBottomDialog(final int type, final int id) {
@@ -110,12 +170,17 @@ public class GoalsSettingActivity extends BaseActivity {
             public void onClick(View v) {
                 if (type != 0) {
                     dialog.dismiss();
-//                    new MaterialDialog.Builder(GoalsSettingActivity.this)
-//                            .title(getString(R.string.goal_delete))
-//                            .content(getString(R.string.settings_sure))
-//                            .negativeText(R.string.goal_cancel)
-//                            .positiveText(R.string.)
-                    deleteGoal(type, id);
+                    new MaterialDialog.Builder(GoalsSettingActivity.this)
+                            .title(getString(R.string.goal_delete))
+                            .content(getString(R.string.settings_sure))
+                            .positiveText(R.string.goal_ok)
+                            .negativeText(R.string.goal_cancel)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    deleteGoal(type, id);
+                                }
+                            }).show();
                 }
             }
         });
@@ -183,21 +248,18 @@ public class GoalsSettingActivity extends BaseActivity {
                 intent.putExtra(getString(R.string.launch_edit_goal_activity_flag), STEPS_FLAG);
                 intent.putExtra(getString(R.string.key_preset_id), id);
                 startActivityForResult(intent, MORE_SETTING_REQUEST_CODE);
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 break;
             case SLEEP_FLAG:
                 Intent intentSleep = new Intent(this, EditGoalsActivity.class);
                 intentSleep.putExtra(getString(R.string.launch_edit_goal_activity_flag), SLEEP_FLAG);
                 intentSleep.putExtra(getString(R.string.key_preset_id), id);
                 startActivityForResult(intentSleep, MORE_SETTING_REQUEST_CODE);
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 break;
             case SOLAR_FLAG:
                 Intent intentSolar = new Intent(this, EditGoalsActivity.class);
                 intentSolar.putExtra(getString(R.string.launch_edit_goal_activity_flag), SOLAR_FLAG);
                 intentSolar.putExtra(getString(R.string.key_preset_id), id);
                 startActivityForResult(intentSolar, MORE_SETTING_REQUEST_CODE);
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 break;
         }
     }
@@ -301,42 +363,6 @@ public class GoalsSettingActivity extends BaseActivity {
         toolbar.setTitle(R.string.settings_more);
     }
 
-    //    private void initData() {
-    //        List<String> placeList = new ArrayList<>();
-    //        placeList.add(getString(R.string.more_setting_place_home));
-    //        placeList.add(getString(R.string.more_setting_place_local));
-    //        MySpinnerAdapter placeAdapter = new MySpinnerAdapter(this, placeList);
-    //        selectPlaceSpinner.setAdapter(placeAdapter);
-    //        selectPlaceSpinner.setSelection(Preferences.getPlaceSelect(this) ? 0 : 1);
-    //
-    //        selectPlaceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-    //            @Override
-    //            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-    //                if (position == 0) {
-    //                    Preferences.savePlaceSelect(GoalsSettingActivity.this, true);
-    //                } else {
-    //                    Preferences.savePlaceSelect(GoalsSettingActivity.this, false);
-    //                }
-    //                EventBus.getDefault().post(new DigitalTimeChangedEvent(position == 0));
-    //            }
-    //
-    //            @Override
-    //            public void onNothingSelected(AdapterView<?> parent) {
-    //
-    //            }
-    //        });
-    //    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    @OnClick(R.id.more_setting_add_new_activity)
     public void addNewActivity() {
         new MaterialDialog.Builder(this)
                 .title(R.string.goal_add)
@@ -388,7 +414,6 @@ public class GoalsSettingActivity extends BaseActivity {
     }
 
 
-    @OnClick(R.id.more_setting_add_new_inactivity)
     public void startSettingGoalTime() {
         selectHour = 0;
         selectMinutes = 0;
@@ -479,8 +504,6 @@ public class GoalsSettingActivity extends BaseActivity {
                 .show();
     }
 
-
-    @OnClick(R.id.more_setting_add_new_sunshine)
     public void editSolarGoalTime() {
         selectHour = 0;
         selectMinutes = 0;
