@@ -101,44 +101,5 @@ public class SplashActivity extends BaseActivity {
                 }
             }
         });
-
-
-//
-//        if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)
-//                && Preferences.isFirstSettingDefValue(this)) {
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    startActivity(new Intent(SplashActivity.this, ConfigTimeSyncActivity.class));
-//                    finish();
-//                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-//                }
-//            }, 1500);
-//        }
-//
-//        if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)
-//                && !Preferences.isFirstSettingDefValue(this)) {
-//
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-//                    finish();
-//                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-//                }
-//            }, 1500);
-//        }
-//
-//        if (getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)
-//                && !Preferences.getIsFirstLogin(this)) {
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    startActivity(new Intent(SplashActivity.this, TutorialPage1Activity.class));
-//                    finish();
-//                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-//                }
-//            }, 1500);
-//        }
     }
 }
