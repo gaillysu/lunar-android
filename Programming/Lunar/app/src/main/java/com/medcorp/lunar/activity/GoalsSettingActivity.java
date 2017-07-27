@@ -177,7 +177,10 @@ public class GoalsSettingActivity extends BaseActivity {
                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                     deleteGoal(type, id);
                                 }
-                            }).show();
+                            })
+                            .negativeColor(getResources().getColor(R.color.colorPrimary))
+                            .positiveColor(getResources().getColor(R.color.colorPrimary))
+                            .show();
                 }
             }
         });
@@ -377,7 +380,8 @@ public class GoalsSettingActivity extends BaseActivity {
                         })
                 .positiveText(R.string.goal_ok)
                 .negativeText(R.string.goal_cancel)
-                .negativeColor(getResources().getColor(R.color.left_menu_item_text_color))
+                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                .positiveColor(getResources().getColor(R.color.colorPrimary))
                 .show();
     }
 
@@ -410,6 +414,8 @@ public class GoalsSettingActivity extends BaseActivity {
                                 });
                             }
                         }).negativeText(R.string.goal_cancel)
+                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                .positiveColor(getResources().getColor(R.color.colorPrimary))
                 .show();
     }
 
@@ -446,6 +452,7 @@ public class GoalsSettingActivity extends BaseActivity {
         });
 
         new MaterialDialog.Builder(this).customView(selectTimeDialog, false).
+                title(getString(R.string.add_new_inactivity_goal_fb)).
                 onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -456,7 +463,8 @@ public class GoalsSettingActivity extends BaseActivity {
                     }
                 }).positiveText(R.string.goal_ok)
                 .negativeText(R.string.goal_cancel)
-                .negativeColor(getResources().getColor(R.color.left_menu_item_text_color))
+                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                .positiveColor(getResources().getColor(R.color.colorPrimary))
                 .show();
     }
 
@@ -493,6 +501,8 @@ public class GoalsSettingActivity extends BaseActivity {
                                         });
                             }
                         }).negativeText(R.string.goal_cancel)
+                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                .positiveColor(getResources().getColor(R.color.colorPrimary))
                 .show();
     }
 
@@ -528,7 +538,8 @@ public class GoalsSettingActivity extends BaseActivity {
         });
 
         new MaterialDialog.Builder(this).customView(selectTimeDialog, false).
-                onPositive(new MaterialDialog.SingleButtonCallback() {
+                title(getString(R.string.and_new_sunshine_fb))
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         if (selectHour == 0 && selectMinutes == 0) {
@@ -539,7 +550,8 @@ public class GoalsSettingActivity extends BaseActivity {
                     }
                 }).positiveText(R.string.goal_ok)
                 .negativeText(R.string.goal_cancel)
-                .negativeColor(getResources().getColor(R.color.left_menu_item_text_color))
+                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                .positiveColor(getResources().getColor(R.color.colorPrimary))
                 .show();
     }
 
@@ -567,6 +579,8 @@ public class GoalsSettingActivity extends BaseActivity {
                                 });
                             }
                         }).negativeText(R.string.goal_cancel)
+                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                .positiveColor(getResources().getColor(R.color.colorPrimary))
                 .show();
     }
 }

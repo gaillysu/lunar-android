@@ -186,7 +186,8 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                         })
                         .positiveText(R.string.goal_ok)
                         .negativeText(R.string.goal_cancel)
-                        .negativeColor(getResources().getColor(R.color.left_menu_item_text_color))
+                        .negativeColor(getResources().getColor(R.color.colorPrimary))
+                        .positiveColor(getResources().getColor(R.color.colorPrimary))
                         .show();
                 break;
         }
@@ -226,6 +227,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                     }
                 });
                 new MaterialDialog.Builder(getContext()).customView(batteryLowAlert, true)
+                        .title(getString(R.string.battery_low_alert_dialog_title))
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -237,7 +239,8 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                             }
                         }).positiveText(R.string.goal_ok)
                         .negativeText(R.string.goal_cancel)
-                        .negativeColor(getResources().getColor(R.color.left_menu_item_text_color))
+                        .negativeColor(getResources().getColor(R.color.colorPrimary))
+                        .positiveColor(getResources().getColor(R.color.colorPrimary))
                         .show();
                 break;
             case 3:
@@ -265,6 +268,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                     seekBar.setProgress(Preferences.getScanDuration(getContext()));
                     if (currentFirmwareVersion >= 14)
                         new MaterialDialog.Builder(getContext())
+                                .title(R.string.settings_bluetooth_scan)
                                 .customView(dialogView, true)
                                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                                     @Override
@@ -282,7 +286,8 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                                     }
                                 }).positiveText(R.string.goal_ok)
                                 .negativeText(R.string.goal_cancel)
-                                .negativeColor(getResources().getColor(R.color.left_menu_item_text_color))
+                                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                                .positiveColor(getResources().getColor(R.color.colorPrimary))
                                 .show();
                     else {
                         askUserIsUpdate();
@@ -305,6 +310,8 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                             }
                         })
                         .cancelable(false)
+                        .negativeColor(getResources().getColor(R.color.colorPrimary))
+                        .positiveColor(getResources().getColor(R.color.colorPrimary))
                         .show();
                 break;
         }
@@ -352,7 +359,10 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                                             startActivity(newIntent);
                                             SettingsFragment.this.getActivity().finish();
                                         }
-                                    }).show();
+                                    })
+                                    .negativeColor(getResources().getColor(R.color.colorPrimary))
+                                    .positiveColor(getResources().getColor(R.color.colorPrimary))
+                                    .show();
 
                         }
                     }
@@ -379,8 +389,9 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                     public void onClick(MaterialDialog dialog, DialogAction which) {
                         startActivity(MyWatchActivity.class);
                     }
-                })
-                .cancelable(false)
+                }).cancelable(false)
+                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                .positiveColor(getResources().getColor(R.color.colorPrimary))
                 .show();
     }
 

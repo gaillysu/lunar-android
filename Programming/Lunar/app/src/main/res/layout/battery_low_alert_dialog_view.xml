@@ -5,20 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
-    <TextView
-        android:id="@+id/battery_low_alert_dialog_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textColor="@android:color/black"
-        android:text="@string/battery_low_alert_dialog_title"
-        android:textAllCaps="false"
-        android:textSize="20sp"/>
     <com.xw.repo.BubbleSeekBar
         android:id="@+id/battery_low_alert__seek_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/battery_low_alert_dialog_title"
         android:layout_marginTop="80dp"
         app:bsb_always_show_bubble="true"
         app:bsb_auto_adjust_section_mark="true"

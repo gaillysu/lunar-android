@@ -63,7 +63,7 @@ public class ChooseColorAdapter extends BaseAdapter {
             }
             viewHolder.colorIv.setColorFilter(ledLamp.getColor());
         } else {
-            viewHolder.colorIv.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_choose_color_icon));
+            viewHolder.colorIv.setImageDrawable(context.getResources().getDrawable(R.drawable.add_color));
         }
         return convertView;
     }

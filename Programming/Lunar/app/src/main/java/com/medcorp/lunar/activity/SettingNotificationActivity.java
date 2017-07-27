@@ -270,7 +270,6 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         MaterialDialog.Builder builder = new MaterialDialog.Builder(this);
 
         builder.title(getString(R.string.notification_choose_color_dialog_title))
-                .titleColor(getResources().getColor(R.color.colorPrimary))
                 .customView(inflateView, true)
                 .positiveText(R.string.goal_ok)
                 .negativeText(R.string.goal_cancel)
@@ -309,8 +308,7 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
             }
         });
         MaterialDialog.Builder builder = new MaterialDialog.Builder(this);
-        builder.titleColor(getResources().getColor(R.color.colorPrimary))
-                .title(getString(R.string.notification_choose_color_dialog_title))
+        builder.title(getString(R.string.notification_choose_color_dialog_title))
                 .customView(inflateView, true)
                 .positiveText(R.string.goal_ok)
                 .negativeText(R.string.goal_cancel)

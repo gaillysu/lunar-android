@@ -2,7 +2,7 @@
     <!-- for better translation, remove all strings into every flavor: nevo,lunar-->
     <string name="profile_gender" translatable="false">profile_gender</string>
     <string name="profile_gender_values" translatable="false">profile_gender_values</string>
-    <string name="edit_notification_item_name">Edit</string>
+    <string name="edit_notification_item_name">Activate</string>
     <string name="edit_notification_delete_item">Delete</string>
     <string name="add_new_notification_dialog_title">Add name</string>
     <string name="add_new_notification_dialog_hint_content">Input name</string>
@@ -186,7 +186,7 @@
     <string name="goal_cancel">Cancel</string>
     <string name="goal_add">Add Goal</string>
     <string name="goal_saved">Saved stepsGoal!</string>
-    <string name="goal_step_goal">Step steps goal</string>
+    <string name="goal_step_goal">steps goal</string>
     <string name="goal_name_goal">Steps goal name</string>
     <string name="goal_name_goal_sleep">Sleep goal name</string>
     <string name="goal_name_goal_solar">Solar goal name</string>

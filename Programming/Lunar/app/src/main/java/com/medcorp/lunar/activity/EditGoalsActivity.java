@@ -157,7 +157,10 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                             getModel().updateGoal(stepsGoal);
                             presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this, getModel(), 0x01, stepsGoal.getId()));
                         }
-                    }).negativeText(R.string.goal_cancel).show();
+                    }).negativeText(R.string.goal_cancel)
+                    .negativeColor(getResources().getColor(R.color.colorPrimary))
+                    .positiveColor(getResources().getColor(R.color.colorPrimary))
+                    .show();
         } else if (position == 1) {
             new MaterialDialog.Builder(EditGoalsActivity.this)
                     .title(R.string.goal_edit)
@@ -173,16 +176,32 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                             presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this, getModel(), 0x01, stepsGoal.getId()));
                         }
                     }).negativeText(R.string.goal_cancel)
+                    .negativeColor(getResources().getColor(R.color.colorPrimary))
+                    .positiveColor(getResources().getColor(R.color.colorPrimary))
                     .show();
         } else if (position == 2) {
-            getModel().getStepsGoalDatabaseHelper().remove(stepsGoal.getId()).subscribe(new Consumer<Boolean>() {
-                @Override
-                public void accept(Boolean aBoolean) throws Exception {
-                    ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_deleted);
-                    setResult(-1);
-                    finish();
-                }
-            });
+            new MaterialDialog.Builder(EditGoalsActivity.this)
+                    .title(getString(R.string.goal_delete))
+                    .content(getString(R.string.settings_sure))
+                    .positiveText(R.string.goal_ok)
+                    .negativeText(R.string.goal_cancel)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            getModel().getStepsGoalDatabaseHelper().remove(stepsGoal.getId()).subscribe(new Consumer<Boolean>() {
+                                @Override
+                                public void accept(Boolean aBoolean) throws Exception {
+                                    ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_deleted);
+                                    setResult(-1);
+                                    finish();
+                                }
+                            });
+                        }
+                    })
+                    .negativeColor(getResources().getColor(R.color.colorPrimary))
+                    .positiveColor(getResources().getColor(R.color.colorPrimary))
+                    .show();
+
         }
     }
 
@@ -218,20 +237,33 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                                 }
                             });
                         }
-                    }).negativeText(R.string.goal_cancel)
+                    }).negativeText(R.string.goal_cancel).negativeColor(getResources().getColor(R.color.colorPrimary))
+                    .positiveColor(getResources().getColor(R.color.colorPrimary))
                     .show();
         } else if (position == 2) {
-            getModel().getSolarGoalDatabaseHelper().remove(solarGoal.getSolarGoalId())
-                    .subscribe(new Consumer<Boolean>() {
+            new MaterialDialog.Builder(EditGoalsActivity.this)
+                    .title(getString(R.string.goal_delete))
+                    .content(getString(R.string.settings_sure))
+                    .positiveText(R.string.goal_ok)
+                    .negativeText(R.string.goal_cancel)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
                         @Override
-                        public void accept(Boolean aBoolean) throws Exception {
-                            if (aBoolean) {
-                                ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_deleted);
-                                setResult(-1);
-                                finish();
-                            }
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            getModel().getSolarGoalDatabaseHelper().remove(solarGoal.getSolarGoalId())
+                                    .subscribe(new Consumer<Boolean>() {
+                                        @Override
+                                        public void accept(Boolean aBoolean) throws Exception {
+                                            if (aBoolean) {
+                                                ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_deleted);
+                                                setResult(-1);
+                                                finish();
+                                            }
+                                        }
+                                    });
                         }
-                    });
+                    }).negativeColor(getResources().getColor(R.color.colorPrimary))
+                    .positiveColor(getResources().getColor(R.color.colorPrimary)).show();
+
         }
     }
 
@@ -266,19 +298,32 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                                 }
                             });
                         }
-                    }).negativeText(R.string.goal_cancel)
+                    }).negativeColor(getResources().getColor(R.color.colorPrimary))
+                    .positiveColor(getResources().getColor(R.color.colorPrimary)).negativeText(R.string.goal_cancel)
                     .show();
         } else if (position == 2) {
-            getModel().getSleepGoalDatabseHelper().remove(sleepGoal.getSleepGoalId()).subscribe(new Consumer<Boolean>() {
-                @Override
-                public void accept(Boolean aBoolean) throws Exception {
-                    if (aBoolean) {
-                        ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_deleted);
-                        setResult(SLEEP_RESULT_CODE);
-                        finish();
-                    }
-                }
-            });
+            new MaterialDialog.Builder(EditGoalsActivity.this)
+                    .title(getString(R.string.goal_delete))
+                    .content(getString(R.string.settings_sure))
+                    .positiveText(R.string.goal_ok)
+                    .negativeText(R.string.goal_cancel)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            getModel().getSleepGoalDatabseHelper().remove(sleepGoal.getSleepGoalId()).subscribe(new Consumer<Boolean>() {
+                                @Override
+                                public void accept(Boolean aBoolean) throws Exception {
+                                    if (aBoolean) {
+                                        ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_deleted);
+                                        setResult(SLEEP_RESULT_CODE);
+                                        finish();
+                                    }
+                                }
+                            });
+                        }
+                    }).negativeColor(getResources().getColor(R.color.colorPrimary))
+                    .positiveColor(getResources().getColor(R.color.colorPrimary)).show();
+
         }
     }
 
@@ -361,7 +406,8 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                     }
                 }).positiveText(R.string.goal_ok)
                 .negativeText(R.string.goal_cancel)
-                .negativeColor(getResources().getColor(R.color.left_menu_item_text_color))
+                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                .positiveColor(getResources().getColor(R.color.colorPrimary))
                 .show();
     }
 

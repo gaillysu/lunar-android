@@ -5,14 +5,6 @@
               android:background="@color/white"
               android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:layout_marginTop="24dp"
-        android:layout_marginLeft="24dp"
-        android:text="@string/goal_add"/>
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
