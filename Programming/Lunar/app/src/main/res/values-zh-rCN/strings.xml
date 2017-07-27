@@ -546,4 +546,6 @@
     <string name="battery_low_alert_percent">百分比</string>
     <string name="settings_notifications_active_button_tv">打开通知</string>
     <string name="settings_notifications_inactive_button_tv">关闭通知</string>
+    <string name="edit_goal_name">编辑名称</string>
+    <string name="edit_goal_time_text">设置时长</string>
 </resources>

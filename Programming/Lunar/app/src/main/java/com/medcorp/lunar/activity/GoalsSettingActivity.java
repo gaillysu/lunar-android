@@ -387,7 +387,7 @@ public class GoalsSettingActivity extends BaseActivity {
 
     private void editActivityName() {
         new MaterialDialog.Builder(this)
-                .title(R.string.goal_add)
+                .title(R.string.edit_goal_name)
                 .content(R.string.goal_label_goal)
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .input(getString(R.string.goal_name_goal), "",
@@ -471,7 +471,7 @@ public class GoalsSettingActivity extends BaseActivity {
 
     public void addNewInactivity(final int hour, final int minute) {
         new MaterialDialog.Builder(this)
-                .title(R.string.goal_add)
+                .title(R.string.edit_goal_name)
                 .content(R.string.goal_label_sleep)
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .input(getString(R.string.goal_name_goal_sleep), "",
@@ -557,7 +557,7 @@ public class GoalsSettingActivity extends BaseActivity {
 
     public void addNewSunshine(final int hour, final int minute) {
         new MaterialDialog.Builder(this)
-                .title(R.string.goal_add)
+                .title(R.string.edit_goal_name)
                 .content(R.string.goal_label_solar)
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .input(getString(R.string.goal_name_goal_solar), "",

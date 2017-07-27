@@ -163,7 +163,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                     .show();
         } else if (position == 1) {
             new MaterialDialog.Builder(EditGoalsActivity.this)
-                    .title(R.string.goal_edit)
+                    .title(R.string.edit_goal_name)
                     .content(R.string.goal_label_goal)
                     .inputType(InputType.TYPE_CLASS_TEXT)
                     .input(getString(R.string.goal_label), stepsGoal.getLabel(), new MaterialDialog.InputCallback() {
@@ -218,7 +218,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
             startSettingGoalTime(hourList, minutes);
         } else if (position == 1) {
             new MaterialDialog.Builder(EditGoalsActivity.this)
-                    .title(R.string.goal_edit)
+                    .title(R.string.edit_goal_name)
                     .content(R.string.goal_label_sleep)
                     .inputType(InputType.TYPE_CLASS_TEXT)
                     .input(getString(R.string.goal_label), solarGoal.getName(), new MaterialDialog.InputCallback() {
@@ -279,7 +279,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
             startSettingGoalTime(hourList, minutes);
         } else if (position == 1) {
             new MaterialDialog.Builder(EditGoalsActivity.this)
-                    .title(R.string.goal_edit)
+                    .title(R.string.edit_goal_name)
                     .content(R.string.goal_label_sleep)
                     .inputType(InputType.TYPE_CLASS_TEXT)
                     .input(getString(R.string.goal_label), sleepGoal.getGoalName(), new MaterialDialog.InputCallback() {
@@ -376,8 +376,9 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
             }
         });
 
-        new MaterialDialog.Builder(this).customView(selectTimeDialog, false).
-                onPositive(new MaterialDialog.SingleButtonCallback() {
+        new MaterialDialog.Builder(this).customView(selectTimeDialog, false)
+                .title(getString(R.string.edit_goal_time_text))
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         if (mFlag == 0x02) {

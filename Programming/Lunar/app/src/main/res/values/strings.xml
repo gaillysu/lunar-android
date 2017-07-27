@@ -141,6 +141,8 @@
     <string name="steps_progress">progress</string>
     <string name="steps_steps">steps</string>
     <string name="setting_goal_title">Select Goal</string>
+    <string name="edit_goal_time_text">Select Time</string>
+    <string name="edit_goal_name">Edit Name</string>
 
 
     <string name="sleep_goal_def_long">Long sleep</string>

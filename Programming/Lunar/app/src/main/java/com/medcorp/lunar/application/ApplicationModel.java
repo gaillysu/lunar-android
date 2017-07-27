@@ -1154,7 +1154,7 @@ public class ApplicationModel extends Application {
     }
 
     private void addSolarDefGoal() {
-        solargoalDatabaseHelper.add(new SolarGoal(getString(R.string.solar_goal_def_long), 480, true)).subscribe(new Consumer<Boolean>() {
+        solargoalDatabaseHelper.add(new SolarGoal(getString(R.string.solar_goal_def_long), 120, true)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
@@ -1162,7 +1162,7 @@ public class ApplicationModel extends Application {
                 }
             }
         });
-        solargoalDatabaseHelper.add(new SolarGoal(getString(R.string.solar_goal_def_short), 30, false)).subscribe(new Consumer<Boolean>() {
+        solargoalDatabaseHelper.add(new SolarGoal(getString(R.string.solar_goal_def_short), 90, false)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
