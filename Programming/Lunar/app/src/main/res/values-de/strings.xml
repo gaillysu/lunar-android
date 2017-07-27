@@ -548,7 +548,7 @@
     <string name="update_watch_firmware_careful_third">Don\'t press and buttons on LunaR while upgrading</string>
     <string name="battery_low_alert_dialog_title">Battery alert</string>
     <string name="battery_low_alert_percent">PERCENT</string>
-    <string name="settings_notifications_active_button_tv">Active</string>
-    <string name="settings_notifications_inactive_button_tv">Inactive</string>
+    <string name="settings_notifications_active_button_tv">Activate </string>
+    <string name="settings_notifications_inactive_button_tv">Deactivate </string>
 
 </resources>

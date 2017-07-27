@@ -198,7 +198,7 @@
     <string name="goal_label_goal">Label your steps goal</string>
     <string name="goal_label_sleep">Label your sleep goal</string>
     <string name="goal_label_solar">Label your solar goal</string>
-    <string name="goal_label">label name</string>
+    <string name="goal_label">Label name</string>
     <string name="goal_deleted">Deleted goal!</string>
     <string name="goal_could_not_delete">Failed to delete stepsGoal</string>
     <string name="goal_could_not_change">Failed to change stepsGoal</string>
@@ -229,8 +229,8 @@
     <string name="settings_notifications">Notifications</string>
     <string name="setting_fragment_notification_subtitle">Set a unique LED -color for each notification</string>
     <string name="settings_notifications_active_title">Active Notifications</string>
-    <string name="settings_notifications_active_button_tv">Active </string>
-    <string name="settings_notifications_inactive_button_tv">Inactive </string>
+    <string name="settings_notifications_active_button_tv">Activate </string>
+    <string name="settings_notifications_inactive_button_tv">Deactivate </string>
     <string name="settings_notifications_inactive_title">Inactive Notifications</string>
     <string name="settings_find_my_watch">Find my watch</string>
     <string name="settings_goals">Goals</string>

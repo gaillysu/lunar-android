@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="56dp"
+              android:layout_height="54dp"
               android:background="?android:attr/selectableItemBackground"
-              android:gravity="center_vertical"
-              android:paddingBottom="8dp"
-              android:paddingLeft="16dp"
-              android:paddingTop="8dp">
+              android:paddingLeft="16dp">
 
     <ImageView
         android:id="@+id/activity_setting_menu_image"
@@ -15,6 +12,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:background="@android:color/transparent"
+        android:layout_gravity="center_vertical"
         android:scaleType="fitXY"
         android:src="@drawable/ic_login_setting_page"
         android:tint="@color/setting_tint_color_icon"/>
@@ -24,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
+        android:layout_gravity="center_vertical"
         android:layout_marginRight="10dp"
         android:layout_weight="1"
         android:orientation="vertical">
@@ -55,6 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
         android:focusable="false"
         android:shadowColor="@color/colorPrimary"
         android:theme="@style/my_switch_color"/>

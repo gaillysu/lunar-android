@@ -9,7 +9,7 @@
         android:id="@+id/battery_low_alert_dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="16dp"
         android:textColor="@android:color/black"
         android:text="@string/battery_low_alert_dialog_title"
         android:textAllCaps="false"
@@ -18,8 +18,8 @@
         android:id="@+id/battery_low_alert__seek_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dialog_title"
-        android:layout_marginTop="100dp"
+        android:layout_below="@+id/battery_low_alert_dialog_title"
+        android:layout_marginTop="80dp"
         app:bsb_always_show_bubble="true"
         app:bsb_auto_adjust_section_mark="true"
         app:bsb_max="30"
@@ -37,6 +37,6 @@
         android:text="@string/battery_low_alert_percent"
         android:alpha="0.5"
         android:textAllCaps="true"
-        android:textSize="20sp"/>
+        android:textSize="18sp"/>
 
 </RelativeLayout>

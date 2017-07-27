@@ -178,8 +178,6 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
             selectNotification = inactiveNotificationList.get(position);
             showBottomDialog(INACTIVITY_FLAG, position);
         }
-
-
     }
 
     private void showBottomDialog(final int type, final int position) {
@@ -324,30 +322,31 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
                         addNewColorDialog.dismiss();
                     }
                 }).onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String name = textLayout.getEditText().getText().toString();
-                        if (!TextUtils.isEmpty(name) && selectedColor != 0) {
-                            addNewColorDialog.dismiss();
-                            if (type == ACTIVITY_FLAG) {
-                                LedLamp currentColor = (LedLamp) Preferences.getNotificationColor(SettingNotificationActivity.this, selectNotification, getModel());
-                                currentColor.setColor(selectedColor);
-                                currentColor.setName(name);
-                                activeNotificationList.remove(position);
-                                activeNotificationList.add(selectNotification);
-                                activeNotificationArrayAdapter.notifyDataSetChanged();
-                            } else {
-                                LedLamp mLedLamp = new LedLamp();
-                                mLedLamp.setSelect(false);
-                                mLedLamp.setName(name);
-                                mLedLamp.setColor(selectedColor);
-                                getModel().addLedLamp(mLedLamp);
-                            }
-                        } else {
-                            ToastHelper.showShortToast(SettingNotificationActivity.this, getString(R.string.prompt_user_set_color_name));
-                        }
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                String name = textLayout.getEditText().getText().toString();
+                if (!TextUtils.isEmpty(name) && selectedColor != 0) {
+                    addNewColorDialog.dismiss();
+                    LedLamp mLedLamp = new LedLamp();
+                    mLedLamp.setSelect(true);
+                    mLedLamp.setName(name);
+                    mLedLamp.setColor(selectedColor);
+                    getModel().addLedLamp(mLedLamp);
+                    if (type == ACTIVITY_FLAG) {
+
+                        LedLamp currentColor = (LedLamp) Preferences.getNotificationColor(SettingNotificationActivity.this, selectNotification, getModel());
+                        currentColor.setColor(selectedColor);
+                        currentColor.setName(name);
+                        activeNotificationList.remove(position);
+                        Preferences.saveNotificationColor(SettingNotificationActivity.this, selectNotification, selectedColor);
+                        activeNotificationList.add(selectNotification);
+                        activeNotificationArrayAdapter.notifyDataSetChanged();
                     }
-                });
+                } else {
+                    ToastHelper.showShortToast(SettingNotificationActivity.this, getString(R.string.prompt_user_set_color_name));
+                }
+            }
+        });
         addNewColorDialog = builder.build();
         addNewColorDialog.show();
     }

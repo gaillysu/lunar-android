@@ -381,7 +381,7 @@
     <string name="goal_edit">Modifier l\'objectif</string>
     <string name="goal_input">Définissez votre objectif</string>
     <string name="goal_label_goal">Étiquetez votre objectif</string>
-    <string name="goal_label">nom de l\'étiquette</string>
+    <string name="goal_label">Nom de l\'étiquette</string>
     <string name="goal_deleted">Objectif supprimé !</string>
     <string name="goal_could_not_delete">Impossible de supprimer l\'objectif</string>
     <string name="goal_could_not_change">Impossible de modifier l\'objectif</string>
@@ -549,6 +549,6 @@
     <string name="update_watch_firmware_careful_third">Don\'t press and buttons on LunaR while upgrading</string>
     <string name="battery_low_alert_dialog_title">Battery alert</string>
     <string name="battery_low_alert_percent">PERCENT</string>
-    <string name="settings_notifications_active_button_tv">Active</string>
-    <string name="settings_notifications_inactive_button_tv">Inactive</string>
+    <string name="settings_notifications_active_button_tv">Activate </string>
+    <string name="settings_notifications_inactive_button_tv">Deactivate </string>
 </resources>

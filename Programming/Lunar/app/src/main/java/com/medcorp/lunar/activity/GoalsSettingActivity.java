@@ -1,7 +1,5 @@
 package com.medcorp.lunar.activity;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -377,7 +374,10 @@ public class GoalsSettingActivity extends BaseActivity {
                                 steps = Integer.parseInt(input.toString());
                                 editActivityName();
                             }
-                        }).negativeText(R.string.goal_cancel)
+                        })
+                .positiveText(R.string.goal_ok)
+                .negativeText(R.string.goal_cancel)
+                .negativeColor(getResources().getColor(R.color.left_menu_item_text_color))
                 .show();
     }
 
@@ -418,7 +418,6 @@ public class GoalsSettingActivity extends BaseActivity {
         selectHour = 0;
         selectMinutes = 0;
         View selectTimeDialog = LayoutInflater.from(this).inflate(R.layout.select_time_dialog_layou, null);
-        final Dialog dialog = new AlertDialog.Builder(this).create();
         List<String> hourList = new ArrayList<>();
         List<String> minutes = new ArrayList<>();
         minutes.add(0 + "");
@@ -432,11 +431,6 @@ public class GoalsSettingActivity extends BaseActivity {
         PickerView minutePickerView = (PickerView) selectTimeDialog.findViewById(R.id.minute_pv);
         minutePickerView.setData(minutes);
         minutePickerView.setSelected(0);
-        Button cancelButton = (Button) selectTimeDialog.findViewById(R.id.select_time_cancel_bt);
-        final Button selectButton = (Button) selectTimeDialog.findViewById(R.id.select_time_select_bt);
-        dialog.show();
-        Window window = dialog.getWindow();
-        window.setContentView(selectTimeDialog);
         hourPickerView.setOnSelectListener(new PickerView.onSelectListener() {
             @Override
             public void onSelect(String text) {
@@ -450,22 +444,20 @@ public class GoalsSettingActivity extends BaseActivity {
                 selectMinutes = new Integer(text).intValue();
             }
         });
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        selectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                if (selectHour == 0 && selectMinutes == 0) {
-                    selectHour = 8;
-                }
-                addNewInactivity(selectHour, selectMinutes);
-            }
-        });
+
+        new MaterialDialog.Builder(this).customView(selectTimeDialog, false).
+                onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        if (selectHour == 0 && selectMinutes == 0) {
+                            selectHour = 8;
+                        }
+                        addNewInactivity(selectHour, selectMinutes);
+                    }
+                }).positiveText(R.string.goal_ok)
+                .negativeText(R.string.goal_cancel)
+                .negativeColor(getResources().getColor(R.color.left_menu_item_text_color))
+                .show();
     }
 
 
@@ -508,7 +500,6 @@ public class GoalsSettingActivity extends BaseActivity {
         selectHour = 0;
         selectMinutes = 0;
         View selectTimeDialog = LayoutInflater.from(this).inflate(R.layout.select_time_dialog_layou, null);
-        final Dialog dialog = new AlertDialog.Builder(this).create();
         List<String> hourList = new ArrayList<>();
         List<String> minutes = new ArrayList<>();
         minutes.add(0 + "");
@@ -522,11 +513,6 @@ public class GoalsSettingActivity extends BaseActivity {
         minutePickerView.setData(minutes);
         minutePickerView.setSelected(1);
         hourPickerView.setSelected(0);
-        Button cancelButton = (Button) selectTimeDialog.findViewById(R.id.select_time_cancel_bt);
-        final Button selectButton = (Button) selectTimeDialog.findViewById(R.id.select_time_select_bt);
-        dialog.show();
-        Window window = dialog.getWindow();
-        window.setContentView(selectTimeDialog);
         hourPickerView.setOnSelectListener(new PickerView.onSelectListener() {
             @Override
             public void onSelect(String text) {
@@ -540,24 +526,21 @@ public class GoalsSettingActivity extends BaseActivity {
                 selectMinutes = new Integer(text).intValue();
             }
         });
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        selectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                if (selectHour == 0 && selectMinutes == 0) {
-                    selectHour = 0;
-                    selectMinutes = 30;
-                }
-                addNewSunshine(selectHour, selectMinutes);
 
-            }
-        });
+        new MaterialDialog.Builder(this).customView(selectTimeDialog, false).
+                onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        if (selectHour == 0 && selectMinutes == 0) {
+                            selectHour = 0;
+                            selectMinutes = 30;
+                        }
+                        addNewSunshine(selectHour, selectMinutes);
+                    }
+                }).positiveText(R.string.goal_ok)
+                .negativeText(R.string.goal_cancel)
+                .negativeColor(getResources().getColor(R.color.left_menu_item_text_color))
+                .show();
     }
 
     public void addNewSunshine(final int hour, final int minute) {

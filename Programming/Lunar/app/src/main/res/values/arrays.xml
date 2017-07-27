@@ -14,7 +14,7 @@
         <item>Inch</item>
     </string-array>
     <string-array name="config_unit" translatable="false">
-        <item>metrics(km/h)</item>
+        <item>Metrics(km/h)</item>
         <item>Imperial(mph)</item>
     </string-array>
     <string-array name="profile_unit_values" translatable="false">
