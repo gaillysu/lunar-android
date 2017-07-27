@@ -1193,7 +1193,7 @@ public class ApplicationModel extends Application {
     }
 
     private void addSleepDefGoal() {
-        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_long), 480, true)).subscribe(new Consumer<Boolean>() {
+        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_long), 630, true)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
@@ -1201,7 +1201,7 @@ public class ApplicationModel extends Application {
                 }
             }
         });
-        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_noon), 90, false)).subscribe(new Consumer<Boolean>() {
+        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_noon), 480, false)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
@@ -1209,7 +1209,7 @@ public class ApplicationModel extends Application {
                 }
             }
         });
-        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_short), 30, false)).subscribe(new Consumer<Boolean>() {
+        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_short), 380, false)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
