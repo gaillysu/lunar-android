@@ -142,6 +142,7 @@ public class ConfigGoalsActivity extends BaseActivity {
                                                 }
                                             });
                                         }
+
                                         sleepGoal.setText(getString(R.string.more_settings_sleep_goal) +
                                                 " : " + countTime(sleepGoals.get(which).getGoalDuration()));
                                     } else {

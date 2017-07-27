@@ -26,10 +26,6 @@
         android:id="@+id/settings_section"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_find_watch_fragment"
-            android:icon="@drawable/ic_left_menu_find"
-            android:title="@string/menu_drawer_find"/>
-        <item
             android:id="@+id/nav_world_clock"
             android:icon="@drawable/ic_left_menu_digital_time"
             android:title="@string/menu_drawer_hometime"/>

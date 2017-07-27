@@ -108,7 +108,6 @@ public class MainClockFragment extends BaseFragment {
     TextView harvestPercentage;
 
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
-    private User user;
 
     private String homeName;
     private String homeCountryName;
@@ -128,7 +127,6 @@ public class MainClockFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        user = getModel().getUser();
     }
 
     @Override
@@ -150,40 +148,45 @@ public class MainClockFragment extends BaseFragment {
     }
 
     private void initData() {
-        Date date = new Date();
-        getModel().getStepsHelper().get(user.getUserID(), date).subscribe(new Consumer<Steps>() {
+        final Date date = new Date();
+        getModel().getUser().subscribe(new Consumer<User>() {
             @Override
-            public void accept(Steps dailySteps) throws Exception {
-                mDefaultTimeZoneCity = getDefaultTimeZoneCity();
-                Log.i("ja", dailySteps.getSteps() + "");
-                if (dailySteps.getSteps() != 0) {
-                    stepsCount.setText(dailySteps.getSteps() + "");
-                    float percent = (float) dailySteps.getSteps() / (float) dailySteps.getGoal();
-                    goalProgress.setProgress(percent * 100 >= 100f ? 100 : (int) (percent * 100));
-                    goalPercentage.setText((percent * 100 >= 100f ? 100 : (int) (percent * 100)) + "%" + getString(R.string.lunar_steps_percentage));
-                } else {
-                    stepsCount.setText("0");
-                    goalPercentage.setText("0%" + getString(R.string.lunar_steps_percentage));
-                }
-            }
-        });
+            public void accept(User user) throws Exception {
+                getModel().getStepsHelper().get(user.getUserID(), date).subscribe(new Consumer<Steps>() {
+                    @Override
+                    public void accept(Steps dailySteps) throws Exception {
+                        mDefaultTimeZoneCity = getDefaultTimeZoneCity();
+                        Log.i("ja", dailySteps.getSteps() + "");
+                        if (dailySteps.getSteps() != 0) {
+                            stepsCount.setText(dailySteps.getSteps() + "");
+                            float percent = (float) dailySteps.getSteps() / (float) dailySteps.getGoal();
+                            goalProgress.setProgress(percent * 100 >= 100f ? 100 : (int) (percent * 100));
+                            goalPercentage.setText((percent * 100 >= 100f ? 100 : (int) (percent * 100)) + "%" + getString(R.string.lunar_steps_percentage));
+                        } else {
+                            stepsCount.setText("0");
+                            goalPercentage.setText("0%" + getString(R.string.lunar_steps_percentage));
+                        }
+                    }
+                });
 
-        getModel().getSolarDatabaseHelper().get(user.getId(), new Date()).subscribe(new Consumer<Solar>() {
-            @Override
-            public void accept(Solar solar) throws Exception {
-                if (solar.getTotalHarvestingTime() != 0) {
-                    harvestDuration.setText(countTime(solar.getTotalHarvestingTime()));
-                    float percentage = (float) solar.getTotalHarvestingTime() / (float) solar.getGoal();
-                    harvestPercentage.setText((percentage * 100 >= 100f ? 100 : (int) (percentage * 100)) + "%" + getString(R.string.lunar_steps_percentage));
-                } else {
-                    harvestDuration.setText("0");
-                    harvestPercentage.setText("0%" + getString(R.string.lunar_steps_percentage));
-                }
+                getModel().getSolarDatabaseHelper().get(user.getId(), new Date()).subscribe(new Consumer<Solar>() {
+                    @Override
+                    public void accept(Solar solar) throws Exception {
+                        if (solar.getTotalHarvestingTime() != 0) {
+                            harvestDuration.setText(countTime(solar.getTotalHarvestingTime()));
+                            float percentage = (float) solar.getTotalHarvestingTime() / (float) solar.getGoal();
+                            harvestPercentage.setText((percentage * 100 >= 100f ? 100 : (int) (percentage * 100)) + "%" + getString(R.string.lunar_steps_percentage));
+                        } else {
+                            harvestDuration.setText("0");
+                            harvestPercentage.setText("0%" + getString(R.string.lunar_steps_percentage));
+                        }
+                    }
+                });
+                setHomeCityData();
+                countSleepTime(date, user);
+                setSunsetOrSunrise();
             }
         });
-        setHomeCityData();
-        countSleepTime(date);
-        setSunsetOrSunrise();
     }
 
     private void setSunsetOrSunrise() {
@@ -270,7 +273,7 @@ public class MainClockFragment extends BaseFragment {
         return new SunriseSunsetCalculator(sunriseLocation, zone);
     }
 
-    private void countSleepTime(final Date date) {
+    private void countSleepTime(final Date date, User user) {
         getModel().getDailySleep(user.getUserID(), date, new AnalysisSleepFragment.TodaySleepListener() {
             @Override
             public void todaySleep(Sleep[] sleepArray) {
@@ -333,14 +336,19 @@ public class MainClockFragment extends BaseFragment {
     @Subscribe
     public void onEvent(LittleSyncEvent event) {
         if (event.isSuccess()) {
-            Steps steps = getModel().getDailySteps(getModel().getUser().getUserID(), Common.removeTimeFromDate(new Date()));
-            if (steps == null) {
-                return;
-            }
-            mUiHandler.post(new Runnable() {
+            getModel().getUser().subscribe(new Consumer<User>() {
                 @Override
-                public void run() {
-                    initData();
+                public void accept(User user) throws Exception {
+                    Steps steps = getModel().getDailySteps(user.getUserID(), Common.removeTimeFromDate(new Date()));
+                    if (steps == null) {
+                        return;
+                    }
+                    mUiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            initData();
+                        }
+                    });
                 }
             });
         }
@@ -385,7 +393,7 @@ public class MainClockFragment extends BaseFragment {
             @Override
             public void run() {
                 //NOTICE: nevo solar adc threshold is 200，but lunar is 170
-                if (event.getPv_adc() >= 170) {
+                if (event.getPv_adc() >= 161) {
                     solarHarvestStatus.setText(R.string.lunar_home_clock_solar_harvest_charge);
                 } else {
                     solarHarvestStatus.setText(R.string.lunar_home_clock_solar_harvest_idle);

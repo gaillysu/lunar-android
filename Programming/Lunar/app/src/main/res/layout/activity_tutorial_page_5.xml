@@ -11,46 +11,50 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
         android:gravity="center"
         android:text="@string/tutorial_5_title"
         android:textColor="@color/black"
-        android:textSize="36sp"
+        android:textSize="45sp"
         roboto:bold="true"/>
 
     <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page5_searching_notice_textview"
-        android:layout_width="275dp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/activity_tutorial_page5_start_searching_textview"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:text="@string/tutorial_5_text"
         android:textColor="@color/left_menu_item_text_color"
-        android:textSize="12sp"/>
+        android:textSize="15sp"/>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/activity_tutorial_page5_searching_notice_textview"
         android:layout_centerInParent="true">
 
         <ImageView
-            android:layout_width="260dp"
-            android:layout_height="260dp"
-            android:layout_gravity="center"
-            android:padding="20dp"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_marginTop="20dp"
             android:scaleType="fitXY"
+            android:layout_centerInParent="true"
             android:src="@drawable/tutorial_nevo_1"/>
 
         <com.medcorp.lunar.view.RoundProgressBar
             android:id="@+id/roundProgressBar"
-            android:layout_width="270dp"
-            android:layout_height="270dp"
-            android:layout_centerHorizontal="true"
+            android:layout_width="310dp"
+            android:layout_height="310dp"
+            android:layout_gravity="center"
             android_custom:roundColor="#00000000"
             android_custom:roundProgressColor="@color/tutorial_progress_bar_color"
             android_custom:roundWidth="8dp"
             android_custom:textIsDisplayable="false"/>
-    </FrameLayout>
+    </RelativeLayout>
 </RelativeLayout>

@@ -20,6 +20,7 @@ import com.medcorp.lunar.event.bluetooth.SolarConvertEvent;
 import com.medcorp.lunar.fragment.base.BaseFragment;
 import com.medcorp.lunar.model.MyWatch;
 import com.medcorp.lunar.model.Solar;
+import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.view.HorizontalProgressBar;
 
@@ -65,7 +66,6 @@ public class MainSolarDetailsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.main_solar_details_fragment, container, false);
         ButterKnife.bind(this, view);
-        initData();
         setHasOptionsMenu(true);
         return view;
     }
@@ -73,6 +73,7 @@ public class MainSolarDetailsFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+        initData();
         EventBus.getDefault().register(this);
     }
 
@@ -99,17 +100,22 @@ public class MainSolarDetailsFragment extends BaseFragment {
             str_battery = this.getString(R.string.my_nevo_battery_half);
         }
         showBatteryLevelTv.setText(str_battery);
-        getModel().getSolarDatabaseHelper().get(getModel().getUser().getId(), new Date()).subscribe(new Consumer<Solar>() {
+        getModel().getUser().subscribe(new Consumer<User>() {
             @Override
-            public void accept(Solar solar) throws Exception {
-                if (solar.getTotalHarvestingTime() != 0) {
-                    solarHarvestTimeTv.setText(countTime(solar.getTotalHarvestingTime()));
-                    float percentage = (float) solar.getTotalHarvestingTime() / (float) solar.getGoal();
-                    solarPercentageHPB.setProgress(percentage * 100 >= 100f ? 100 : (int) (percentage * 100));
-                } else {
-                    solarHarvestTimeTv.setText("0");
-                    solarPercentageHPB.setProgress(0);
-                }
+            public void accept(User user) throws Exception {
+                getModel().getSolarDatabaseHelper().get(user.getId(), new Date()).subscribe(new Consumer<Solar>() {
+                    @Override
+                    public void accept(Solar solar) throws Exception {
+                        if (solar.getTotalHarvestingTime() != 0) {
+                            solarHarvestTimeTv.setText(countTime(solar.getTotalHarvestingTime()));
+                            float percentage = (float) solar.getTotalHarvestingTime() / (float) solar.getGoal();
+                            solarPercentageHPB.setProgress(percentage * 100 >= 100f ? 100 : (int) (percentage * 100));
+                        } else {
+                            solarHarvestTimeTv.setText("0");
+                            solarPercentageHPB.setProgress(0);
+                        }
+                    }
+                });
             }
         });
 
@@ -131,35 +137,46 @@ public class MainSolarDetailsFragment extends BaseFragment {
 
 
     private void setLastWeekSolarTotal() {
-        getModel().getSolarData(getModel().getUser().getId(), new Date(), WeekData.LASTWEEK,
-                new AnalysisSolarFragment.ObtainSolarListener() {
-                    @Override
-                    public void obtainSolarData(List<Solar> lastWeek) {
-                        int totalTime = 0;
-                        for (Solar solar : lastWeek) {
-                            if (solar.getTotalHarvestingTime() != 0) {
-                                totalTime += solar.getTotalHarvestingTime();
+        getModel().getUser().subscribe(new Consumer<User>() {
+            @Override
+            public void accept(User user) throws Exception {
+                getModel().getSolarData(user.getId(), new Date(), WeekData.LASTWEEK,
+                        new AnalysisSolarFragment.ObtainSolarListener() {
+                            @Override
+                            public void obtainSolarData(List<Solar> lastWeek) {
+                                int totalTime = 0;
+                                for (Solar solar : lastWeek) {
+                                    if (solar.getTotalHarvestingTime() != 0) {
+                                        totalTime += solar.getTotalHarvestingTime();
+                                    }
+                                }
+                                showLastWeekSolarTotalTv.setText(countTime(totalTime));
                             }
-                        }
-                        showLastWeekSolarTotalTv.setText(countTime(totalTime));
-                    }
-                });
+                        });
+            }
+        });
+
     }
 
     private void setLastMonthSolarTotal() {
-        getModel().getSolarData(getModel().getUser().getId(), new Date(), WeekData.LASTMONTH,
-                new AnalysisSolarFragment.ObtainSolarListener() {
-                    @Override
-                    public void obtainSolarData(List<Solar> lastWeek) {
-                        int totalTime = 0;
-                        for (Solar solar : lastWeek) {
-                            if (solar.getTotalHarvestingTime() != 0) {
-                                totalTime += solar.getTotalHarvestingTime();
+        getModel().getUser().subscribe(new Consumer<User>() {
+            @Override
+            public void accept(User user) throws Exception {
+                getModel().getSolarData(user.getId(), new Date(), WeekData.LASTMONTH,
+                        new AnalysisSolarFragment.ObtainSolarListener() {
+                            @Override
+                            public void obtainSolarData(List<Solar> lastWeek) {
+                                int totalTime = 0;
+                                for (Solar solar : lastWeek) {
+                                    if (solar.getTotalHarvestingTime() != 0) {
+                                        totalTime += solar.getTotalHarvestingTime();
+                                    }
+                                }
+                                showLastMonthSolarTotalTv.setText(countTime(totalTime));
                             }
-                        }
-                        showLastMonthSolarTotalTv.setText(countTime(totalTime));
-                    }
-                });
+                        });
+            }
+        });
     }
 
     @Subscribe

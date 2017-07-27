@@ -48,6 +48,7 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import me.nereo.multi_image_selector.MultiImageSelectorFragment;
@@ -74,7 +75,7 @@ public class ProfileActivity extends BaseActivity {
     @Bind(R.id.edit_user_weight_pop)
     LinearLayout editUserWeightL;
 
-    private User user;
+    private User lunarUser;
     private int viewType;
     private String userEmail;
     private static final int REQUEST_IMAGE = 2;
@@ -92,18 +93,23 @@ public class ProfileActivity extends BaseActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitle(R.string.profile_title);
-        user = getModel().getUser();
-        if (user.getUserEmail() != null) {
-            userEmail = user.getUserEmail();
-        } else {
-            userEmail = getString(R.string.watch_med_profile);
-        }
-        Bitmap bt = BitmapFactory.decodeFile(Preferences.getUserHeardPicturePath(this, userEmail));//从Sd中找头像，转换成Bitmap
-        if (bt != null) {
-            mImageButton.setImageBitmap(PublicUtils.drawCircleView(bt));
-        } else {
-            mImageButton.setImageResource(R.drawable.user);
-        }
+        getModel().getUser().subscribe(new Consumer<User>() {
+            @Override
+            public void accept(User user) throws Exception {
+                lunarUser = user;
+                if (user.getUserEmail() != null) {
+                    userEmail = user.getUserEmail();
+                } else {
+                    userEmail = getString(R.string.watch_med_profile);
+                }
+                Bitmap bt = BitmapFactory.decodeFile(Preferences.getUserHeardPicturePath(ProfileActivity.this, userEmail));//从Sd中找头像，转换成Bitmap
+                if (bt != null) {
+                    mImageButton.setImageBitmap(PublicUtils.drawCircleView(bt));
+                } else {
+                    mImageButton.setImageResource(R.drawable.user);
+                }
+            }
+        });
         initView();
     }
 
@@ -115,13 +121,13 @@ public class ProfileActivity extends BaseActivity {
         final TextView userHeight = (TextView) findViewById(R.id.profile_fragment_user_height_tv);
         final TextView userWeight = (TextView) findViewById(R.id.profile_fragment_user_weight_tv);
 
-        firstName.setText(TextUtils.isEmpty(user.getFirstName()) ? getString(R.string.edit_user_first_name) : user.getFirstName());
-        lastName.setText(TextUtils.isEmpty(user.getLastName()) ? getString(R.string.edit_user_last_name) : user.getLastName());
+        firstName.setText(TextUtils.isEmpty(lunarUser.getFirstName()) ? getString(R.string.edit_user_first_name) : lunarUser.getFirstName());
+        lastName.setText(TextUtils.isEmpty(lunarUser.getLastName()) ? getString(R.string.edit_user_last_name) : lunarUser.getLastName());
         //please strictly refer to our UI design Docs, the date format is dd,MMM,yyyy
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
-        userBirthday.setText(simpleDateFormat.format(new Date(user.getBirthday())));
-        userHeight.setText(user.getHeight() + " cm");
-        userWeight.setText(user.getWeight() + " kg");
+        userBirthday.setText(simpleDateFormat.format(new Date(lunarUser.getBirthday())));
+        userHeight.setText(lunarUser.getHeight() + " cm");
+        userWeight.setText(lunarUser.getWeight() + " kg");
 
         editLastName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,10 +176,10 @@ public class ProfileActivity extends BaseActivity {
         String hintName = null;
         if (nameText.getId() == R.id.profile_fragment_user_first_name_tv) {
             content = getString(R.string.profile_input_user_first_name_dialog_title);
-            hintName = user.getFirstName();
+            hintName = lunarUser.getFirstName();
         } else if (nameText.getId() == R.id.profile_fragment_user_last_name_tv) {
             content = getString(R.string.profile_fragment_input_user_surname_dialog_title);
-            hintName = user.getLastName();
+            hintName = lunarUser.getLastName();
         }
 
         new MaterialDialog.Builder(this).title(getString(R.string.edit_profile)).content(content)
@@ -184,9 +190,9 @@ public class ProfileActivity extends BaseActivity {
                         if (input.toString().length() > 0) {
                             nameText.setText(input.toString());
                             if (nameText.getId() == R.id.profile_fragment_user_first_name_tv) {
-                                user.setFirstName(input.toString());
+                                lunarUser.setFirstName(input.toString());
                             } else if (nameText.getId() == R.id.profile_fragment_user_last_name_tv) {
-                                user.setLastName(input.toString());
+                                lunarUser.setLastName(input.toString());
                             }
                         }
                     }
@@ -204,11 +210,11 @@ public class ProfileActivity extends BaseActivity {
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
                         userWeight.setText(dateDesc + " kg");
-                        user.setWeight(new Integer(dateDesc).intValue());
+                        lunarUser.setWeight(new Integer(dateDesc).intValue());
                     }
                 }).viewStyle(viewType)
                 .viewTextSize(25)
-                .dateChose(user.getWeight() + "")
+                .dateChose(lunarUser.getWeight() + "")
                 .build();
 
         pickerPopWin3.showPopWin(this);
@@ -223,11 +229,11 @@ public class ProfileActivity extends BaseActivity {
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
                         userHeight.setText(dateDesc + " cm");
-                        user.setHeight(new Integer(dateDesc).intValue());
+                        lunarUser.setHeight(new Integer(dateDesc).intValue());
                     }
                 }).viewStyle(viewType)
                 .viewTextSize(25)
-                .dateChose(user.getHeight() + "")
+                .dateChose(lunarUser.getHeight() + "")
                 .build();
 
         pickerPopWin2.showPopWin(this);
@@ -244,7 +250,7 @@ public class ProfileActivity extends BaseActivity {
                         try {
                             Date date = dateFormat.parse(dateDesc);
                             birthdayText.setText(new SimpleDateFormat("dd MMM yyyy", Locale.US).format(date));
-                            user.setBirthday(date.getTime());
+                            lunarUser.setBirthday(date.getTime());
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -253,7 +259,7 @@ public class ProfileActivity extends BaseActivity {
                 .viewTextSize(25) // pick view text size
                 .minYear(Integer.valueOf(new SimpleDateFormat("yyyy").format(new Date())) - 100) //min year in loop
                 .maxYear(Integer.valueOf(new SimpleDateFormat("yyyy").format(new Date())) + 1)
-                .dateChose(new SimpleDateFormat("yyyy-MM-dd").format(new Date(user.getBirthday()))) // date chose when init popwindow
+                .dateChose(new SimpleDateFormat("yyyy-MM-dd").format(new Date(lunarUser.getBirthday()))) // date chose when init popwindow
                 .build();
         pickerPopWin.showPopWin(this);
     }
@@ -278,11 +284,11 @@ public class ProfileActivity extends BaseActivity {
                 progressDialog.setCancelable(false);
                 progressDialog.setMessage(getString(R.string.network_wait_text));
                 progressDialog.show();
-                String format = new SimpleDateFormat("yyyy-MM-dd").format(user.getBirthday());
+                String format = new SimpleDateFormat("yyyy-MM-dd").format(lunarUser.getBirthday());
                 UpdateAccountInformationRequest request = new UpdateAccountInformationRequest(
-                        new Integer(user.getUserID()).intValue()
-                        , user.getFirstName(), user.getUserEmail(), user.getLastName(), format
-                        , user.getHeight(), user.getWeight(), user.getSex());
+                        new Integer(lunarUser.getUserID()).intValue()
+                        , lunarUser.getFirstName(), lunarUser.getUserEmail(), lunarUser.getLastName(), format
+                        , lunarUser.getHeight(), lunarUser.getWeight(), lunarUser.getSex());
                 MedNetworkOperation.getInstance(this).updateUserInformation(request,
                         new RequestResponseListener<UpdateAccountInformationResponse>() {
                             @Override
@@ -303,7 +309,7 @@ public class ProfileActivity extends BaseActivity {
                                     @Override
                                     public void run() {
                                         progressDialog.dismiss();
-                                        getModel().saveUser(user);
+                                        getModel().saveUser(lunarUser);
                                         startActivity(MainActivity.class);
                                         finish();
                                         overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);

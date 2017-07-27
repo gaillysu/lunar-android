@@ -19,7 +19,7 @@ import com.medcorp.lunar.view.customfontview.RobotoTextView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/***
  * Created by gaillysu on 16/1/6.
  */
 public class SettingMenuAdapter extends ArrayAdapter<SettingsMenuItem> {

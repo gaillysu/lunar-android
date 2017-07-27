@@ -151,7 +151,7 @@
     <string name="profile_fragment_input_surname_edit_hint">Surname</string>
     <string name="profile_fragment_input_user_surname_dialog_title">Input Surname</string>
     <string name="profile_fragment_last_name_text">Surname</string>
-    <string name="profile_fragment_user_birthday_text">Date of Birth</string>
+    <string name="profile_fragment_user_birthday_text">Birthday</string>
     <string name="profile_fragment_user_height_text">Height</string>
     <string name="profile_fragment_user_weight_text">Weight</string>
     <string name="profile_input_age">Input age</string>
@@ -190,7 +190,7 @@
     <string name="register_user_info_page_text">Register</string>
     <string name="saturday">Sat</string>
     <string name="save_notification_ok">Notification Saved</string>
-    <string name="settings_more">More Settings</string>
+    <string name="settings_more">Goals</string>
     <string name="settings_login">Log in</string>
     <string name="settings_other_apps_validic">Validic</string>
     <string name="singnup_failed">Sign up failed</string>
@@ -381,7 +381,7 @@
     <string name="goal_edit">Modifier l\'objectif</string>
     <string name="goal_input">Définissez votre objectif</string>
     <string name="goal_label_goal">Étiquetez votre objectif</string>
-    <string name="goal_label">nom de l\'étiquette</string>
+    <string name="goal_label">Nom de l\'étiquette</string>
     <string name="goal_deleted">Objectif supprimé !</string>
     <string name="goal_could_not_delete">Impossible de supprimer l\'objectif</string>
     <string name="goal_could_not_change">Impossible de modifier l\'objectif</string>
@@ -415,8 +415,8 @@
 
     <string name="settings_link_loss_notification">Notification de perte de lien</string>
     <string name="settings_notifications">Notifications</string>
-    <string name="settings_notifications_active_title">Notifications actives</string>
-    <string name="settings_notifications_inactive_title">Notifications inactives</string>
+    <string name="settings_notifications_active_title">Notifications active</string>
+    <string name="settings_notifications_inactive_title">Notifications inactive</string>
     <string name="settings_my_nevo">Ma LunaR</string>
     <string name="settings_find_my_watch">Trouver ma montre</string>
     <string name="settings_goals">Objectifs</string>
@@ -522,4 +522,35 @@
     <string name="welcome_activity_facebook_login">Continue with Facebook</string>
     <string name="welcome_activity_wechat_login">Continue with WeChat</string>
     <string name="menu_drawer_find">Find Watch</string>
+    <string name="add_new_activity_goal_fb">Activity goal</string>
+    <string name="add_new_color_name_prompt">Create a label</string>
+    <string name="add_new_inactivity_goal_fb">Inactivity goal</string>
+    <string name="and_new_sunshine_fb">Sunshine goal</string>
+    <string name="find_watch_subtitle">press to send a alert-signal to LunaR</string>
+    <string name="fragment_setting_app_list_title">App</string>
+    <string name="fragment_setting_device_list_title">Device</string>
+    <string name="fragment_setting_local_list_title">Local</string>
+    <string name="loss_notification_subtitle">Receive an alert once LunaR gets disconnected</string>
+    <string name="more_setting_activity_title">Activity</string>
+    <string name="more_setting_inactivity_title">Inactivity</string>
+    <string name="more_setting_sunshine_title">Sunshine</string>
+    <string name="notification_choose_color_dialog_title">Notification Color</string>
+    <string name="prompt_user_set_color_name">Please input color label!</string>
+    <string name="ready_update_describe_subtitle">You are about to update the firmware of your LunaR watch.</string>
+    <string name="ready_update_describe_title">Please note</string>
+    <string name="ready_update_firmware_title">Upgrade firmware</string>
+    <string name="ready_update_to_update_button_tv">Got it,update my LunaR</string>
+    <string name="save_filed">Save Filed</string>
+    <string name="setting_fragment_app_goal_subtitle">Set preset-goals for(in)activity and sunshine</string>
+    <string name="setting_fragment_notification_subtitle">Set a unique LED -color for each notification</string>
+    <string name="snack_title">Actions</string>
+    <string name="update_watch_firmware_careful_one">- Keep LunaR close to your phone.</string>
+    <string name="update_watch_firmware_careful_second">"- Don't turn off the bluetooth  "</string>
+    <string name="update_watch_firmware_careful_third">Don\'t press and buttons on LunaR while upgrading</string>
+    <string name="battery_low_alert_dialog_title">Battery alert</string>
+    <string name="battery_low_alert_percent">PERCENT</string>
+    <string name="settings_notifications_active_button_tv">Activate </string>
+    <string name="settings_notifications_inactive_button_tv">Deactivate </string>
+    <string name="edit_goal_name">Edit Name</string>
+    <string name="edit_goal_time_text">Select Time</string>
 </resources>

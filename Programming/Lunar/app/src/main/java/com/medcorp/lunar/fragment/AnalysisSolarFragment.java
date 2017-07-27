@@ -14,6 +14,7 @@ import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.lunar.fragment.base.BaseFragment;
 import com.medcorp.lunar.model.Solar;
 import com.medcorp.lunar.model.SolarGoal;
+import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisSolarLineChart;
@@ -153,44 +154,61 @@ public class AnalysisSolarFragment extends BaseFragment {
         switch (position) {
             case 0:
                 solarTitleTextView.setText(R.string.analysis_fragment_today_chart_title);
-                getModel().getSolarDatabaseHelper().get(getModel().getUser().getId(),new Date()).subscribe(new Consumer<Solar>() {
+                getModel().getUser().subscribe(new Consumer<User>() {
                     @Override
-                    public void accept(Solar solar) throws Exception {
-                        String[] hourlyHarvestingTime = solar.getHourlyHarvestingTime().replace("[", "").replace("]", "").replace(" ","").split(",");
-                        int[] dailySolar = new int[hourlyHarvestingTime.length];
-                        for (int i = 0; i < 24; i++) {
-                            dailySolar[i] = new Integer(hourlyHarvestingTime[i]).intValue();
-                        }
-                        todayChart.setDataInChart(dailySolar,solar.getGoal());
+                    public void accept(User user) throws Exception {
+                        getModel().getSolarDatabaseHelper().get(user.getId(), new Date()).subscribe(new Consumer<Solar>() {
+                            @Override
+                            public void accept(Solar solar) throws Exception {
+                                String[] hourlyHarvestingTime = solar.getHourlyHarvestingTime().replace("[", "").replace("]", "").replace(" ", "").split(",");
+                                int[] dailySolar = new int[hourlyHarvestingTime.length];
+                                for (int i = 0; i < 24; i++) {
+                                    dailySolar[i] = new Integer(hourlyHarvestingTime[i]).intValue();
+                                }
+                                todayChart.setDataInChart(dailySolar, solar.getGoal());
+                            }
+                        });
+                    }
+                });
+
+                break;
+            case 1:
+                getModel().getUser().subscribe(new Consumer<User>() {
+                    @Override
+                    public void accept(User user) throws Exception {
+                        getModel().getSolarData(user.getId(), new Date(), WeekData.TISHWEEK,
+                                new ObtainSolarListener() {
+                                    @Override
+                                    public void obtainSolarData(List<Solar> thisWeek) {
+                                        thisWeekChart.addData(thisWeek, solarGoal, 7);
+                                        thisWeekChart.setMarkerView(mMarker);
+                                        solarTitleTextView.setText(R.string.analysis_fragment_this_week_chart_title);
+                                        averageTimeOnSolar.setText(TimeUtil.formatTime(getAverageTimeOnBattery(thisWeek)));
+                                        averageTimeOnBattery.setText(TimeUtil.formatTime(24 * 60 - getAverageTimeOnBattery(thisWeek)));
+                                    }
+                                });
+
                     }
                 });
                 break;
-            case 1:
-                getModel().getSolarData(getModel().getUser().getId(), new Date(), WeekData.TISHWEEK,
-                        new ObtainSolarListener() {
-                            @Override
-                            public void obtainSolarData(List<Solar> thisWeek) {
-                                thisWeekChart.addData(thisWeek, solarGoal, 7);
-                                thisWeekChart.setMarkerView(mMarker);
-                                solarTitleTextView.setText(R.string.analysis_fragment_this_week_chart_title);
-                                averageTimeOnSolar.setText(TimeUtil.formatTime(getAverageTimeOnBattery(thisWeek)));
-                                averageTimeOnBattery.setText(TimeUtil.formatTime(24 * 60 - getAverageTimeOnBattery(thisWeek)));
-                            }
-                        });
-                break;
 
             case 2:
-                getModel().getSolarData(getModel().getUser().getId(), new Date(), WeekData.LASTMONTH,
-                        new ObtainSolarListener() {
-                            @Override
-                            public void obtainSolarData(List<Solar> lastMonth) {
-                                lastMonthChart.addData(lastMonth, solarGoal, 30);
-                                lastMonthChart.setMarkerView(mMarker);
-                                solarTitleTextView.setText(R.string.analysis_fragment_last_month_chart_title);
-                                averageTimeOnSolar.setText(TimeUtil.formatTime(getAverageTimeOnBattery(lastMonth)));
-                                averageTimeOnBattery.setText(TimeUtil.formatTime(24 * 60 - getAverageTimeOnBattery(lastMonth)));
-                            }
-                        });
+                getModel().getUser().subscribe(new Consumer<User>() {
+                    @Override
+                    public void accept(User user) throws Exception {
+                        getModel().getSolarData(user.getId(), new Date(), WeekData.LASTMONTH,
+                                new ObtainSolarListener() {
+                                    @Override
+                                    public void obtainSolarData(List<Solar> lastMonth) {
+                                        lastMonthChart.addData(lastMonth, solarGoal, 30);
+                                        lastMonthChart.setMarkerView(mMarker);
+                                        solarTitleTextView.setText(R.string.analysis_fragment_last_month_chart_title);
+                                        averageTimeOnSolar.setText(TimeUtil.formatTime(getAverageTimeOnBattery(lastMonth)));
+                                        averageTimeOnBattery.setText(TimeUtil.formatTime(24 * 60 - getAverageTimeOnBattery(lastMonth)));
+                                    }
+                                });
+                    }
+                });
                 break;
         }
     }

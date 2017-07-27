@@ -2,46 +2,47 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:roboto="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="10dp">
+                android:layout_height="54dp"
+                android:layout_marginRight="16dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/activity_goals_list_view_item_goal_steps_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_centerVertical="true">
+
+        <com.medcorp.lunar.view.customfontview.RobotoTextView
+            android:id="@+id/activity_goals_list_view_item_goals_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"
+            roboto:bold="true"/>
 
         <com.medcorp.lunar.view.customfontview.RobotoTextView
             android:id="@+id/activity_goals_list_view_item_goal_steps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:layout_marginTop="3dp"
+            android:layout_below="@+id/activity_goals_list_view_item_goal_steps_wrapper"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/text_color"
-            android:textSize="25sp"
+            android:textColor="@color/graph_grid_line_color"
+            android:textSize="14sp"
             roboto:thin="true"/>
+    </LinearLayout>
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/activity_goals_list_view_item_goals_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:focusable="false"
-            android:shadowColor="@color/colorPrimary"/>
-    </RelativeLayout>
-
-    <com.medcorp.lunar.view.customfontview.RobotoTextView
-        android:id="@+id/activity_goals_list_view_item_goals_label"
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/activity_goals_list_view_item_goals_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/activity_goals_list_view_item_goal_steps_wrapper"
-        android:paddingBottom="10dp"
-        android:paddingLeft="5dp"
-        android:paddingTop="5dp"
-        android:textColor="@color/text_color"
-        android:textSize="18sp"
-        roboto:bold="true"/>
-
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:focusable="false"
+        android:shadowColor="@color/colorPrimary"/>
 </RelativeLayout>

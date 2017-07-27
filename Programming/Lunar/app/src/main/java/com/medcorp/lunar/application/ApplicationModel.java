@@ -151,7 +151,6 @@ public class ApplicationModel extends Application {
     private GoogleFitTaskCounter googleFitTaskCounter;
     private CloudSyncManager cloudSyncManager;
     private WeatherManager weatherManager;
-    private User nevoUser;
     private WorldClockDatabaseHelper worldClockDatabaseHelper;
     private SleepGoalDatabaseHelper sleepGoalDatabaeHelper;
     private SolarGoalDatabaseHelper solargoalDatabaseHelper;
@@ -199,12 +198,6 @@ public class ApplicationModel extends Application {
         ledDataBase = new LedLampDatabase(this);
         locationController = new LocationController(this);
         mIWXAPI = WXAPIFactory.createWXAPI(this, getString(R.string.we_chat_app_id), true);
-        userDatabaseHelper.getLoginUser().subscribe(new Consumer<User>() {
-            @Override
-            public void accept(User user) throws Exception {
-                nevoUser = user;
-            }
-        });
         updateGoogleFit();
         if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(getString(R.string.key_preset), false)) {
             addSolarDefGoal();
@@ -222,17 +215,22 @@ public class ApplicationModel extends Application {
     public void onEvent(OnSyncEvent event) {
         if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
             updateGoogleFit();
-            getNeedSyncSteps(nevoUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
+            userDatabaseHelper.getLoginUser().subscribe(new Consumer<User>() {
                 @Override
-                public void accept(final List<Steps> stepses) throws Exception {
-                    if (stepses.size() > 0) {
-                        getNeedSyncSleep(nevoUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
-                            @Override
-                            public void accept(List<Sleep> sleeps) throws Exception {
-                                getCloudSyncManager().launchSyncWeekly(nevoUser, stepses, sleeps);
+                public void accept(final User user) throws Exception {
+                    getNeedSyncSteps(user.getUserID()).subscribe(new Consumer<List<Steps>>() {
+                        @Override
+                        public void accept(final List<Steps> stepses) throws Exception {
+                            if (stepses.size() > 0) {
+                                getNeedSyncSleep(user.getUserID()).subscribe(new Consumer<List<Sleep>>() {
+                                    @Override
+                                    public void accept(List<Sleep> sleeps) throws Exception {
+                                        getCloudSyncManager().launchSyncWeekly(user, stepses, sleeps);
+                                    }
+                                });
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             });
         }
@@ -241,9 +239,13 @@ public class ApplicationModel extends Application {
     @Subscribe
     public void onEvent(LittleSyncEvent event) {
         if (event.isSuccess()) {
-            Steps steps = getDailySteps(nevoUser.getUserID(), Common.removeTimeFromDate(new Date()));
-            getCloudSyncManager().launchSyncDaily(nevoUser, steps);
-
+            userDatabaseHelper.getLoginUser().subscribe(new Consumer<User>() {
+                @Override
+                public void accept(User user) throws Exception {
+                    Steps steps = getDailySteps(user.getUserID(), Common.removeTimeFromDate(new Date()));
+                    getCloudSyncManager().launchSyncDaily(user, steps);
+                }
+            });
         }
     }
 
@@ -328,11 +330,20 @@ public class ApplicationModel extends Application {
         syncController.forgetDevice();
     }
 
+    public UserDatabaseHelper getUserDatabaseHelper() {
+        return userDatabaseHelper;
+    }
+
     public List<Steps> getAllSteps() {
-        stepsDatabaseHelper.getAll(nevoUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
+        userDatabaseHelper.getLoginUser().subscribe(new Consumer<User>() {
             @Override
-            public void accept(List<Steps> stepses) throws Exception {
-                allSteps = stepses;
+            public void accept(User user) throws Exception {
+                stepsDatabaseHelper.getAll(user.getUserID()).subscribe(new Consumer<List<Steps>>() {
+                    @Override
+                    public void accept(List<Steps> stepses) throws Exception {
+                        allSteps = stepses;
+                    }
+                });
             }
         });
         return allSteps;
@@ -614,56 +625,62 @@ public class ApplicationModel extends Application {
         saveDailySteps(steps);
     }
 
-    public void saveSleepFromMed(ObtainMoreSleepResponse.SleepBean dailySleep, Date createDate) {
-        Sleep sleep = new Sleep(createDate.getTime());
-        sleep.setDate(Common.removeTimeFromDate(createDate).getTime());
+    public void saveSleepFromMed(final ObtainMoreSleepResponse.SleepBean dailySleep, final Date createDate) {
+        getUser().subscribe(new Consumer<User>() {
+            @Override
+            public void accept(User user) throws Exception {
+                Sleep sleep = new Sleep(createDate.getTime());
+                sleep.setDate(Common.removeTimeFromDate(createDate).getTime());
 
-        sleep.setHourlyWake(dailySleep.getWake_time());
-        sleep.setHourlyLight(dailySleep.getLight_sleep());
-        sleep.setHourlyDeep(dailySleep.getDeep_sleep());
+                sleep.setHourlyWake(dailySleep.getWake_time());
+                sleep.setHourlyLight(dailySleep.getLight_sleep());
+                sleep.setHourlyDeep(dailySleep.getDeep_sleep());
 
-        int lightSleep = 0;
-        int deepSleep = 0;
-        int wake = 0;
-        List<Integer> hourlySleepList = new ArrayList<>();
-        try {
-            JSONArray hourlyWake = new JSONArray(sleep.getHourlyWake());
-            for (int i = 0; i < hourlyWake.length(); i++) {
-                wake += Integer.parseInt(hourlyWake.getString(i));
-                hourlySleepList.add(Integer.parseInt(hourlyWake.getString(i)));
+                int lightSleep = 0;
+                int deepSleep = 0;
+                int wake = 0;
+                List<Integer> hourlySleepList = new ArrayList<>();
+                try {
+                    JSONArray hourlyWake = new JSONArray(sleep.getHourlyWake());
+                    for (int i = 0; i < hourlyWake.length(); i++) {
+                        wake += Integer.parseInt(hourlyWake.getString(i));
+                        hourlySleepList.add(Integer.parseInt(hourlyWake.getString(i)));
+                    }
+
+                    JSONArray hourlyLight = new JSONArray(sleep.getHourlyLight());
+                    for (int i = 0; i < hourlyLight.length(); i++) {
+                        lightSleep += Integer.parseInt(hourlyLight.getString(i));
+                        hourlySleepList.set(i, hourlySleepList.get(i) + Integer.parseInt(hourlyLight.getString(i)));
+                    }
+
+                    JSONArray hourlyDeep = new JSONArray(sleep.getHourlyDeep());
+                    for (int i = 0; i < hourlyDeep.length(); i++) {
+                        deepSleep += Integer.parseInt(hourlyDeep.getString(i));
+                        hourlySleepList.set(i, hourlySleepList.get(i) + Integer.parseInt(hourlyDeep.getString(i)));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                sleep.setHourlySleep(hourlySleepList.toString());
+                sleep.setTotalSleepTime(wake + deepSleep + lightSleep);
+                sleep.setTotalWakeTime(wake);
+                sleep.setTotalLightTime(lightSleep);
+                sleep.setTotalDeepTime(deepSleep);
+                sleep.setStart(0);
+                sleep.setEnd(0);
+                sleep.setUserID(user.getUserID());
+                //we must set CloudRecordID here, avoid doing sync repeatly
+                sleep.setCloudRecordID(dailySleep.getId() + "");
+                try {
+                    sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                saveDailySleep(sleep);
             }
+        });
 
-            JSONArray hourlyLight = new JSONArray(sleep.getHourlyLight());
-            for (int i = 0; i < hourlyLight.length(); i++) {
-                lightSleep += Integer.parseInt(hourlyLight.getString(i));
-                hourlySleepList.set(i, hourlySleepList.get(i) + Integer.parseInt(hourlyLight.getString(i)));
-            }
-
-            JSONArray hourlyDeep = new JSONArray(sleep.getHourlyDeep());
-            for (int i = 0; i < hourlyDeep.length(); i++) {
-                deepSleep += Integer.parseInt(hourlyDeep.getString(i));
-                hourlySleepList.set(i, hourlySleepList.get(i) + Integer.parseInt(hourlyDeep.getString(i)));
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        sleep.setHourlySleep(hourlySleepList.toString());
-        sleep.setTotalSleepTime(wake + deepSleep + lightSleep);
-        sleep.setTotalWakeTime(wake);
-        sleep.setTotalLightTime(lightSleep);
-        sleep.setTotalDeepTime(deepSleep);
-        sleep.setStart(0);
-        sleep.setEnd(0);
-        sleep.setUserID(getUser().getUserID());
-        //we must set CloudRecordID here, avoid doing sync repeatly
-        sleep.setCloudRecordID(dailySleep.getId() + "");
-        try {
-            sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        saveDailySleep(sleep);
     }
 
     public Observable<List<Sleep>> getNeedSyncSleep(String userid) {
@@ -708,15 +725,8 @@ public class ApplicationModel extends Application {
         });
     }
 
-    public void addGoal(StepsGoal stepsGoal) {
-        mStepsGoalDatabaseHelper.add(stepsGoal).subscribe(new Consumer<Boolean>() {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception {
-                if (aBoolean) {
-                    Log.i("jason", "append success");
-                }
-            }
-        });
+    public Observable<Boolean> addGoal(StepsGoal stepsGoal) {
+        return mStepsGoalDatabaseHelper.add(stepsGoal);
     }
 
     public boolean updateGoal(StepsGoal stepsGoal) {
@@ -905,8 +915,8 @@ public class ApplicationModel extends Application {
         return ledDataBase;
     }
 
-    public User getUser() {
-        return nevoUser;
+    public Observable<User> getUser() {
+        return  userDatabaseHelper.getLoginUser();
     }
 
     @Override
@@ -943,13 +953,18 @@ public class ApplicationModel extends Application {
     public void onValidicCreateUserEvent(ValidicCreateUserEvent validicCreateUserEvent) {
         saveUser(validicCreateUserEvent.getUser());
         getSyncController().getDailyTrackerInfo(true);
-        getNeedSyncSteps(nevoUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
+        userDatabaseHelper.getLoginUser().subscribe(new Consumer<User>() {
             @Override
-            public void accept(final List<Steps> stepses) throws Exception {
-                getNeedSyncSleep(nevoUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
+            public void accept(final User user) throws Exception {
+                getNeedSyncSteps(user.getUserID()).subscribe(new Consumer<List<Steps>>() {
                     @Override
-                    public void accept(List<Sleep> sleeps) throws Exception {
-                        getCloudSyncManager().launchSyncAll(nevoUser, stepses, sleeps);
+                    public void accept(final List<Steps> stepses) throws Exception {
+                        getNeedSyncSleep(user.getUserID()).subscribe(new Consumer<List<Sleep>>() {
+                            @Override
+                            public void accept(List<Sleep> sleeps) throws Exception {
+                                getCloudSyncManager().launchSyncAll(user, stepses, sleeps);
+                            }
+                        });
                     }
                 });
             }
@@ -1101,9 +1116,24 @@ public class ApplicationModel extends Application {
     }
 
     private void setStepDefGoal() {
-        addGoal(new StepsGoal(getString(R.string.startup_goal_light), false, 7000));
-        addGoal(new StepsGoal(getString(R.string.startup_goal_moderate), true, 10000));
-        addGoal(new StepsGoal(getString(R.string.startup_goal_heavy), false, 20000));
+        addGoal(new StepsGoal(getString(R.string.startup_goal_light), false, 7000)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                Log.i("jason", "add def steps goal success");
+            }
+        });
+        addGoal(new StepsGoal(getString(R.string.startup_goal_moderate), true, 10000)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                Log.i("jason", "add def steps goal success");
+            }
+        });
+        addGoal(new StepsGoal(getString(R.string.startup_goal_heavy), false, 20000)).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                Log.i("jason", "add def steps goal success");
+            }
+        });
     }
 
     private void addDefNotificationColor() {
@@ -1124,7 +1154,7 @@ public class ApplicationModel extends Application {
     }
 
     private void addSolarDefGoal() {
-        solargoalDatabaseHelper.add(new SolarGoal(getString(R.string.solar_goal_def_long), 480, true)).subscribe(new Consumer<Boolean>() {
+        solargoalDatabaseHelper.add(new SolarGoal(getString(R.string.solar_goal_def_long), 120, true)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
@@ -1132,7 +1162,7 @@ public class ApplicationModel extends Application {
                 }
             }
         });
-        solargoalDatabaseHelper.add(new SolarGoal(getString(R.string.solar_goal_def_short), 30, false)).subscribe(new Consumer<Boolean>() {
+        solargoalDatabaseHelper.add(new SolarGoal(getString(R.string.solar_goal_def_short), 90, false)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
@@ -1163,7 +1193,7 @@ public class ApplicationModel extends Application {
     }
 
     private void addSleepDefGoal() {
-        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_long), 480, true)).subscribe(new Consumer<Boolean>() {
+        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_long), 630, true)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
@@ -1171,7 +1201,7 @@ public class ApplicationModel extends Application {
                 }
             }
         });
-        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_noon), 90, false)).subscribe(new Consumer<Boolean>() {
+        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_noon), 480, false)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
@@ -1179,7 +1209,7 @@ public class ApplicationModel extends Application {
                 }
             }
         });
-        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_short), 30, false)).subscribe(new Consumer<Boolean>() {
+        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_short), 380, false)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {

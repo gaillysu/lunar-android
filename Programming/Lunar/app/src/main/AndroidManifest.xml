@@ -68,6 +68,10 @@
             android:name=".activity.login.SignupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark"/>
+
+        <activity
+            android:name=".activity.ReadyUpdateFirmwareActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.EditAlarmActivity"
             android:screenOrientation="portrait"/>
@@ -77,9 +81,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             />
-        <activity
-            android:name=".activity.StepsGoalsActivity"
-            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.EditGoalsActivity"
             android:screenOrientation="portrait"/>
@@ -91,9 +92,6 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.SettingNotificationActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.EditSettingNotificationActivity"
             android:screenOrientation="portrait"/>
 
         <activity
@@ -151,9 +149,6 @@
             android:name=".activity.NotificationActivity"
             android:label="Dfu"/>
         <activity
-            android:name=".activity.ScanDurationActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.config.ConfigTimeSyncActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -181,12 +176,6 @@
         </service>
         <service
             android:name="com.octo.android.robospice.JacksonSpringAndroidSpiceService"
-            android:exported="false"/>
-        <service
-            android:name=".network.validic.service.BaseValidicRetroService"
-            android:exported="false"/>
-        <service
-            android:name=".network.med.service.BaseMedRetroService"
             android:exported="false"/>
         <service
             android:name=".ble.dfu.DfuService"
@@ -237,25 +226,9 @@
             android:configChanges="orientation|screenSize"/>
 
         <activity
-            android:name=".activity.EditNotificationLampActivity"
+            android:name=".activity.GoalsSettingActivity"
             android:screenOrientation="portrait"
-            />
-        <activity
-            android:name=".activity.EditNotificationAttributeActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity
-            android:name=".activity.MoreSettingActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity
-            android:name=".activity.SolarGoalActivity"
-            android:screenOrientation="portrait"
-            />
-
-        <activity
-            android:name=".activity.SleepGoalActivity"
-            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden"
             />
         <activity
             android:name=".wxapi.WXEntryActivity"

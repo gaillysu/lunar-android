@@ -3,7 +3,7 @@ package com.medcorp.lunar.fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -16,9 +16,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.ConnectToOtherAppsActivity;
-import com.medcorp.lunar.activity.MoreSettingActivity;
+import com.medcorp.lunar.activity.GoalsSettingActivity;
 import com.medcorp.lunar.activity.MyWatchActivity;
-import com.medcorp.lunar.activity.ScanDurationActivity;
 import com.medcorp.lunar.activity.SettingNotificationActivity;
 import com.medcorp.lunar.activity.login.LoginActivity;
 import com.medcorp.lunar.activity.tutorial.TutorialPage1Activity;
@@ -27,9 +26,11 @@ import com.medcorp.lunar.event.bluetooth.FindWatchEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
 import com.medcorp.lunar.listener.OnCheckedChangeInListListener;
 import com.medcorp.lunar.model.SettingsMenuItem;
+import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.util.LinklossNotificationUtils;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.view.ToastHelper;
+import com.xw.repo.BubbleSeekBar;
 
 import net.medcorp.library.ble.util.Constants;
 
@@ -41,58 +42,334 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 
-/**
+/***
  * Created by karl-john on 14/12/15.
  */
-public class SettingsFragment extends BaseObservableFragment implements AdapterView.OnItemClickListener, OnCheckedChangeInListListener {
+public class SettingsFragment extends BaseObservableFragment implements OnCheckedChangeInListListener {
 
-    @Bind(R.id.fragment_setting_list_view)
-    ListView settingListView;
+    @Bind(R.id.fragment_setting_app_list_view)
+    ListView settingAppListView;
+    @Bind(R.id.fragment_setting_local_list_view)
+    ListView settingLocalListView;
+    @Bind(R.id.fragment_setting_device_list_view)
+    ListView settingDeviceLIstView;
 
-    private List<SettingsMenuItem> listMenu;
-    private SettingMenuAdapter settingAdapter;
+    private List<SettingsMenuItem> appListMenu;
+    private List<SettingsMenuItem> deviceListMenu;
+    private List<SettingsMenuItem> localListMenu;
+    private SettingMenuAdapter mSettingDeviceAdapter;
+    private int scanTime;
+    private int batteryPercent;
+    private SettingMenuAdapter mSettingAppAdapter;
+    private SettingMenuAdapter mSettingLocalAdapter;
 
-    @Nullable
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, view);
-        initData();
-        settingAdapter = new SettingMenuAdapter(getContext(), listMenu, this);
-        settingListView.setAdapter(settingAdapter);
-        settingListView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
         return view;
     }
 
-    private void initData() {
-        int mSelectIndex = Preferences.getDetectionBattery(SettingsFragment.this.getActivity());
-        String value = getResources().getStringArray(R.array.detection_battery)[mSelectIndex];
+
+    private void initAppData() {
+        appListMenu = new ArrayList<>();
+        String unitSubtitle = Preferences.getUnitSelect(getContext()) ? getString(R.string.user_select_metrics) : getString(R.string.user_select_imperial);
+        appListMenu.add(new SettingsMenuItem(getString(R.string.settings_more), getString(R.string.setting_fragment_app_goal_subtitle), R.drawable.setting_goals));
+        appListMenu.add(new SettingsMenuItem(getString(R.string.more_setting_unit), unitSubtitle, R.drawable.ic_setting_fragment_unit_icon));
+
+        mSettingAppAdapter = new SettingMenuAdapter(getContext(), appListMenu, this);
+        settingAppListView.setAdapter(mSettingAppAdapter);
+        settingAppListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                appListItemClick(position);
+            }
+        });
+    }
+
+    private void initDeviceData() {
+        int batteryAlertPercent = Preferences.getDetectionBattery(SettingsFragment.this.getActivity());
+
         Preferences.getBatterySwitch(SettingsFragment.this.getActivity());
-        listMenu = new ArrayList<>();
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_link_loss_notification), R.drawable.setting_linkloss, Preferences.getLinklossNotification(getActivity())));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_notifications), R.drawable.setting_notfications));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_my_nevo), R.drawable.setting_mynevo));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_find_my_watch), R.drawable.setting_findmywatch));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_bluetooth_scan), R.drawable.ic_scan_bluetooth));
-        listMenu.add(new SettingsMenuItem(getString(R.string.detection_battery),
-                getString(R.string.originally_chosen_value) + " : " + value,
-                R.drawable.ic_low_detection_alert, Preferences.getBatterySwitch(SettingsFragment.this.getContext())));
+        deviceListMenu = new ArrayList<>();
+        int scanDuration = Preferences.getScanDuration(getContext());
 
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_more), R.drawable.setting_goals));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
-        //listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getUser().isLogin()));
-        if (getModel().getUser().isLogin()) {
-            listMenu.add(new SettingsMenuItem(getString(R.string.google_fit_log_out), R.drawable.logout_icon));
+        String scanDurationSubTitle = null;
+        if (scanDuration == 60) {
+            scanDurationSubTitle = " " + getString(R.string.scan_duration_item_select_one_hour);
         } else {
-
-            listMenu.add(new SettingsMenuItem(getString(R.string.login_page_activity_title), R.drawable.ic_login_setting_page));
+            scanDurationSubTitle = scanDuration + " " + getString(R.string.scan_duration_time_unit);
         }
-        //        listMenu.add(new SettingsMenuItem(getString(R.string.settings_about), R.drawable.setting_about));
+        deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_my_nevo), R.drawable.setting_mynevo));
+        deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_notifications), getString(R.string.setting_fragment_notification_subtitle),
+                R.drawable.setting_notfications));
+
+        deviceListMenu.add(new SettingsMenuItem(getString(R.string.detection_battery),
+                getString(R.string.originally_chosen_value) + " : " + batteryAlertPercent + "%",
+                R.drawable.ic_low_detection_alert,
+                Preferences.getBatterySwitch(SettingsFragment.this.getContext())));
+
+        deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_bluetooth_scan),
+                scanDurationSubTitle, R.drawable.ic_scan_bluetooth));
+        deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
+        mSettingDeviceAdapter = new SettingMenuAdapter(getContext(), deviceListMenu, this);
+        settingDeviceLIstView.setAdapter(mSettingDeviceAdapter);
+        settingDeviceLIstView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                deviceListItemClick(position);
+            }
+        });
+    }
+
+    private void initLocalData() {
+        getModel().getUser().subscribe(new Consumer<User>() {
+            @Override
+            public void accept(User user) throws Exception {
+                localListMenu = new ArrayList<>();
+                localListMenu.add(new SettingsMenuItem(getString(R.string.menu_drawer_find)
+                        , getString(R.string.find_watch_subtitle), R.drawable.ic_left_menu_find));
+                localListMenu.add(new SettingsMenuItem(getString(R.string.settings_link_loss_notification),
+                        getString(R.string.loss_notification_subtitle), R.drawable.setting_linkloss,
+                        Preferences.getLinklossNotification(getActivity())));
+                localListMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
+                localListMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
+                //listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getUser().isLogin()));
+                if (user.isLogin()) {
+                    localListMenu.add(new SettingsMenuItem(getString(R.string.google_fit_log_out), R.drawable.logout_icon));
+                } else {
+                    localListMenu.add(new SettingsMenuItem(getString(R.string.login_page_activity_title), R.drawable.ic_login_setting_page));
+                }
+
+                mSettingLocalAdapter = new SettingMenuAdapter(getContext(), localListMenu, SettingsFragment.this);
+                settingLocalListView.setAdapter(mSettingLocalAdapter);
+                settingLocalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        localListItemClick(position);
+                    }
+                });
+            }
+        });
+
+    }
+
+    private void appListItemClick(int position) {
+        switch (position) {
+            case 0:
+                startActivity(GoalsSettingActivity.class);
+                break;
+            case 1:
+                boolean unitSelect = Preferences.getUnitSelect(getContext());
+                new MaterialDialog.Builder(getContext())
+                        .title(R.string.more_setting_unit)
+                        .itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
+                        .items(getResources().getStringArray(R.array.config_unit))
+                        .itemsCallbackSingleChoice(unitSelect ? 0 : 1, new MaterialDialog.ListCallbackSingleChoice() {
+                            @Override
+                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                if (which == 0) {
+                                    appListMenu.get(1).setSubtitle(getString(R.string.user_select_metrics));
+                                    Preferences.saveUnitSelect(getContext(), true);
+                                } else {
+                                    appListMenu.get(1).setSubtitle(getString(R.string.user_select_imperial));
+                                    Preferences.saveUnitSelect(getContext(), false);
+                                }
+                                mSettingAppAdapter.notifyDataSetChanged();
+                                return true;
+                            }
+                        })
+                        .positiveText(R.string.goal_ok)
+                        .negativeText(R.string.goal_cancel)
+                        .negativeColor(getResources().getColor(R.color.colorPrimary))
+                        .positiveColor(getResources().getColor(R.color.colorPrimary))
+                        .show();
+                break;
+        }
+    }
+
+    private void deviceListItemClick(final int position) {
+        switch (position) {
+            case 0:
+                if (getModel().isWatchConnected()) {
+                    startActivity(MyWatchActivity.class);
+                } else {
+                    ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+                }
+                break;
+            case 1:
+                startActivity(SettingNotificationActivity.class);
+                break;
+            case 2:
+                int selectIndex = Preferences.getDetectionBattery(SettingsFragment.this.getActivity());
+                View batteryLowAlert = LayoutInflater.from(getContext()).inflate(R.layout.battery_low_alert_dialog_view, null);
+                BubbleSeekBar batterySeekBar = (BubbleSeekBar) batteryLowAlert.findViewById(R.id.battery_low_alert__seek_bar);
+                batterySeekBar.setProgress(selectIndex);
+                batterySeekBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
+                    @Override
+                    public void onProgressChanged(int progress, float progressFloat) {
+                        batteryPercent = progress;
+                    }
+
+                    @Override
+                    public void getProgressOnActionUp(int progress, float progressFloat) {
+
+                    }
+
+                    @Override
+                    public void getProgressOnFinally(int progress, float progressFloat) {
+
+                    }
+                });
+                new MaterialDialog.Builder(getContext()).customView(batteryLowAlert, true)
+                        .title(getString(R.string.battery_low_alert_dialog_title))
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                Preferences.saveDetectionBattery(SettingsFragment.this.getActivity()
+                                        , batteryPercent);
+                                deviceListMenu.get(2).setSubtitle(getString(R.string.originally_chosen_value) + " : "
+                                        + batteryPercent + "%");
+                                mSettingDeviceAdapter.notifyDataSetChanged();
+                            }
+                        }).positiveText(R.string.goal_ok)
+                        .negativeText(R.string.goal_cancel)
+                        .negativeColor(getResources().getColor(R.color.colorPrimary))
+                        .positiveColor(getResources().getColor(R.color.colorPrimary))
+                        .show();
+                break;
+            case 3:
+                if (getModel().isWatchConnected()) {
+                    LayoutInflater inflater = LayoutInflater.from(getContext());
+                    View dialogView = inflater.inflate(R.layout.scan_duration_dialog_view, null);
+                    final BubbleSeekBar seekBar = (BubbleSeekBar) dialogView.findViewById(R.id.scan_duration_time_seek_bar);
+                    seekBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
+                        @Override
+                        public void onProgressChanged(int progress, float progressFloat) {
+                            scanTime = progress;
+                        }
+
+                        @Override
+                        public void getProgressOnActionUp(int progress, float progressFloat) {
+
+                        }
+
+                        @Override
+                        public void getProgressOnFinally(int progress, float progressFloat) {
+
+                        }
+                    });
+                    int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
+                    seekBar.setProgress(Preferences.getScanDuration(getContext()));
+                    if (currentFirmwareVersion >= 14)
+                        new MaterialDialog.Builder(getContext())
+                                .title(R.string.settings_bluetooth_scan)
+                                .customView(dialogView, true)
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        Preferences.saveScanDuration(getContext(), scanTime);
+                                        getModel().getSyncController().setBleConnectTimeout(scanTime);
+                                        String scanDurationSubTitle = null;
+                                        if (scanTime == 60) {
+                                            scanDurationSubTitle = " " + getString(R.string.scan_duration_item_select_one_hour);
+                                        } else {
+                                            scanDurationSubTitle = scanTime + " " + getString(R.string.scan_duration_time_unit);
+                                        }
+                                        deviceListMenu.get(3).setSubtitle(scanDurationSubTitle);
+                                        mSettingDeviceAdapter.notifyDataSetChanged();
+                                    }
+                                }).positiveText(R.string.goal_ok)
+                                .negativeText(R.string.goal_cancel)
+                                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                                .positiveColor(getResources().getColor(R.color.colorPrimary))
+                                .show();
+                    else {
+                        askUserIsUpdate();
+                    }
+                } else {
+                    ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+                }
+                break;
+            case 4:
+                new MaterialDialog.Builder(getContext())
+                        .content(R.string.settings_sure)
+                        .negativeText(android.R.string.no)
+                        .positiveText(android.R.string.yes)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(MaterialDialog dialog, DialogAction which) {
+                                getModel().forgetDevice();
+                                startActivity(TutorialPage1Activity.class);
+                                SettingsFragment.this.getActivity().finish();
+                            }
+                        })
+                        .cancelable(false)
+                        .negativeColor(getResources().getColor(R.color.colorPrimary))
+                        .positiveColor(getResources().getColor(R.color.colorPrimary))
+                        .show();
+                break;
+        }
+    }
+
+
+    private void localListItemClick(int position) {
+        switch (position) {
+            case 0:
+                if (getModel().isWatchConnected()) {
+                    getModel().blinkWatch();
+                } else {
+                    ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+                }
+                break;
+            case 2:
+                startActivity(ConnectToOtherAppsActivity.class);
+                break;
+            case 3:
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.support_url)));
+                getActivity().startActivity(intent);
+                break;
+            case 4:
+                getModel().getUser().subscribe(new Consumer<User>() {
+                    @Override
+                    public void accept(final User lunarUser) throws Exception {
+                        if (!lunarUser.isLogin()) {
+                            getModel().removeUser(lunarUser);
+                            Intent newIntent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
+                            SettingsFragment.this.getContext().getSharedPreferences(Constants.PREF_NAME, 0)
+                                    .edit().putBoolean(Constants.FIRST_FLAG, true);
+                            startActivity(newIntent);
+                        } else {
+                            new MaterialDialog.Builder(SettingsFragment.this.getContext())
+                                    .title(getString(R.string.google_fit_log_out))
+                                    .content(getString(R.string.settings_sure))
+                                    .positiveText(R.string.goal_ok)
+                                    .negativeText(R.string.goal_cancel)
+                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            Intent newIntent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
+                                            lunarUser.setIsLogin(false);
+                                            getModel().saveUser(lunarUser);
+                                            startActivity(newIntent);
+                                            SettingsFragment.this.getActivity().finish();
+                                        }
+                                    })
+                                    .negativeColor(getResources().getColor(R.color.colorPrimary))
+                                    .positiveColor(getResources().getColor(R.color.colorPrimary))
+                                    .show();
+
+                        }
+                    }
+                });
+
+                break;
+        }
     }
 
     @Override
@@ -100,104 +377,6 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.add_menu).setVisible(false);
         menu.findItem(R.id.choose_goal_menu).setVisible(false);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (position == 1) {
-            startActivity(SettingNotificationActivity.class);
-        } else if (position == 2) {
-
-            if (getModel().isWatchConnected()) {
-                startActivity(MyWatchActivity.class);
-            } else {
-                ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-            }
-
-        } else if (position == 3) {
-            if (getModel().isWatchConnected()) {
-                getModel().blinkWatch();
-
-            } else {
-
-                ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-            }
-
-        } else if (position == 4) {
-            if (getModel().isWatchConnected()) {
-                int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
-                if (currentFirmwareVersion >= 14) {
-                    startActivity(ScanDurationActivity.class);
-                } else {
-                    askUserIsUpdate();
-                }
-            } else {
-                ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-            }
-        } else if (position == 5) {
-            int selectIndex = Preferences.getDetectionBattery(SettingsFragment.this.getActivity());
-            new MaterialDialog.Builder(getContext())
-                    .title(R.string.low_detection_battery_title)
-                    .itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
-                    .content(getString(R.string.set_detection_battery_alerts))
-                    .items(getResources().getStringArray(R.array.detection_battery))
-                    .itemsCallbackSingleChoice(selectIndex, new MaterialDialog.ListCallbackSingleChoice() {
-                        @Override
-                        public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                            Preferences.saveDetectionBattery(SettingsFragment.this.getActivity(), which);
-                            listMenu.get(5).setSubtitle(getString(R.string.originally_chosen_value) + " : "
-                                    + getResources().getStringArray(R.array.detection_battery)[which]);
-                            settingAdapter.notifyDataSetChanged();
-
-                            return true;
-                        }
-                    })
-                    .positiveText(R.string.goal_ok)
-                    .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
-                    .show();
-
-        } else if (position == 6) {
-            startActivity(MoreSettingActivity.class);
-
-        } else if (position == 7) {
-            startActivity(ConnectToOtherAppsActivity.class);
-        } else if (position == 8) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.support_url)));
-            getActivity().startActivity(intent);
-
-        } else if (position == 9) {
-
-            new MaterialDialog.Builder(getContext())
-                    .content(R.string.settings_sure)
-                    .negativeText(android.R.string.no)
-                    .positiveText(android.R.string.yes)
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(MaterialDialog dialog, DialogAction which) {
-                            getModel().forgetDevice();
-                            startActivity(TutorialPage1Activity.class);
-                            SettingsFragment.this.getActivity().finish();
-                        }
-                    })
-                    .cancelable(false)
-                    .show();
-
-        } else if (position == 10) {
-            if (!getModel().getUser().isLogin()) {
-                getModel().removeUser(getModel().getUser());
-                Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
-                intent.putExtra("isTutorialPage", false);
-                SettingsFragment.this.getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, true);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
-                intent.putExtra("isTutorialPage", false);
-                getModel().getUser().setIsLogin(false);
-                getModel().saveUser(getModel().getUser());
-                startActivity(intent);
-            }
-            SettingsFragment.this.getActivity().finish();
-        }
     }
 
     private void askUserIsUpdate() {
@@ -210,22 +389,22 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                     public void onClick(MaterialDialog dialog, DialogAction which) {
                         startActivity(MyWatchActivity.class);
                     }
-                })
-                .cancelable(false)
+                }).cancelable(false)
+                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                .positiveColor(getResources().getColor(R.color.colorPrimary))
                 .show();
     }
 
     @Override
     public void onCheckedChange(CompoundButton buttonView, boolean isChecked, int position) {
-            if (position == 0) {
-                Preferences.saveLinklossNotification(getActivity(), isChecked);
-            } else if (position == 5) {
-                Preferences.saveBatterySwitch(getActivity(), isChecked);
-                int[] vaule = {5, 10, 15, 20, 30};
-
-                getModel().getSyncController().setChargingNotification((byte) vaule[Preferences.getDetectionBattery
-                        (SettingsFragment.this.getContext())], isChecked);
-            }
+        if (position == 0) {
+            Preferences.saveLinklossNotification(getActivity(), isChecked);
+        } else if (position == 5) {
+            Preferences.saveBatterySwitch(getActivity(), isChecked);
+            int[] vaule = {5, 10, 15, 20, 30};
+            getModel().getSyncController().setChargingNotification((byte) vaule[Preferences.getDetectionBattery
+                    (SettingsFragment.this.getContext())], isChecked);
+        }
 
     }
 
@@ -233,6 +412,9 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        initAppData();
+        initDeviceData();
+        initLocalData();
     }
 
     @Override

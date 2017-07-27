@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:background="@color/window_background_color"
               android:orientation="vertical">
 
@@ -88,7 +89,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="28dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="16dp"
                 android:text="@string/edit_home_position_city"
                 android:textColor="@color/text_color"
                 android:layout_marginStart="60dp"
@@ -109,19 +109,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1">
-
-                <ListView
+                <com.l4digital.fastscroll.FastScrollRecyclerView
                     android:id="@+id/show_all_city_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:divider="@android:color/transparent"
-                    />
-
-                <com.medcorp.lunar.view.SideBar
-                    android:id="@+id/choose_activity_list_index_sidebar"
-                    android:layout_width="30.0dip"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end|center"/>
+                    app:bubbleColor="@color/colorAccent"
+                    app:bubbleTextColor="#ffffff"
+                    android:dividerHeight="@null"
+                    app:handleColor="@color/tutorial_black"
+                    app:trackColor="#bbbbbb"
+                    app:hideScrollbar="false"
+                    app:showTrack="true" />
             </FrameLayout>
         </LinearLayout>
 

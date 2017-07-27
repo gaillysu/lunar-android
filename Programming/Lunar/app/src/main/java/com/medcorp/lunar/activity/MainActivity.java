@@ -11,8 +11,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -43,8 +41,8 @@ import com.medcorp.lunar.fragment.HomeClockFragment;
 import com.medcorp.lunar.fragment.MainFragment;
 import com.medcorp.lunar.fragment.SettingsFragment;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
+import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.util.PublicUtils;
-import com.medcorp.lunar.view.ToastHelper;
 
 import net.medcorp.library.ble.event.BLEBluetoothOffEvent;
 import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
@@ -57,6 +55,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 
 import static com.medcorp.lunar.R.id.navigation_header_imageview;
 import static com.medcorp.lunar.util.Preferences.getUserHeardPicturePath;
@@ -92,7 +91,8 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private Snackbar snackbar = null;
     private boolean bigSyncStart = false;
     private BaseObservableFragment mainStepsFragment;
-    private int viewPage = 0;
+    private User currentUser;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,17 +126,31 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         View headerView = navigationView.getHeaderView(0);
         userView = (TextView) headerView.findViewById(R.id.navigation_header_textview);
         showUserFirstNameText = (TextView) headerView.findViewById(R.id.drawable_left_show_user_name_tv);
-        ImageButton userImageView = (ImageButton) headerView.findViewById(navigation_header_imageview);
+        final ImageButton userImageView = (ImageButton) headerView.findViewById(navigation_header_imageview);
+        floatingActionButton = (FloatingActionButton) headerView.findViewById(R.id.navigation_header_spinner);
+        getModel().getUser().subscribe(new Consumer<User>() {
+            @Override
+            public void accept(User user) throws Exception {
+                initView(userImageView,user);
+                currentUser = user;
+            }
+        });
 
+    }
+
+    private void initView(ImageButton userImageView ,User user) {
         String userEmail = null;
-        if (getModel().getUser().isLogin()) {
-            userEmail = getModel().getUser().getUserEmail();
+        if (user.isLogin()) {
+            userEmail = user.getUserEmail();
         } else {
             userEmail = getString(R.string.watch_med_profile);
         }
-        Bitmap bt = BitmapFactory.decodeFile(getUserHeardPicturePath(this, userEmail));
-        if (bt != null) {
-            userImageView.setImageBitmap(PublicUtils.drawCircleView(bt));
+        String userHeardPicturePath = getUserHeardPicturePath(this, userEmail);
+        if (userHeardPicturePath != null) {
+            Bitmap bt = BitmapFactory.decodeFile(userHeardPicturePath);
+            if (bt != null) {
+                userImageView.setImageBitmap(PublicUtils.drawCircleView(bt));
+            }
         } else {
             userImageView.setImageResource(R.drawable.user);
         }
@@ -147,8 +161,8 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 finish();
             }
         });
-        FloatingActionButton floatingActionButton = (FloatingActionButton) headerView.findViewById(R.id.navigation_header_spinner);
-        if (getModel().getUser().isLogin()) {
+
+        if (user.isLogin()) {
             floatingActionButton.setVisibility(View.GONE);
         } else {
             floatingActionButton.setVisibility(View.VISIBLE);
@@ -163,7 +177,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             }
         });
     }
-
 
 
     @Override
@@ -225,11 +238,11 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     @Override
     public void onDrawerOpened(View drawerView) {
-        userView.setText(getModel().getUser().getUserEmail());
-        showUserFirstNameText.setText(getModel().getUser().isLogin() ?
-                (getModel().getUser().getFirstName() != null ? getModel().getUser().getFirstName() : "") +
-                        " " + (getModel().getUser().getLastName() != null ?
-                        getModel().getUser().getLastName() : "") : "");
+        userView.setText(currentUser.getUserEmail());
+        showUserFirstNameText.setText(currentUser.isLogin() ?
+                (currentUser.getFirstName() != null ?currentUser.getFirstName() : "") +
+                        " " + (currentUser.getLastName() != null ?
+                        currentUser.getLastName() : "") : "");
     }
 
 
@@ -277,13 +290,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
                 toolbar.setTitle(item.getTitle());
                 break;
-            case R.id.nav_find_watch_fragment:
-                if (getModel().isWatchConnected()) {
-                    getModel().blinkWatch();
-                } else {
-                    ToastHelper.showShortToast(this, R.string.in_app_notification_no_watch);
-                }
-                return;
             case R.id.nav_world_clock:
                 fragment = HomeClockFragment.instantiate(MainActivity.this, HomeClockFragment.class.getName());
                 toolbar.setTitle(item.getTitle());

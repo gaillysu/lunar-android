@@ -38,7 +38,7 @@
     <string name="edit_home_all_city">全部城市</string>
     <string name="edit_home_position_city">定位城市</string>
     <string name="edit_notification_delete_item">刪除</string>
-    <string name="edit_notification_item_name">設置</string>
+    <string name="edit_notification_item_name">编辑</string>
     <string name="lunar_home_clock_steps_title_tv">步數</string>
     <string name="lunar_main_clock_charging_status_title">太陽能狀態</string>
     <string name="lunar_main_clock_home_city_sunrise">日出</string>
@@ -54,7 +54,7 @@
     <string name="more_setting_place_local">本地时间</string>
     <string name="more_setting_place_time">手表数字时间</string>
     <string name="more_setting_unit">单位</string>
-    <string name="settings_more">更多设置</string>
+    <string name="settings_more">目標</string>
     <string name="lunar_steps_percentage">OF GOAL</string>
     <string name="user_select_imperial">英制</string>
     <string name="user_select_metrics">公制</string>
@@ -261,7 +261,7 @@
     <string name="settings_support">在線支持</string>
     <string name="settings_about">關於</string>
     <string name="settings_forget_watch">解綁手表</string>
-    <string name="settings_sure">您確認解除已綁定的手表嗎?</string>
+    <string name="settings_sure">您确认您当前操作嗎?</string>
 
     <string name="google_fit_could_not_login">不能登錄,請稍後重試</string>
     <string name="google_fit_connecting">連接谷歌賬戶失敗</string>
@@ -520,4 +520,36 @@
     <string name="welcome_activity_facebook_login">使用Facebook</string>
     <string name="welcome_activity_wechat_login">微信登錄</string>
     <string name="menu_drawer_find">尋找手錶</string>
+    <string name="add_new_activity_goal_fb">步行目標</string>
+    <string name="add_new_color_name_prompt">設置壹個名字</string>
+    <string name="add_new_inactivity_goal_fb">睡眠目標</string>
+    <string name="and_new_sunshine_fb">太陽能目標</string>
+    <string name="find_watch_subtitle">按下後手表會震動提示!</string>
+    <string name="fragment_setting_app_list_title">應用</string>
+    <string name="fragment_setting_device_list_title">手表</string>
+    <string name="fragment_setting_local_list_title">應用內</string>
+    <string name="loss_notification_subtitle">連接斷開後提醒</string>
+    <string name="more_setting_activity_title">活動</string>
+    <string name="more_setting_inactivity_title">睡眠</string>
+    <string name="more_setting_sunshine_title">太陽能</string>
+    <string name="notification_choose_color_dialog_title">LED的颜色</string>
+    <string name="prompt_user_set_color_name">請設置壹個名字</string>
+    <string name="ready_update_describe_subtitle">手表有新的跟新</string>
+    <string name="ready_update_describe_title">註意</string>
+    <string name="ready_update_firmware_title">更新插件</string>
+    <string name="ready_update_to_update_button_tv">更新我的手表插件</string>
+    <string name="save_filed">保存失敗</string>
+    <string name="setting_fragment_app_goal_subtitle">設定活動和陽光的預定目標</string>
+    <string name="setting_fragment_notification_subtitle">為每壹個通知設置壹個獨特的LED顏色</string>
+    <string name="snack_title">操作</string>
+    <string name="update_watch_firmware_careful_one">- 讓LunaR靠近妳的手機。</string>
+    <string name="update_watch_firmware_careful_second">- 不要關掉藍牙</string>
+    <string name="update_watch_firmware_careful_third">升級是不要使用LunaR的按鈕</string>
+    <string name="battery_low_alert_dialog_title">低電量提示</string>
+    <string name="battery_low_alert_percent">百分比</string>
+    <string name="settings_notifications_active_button_tv">打開通知</string>
+    <string name="settings_notifications_inactive_button_tv">關閉通知</string>
+    <string name="edit_goal_name">編輯名稱</string>
+    <string name="edit_goal_time_text">設置時長</string>
+
 </resources>

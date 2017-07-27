@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.l4digital.fastscroll.FastScrollRecyclerView;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.ChooseCityAdapter;
 import com.medcorp.lunar.adapter.SearchWorldAdapter;
@@ -27,7 +29,6 @@ import com.medcorp.lunar.event.bluetooth.PositionAddressChangeEvent;
 import com.medcorp.lunar.model.ChooseCityViewModel;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.view.PinyinComparator;
-import com.medcorp.lunar.view.SideBar;
 
 import net.medcorp.library.worldclock.City;
 
@@ -53,9 +54,7 @@ public class EditWorldClockActivity extends BaseActivity {
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
     @Bind(R.id.show_all_city_list)
-    ListView showAllCityList;
-    @Bind(R.id.choose_activity_list_index_sidebar)
-    SideBar sortCityBar;
+    FastScrollRecyclerView showAllCityList;
     @Bind(R.id.search_world_city_edit_city_name_ed)
     EditText searchCityAutoCompleteTv;
     @Bind(R.id.search_city_result_list)
@@ -123,21 +122,13 @@ public class EditWorldClockActivity extends BaseActivity {
         });
 
         allCityAdapter = new ChooseCityAdapter(this, chooseCityViewModelsList, false);
+        showAllCityList.setLayoutManager(new LinearLayoutManager(this));
         showAllCityList.setAdapter(allCityAdapter);
-        sortCityBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
-            @Override
-            public void onTouchingLetterChanged(String s) {
-                int position = allCityAdapter.getPositionForSection(s.charAt(0));
-                if (position != -1) {
-                    showAllCityList.setSelection(position);
-                }
-            }
-        });
 
-        showAllCityList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        allCityAdapter.setRecyclerViewItemClick(new ChooseCityAdapter.RecyclerViewItemClick() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectCity(chooseCityViewModelsList.get(position).getCityId());
+            public void onRecyclerViewItemClick(ChooseCityViewModel data) {
+                selectCity(data.getCityId());
             }
         });
 

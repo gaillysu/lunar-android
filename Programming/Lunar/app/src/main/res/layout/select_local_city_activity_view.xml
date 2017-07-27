@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/white"
@@ -16,9 +17,9 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
+            android:background="@drawable/select_city_search_button_bg"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:background="@drawable/select_city_search_button_bg"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -55,35 +56,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <ListView
+            <com.l4digital.fastscroll.FastScrollRecyclerView
                 android:id="@+id/show_all_city_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="@null"/>
-
-            <TextView
-                android:id="@+id/index_slide_dialog"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_above="@+id/right_line_view"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/right_line_view"
-                android:background="@drawable/select_city_index_tv_bg"
-                android:gravity="center"
-                android:text="A"
-                android:textColor="@color/text_color"
-                android:textSize="20dp"/>
-
-            <ImageView
-                android:id="@+id/right_line_view"
-                android:layout_width="4dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/select_city_view_bg"/>
+                app:bubbleColor="@color/colorAccent"
+                app:bubbleTextColor="#ffffff"
+                android:dividerHeight="@null"
+                app:handleColor="@color/tutorial_black"
+                app:trackColor="#bbbbbb"
+                app:hideScrollbar="false"
+                app:showTrack="true" />
         </RelativeLayout>
 
         <ListView

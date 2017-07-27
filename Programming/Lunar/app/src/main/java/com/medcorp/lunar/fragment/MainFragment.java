@@ -6,8 +6,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.MainActivity;
@@ -35,67 +33,19 @@ public class MainFragment extends BaseObservableFragment {
     TabLayout mainFragmentTitleTabLayout;
     @Bind(R.id.fragment_lunar_main_view_pager)
     ViewPager showWatchViewPage;
-    @Bind(R.id.ui_page_control_point)
-    LinearLayout uiPageControl;
 
     private boolean showSyncGoal;
     private LunarMainFragmentAdapter adapter;
-    private String[] fragmentAdapterArray;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.lunar_main_fragment_layout, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
-        initUiControl();
         mainFragmentTitleTabLayout.setupWithViewPager(showWatchViewPage);
         adapter = new LunarMainFragmentAdapter(getChildFragmentManager(), this);
         showWatchViewPage.setAdapter(adapter);
         return view;
-    }
-
-    private void initUiControl() {
-        fragmentAdapterArray = getResources().getStringArray(R.array.lunar_main_adapter_fragment);
-        uiPageControl.removeAllViews();
-        for (int i = 0; i < fragmentAdapterArray.length; i++) {
-            ImageView imageView = new ImageView(MainFragment.this.getContext());
-            if (i == 0) {
-                imageView.setImageResource(R.drawable.ui_page_control_selector);
-            } else {
-                imageView.setImageResource(R.drawable.ui_page_control_unselector);
-            }
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
-                    (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            if (i != 0) {
-                params.leftMargin = 20;
-            }
-            uiPageControl.addView(imageView, params);
-        }
-
-        showWatchViewPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    int childCount = uiPageControl.getChildCount();
-                    for (int i = 0; i < childCount; i++) {
-                        ImageView im = (ImageView) uiPageControl.getChildAt(i);
-                        if (position == i) {
-                            im.setImageResource(R.drawable.ui_page_control_selector);
-                        } else {
-                            im.setImageResource(R.drawable.ui_page_control_unselector);
-                        }
-                    }
-                }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
     }
 
     @Override

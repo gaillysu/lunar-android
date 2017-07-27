@@ -44,12 +44,14 @@
             android:background="@drawable/radio_button_bg"
             android:button="@null"
             android:checked="true"
+            android:drawablePadding="5dp"
             android:drawableTop="@drawable/second_time_home_time_select"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:paddingTop="40dp"
             android:text="@string/more_setting_place_home"
             android:textAllCaps="false"
-            android:textColor="@drawable/second_time_radio_button_text_color"/>
+            android:textColor="@drawable/second_time_radio_button_text_color"
+            android:textSize="15sp"/>
 
         <RadioButton
 
@@ -59,12 +61,14 @@
             android:layout_marginLeft="20dp"
             android:background="@drawable/radio_button_bg"
             android:button="@null"
+            android:drawablePadding="5dp"
             android:drawableTop="@drawable/second_time_zone_local_select"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:paddingTop="40dp"
             android:text="@string/more_setting_place_local"
             android:textAllCaps="false"
-            android:textColor="@drawable/second_time_radio_button_text_color"/>
+            android:textColor="@drawable/second_time_radio_button_text_color"
+            android:textSize="15sp"/>
     </RadioGroup>
 
     <com.medcorp.lunar.view.customfontview.RobotoButton

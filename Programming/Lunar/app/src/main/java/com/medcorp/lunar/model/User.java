@@ -7,7 +7,7 @@ import io.realm.RealmObject;
 public class User extends RealmObject {
 
     @SerializedName("id")
-    private int id;
+    private int id = (int) Math.floor(Math.random() * Integer.MAX_VALUE);
 
     @SerializedName("birthday")
     private long birthday;

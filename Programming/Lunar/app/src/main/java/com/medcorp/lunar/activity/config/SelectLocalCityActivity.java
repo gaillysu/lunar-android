@@ -2,18 +2,19 @@ package com.medcorp.lunar.activity.config;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.l4digital.fastscroll.FastScrollRecyclerView;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.ChooseCityAdapter;
 import com.medcorp.lunar.adapter.SearchWorldAdapter;
@@ -43,9 +44,7 @@ public class SelectLocalCityActivity extends BaseActivity {
     @Bind(R.id.search_city_result_list)
     ListView searchResultListView;
     @Bind(R.id.show_all_city_list)
-    ListView showAllCityList;
-    @Bind(R.id.index_slide_dialog)
-    TextView firstShowCity;
+    FastScrollRecyclerView showAllCityList;
 
     private ChooseCityAdapter allCityAdapter;
     private SearchWorldAdapter searchResultAdapter;
@@ -75,33 +74,24 @@ public class SelectLocalCityActivity extends BaseActivity {
 
     private void initView() {
         allCityAdapter = new ChooseCityAdapter(this, allCitesList, true);
+        showAllCityList.setLayoutManager(new LinearLayoutManager(this));
         showAllCityList.setAdapter(allCityAdapter);
         searchResultAdapter = new SearchWorldAdapter(searchResultList, this);
         searchResultListView.setAdapter(searchResultAdapter);
-        showAllCityList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        allCityAdapter.setRecyclerViewItemClick(new ChooseCityAdapter.RecyclerViewItemClick() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                saveLocalCity(allCitesList.get(position).getCityId());
+            public void onRecyclerViewItemClick(ChooseCityViewModel data) {
+
+                saveLocalCity(data.getCityId());
                 back();
             }
         });
+
         searchResultListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                saveLocalCity(searchResultList.get(position).getCityId());
-                back();
-            }
-        });
-
-        showAllCityList.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                firstShowCity.setText(allCitesList.get(showAllCityList.getFirstVisiblePosition()).getSortLetter());
+                    saveLocalCity(searchResultList.get(position).getCityId());
+                    back();
             }
         });
 

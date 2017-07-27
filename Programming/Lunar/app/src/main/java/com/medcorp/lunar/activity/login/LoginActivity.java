@@ -59,15 +59,22 @@ public class LoginActivity extends BaseActivity {
     AppCompatButton _loginButton;
     @Bind(R.id.login_activity_layout)
     CoordinatorLayout loginLayout;
+    private User LoginUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        if (getModel().getUser().getUserEmail() != null) {
-            _emailText.setText(getModel().getUser().getUserEmail());
-        }
+        getModel().getUser().subscribe(new Consumer<User>() {
+            @Override
+            public void accept(User user) throws Exception {
+                LoginUser = user;
+                if (user.getUserEmail() != null) {
+                    _emailText.setText(user.getUserEmail());
+                }
+            }
+        });
         progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
@@ -107,30 +114,29 @@ public class LoginActivity extends BaseActivity {
                 progressDialog.dismiss();
                 if (userLoginResponse.getStatus() == 1) {
                     UserLoginResponse.UserBean user = userLoginResponse.getUser();
-                    final User nevoUser = getModel().getUser();
                     try {
-                        nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday().getDate()).getTime());
+                        LoginUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday().getDate()).getTime());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    nevoUser.setFirstName(user.getFirst_name());
-                    nevoUser.setHeight(user.getLength());
-                    nevoUser.setLastName(user.getLast_name());
-                    nevoUser.setWeight(user.getWeight());
-                    nevoUser.setUserID("" + user.getId());
-                    nevoUser.setUserEmail(user.getEmail());
-                    nevoUser.setIsLogin(true);
-                    nevoUser.setCreatedDate(new Date().getTime());
+                    LoginUser.setFirstName(user.getFirst_name());
+                    LoginUser.setHeight(user.getLength());
+                    LoginUser.setLastName(user.getLast_name());
+                    LoginUser.setWeight(user.getWeight());
+                    LoginUser.setUserID("" + user.getId());
+                    LoginUser.setUserEmail(user.getEmail());
+                    LoginUser.setIsLogin(true);
+                    LoginUser.setCreatedDate(new Date().getTime());
                     //save it and sync with watch and cloud server
-                    getModel().saveUser(nevoUser);
+                    getModel().saveUser(LoginUser);
                     getModel().getSyncController().getDailyTrackerInfo(true);
-                    getModel().getNeedSyncSteps(nevoUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
+                    getModel().getNeedSyncSteps(LoginUser.getUserID()).subscribe(new Consumer<List<Steps>>() {
                         @Override
                         public void accept(final List<Steps> stepses) throws Exception {
-                            getModel().getNeedSyncSleep(nevoUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
+                            getModel().getNeedSyncSleep(LoginUser.getUserID()).subscribe(new Consumer<List<Sleep>>() {
                                 @Override
                                 public void accept(List<Sleep> sleeps) throws Exception {
-                                    getModel().getCloudSyncManager().launchSyncAll(nevoUser, stepses, sleeps);
+                                    getModel().getCloudSyncManager().launchSyncAll(LoginUser, stepses, sleeps);
                                 }
                             });
                         }
@@ -158,9 +164,7 @@ public class LoginActivity extends BaseActivity {
                 _loginButton.setEnabled(true);
                 setResult(RESULT_OK, null);
                 Preferences.saveIsFirstLogin(LoginActivity.this, false);
-                if ((getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true) &&
-                        getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, false))
-                        | !getModel().isWatchConnected()) {
+                if (getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, false)) {
                     startActivity(TutorialPage1Activity.class);
                 } else {
                     startActivity(MainActivity.class);
@@ -184,7 +188,8 @@ public class LoginActivity extends BaseActivity {
             new MaterialDialog.Builder(this).backgroundColor(getResources().getColor(R.color.window_background_color))
                     .contentColor(getResources().getColor(R.color.text_color)).titleColor(getResources().getColor(R.color.text_color))
                     .title(getString(R.string.open_forget_password_dialog_title))
-                    .content(getString(R.string.prompt_is_not_forget_password)).negativeText(R.string.tutorial_failed_try_again)
+                    .content(getString(R.string.prompt_is_not_forget_password))
+                    .negativeText(R.string.tutorial_failed_try_again)
                     .positiveText(android.R.string.ok).onPositive(new MaterialDialog.SingleButtonCallback() {
                 @Override
                 public void onClick(MaterialDialog dialog, DialogAction which) {

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +42,7 @@ import no.nordicsemi.android.dfu.DfuProgressListenerAdapter;
 import no.nordicsemi.android.dfu.DfuServiceInitiator;
 import no.nordicsemi.android.dfu.DfuServiceListenerHelper;
 
-/**
+/***
  * Created by gaillysu on 15/12/28.
  */
 public class DfuActivity extends BaseActivity implements OnOtaControllerListener {
@@ -51,11 +52,8 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
     @Bind(R.id.clock_imageView)
     ImageView clockImage;
 
-    @Bind(R.id.lunar_main_clock_home_hour)
-    ImageView hourImage;
-
-    @Bind(R.id.lunar_main_clock_home_minute)
-    ImageView minImage;
+    @Bind(R.id.update_watch_firmware_rl)
+    RelativeLayout updateFirmware;
 
     @Bind(R.id.roundProgressBar)
     RoundProgressBar roundProgressBar;
@@ -78,7 +76,6 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
     private boolean mUpdateSuccess = false;
     private boolean manualMode = false;
     private boolean backToSetting = false;
-    private boolean isShowingAlertDialog = false;
 
     private final DfuProgressListener dfuProgressListener = new DfuProgressListenerAdapter() {
         @Override
@@ -176,7 +173,6 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         mContext = this;
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         initManualmodeAndtFirmwareList();
-        initNevoLogo();
         back2settings.setVisibility(View.INVISIBLE);
         back2settings.setText(R.string.dfu_re_upgrade);
         back2settings.setTag(new ButtonTag(getString(R.string.dfu_retry)));
@@ -187,7 +183,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
             mNevoOtaController.setManualMode(true);
             mNevoOtaController.setOtaMode(true, true);
         } else {
-            showAlertDialog();
+            uploadPressed();
         }
     }
 
@@ -204,10 +200,6 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
     }
 
     private void showAlertDialog() {
-        if (isShowingAlertDialog) {
-            return;
-        }
-        isShowingAlertDialog = true;
 
         new MaterialDialog.Builder(this)
                 .title(R.string.dfu_update_title)
@@ -215,14 +207,12 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog dialog, DialogAction which) {
-                        isShowingAlertDialog = false;
-                        uploadPressed();
+
                     }
                 })
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog dialog, DialogAction which) {
-                        isShowingAlertDialog = false;
                         finish();
                     }
                 })
@@ -231,25 +221,6 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                 .cancelable(false)
                 .show();
 
-    }
-
-    private void initNevoLogo() {
-        hourImage.setVisibility(View.VISIBLE);
-        minImage.setVisibility(View.VISIBLE);
-        clockImage.setVisibility(View.VISIBLE);
-        clockImage.setImageResource(R.drawable.watch_dashboard_icon);
-
-        int hour = 11;
-        int minute = 5;
-        final float degreeHour = (float) ((hour + minute / 60.0) * 30);
-        final float degreeMin = minute * 6;
-        ((Activity) mContext).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                hourImage.setRotation(degreeHour);
-                minImage.setRotation(degreeMin);
-            }
-        });
     }
 
     private void initManualmodeAndtFirmwareList() {
@@ -290,7 +261,6 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         if (selectedFileURL.contains(".zip")) {
             enumFirmwareType = Constants.DfuFirmwareTypes.DISTRIBUTION_ZIP;
         }
-        initNevoLogo();
         roundProgressBar.setProgress(0);
         roundProgressBar.setVisibility(View.VISIBLE);
         percentTextView.setText("");
@@ -416,9 +386,8 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                     back2settings.setVisibility(View.INVISIBLE);
 
                     roundProgressBar.setVisibility(View.INVISIBLE);
-                    hourImage.setVisibility(View.INVISIBLE);
-                    minImage.setVisibility(View.INVISIBLE);
-                    clockImage.setImageDrawable(ContextCompat.getDrawable(DfuActivity.this, R.drawable.tutorial_nevo_link_success));
+                    clockImage.setImageDrawable(ContextCompat.getDrawable(DfuActivity.this, R.drawable.ic_connect));
+                    updateFirmware.setBackground(getResources().getDrawable(R.drawable.connect_watch_bg));
                     percentTextView.setText(R.string.dfu_press_third_button);
                     infomationTextView.setText(R.string.dfu_press_third_button_description);
                 }
