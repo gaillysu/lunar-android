@@ -54,7 +54,7 @@
     <string name="edit_notification_delete_item">Delete</string>
     <string name="edit_home_position_city">Position City</string>
     <string name="edit_profile">Edit Profile</string>
-    <string name="edit_notification_item_name">Activate</string>
+    <string name="edit_notification_item_name">Edit</string>
     <string name="edit_user_last_name">Click to set your last name</string>
     <string name="edit_user_first_name">Click to set your first name</string>
     <string name="email_format_error">Invalid Email format</string>

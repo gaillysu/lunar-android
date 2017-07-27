@@ -393,7 +393,7 @@ public class MainClockFragment extends BaseFragment {
             @Override
             public void run() {
                 //NOTICE: nevo solar adc threshold is 200，but lunar is 170
-                if (event.getPv_adc() >= 170) {
+                if (event.getPv_adc() >= 161) {
                     solarHarvestStatus.setText(R.string.lunar_home_clock_solar_harvest_charge);
                 } else {
                     solarHarvestStatus.setText(R.string.lunar_home_clock_solar_harvest_idle);
