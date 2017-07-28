@@ -93,4 +93,5 @@
     <color name="welcome_other_text_color">#DFCFCF</color>
     <color name="more_setting_sub_text_color">#858384</color>
     <color name="bottom_dialog_icon_color">#727272</color>
+    <color name="bedtime_icon_tint_color">#95989A</color>
 </resources>

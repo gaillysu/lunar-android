@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.EditAlarmActivity;
 import com.medcorp.lunar.activity.MainActivity;
-import com.medcorp.lunar.adapter.AlarmArrayAdapter;
 import com.medcorp.lunar.adapter.AlarmRecyclerViewAdapter;
 import com.medcorp.lunar.ble.controller.SyncControllerImpl;
 import com.medcorp.lunar.event.bluetooth.RequestResponseEvent;
@@ -209,20 +208,20 @@ public class AlarmFragment extends BaseObservableFragment
             }
         });
         for (int i = 0; i < alarmNumber.length; i++) {
-            getModel().getAlarmDatabaseHelper().obtainAlarm(alarmNumber[i]).subscribe(new Consumer<Alarm>() {
-                @Override
-                public void accept(Alarm alarm) throws Exception {
-                    alarm.setEnable(checked);
-                    getModel().getSyncController().setAlarm(alarm);
-                }
-            });
-            getModel().getAlarmDatabaseHelper().obtainAlarm(alarmNumber[i] + 13).subscribe(new Consumer<Alarm>() {
-                @Override
-                public void accept(Alarm alarm) throws Exception {
-                    alarm.setEnable(checked);
-                    getModel().getSyncController().setAlarm(alarm);
-                }
-            });
+//            getModel().getAlarmDatabaseHelper().obtainAlarm(alarmNumber[i]).subscribe(new Consumer<Alarm>() {
+//                @Override
+//                public void accept(Alarm alarm) throws Exception {
+//                    alarm.setEnable(checked);
+//                    getModel().getSyncController().setAlarm(alarm);
+//                }
+//            });
+//            getModel().getAlarmDatabaseHelper().obtainAlarm(alarmNumber[i] + 13).subscribe(new Consumer<Alarm>() {
+//                @Override
+//                public void accept(Alarm alarm) throws Exception {
+//                    alarm.setEnable(checked);
+//                    getModel().getSyncController().setAlarm(alarm);
+//                }
+//            });
         }
         ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
     }
