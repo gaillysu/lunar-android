@@ -213,7 +213,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
             @Override
             public void onPreOpen() {
                 viewHolder.showInfoRl.setVisibility(View.GONE);
-//                viewHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.bedtime_item_background_color));
+                viewHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.bedtime_item_background_color));
                 expandState.put(position, true);
             }
 

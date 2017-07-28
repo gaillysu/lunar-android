@@ -518,6 +518,9 @@
     <string name="update_watch_firmware_careful_third">Don\'t press and buttons on LunaR while upgrading</string>
     <string name="add_new_activity_goal_fb">Activity goal</string>
     <string name="add_new_inactivity_goal_fb">Inactivity goal</string>
+
+    <string name="append_new_alarm_bedtime">Bedtime Alarm</string>
+    <string name="append_new_alarm_normal">Normal Alarm</string>
     <string name="and_new_sunshine_fb">Sunshine goal</string>
     <string name="more_setting_activity_title">Activity</string>
     <string name="more_setting_inactivity_title">Inactivity</string>
