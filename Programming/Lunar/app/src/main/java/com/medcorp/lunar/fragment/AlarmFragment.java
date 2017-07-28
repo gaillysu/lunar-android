@@ -30,6 +30,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.functions.Consumer;
 
 /***
@@ -88,6 +89,17 @@ public class AlarmFragment extends BaseObservableFragment
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.add_menu).setVisible(false);
         menu.findItem(R.id.choose_goal_menu).setVisible(false);
+    }
+
+    @OnClick(R.id.alarm_fragment_add_new_normal_alarm_ft)
+    public void addNewNormalAlarm(){
+        View inflate = LayoutInflater.from(AlarmFragment.this.getContext()).inflate(R.layout.add_normal_alarm_dialog_layout, null);
+
+    }
+
+    @OnClick(R.id.alarm_fragment_add_new_bedtime_alarm_ft)
+    public void addNewBedtimeAlarm(){
+
     }
 
     //    @Override
@@ -208,20 +220,20 @@ public class AlarmFragment extends BaseObservableFragment
             }
         });
         for (int i = 0; i < alarmNumber.length; i++) {
-//            getModel().getAlarmDatabaseHelper().obtainAlarm(alarmNumber[i]).subscribe(new Consumer<Alarm>() {
-//                @Override
-//                public void accept(Alarm alarm) throws Exception {
-//                    alarm.setEnable(checked);
-//                    getModel().getSyncController().setAlarm(alarm);
-//                }
-//            });
-//            getModel().getAlarmDatabaseHelper().obtainAlarm(alarmNumber[i] + 13).subscribe(new Consumer<Alarm>() {
-//                @Override
-//                public void accept(Alarm alarm) throws Exception {
-//                    alarm.setEnable(checked);
-//                    getModel().getSyncController().setAlarm(alarm);
-//                }
-//            });
+            getModel().getAlarmDatabaseHelper().obtainAlarm(alarmNumber[i]).subscribe(new Consumer<Alarm>() {
+                @Override
+                public void accept(Alarm alarm) throws Exception {
+                    alarm.setEnable(checked);
+                    getModel().getSyncController().setAlarm(alarm);
+                }
+            });
+            getModel().getAlarmDatabaseHelper().obtainAlarm(alarmNumber[i] + 13).subscribe(new Consumer<Alarm>() {
+                @Override
+                public void accept(Alarm alarm) throws Exception {
+                    alarm.setEnable(checked);
+                    getModel().getSyncController().setAlarm(alarm);
+                }
+            });
         }
         ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
     }

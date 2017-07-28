@@ -13,7 +13,7 @@
     <string name="sunset_activity_title_tv">TODAY</string>
     <string name="sunset_activity_title_tomorrow">TOMORROW</string>
     <string name="sunrise_activity_toolbar_title">Sunset Sunrise</string>
-    <string name="sunday">Sun</string>
+    <string name="sunday">S</string>
     <string name="steps_goal_two">6000 steps</string>
     <string name="steps_goal_three">8000 steps</string>
     <string name="steps_goal_one">4500 steps</string>
@@ -66,7 +66,7 @@
     <string name="forget_password_result_prompt">Check your inbox</string>
     <string name="forget_password_result_prompt_user_check_email">Please open the link we’ve  sent and verify your e-mail ad- dress.</string>
     <string name="forget_password_send_request_bt_text">SEND</string>
-    <string name="friday">Fri</string>
+    <string name="friday">F</string>
     <string name="google_fit_cancel">Cancel</string>
     <string name="google_fit_log_out">Log out</string>
     <string name="google_fit_log_out_message">Do you want to disable Google Fit?</string>
@@ -125,7 +125,7 @@
     <string name="main_steps_fragment_title">Steps</string>
     <string name="menu_drawer_hometime">Digital Time</string>
     <string name="more_setting_place_home">Home Time</string>
-    <string name="monday">Mon</string>
+    <string name="monday">M</string>
     <string name="more_setting_place_local">Local Time</string>
     <string name="more_setting_place_time">Watch digital time</string>
     <string name="more_setting_unit">Unit</string>
@@ -188,7 +188,7 @@
     <string name="register_to_login">Already a member? Login</string>
     <string name="register_user_info_page_next_text">Next</string>
     <string name="register_user_info_page_text">Register</string>
-    <string name="saturday">Sat</string>
+    <string name="saturday">S</string>
     <string name="save_notification_ok">Notification Saved</string>
     <string name="settings_more">Goals</string>
     <string name="settings_login">Log in</string>
@@ -206,7 +206,7 @@
     <string name="time_able_morning">am</string>
     <string name="time_able_afternoon">pm</string>
     <string name="tips_user_account_password">Email must not be empty</string>
-    <string name="thursday">Thu</string>
+    <string name="thursday">T</string>
     <string name="unit_length">mi</string>
     <string name="unit_cal">kcal</string>
     <string name="user_info_back_text">Back</string>
@@ -220,9 +220,9 @@
     <string name="validic_enable_message">Please login firstly</string>
     <string name="validic_pin_code_title">Input PIN code</string>
     <string name="validic_pin_code">pin code</string>
-    <string name="wednesday">Wed</string>
+    <string name="wednesday">W</string>
     <string name="sleep_time">Time</string>
-    <string name="tuesday">Tue</string>
+    <string name="tuesday">T</string>
 
 
     <string name="app_name">LunaR</string>

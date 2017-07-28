@@ -310,7 +310,7 @@
     <string name="forget_password_result_prompt">檢查妳的郵箱</string>
     <string name="forget_password_result_prompt_user_check_email">請打開鏈接來驗證妳的電子郵箱</string>
     <string name="forget_password_send_request_bt_text">發送</string>
-    <string name="friday">星期五</string>
+    <string name="friday">五</string>
     <string name="google_fit_cancel">取消</string>
     <string name="google_fit_log_out">退出</string>
     <string name="google_fit_log_out_message">妳想退出Google Fit嗎?</string>
@@ -360,7 +360,7 @@
     <string name="main_fragment_solar_page_time_on_solar_text">太陽能時間</string>
     <string name="main_sleep_fragment_title">睡眠</string>
     <string name="main_steps_fragment_title">步數</string>
-    <string name="monday">星期壹</string>
+    <string name="monday">壹</string>
     <string name="my_device_version_text">手表版本</string>
     <string name="my_nevo_new_update_available">有可用的新版本</string>
     <string name="network_wait_text">請等待...</string>
@@ -405,7 +405,7 @@
     <string name="register_to_login">已有帳號?登錄</string>
     <string name="register_user_info_page_next_text">下壹步</string>
     <string name="register_user_info_page_text">註冊</string>
-    <string name="saturday">星期六</string>
+    <string name="saturday">六</string>
     <string name="save_notification_ok">保存成功</string>
     <string name="settings_login">登錄</string>
     <string name="settings_other_apps">連接到其它應用</string>
@@ -423,13 +423,13 @@
     <string name="steps_goal_one">4500 步</string>
     <string name="steps_goal_three">8000 步</string>
     <string name="steps_goal_two">6000 步</string>
-    <string name="sunday">星期日</string>
+    <string name="sunday">日</string>
     <string name="this_week_steps_identification_average">平均</string>
     <string name="this_week_steps_identification_one">妳</string>
     <string name="this_week_steps_identification_two">平均步數</string>
-    <string name="thursday">星期四</string>
+    <string name="thursday">四</string>
     <string name="tips_user_account_password">電郵不能為空</string>
-    <string name="tuesday">星期二</string>
+    <string name="tuesday">二</string>
     <string name="user_email_is_error">請檢查妳的郵件格式...</string>
     <string name="user_info_back_text">返回</string>
     <string name="user_info_user_birthday_error">生日不能為空</string>
@@ -439,7 +439,7 @@
     <string name="validic_enable_message">請先登錄</string>
     <string name="validic_pin_code">PIN 碼</string>
     <string name="validic_pin_code_title">輸入 PIN 碼</string>
-    <string name="wednesday">星期三</string>
+    <string name="wednesday">三</string>
     <string name="lunar_home_clock_solar_harvest_charge">充電中</string>
     <string name="lunar_home_clock_solar_harvest_idle">空閑</string>
     <string name="check_email_message">邮箱已经存在!!!</string>
