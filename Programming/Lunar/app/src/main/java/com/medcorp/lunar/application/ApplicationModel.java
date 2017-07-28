@@ -27,6 +27,7 @@ import com.medcorp.lunar.ble.model.goal.NumberOfStepsGoal;
 import com.medcorp.lunar.cloud.CloudSyncManager;
 import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.entry.AlarmDatabaseHelper;
+import com.medcorp.lunar.database.entry.BedtimeDatabaseHelper;
 import com.medcorp.lunar.database.entry.CityWeatherDatabaseHelper;
 import com.medcorp.lunar.database.entry.LedLampDatabase;
 import com.medcorp.lunar.database.entry.SleepDatabaseHelper;
@@ -167,6 +168,7 @@ public class ApplicationModel extends Application {
     private Sleep mYesterdaySleep;
     private Sleep[] todaySleep;
     private static ApplicationModel mModel;
+    private BedtimeDatabaseHelper bedtimeDatabaseHelper;
 
     @Override
     public void onCreate() {
@@ -197,6 +199,7 @@ public class ApplicationModel extends Application {
         weatherManager = new WeatherManager(this);
         ledDataBase = new LedLampDatabase(this);
         locationController = new LocationController(this);
+        bedtimeDatabaseHelper = new BedtimeDatabaseHelper(this);
         mIWXAPI = WXAPIFactory.createWXAPI(this, getString(R.string.we_chat_app_id), true);
         updateGoogleFit();
         if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(getString(R.string.key_preset), false)) {
@@ -902,7 +905,9 @@ public class ApplicationModel extends Application {
             new GoogleHistoryUpdateTask(googleFitManager).execute(dataHandler.getDistanceDataSet());
         }
     }
-
+    public BedtimeDatabaseHelper getBedTimeDatabaseHelper(){
+        return bedtimeDatabaseHelper;
+    }
     public CloudSyncManager getCloudSyncManager() {
         return cloudSyncManager;
     }
