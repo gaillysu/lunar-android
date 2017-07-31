@@ -40,6 +40,7 @@
     <color name="purple_normal">#FF7ED8D1</color>
     <color name="purple_pressed">#997ED8D1</color>
     <color name="half_blue">#507ED8D1</color>
+    <color name="add_new_alarm_text_color">#A0A0A0</color>
 
     <color name="register_account_text_color">#7ED8D1</color>
     <color name="input_account_shape_color">#54575A</color>

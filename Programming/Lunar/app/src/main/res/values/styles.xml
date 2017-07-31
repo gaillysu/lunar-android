@@ -16,6 +16,11 @@
         <item name="android:windowBackground">@color/window_background_color</item>
     </style>
 
+
+    <style name="MyTimePickerStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowShowWallpaper">false</item>
+    </style>
     <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/radion_button_style</item>
     </style>

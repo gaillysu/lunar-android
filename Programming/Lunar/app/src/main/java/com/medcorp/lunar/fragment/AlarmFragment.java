@@ -1,6 +1,7 @@
 package com.medcorp.lunar.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -9,7 +10,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TimePicker;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.EditAlarmActivity;
 import com.medcorp.lunar.activity.MainActivity;
@@ -94,6 +98,20 @@ public class AlarmFragment extends BaseObservableFragment
     @OnClick(R.id.alarm_fragment_add_new_normal_alarm_ft)
     public void addNewNormalAlarm(){
         View inflate = LayoutInflater.from(AlarmFragment.this.getContext()).inflate(R.layout.add_normal_alarm_dialog_layout, null);
+        TimePicker timePicker = (TimePicker) inflate.findViewById(R.id.new_alarm_time_select_tp);
+        timePicker.setIs24HourView(true);
+        new MaterialDialog.Builder(AlarmFragment.this.getContext())
+                .title(getString(R.string.add_new_normal_alarm_dialog_title))
+                .customView(inflate,false)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                    }
+                })
+                .positiveText(R.string.goal_ok)
+                .negativeText(R.string.goal_cancel)
+                .show();
 
     }
 

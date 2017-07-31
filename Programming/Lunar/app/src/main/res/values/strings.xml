@@ -527,4 +527,5 @@
     <string name="more_setting_sunshine_title">Sunshine</string>
     <string name="save_filed">Save Filed</string>
     <string name="snack_title">Actions</string>
+    <string name="add_new_normal_alarm_dialog_title">Set Bedtime</string>
 </resources>
