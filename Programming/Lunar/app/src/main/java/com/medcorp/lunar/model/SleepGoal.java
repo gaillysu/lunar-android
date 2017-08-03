@@ -51,10 +51,6 @@ public class SleepGoal extends RealmObject {
 
     @Override
     public String toString() {
-        return "SleepGoal{" +
-                "goalName='" + sleepGoalName + '\'' +
-                ", goalDuration=" + goalDuration +
-                ", status=" + status +
-                '}';
+        return (goalDuration/60==0?"":goalDuration/60)+"h"+(goalDuration%60==0?"":goalDuration%60+"min");
     }
 }

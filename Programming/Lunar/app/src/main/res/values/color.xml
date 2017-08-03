@@ -4,9 +4,15 @@
     <color name="customWhite">#f4f2f1</color>
     <color name="transparent">#00000000</color>
     <color name="alarm_repeat_text_color">#BCBCBC</color>
+    <color name="new_bedtime_dialog_background_color">#F2F2F2</color>
+    <color name="blue">#33b5e5</color>
+    <color name="ampm_text_color">#8c8c8c</color>
     <color name="solar_pie_chart_content_text_color">@android:color/white</color>
     <color name="wake_sleep">#fffde69c</color>
+    <color name="red">#ff3333</color>
     <color name="light_sleep">#A08455</color>
+    <color name="date_picker_text_disabled">#ccc</color>
+    <color name="date_picker_text_normal">#ff999999</color>
     <color name="edit_world_clock_driver_color">#A2A4A5</color>
     <color name="deep_sleep">#A08455</color>
     <color name="history_data_black">#ff524e4e</color>
@@ -41,7 +47,10 @@
     <color name="purple_pressed">#997ED8D1</color>
     <color name="half_blue">#507ED8D1</color>
     <color name="add_new_alarm_text_color">#A0A0A0</color>
-
+    <color name="transparent_black">#7f000000</color>
+    <color name="dark_gray">#363636</color>
+    <color name="light_gray">#404040</color>
+    <color name="numbers_text_color">#8c8c8c</color>
     <color name="register_account_text_color">#7ED8D1</color>
     <color name="input_account_shape_color">#54575A</color>
     <color name="window_background_color">#3A3739</color>

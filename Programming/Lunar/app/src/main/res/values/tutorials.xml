@@ -36,7 +36,8 @@
     <string name="cancel_login_bt_tv">Cancel login</string>
     <string name="login_activity_title">Login</string>
     <string name="tutorial_out_shipping_mode_title">Shipping-mode</string>
-    <string name="tutorial_shipping_mode_describe_text">Take LunaR out of shipping-mode by pressing the two lower buttons. The LED at 12 0\'clock will blink green.</string>
+    <string name="tutorial_shipping_mode_describe_text">Take LunaR out of shipping-mode by holding the lower left button.
+        The LED at 12 o\‘clock will blink green. The 2, 4, 6, 8 and 10 o\‘clock LED will blink white.</string>
     <string name="start_config_watch_tv">Configurate LunaR</string>
     <string name="config_time_title">Second Timezone</string>
     <string name="config_time_describe">LunaR can display your home or local time by pushing on the right button. Which time would you like to use?</string>
@@ -55,10 +56,12 @@
     <string name="other_color_green" translatable="false">green</string>
     <string name="other_color_gray" translatable="false">or</string>
     <string name="other_color_white" translatable="false">white</string>
-    <string name="other_color_text" translatable="false">two lower buttons</string>
+    <string name="other_color_text" translatable="false">lower left button</string>
     <string name="add_new_color_name_prompt">Create a label</string>
     <string name="main_solar_details_sun_exposure_describe">Todays sun exposure</string>
     <string name="prompt_user_set_color_name">Please input color label!</string>
     <string name="select_sleep_goal_describe">Sleep Goal</string>
     <string name="set_new_alarm_label">Create a label</string>
+    <string name="edit_new_sleep_describe">Add presets</string>
+    <string name="edit_new_sleep_goal_bottom_dialog_title">Select presets</string>
 </resources>

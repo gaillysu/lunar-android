@@ -116,7 +116,7 @@
 
     <string name="tutorial_next_step_text">Next Step</string>
 
-    <string name="tutorial_5_text">Trying to connect with LunaR.Make sure you to keep LunaR  in reach of your phone!</string>
+    <string name="tutorial_5_text">Now let\'s configure LunaR to your preferences.</string>
 
     <string name="tutorial_failed_title">Connection failed</string>
     <string name="tutorial_failed_try_again">Try Again</string>
@@ -389,6 +389,8 @@
     <string name="saturday">S</string>
     <string name="sunday">S</string>
     <string name="disable">Disable</string>
+    <string name="sans_serif" translatable="false">sans-serif</string>
+    <string name="radial_numbers_typeface">sans-serif</string>
     <string name="every_day">Every </string>
     <string name="Edit_alarm_type">Edit Alarm type</string>
     <string name="edit_alarm_sleep">Sleep Alarm</string>
@@ -414,12 +416,12 @@
     <string name="tutorial_1_text">Use your LunaR watch to set, track and analyse\n your personal health and fitness data</string>
     <string name="tutorial_1_lets_activate">Activate LunaR</string>
     <string name="change_select_city">Change city</string>
-    <string name="tutorial_3_text">Pull out the crown out and turn to set the time on LunR.Be aware that the hands doesn\'t sync with your phone\'s time.</string>
+    <string name="tutorial_3_text">Pull out the crown out and turn to set the time on LunaR .Be aware that the hands doesn\'t sync with your phone\'s time.</string>
     <string name="tutorial_2_text">Tap the Settings button and turn\n Bluetooth on.</string>
     <string name="tutorial_2_continue">Turn Bluetooth on</string>
     <string name="tutorial_4_title">Turn on LunaR </string>
-    <string name="tutorial_4_text">Push any of the lower buttons to turn on LunaR. the LED ar 12 o\'clock will blink white.</string>
-    <string name="tutorial_5_title">Searching</string>
+    <string name="tutorial_4_text">Push any button to turn on LunaR\'s bluetooth. But for now, press the lower right button. The 12 o\'clock LED will blink white.</string>
+    <string name="tutorial_5_title">Connected</string>
     <string name="tutorial_failed_text">Make sure your phone\'s bluetooth is enabled and that the LED on the LunaR is blinking.</string>
     <string name="in_app_notification_found_nevo">Found LunaR!</string>
     <string name="in_app_notification_nevo_disconnected">LunaR disconnected.</string>
@@ -528,4 +530,8 @@
     <string name="save_filed">Save Filed</string>
     <string name="snack_title">Actions</string>
     <string name="add_new_normal_alarm_dialog_title">Set Bedtime</string>
+    <string name="hour_picker_description" translatable="false">Hours circular slider</string>
+    <string name="select_hours" translatable="false">Select hours</string>
+    <string name="minute_picker_description" translatable="false">Minutes circular slider</string>
+    <string name="select_minutes" translatable="false">Select minutes</string>
 </resources>

@@ -129,6 +129,8 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         TextView titleTv;
         @Bind(R.id.bedtime_item_wake_up_icon)
         ImageView wakeUpIv;
+        @Bind(R.id.fragment_alarm_list_view_item_bottom_line)
+        View bottomLine;
 
         public ViewHolder(View view) {
             super(view);
@@ -203,7 +205,8 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         if (position < bedtimeList.size()) {
             setBedtimeData(viewHolder, position);
         } else if (position > bedtimeList.size() - 1 && normalAlarmList.size() > 0) {
-            setNormalAlarmData(viewHolder, position);
+            viewHolder.settingBedTimeGoal.setVisibility(View.GONE);
+            setNormalAlarmData(viewHolder, position - bedtimeList.size());
         }
         viewHolder.setIsRecyclable(false);
         viewHolder.expandable.setInRecyclerView(true);
@@ -213,6 +216,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
             @Override
             public void onPreOpen() {
                 viewHolder.showInfoRl.setVisibility(View.GONE);
+                viewHolder.bottomLine.setVisibility(View.GONE);
                 viewHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.bedtime_item_background_color));
                 expandState.put(position, true);
             }
@@ -221,6 +225,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
             public void onPreClose() {
                 viewHolder.rootView.setBackgroundColor(context.getResources().getColor(R.color.window_background_color));
                 viewHolder.showInfoRl.setVisibility(View.VISIBLE);
+                viewHolder.bottomLine.setVisibility(View.VISIBLE);
                 expandState.put(position, false);
             }
         });

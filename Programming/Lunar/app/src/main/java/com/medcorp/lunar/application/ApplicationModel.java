@@ -905,9 +905,11 @@ public class ApplicationModel extends Application {
             new GoogleHistoryUpdateTask(googleFitManager).execute(dataHandler.getDistanceDataSet());
         }
     }
-    public BedtimeDatabaseHelper getBedTimeDatabaseHelper(){
+
+    public BedtimeDatabaseHelper getBedTimeDatabaseHelper() {
         return bedtimeDatabaseHelper;
     }
+
     public CloudSyncManager getCloudSyncManager() {
         return cloudSyncManager;
     }
@@ -921,7 +923,7 @@ public class ApplicationModel extends Application {
     }
 
     public Observable<User> getUser() {
-        return  userDatabaseHelper.getLoginUser();
+        return userDatabaseHelper.getLoginUser();
     }
 
     @Override
@@ -1179,7 +1181,7 @@ public class ApplicationModel extends Application {
 
 
     private void addDefAlarm() {
-        addAlarm(new Alarm(21, 0, (byte) (0), getString(R.string.def_alarm_one), (byte) 0, (byte) 13)).subscribe(new Consumer<Boolean>() {
+        addAlarm(new Alarm(21, 0, (byte) (1), getString(R.string.def_alarm_one), (byte) 7)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
@@ -1187,7 +1189,7 @@ public class ApplicationModel extends Application {
                 }
             }
         });
-        addAlarm(new Alarm(8, 0, (byte) (0), getString(R.string.def_alarm_two), (byte) 1, (byte) 0)).subscribe(new Consumer<Boolean>() {
+        addAlarm(new Alarm(8, 0, (byte) (2), getString(R.string.def_alarm_two), (byte) 8)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
