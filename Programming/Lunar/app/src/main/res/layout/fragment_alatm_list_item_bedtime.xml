@@ -129,13 +129,14 @@
         <com.github.aakira.expandablelayout.ExpandableLinearLayout
             android:id="@+id/bedtime_item_expandable_edit_layout"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
             app:ael_duration="400"
             app:ael_expanded="false">
 
             <LinearLayout
+                android:id="@+id/alarm_adapter_item_weekday_ll"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 android:orientation="horizontal">
@@ -301,23 +302,14 @@
                     android:src="@drawable/ic_edit_bedtime_alarm_label"
                     android:tint="@color/colorAccent"/>
 
-                <!--<android.support.design.widget.TextInputLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:hint="@string/alarm_label"-->
-                    <!---->
-                    <!--app:hintTextAppearance="@android:style/TextAppearance.Medium">-->
-
-                    <EditText
-                        android:id="@+id/edit_bedtime_alarm_label_tv"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="54dp"
-                        android:background="@null"
-                        android:textColor="@color/text_color"
-                        android:textSize="13sp"/>
-                <!--</android.support.design.widget.TextInputLayout>-->
+                <EditText
+                    android:id="@+id/edit_bedtime_alarm_label_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="54dp"
+                    android:background="@null"
+                    android:textColor="@color/text_color"
+                    android:textSize="13sp"/>
             </RelativeLayout>
 
             <View

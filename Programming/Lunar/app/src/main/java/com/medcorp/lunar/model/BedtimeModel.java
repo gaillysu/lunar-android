@@ -7,7 +7,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by Jason on 2017/6/8.
  */
 
-public class BedtimeModel extends RealmObject{
+public class BedtimeModel extends RealmObject {
 
     @PrimaryKey
     private int id = (int) (Math.floor(Math.random() * Integer.MAX_VALUE));
@@ -113,5 +113,27 @@ public class BedtimeModel extends RealmObject{
         }
         return builder.toString();
 
+    }
+
+    public String  getGoalString() {
+        StringBuilder builder = new StringBuilder();
+        int goalHour = SleepGoal / 60;
+        int goalMinute = SleepGoal % 60;
+        if (goalHour == 0) {
+            builder.append("00");
+        } else if (goalHour < 10) {
+            builder.append("0" + goalHour);
+        } else {
+            builder.append(goalHour);
+        }
+        builder.append(":");
+        if (goalMinute == 0) {
+            builder.append("00");
+        } else if (goalMinute < 10) {
+            builder.append("0" + goalMinute);
+        } else {
+            builder.append(goalMinute);
+        }
+        return builder.toString();
     }
 }

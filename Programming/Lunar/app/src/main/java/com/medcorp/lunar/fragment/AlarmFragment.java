@@ -32,7 +32,6 @@ import com.medcorp.lunar.adapter.ShowAllSleepGoalAdapter;
 import com.medcorp.lunar.ble.controller.SyncControllerImpl;
 import com.medcorp.lunar.event.bluetooth.RequestResponseEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
-import com.medcorp.lunar.fragment.listener.OnAlarmSwitchListener;
 import com.medcorp.lunar.model.Alarm;
 import com.medcorp.lunar.model.BedtimeModel;
 import com.medcorp.lunar.model.SleepGoal;
@@ -62,7 +61,8 @@ import static com.wdullaer.materialdatetimepicker.time.TimePickerDialog.MINUTE_I
  * Created by karl-john on 11/12/15.
  */
 public class AlarmFragment extends BaseObservableFragment
-        implements OnAlarmSwitchListener, AlarmRecyclerViewAdapter.OnBedtimeSwitchListener, AlarmRecyclerViewAdapter.OnBedtimeDeleteListener, RadialPickerLayout.OnValueSelectedListener, CompoundButton.OnCheckedChangeListener {
+        implements RadialPickerLayout.OnValueSelectedListener, CompoundButton.OnCheckedChangeListener,
+        AlarmRecyclerViewAdapter.OnBedtimeDeleteListener, AlarmRecyclerViewAdapter.OnNormalAlarmSwitchListener, AlarmRecyclerViewAdapter.OnDeleteNormalAlarmListener, AlarmRecyclerViewAdapter.OnBedtimeSwitchListener {
     @Bind(R.id.all_alarm_recycler_view)
     RecyclerView allAlarm;
     private List<Alarm> alarmList;
@@ -120,16 +120,18 @@ public class AlarmFragment extends BaseObservableFragment
                         alarmList.add(alarm);
                     }
                 }
-
                 getModel().getBedTimeDatabaseHelper().getAll().subscribe(new Consumer<List<BedtimeModel>>() {
                     @Override
                     public void accept(List<BedtimeModel> bedtimeModels) throws Exception {
                         allBedtimeModels.clear();
                         allBedtimeModels.addAll(bedtimeModels);
                         allAlarm.setLayoutManager(new LinearLayoutManager(AlarmFragment.this.getContext()));
-                        mAlarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter(AlarmFragment.this, AlarmFragment.this,
-                                getModel(), alarmList, allBedtimeModels);
+                        mAlarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter(getModel(), alarmList, allBedtimeModels);
                         allAlarm.setAdapter(mAlarmRecyclerViewAdapter);
+                        mAlarmRecyclerViewAdapter.setBedtimeDeleteListener(AlarmFragment.this);
+                        mAlarmRecyclerViewAdapter.setBedtimeSwitchListener(AlarmFragment.this);
+                        mAlarmRecyclerViewAdapter.setDeleteNormalAlarmListener(AlarmFragment.this);
+                        mAlarmRecyclerViewAdapter.setNormalAlarmSwitchListener(AlarmFragment.this);
                     }
                 });
 
@@ -247,8 +249,7 @@ public class AlarmFragment extends BaseObservableFragment
 
                         }
                     }
-                })
-                .positiveText(R.string.goal_ok)
+                }).positiveText(R.string.goal_ok)
                 .positiveColor(getResources().getColor(R.color.colorAccent))
                 .negativeColor(getResources().getColor(R.color.colorAccent))
                 .negativeText(R.string.goal_cancel)
@@ -474,23 +475,6 @@ public class AlarmFragment extends BaseObservableFragment
     //        return super.onOptionsItemSelected(item);
     //    }
 
-    @Override
-    public void onAlarmSwitch(SwitchCompat alarmSwitch, Alarm alarm) {
-        if (!getModel().isWatchConnected()) {
-            alarmSwitch.setChecked(!alarmSwitch.isChecked());
-            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-            return;
-        }
-        alarmSwitch.setChecked(alarmSwitch.isChecked());
-        //save weekday to low 4 bit,bit 7 to save enable or disable
-        alarm.setEnable(alarmSwitch.isChecked());
-        Log.e("jason", alarmSwitch.isChecked() + "AAl");
-        getModel().updateAlarm(alarm);
-        showSyncAlarm = true;
-        getModel().getSyncController().setAlarm(alarm);
-        ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
-    }
-
     private void syncAlarmByEditor(boolean delete) {
         if (!getModel().isWatchConnected()) {
             ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
@@ -533,50 +517,6 @@ public class AlarmFragment extends BaseObservableFragment
             ((MainActivity) getActivity()).showStateString(id, false);
         }
     }
-
-    @Override
-    public void onBedtimeSwitch(final SwitchCompat alarmSwitch, BedtimeModel bedtime) {
-        if (!getModel().isWatchConnected()) {
-            alarmSwitch.setChecked(!alarmSwitch.isChecked());
-            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-            return;
-        }
-        final byte[] alarmNumber = bedtime.getAlarmNumber();
-        final boolean checked = alarmSwitch.isChecked();
-        alarmSwitch.setChecked(checked);
-        bedtime.setEnable(checked);
-        getModel().getBedTimeDatabaseHelper().update(bedtime).subscribe(new Consumer<Boolean>() {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception {
-                Log.i("jason", "success bedtime");
-            }
-        });
-        for (int i = 0; i < alarmNumber.length; i++) {
-            getModel().getAlarmDatabaseHelper().obtainAlarm(alarmNumber[i]).subscribe(new Consumer<Alarm>() {
-                @Override
-                public void accept(Alarm alarm) throws Exception {
-                    alarm.setEnable(checked);
-                    getModel().getSyncController().setAlarm(alarm);
-                }
-            });
-            getModel().getAlarmDatabaseHelper().obtainAlarm(alarmNumber[i] + 13).subscribe(new Consumer<Alarm>() {
-                @Override
-                public void accept(Alarm alarm) throws Exception {
-                    alarm.setEnable(checked);
-                    getModel().getSyncController().setAlarm(alarm);
-                }
-            });
-        }
-        ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
-    }
-
-
-    @Override
-    public void onBedtimeDelete(byte[] alarmNumber) {
-        //TODO delete alarm
-
-    }
-
 
     private void initPicker() {
         calendar = Calendar.getInstance();
@@ -725,5 +665,111 @@ public class AlarmFragment extends BaseObservableFragment
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onNormalAlarmSwitch(SwitchCompat alarmSwitch, Alarm alarm) {
+        if (!getModel().isWatchConnected()) {
+            alarmSwitch.setChecked(!alarmSwitch.isChecked());
+            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+            return;
+        }
+        alarmSwitch.setChecked(alarmSwitch.isChecked());
+        //save weekday to low 4 bit,bit 7 to save enable or disable
+        alarm.setEnable(alarmSwitch.isChecked());
+        Log.e("jason", alarmSwitch.isChecked() + "AAl");
+        getModel().updateAlarm(alarm);
+        showSyncAlarm = true;
+        getModel().getSyncController().setAlarm(alarm);
+        ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
+    }
+
+    @Override
+    public void onBedtimeSwitch(SwitchCompat alarmSwitch, BedtimeModel bedtime) {
+        if (!getModel().isWatchConnected()) {
+            alarmSwitch.setChecked(!alarmSwitch.isChecked());
+            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+            return;
+        }
+        final byte[] alarmNumber = bedtime.getAlarmNumber();
+        final boolean checked = alarmSwitch.isChecked();
+        alarmSwitch.setChecked(checked);
+        bedtime.setEnable(checked);
+        getModel().getBedTimeDatabaseHelper().update(bedtime).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                Log.i("jason", "success bedtime");
+            }
+        });
+        for (int i = 0; i < alarmNumber.length; i++) {
+            getModel().getAlarmDatabaseHelper().obtainAlarm(alarmNumber[i]).subscribe(new Consumer<Alarm>() {
+                @Override
+                public void accept(Alarm alarm) throws Exception {
+                    alarm.setEnable(checked);
+                    getModel().getSyncController().setAlarm(alarm);
+                }
+            });
+            getModel().getAlarmDatabaseHelper().obtainAlarm(alarmNumber[i] + 13).subscribe(new Consumer<Alarm>() {
+                @Override
+                public void accept(Alarm alarm) throws Exception {
+                    alarm.setEnable(checked);
+                    getModel().getSyncController().setAlarm(alarm);
+                }
+            });
+        }
+    }
+
+
+    @Override
+    public void onBedtimeDelete(final BedtimeModel bedtimeModel, final int position) {
+        ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
+        getModel().getBedTimeDatabaseHelper().remove(bedtimeModel.getId()).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    getModel().getAlarmDatabaseHelper().getAll().subscribe(new Consumer<List<Alarm>>() {
+                        @Override
+                        public void accept(List<Alarm> alarms) throws Exception {
+                            for (final Alarm alarm : alarms) {
+                                for (int i = 0; i < bedtimeModel.getAlarmNumber().length; i++) {
+                                    if (alarm.getAlarmNumber() == bedtimeModel.getAlarmNumber()[i]) {
+                                        if (bedtimeModel.getAlarmNumber()[i] < 7 | bedtimeModel.getAlarmNumber()[i] == bedtimeModel.getAlarmNumber()[i] + 13) {
+                                            getModel().getAlarmDatabaseHelper().remove(alarm.getId()).subscribe(new Consumer<Boolean>() {
+                                                @Override
+                                                public void accept(Boolean aBoolean) throws Exception {
+                                                    allBedtimeModels.remove(position);
+                                                    mAlarmRecyclerViewAdapter.notifyDataSetChanged();
+                                                    getModel().getSyncController().setAlarm(alarm);
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onNormalAlarmDelete(final int id, final int position) {
+
+        getModel().getAlarmDatabaseHelper().remove(id).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    alarmList.remove(position);
+                    mAlarmRecyclerViewAdapter.notifyDataSetChanged();
+                    getModel().getAlarmDatabaseHelper().get(id).subscribe(new Consumer<Alarm>() {
+                        @Override
+                        public void accept(Alarm alarm) throws Exception {
+                            getModel().getSyncController().setAlarm(alarm);
+                        }
+                    });
+                }
+            }
+        });
     }
 }
