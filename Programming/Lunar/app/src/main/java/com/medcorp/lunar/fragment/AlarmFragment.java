@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,7 +30,6 @@ import com.medcorp.lunar.activity.EditAlarmActivity;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.adapter.AlarmRecyclerViewAdapter;
 import com.medcorp.lunar.adapter.ShowAllSleepGoalAdapter;
-import com.medcorp.lunar.ble.controller.SyncControllerImpl;
 import com.medcorp.lunar.event.bluetooth.RequestResponseEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
 import com.medcorp.lunar.model.Alarm;
@@ -63,8 +63,10 @@ import static com.wdullaer.materialdatetimepicker.time.TimePickerDialog.MINUTE_I
 public class AlarmFragment extends BaseObservableFragment
         implements RadialPickerLayout.OnValueSelectedListener, CompoundButton.OnCheckedChangeListener,
         AlarmRecyclerViewAdapter.OnBedtimeDeleteListener, AlarmRecyclerViewAdapter.OnNormalAlarmSwitchListener, AlarmRecyclerViewAdapter.OnDeleteNormalAlarmListener, AlarmRecyclerViewAdapter.OnBedtimeSwitchListener {
+
     @Bind(R.id.all_alarm_recycler_view)
     RecyclerView allAlarm;
+
     private List<Alarm> alarmList;
     private AlarmRecyclerViewAdapter mAlarmRecyclerViewAdapter;
     private List<BedtimeModel> allBedtimeModels;
@@ -107,14 +109,38 @@ public class AlarmFragment extends BaseObservableFragment
         allBedtimeModels = new ArrayList<>();
         mAllSleepGoal = new ArrayList<>();
         this.savedInstanceState = savedInstanceState;
+        initView();
         initData();
         return view;
     }
 
+    private void initView() {
+        allAlarm.setLayoutManager(new LinearLayoutManager(AlarmFragment.this.getContext()));
+        mAlarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter(getModel(), AlarmFragment.this.getContext(), alarmList, allBedtimeModels);
+        mAlarmRecyclerViewAdapter.setBedtimeDeleteListener(AlarmFragment.this);
+        mAlarmRecyclerViewAdapter.setBedtimeSwitchListener(AlarmFragment.this);
+        mAlarmRecyclerViewAdapter.setDeleteNormalAlarmListener(AlarmFragment.this);
+        mAlarmRecyclerViewAdapter.setNormalAlarmSwitchListener(AlarmFragment.this);
+        allAlarm.setAdapter(mAlarmRecyclerViewAdapter);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+
+    }
+
     private void initData() {
-        getModel().getAllAlarm(new SyncControllerImpl.SyncAlarmToWatchListener() {
+        getModel().getAlarmDatabaseHelper().getAll().subscribe(new Consumer<List<Alarm>>() {
             @Override
-            public void syncAlarmToWatch(List<Alarm> alarms) {
+            public void accept(List<Alarm> alarms) throws Exception {
                 for (Alarm alarm : alarms) {
                     if (alarm.getAlarmNumber() > 6 && alarm.getAlarmNumber() < 13) {
                         alarmList.add(alarm);
@@ -123,21 +149,12 @@ public class AlarmFragment extends BaseObservableFragment
                 getModel().getBedTimeDatabaseHelper().getAll().subscribe(new Consumer<List<BedtimeModel>>() {
                     @Override
                     public void accept(List<BedtimeModel> bedtimeModels) throws Exception {
-                        allBedtimeModels.clear();
                         allBedtimeModels.addAll(bedtimeModels);
-                        allAlarm.setLayoutManager(new LinearLayoutManager(AlarmFragment.this.getContext()));
-                        mAlarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter(getModel(), alarmList, allBedtimeModels);
-                        allAlarm.setAdapter(mAlarmRecyclerViewAdapter);
-                        mAlarmRecyclerViewAdapter.setBedtimeDeleteListener(AlarmFragment.this);
-                        mAlarmRecyclerViewAdapter.setBedtimeSwitchListener(AlarmFragment.this);
-                        mAlarmRecyclerViewAdapter.setDeleteNormalAlarmListener(AlarmFragment.this);
-                        mAlarmRecyclerViewAdapter.setNormalAlarmSwitchListener(AlarmFragment.this);
+                        mAlarmRecyclerViewAdapter.notifyDataSetChanged();
                     }
                 });
-
             }
         });
-
     }
 
     @Override
@@ -161,14 +178,21 @@ public class AlarmFragment extends BaseObservableFragment
     public void showDialog(final int type) {
         View inflate = LayoutInflater.from(AlarmFragment.this.getContext()).inflate(R.layout.add_normal_alarm_dialog_layout, null);
         mTimePicker = (RadialPickerLayout) inflate.findViewById(R.id.new_alarm_time_select_rp);
+        LinearLayout allWeekdayLL = (LinearLayout) inflate.findViewById(R.id.add_new_alarm_dialog_weekday_ll);
+
         final EditText editNewAlarmNameEd = (EditText) inflate.findViewById(R.id.add_new_alarm_name);
         initPicker();
         final LinearLayout showGoalLL = (LinearLayout) inflate.findViewById(R.id.add_new_alarm_dialog_show_goal_ll);
         mShowGoalText = (TextView) inflate.findViewById(R.id.add_new_alarm_goal);
+        String dialogTitle = null;
         if (type == NORMAL_ALARM) {
             showGoalLL.setVisibility(View.GONE);
+            allWeekdayLL.setVisibility(View.GONE);
+            dialogTitle = getString(R.string.add_new_normal_alarm_dialog_title);
         } else {
             showGoalLL.setVisibility(View.VISIBLE);
+            allWeekdayLL.setVisibility(View.VISIBLE);
+            dialogTitle = getString(R.string.add_new_bedtime_alarm_dialog_title);
         }
         getModel().getSleepGoalDatabseHelper().getSelectedGoal().subscribe(new Consumer<SleepGoal>() {
             @Override
@@ -183,50 +207,33 @@ public class AlarmFragment extends BaseObservableFragment
                 showSleepGoalListDialog();
             }
         });
-
         initDialogView(inflate);
         new MaterialDialog.Builder(AlarmFragment.this.getContext())
-                .title(getString(R.string.add_new_normal_alarm_dialog_title))
+                .title(dialogTitle)
                 .titleColor(getResources().getColor(R.color.colorAccent))
                 .backgroundColor(getResources().getColor(R.color.new_bedtime_dialog_background_color))
                 .customView(inflate, false)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
                         if (type == NORMAL_ALARM) {
                             if (editNewAlarmNameEd.getText().toString().isEmpty()) {
                                 getModel().getAlarmDatabaseHelper().getAll().subscribe(new Consumer<List<Alarm>>() {
                                     @Override
                                     public void accept(List<Alarm> alarms) throws Exception {
-                                        alarmName = alarms.size() + 1 + getString(R.string.def_alarm_name);
+                                        alarmName = getString(R.string.def_alarm_name) + alarms.size() + 1;
                                     }
                                 });
                             } else {
                                 alarmName = editNewAlarmNameEd.getText().toString();
                             }
-                            Alarm normalAlarm = null;
-                            for (int i = 7; i < manyWeekday.size() && i < 13; i++) {
-                                normalAlarm = new Alarm(mTimePicker.getHours(), mTimePicker.getMinutes(),
-                                        (byte) (manyWeekday.get(i).intValue()), alarmName, (byte) (manyWeekday.get(i).intValue()));
-                                final Alarm finalNormalAlarm = normalAlarm;
-                                getModel().getAlarmDatabaseHelper().add(normalAlarm).subscribe(new Consumer<Boolean>() {
-                                    @Override
-                                    public void accept(Boolean aBoolean) throws Exception {
-                                        if (aBoolean) {
-                                            alarmList.add(finalNormalAlarm);
-
-                                        }
-                                    }
-                                });
-                            }
-                            mAlarmRecyclerViewAdapter.notifyDataSetChanged();
+                            selectWeekdayDialog();
                         } else {
-                            if (editNewAlarmNameEd.getText().toString().isEmpty()) {
+                            if (TextUtils.isEmpty(editNewAlarmNameEd.getText().toString())) {
                                 getModel().getAlarmDatabaseHelper().getAll().subscribe(new Consumer<List<Alarm>>() {
                                     @Override
                                     public void accept(List<Alarm> alarms) throws Exception {
-                                        alarmName = alarms.size() + 1 + getString(R.string.def_alarm_name);
+                                        alarmName = getString(R.string.def_bedtime_name) + alarms.size() + 1;
                                     }
                                 });
                             } else {
@@ -256,6 +263,38 @@ public class AlarmFragment extends BaseObservableFragment
                 .show();
     }
 
+    private void selectWeekdayDialog() {
+        new MaterialDialog.Builder(AlarmFragment.this.getContext())
+                .title(getString(R.string.edit_alarm_repeat))
+                .items(getResources().getStringArray(R.array.week_day))
+                .positiveText(R.string.goal_ok)
+                .positiveColor(getResources().getColor(R.color.colorAccent))
+                .negativeColor(getResources().getColor(R.color.colorAccent))
+                .negativeText(R.string.goal_cancel)
+                .itemsCallbackSingleChoice(7, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        final Alarm normalAlarm = new Alarm(mTimePicker.getHours(), mTimePicker.getMinutes(),
+                                (byte) which, alarmName, (byte) (alarmList.size() + 7));
+                        if (normalAlarm.getAlarmNumber() < 13) {
+                            getModel().getAlarmDatabaseHelper().add(normalAlarm).subscribe(new Consumer<Boolean>() {
+                                @Override
+                                public void accept(Boolean aBoolean) throws Exception {
+                                    if (aBoolean) {
+                                        alarmList.add(normalAlarm);
+                                        mAlarmRecyclerViewAdapter.notifyDataSetChanged();
+                                    }
+                                }
+                            });
+                            return true;
+                        } else {
+                            ToastHelper.showShortToast(AlarmFragment.this.getContext(), getString(R.string.normal_alarm_max_toast));
+                            return true;
+                        }
+                    }
+                }).show();
+    }
+
     private void initDialogView(View inflate) {
         final CheckBox sunday = (CheckBox) inflate.findViewById(R.id.bedtime_sunday);
         final CheckBox monday = (CheckBox) inflate.findViewById(R.id.bedtime_monday);
@@ -274,43 +313,38 @@ public class AlarmFragment extends BaseObservableFragment
         getModel().getBedTimeDatabaseHelper().getAll().subscribe(new Consumer<List<BedtimeModel>>() {
             @Override
             public void accept(List<BedtimeModel> alarms) throws Exception {
-                List<Byte> allWeekday = new ArrayList<>();
                 for (BedtimeModel bedtimeModel : alarms) {
-                    byte[] weekday = bedtimeModel.getWeekday();
-                    for (int i = 0; i < weekday.length; i++) {
-                        allWeekday.add(weekday[i]);
-                    }
-                }
-                for (int i = 0; i < allWeekday.size(); i++) {
-                    switch (allWeekday.get(i)) {
-                        case 0:
-                            sunday.setClickable(false);
-                            sunday.setBackground(getResources().getDrawable(R.drawable.shape_circle_weekday));
-                            break;
-                        case 1:
-                            monday.setClickable(false);
-                            monday.setBackground(getResources().getDrawable(R.drawable.shape_circle_weekday));
-                            break;
-                        case 2:
-                            tuesday.setClickable(false);
-                            tuesday.setBackground(getResources().getDrawable(R.drawable.shape_circle_weekday));
-                            break;
-                        case 3:
-                            wednesday.setClickable(false);
-                            wednesday.setBackground(getResources().getDrawable(R.drawable.shape_circle_weekday));
-                            break;
-                        case 4:
-                            thursday.setClickable(false);
-                            thursday.setBackground(getResources().getDrawable(R.drawable.shape_circle_weekday));
-                            break;
-                        case 5:
-                            friday.setClickable(false);
-                            friday.setBackground(getResources().getDrawable(R.drawable.shape_circle_weekday));
-                            break;
-                        case 6:
-                            saturday.setClickable(false);
-                            saturday.setBackground(getResources().getDrawable(R.drawable.shape_circle_weekday));
-                            break;
+                    for (int i = 0; i < bedtimeModel.getWeekday().length; i++) {
+                        switch (bedtimeModel.getWeekday()[i]) {
+                            case 0:
+                                sunday.setClickable(false);
+                                sunday.setBackground(getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                break;
+                            case 1:
+                                monday.setClickable(false);
+                                monday.setBackground(getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                break;
+                            case 2:
+                                tuesday.setClickable(false);
+                                tuesday.setBackground(getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                break;
+                            case 3:
+                                wednesday.setClickable(false);
+                                wednesday.setBackground(getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                break;
+                            case 4:
+                                thursday.setClickable(false);
+                                thursday.setBackground(getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                break;
+                            case 5:
+                                friday.setClickable(false);
+                                friday.setBackground(getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                break;
+                            case 6:
+                                saturday.setClickable(false);
+                                saturday.setBackground(getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                break;
+                        }
                     }
                 }
             }
@@ -494,13 +528,6 @@ public class AlarmFragment extends BaseObservableFragment
                 }
             });
         }
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
     }
 
     @Override

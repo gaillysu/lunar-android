@@ -1,21 +1,29 @@
 package com.medcorp.lunar.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.text.InputType;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.aakira.expandablelayout.ExpandableLayout;
 import com.github.aakira.expandablelayout.ExpandableLayoutListenerAdapter;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
@@ -24,6 +32,8 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.application.ApplicationModel;
 import com.medcorp.lunar.model.Alarm;
 import com.medcorp.lunar.model.BedtimeModel;
+import com.medcorp.lunar.model.SleepGoal;
+import com.medcorp.lunar.view.PickerView;
 import com.medcorp.lunar.view.customfontview.RobotoTextView;
 
 import java.util.ArrayList;
@@ -49,17 +59,22 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
     private SparseBooleanArray expandState = new SparseBooleanArray();
     private ApplicationModel model;
     private List<Alarm> normalAlarmList;
-    private List<Byte> mAllBedtimeWeekday;
-    private ArrayList<Byte> bedtimeSelfWeekday;
+    private ListView mAllSleepGoalList;
+    private Context mContext;
+    private List<SleepGoal> mAllSleepGoal;
+    private ShowAllSleepGoalAdapter mGoalAdapter;
+    private int newBedtimeSleepGoal = 0;
+    private int selectHour = 0;
+    private String sleepLableGoal;
+    private int selectMinutes = 0;
 
-
-    public AlarmRecyclerViewAdapter(ApplicationModel model, List<Alarm> allNormalAlarm, List<BedtimeModel> bedtimeAllList) {
+    public AlarmRecyclerViewAdapter(ApplicationModel model, Context context, List<Alarm> allNormalAlarm, List<BedtimeModel> bedtimeAllList) {
         this.model = model;
+        mContext = context;
         this.normalAlarmList = allNormalAlarm;
         this.bedtimeList = bedtimeAllList;
         manyWeekday = new ArrayList<>();
-        mAllBedtimeWeekday = new ArrayList<>();
-        bedtimeSelfWeekday = new ArrayList<>();
+        mAllSleepGoal = new ArrayList<>();
         for (int i = 0; i < normalAlarmList.size() + bedtimeAllList.size(); i++) {
             expandState.append(i, true);
         }
@@ -88,7 +103,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
     public int getItemCount() {
         return bedtimeList.size() + normalAlarmList.size();
     }
-
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.alarm_adapter_item_weekday_ll)
@@ -149,89 +163,78 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
     }
 
     private void initView(final ViewHolder viewHolder, final int position) {
-        mAllBedtimeWeekday.clear();
-        bedtimeSelfWeekday.clear();
         if (position < bedtimeList.size()) {
             final int id = bedtimeList.get(position).getId();
             model.getBedTimeDatabaseHelper().getAll().subscribe(new Consumer<List<BedtimeModel>>() {
                 @Override
                 public void accept(List<BedtimeModel> alarms) throws Exception {
-                    for (BedtimeModel bedtimeModel : alarms) {
-                        byte[] weekday = bedtimeModel.getWeekday();
-                        for (int i = 0; i < weekday.length; i++) {
-                            if (bedtimeModel.getId() == id) {
-                                bedtimeSelfWeekday.add(weekday[i]);
-                            } else {
-                                mAllBedtimeWeekday.add(weekday[i]);
+                    for(BedtimeModel bedtimeModel : alarms){
+                        if(bedtimeModel.getId() == id){
+                            for (int i = 0; i < bedtimeModel.getWeekday().length; i++) {
+                                switch (bedtimeModel.getWeekday()[i]) {
+                                    case 0:
+                                        viewHolder.sunday.setChecked(true);
+                                        break;
+                                    case 1:
+                                        viewHolder.monday.setChecked(true);
+                                        break;
+                                    case 2:
+                                        viewHolder.tuesday.setChecked(true);
+                                        break;
+                                    case 3:
+                                        viewHolder.wednesday.setChecked(true);
+                                        break;
+                                    case 4:
+                                        viewHolder.thursday.setChecked(true);
+                                        break;
+                                    case 5:
+                                        viewHolder.friday.setChecked(true);
+                                        break;
+                                    case 6:
+                                        viewHolder.saturday.setChecked(true);
+                                        break;
+                                }
+                            }
+                        }else{
+                            for (int i = 0; i < bedtimeModel.getWeekday().length; i++) {
+                                switch (bedtimeModel.getWeekday()[i]) {
+                                    case 0:
+                                        viewHolder.sunday.setClickable(false);
+                                        viewHolder.sunday.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                        break;
+                                    case 1:
+                                        viewHolder.monday.setClickable(false);
+                                        viewHolder.monday.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                        break;
+                                    case 2:
+                                        viewHolder.tuesday.setClickable(false);
+                                        viewHolder.tuesday.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                        break;
+                                    case 3:
+                                        viewHolder.wednesday.setClickable(false);
+                                        viewHolder.wednesday.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                        break;
+                                    case 4:
+                                        viewHolder.thursday.setClickable(false);
+                                        viewHolder.thursday.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                        break;
+                                    case 5:
+                                        viewHolder.friday.setClickable(false);
+                                        viewHolder.friday.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                        break;
+                                    case 6:
+                                        viewHolder.saturday.setClickable(false);
+                                        viewHolder.saturday.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                        break;
+                                }
                             }
                         }
                     }
-                    initCheckBox(viewHolder, mAllBedtimeWeekday, bedtimeSelfWeekday);
                 }
             });
             viewHolder.weekdayLL.setVisibility(View.VISIBLE);
         } else {
             viewHolder.weekdayLL.setVisibility(View.GONE);
-        }
-    }
-
-    private void initCheckBox(ViewHolder viewHolder,List<Byte> alarms, List<Byte> normalSelfWeekday) {
-        for (int i = 0; i < alarms.size(); i++) {
-            switch (alarms.get(i)) {
-                case 0:
-                    viewHolder.sunday.setClickable(false);
-                    viewHolder.sunday.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_weekday));
-                    break;
-                case 1:
-                    viewHolder.monday.setClickable(false);
-                    viewHolder.monday.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_weekday));
-                    break;
-                case 2:
-                    viewHolder.tuesday.setClickable(false);
-                    viewHolder.tuesday.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_weekday));
-                    break;
-                case 3:
-                    viewHolder.wednesday.setClickable(false);
-                    viewHolder.wednesday.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_weekday));
-                    break;
-                case 4:
-                    viewHolder.thursday.setClickable(false);
-                    viewHolder.thursday.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_weekday));
-                    break;
-                case 5:
-                    viewHolder.friday.setClickable(false);
-                    viewHolder.friday.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_weekday));
-                    break;
-                case 6:
-                    viewHolder.saturday.setClickable(false);
-                    viewHolder.saturday.setBackground(context.getResources().getDrawable(R.drawable.shape_circle_weekday));
-                    break;
-            }
-        }
-        for (int i = 0; i < normalSelfWeekday.size(); i++) {
-            switch (normalSelfWeekday.get(i)) {
-                case 0:
-                    viewHolder.sunday.setChecked(true);
-                    break;
-                case 1:
-                    viewHolder.monday.setChecked(true);
-                    break;
-                case 2:
-                    viewHolder.tuesday.setChecked(true);
-                    break;
-                case 3:
-                    viewHolder.wednesday.setChecked(true);
-                    break;
-                case 4:
-                    viewHolder.thursday.setChecked(true);
-                    break;
-                case 5:
-                    viewHolder.friday.setChecked(true);
-                    break;
-                case 6:
-                    viewHolder.saturday.setChecked(true);
-                    break;
-            }
         }
     }
 
@@ -282,11 +285,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 viewHolder.showInfoRl.setVisibility(View.VISIBLE);
                 viewHolder.bottomLine.setVisibility(View.VISIBLE);
                 expandState.put(position, false);
-                if (position < bedtimeList.size()) {
-                    saveBedtimeChangeConfig(viewHolder, position);
-                } else if (position > bedtimeList.size() - 1 && normalAlarmList.size() > 0) {
-                    saveNormalAlarmChangeConfig(viewHolder, position - bedtimeList.size());
-                }
             }
         });
         viewHolder.openExpandableIb.setOnClickListener(new View.OnClickListener() {
@@ -299,6 +297,18 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
             @Override
             public void onClick(View v) {
                 onClickButton(viewHolder.expandable);
+                if (position < bedtimeList.size()) {
+                    saveBedtimeChangeConfig(viewHolder, position);
+                } else if (position > bedtimeList.size() - 1 && normalAlarmList.size() > 0) {
+                    saveNormalAlarmChangeConfig(viewHolder, position - bedtimeList.size());
+                }
+            }
+        });
+
+        viewHolder.settingBedTimeGoal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSleepGoalListDialog(viewHolder);
             }
         });
         viewHolder.sunday.setOnCheckedChangeListener(this);
@@ -311,6 +321,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
     }
 
     private void saveNormalAlarmChangeConfig(ViewHolder viewHolder, int id) {
+
     }
 
     private void saveBedtimeChangeConfig(ViewHolder viewHolder, int position) {
@@ -328,8 +339,9 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         }
         if (alarm != null) {
             viewHolder.editBedtimeAlarmEd.setText(alarm.getLabel());
-            viewHolder.repeatWeekDayTv.setTag(obtainWeekday(weekday));
+            viewHolder.repeatWeekDayTv.setText(obtainWeekday(new byte[]{alarm.getWeekDay()}));
             viewHolder.sleepTimeTv.setText(alarm.toString());
+            viewHolder.alarmNameTv.setText(alarm.getLabel());
             viewHolder.alarmSwitch.setChecked(alarm.isEnable());
             viewHolder.alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -338,7 +350,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 }
             });
 
-            viewHolder.alarmNameTv.setText(alarm.getLabel());
             viewHolder.deleteBedtime.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -352,7 +363,8 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         final BedtimeModel bedtimeModel = bedtimeList.get(position);
         if (bedtimeModel != null) {
             viewHolder.editBedtimeAlarmEd.setText(bedtimeModel.getName());
-            viewHolder.repeatWeekDayTv.setTag(obtainWeekday(bedtimeModel.getWeekday()));
+            viewHolder.repeatWeekDayTv.setText(obtainWeekday(bedtimeModel.getWeekday()));
+            viewHolder.alarmNameTv.setText(bedtimeModel.getName());
             viewHolder.showBedtimeGoalTv.setText(bedtimeModel.getGoalString());
             viewHolder.sleepTimeTv.setText("23:30");
             viewHolder.wakeTimeTv.setText(bedtimeModel.toString());
@@ -364,7 +376,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 }
             });
 
-            viewHolder.alarmNameTv.setText(bedtimeModel.getName());
             viewHolder.deleteBedtime.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -375,7 +386,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
     }
 
     public String obtainWeekday(byte[] weekday) {
-        String[] weekDayArray = context.getResources().getStringArray(R.array.week_day);
+        String[] weekDayArray = context.getResources().getStringArray(R.array.alarm_week_day);
         StringBuffer weekdayString = new StringBuffer();
         for (int i = 0; i < weekday.length; i++) {
             if (i != weekday.length - 1) {
@@ -426,6 +437,122 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 }
                 break;
         }
+    }
+
+    private void showSleepGoalListDialog(final ViewHolder viewHolder) {
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View allGoalBottomView = inflater.inflate(R.layout.show_sleep_goal_bottom_dialog_view, null);
+        mAllSleepGoalList = (ListView) allGoalBottomView.findViewById(R.id.show_all_sleep_goal_list);
+        model.getSleepGoalDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
+            @Override
+            public void accept(List<SleepGoal> sleepGoals) throws Exception {
+                mAllSleepGoal.clear();
+                mAllSleepGoal.addAll(sleepGoals);
+                mGoalAdapter = new ShowAllSleepGoalAdapter(mContext, sleepGoals);
+                mAllSleepGoalList.setAdapter(mGoalAdapter);
+            }
+        });
+        mAllSleepGoalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                bottomSheetDialog.dismiss();
+                SleepGoal sleepGoal = mAllSleepGoal.get(position);
+                if (sleepGoal != null) {
+                    newBedtimeSleepGoal = sleepGoal.getGoalDuration();
+                    viewHolder.showBedtimeGoalTv.setText(sleepGoal.toString());
+                }
+            }
+        });
+        Button addPresetsGoal = (Button) allGoalBottomView.findViewById(R.id.add_presets_sleep_goal_bt);
+        addPresetsGoal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+                addNewSleepGoalMethod();
+            }
+        });
+        bottomSheetDialog.setContentView(allGoalBottomView);
+        bottomSheetDialog.show();
+    }
+
+    private void addNewSleepGoalMethod() {
+        selectHour = 0;
+        selectMinutes = 0;
+        View selectTimeDialog = LayoutInflater.from(mContext).inflate(R.layout.select_time_dialog_layou, null);
+        List<String> hourList = new ArrayList<>();
+        List<String> minutes = new ArrayList<>();
+        minutes.add(0 + "");
+        minutes.add(30 + "");
+        for (int i = 5; i <= 12; i++) {
+            hourList.add(i + "");
+        }
+        PickerView hourPickerView = (PickerView) selectTimeDialog.findViewById(R.id.hour_pv);
+        hourPickerView.setData(hourList);
+        hourPickerView.setSelected(3);
+        PickerView minutePickerView = (PickerView) selectTimeDialog.findViewById(R.id.minute_pv);
+        minutePickerView.setData(minutes);
+        minutePickerView.setSelected(0);
+        hourPickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                selectHour = new Integer(text).intValue();
+            }
+        });
+
+        minutePickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                selectMinutes = new Integer(text).intValue();
+            }
+        });
+
+        new MaterialDialog.Builder(mContext).customView(selectTimeDialog, false).
+                title(mContext.getString(R.string.add_new_inactivity_goal_fb)).
+                onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        if (selectHour == 0 && selectMinutes == 0) {
+                            selectHour = 8;
+                        }
+                        addNewInactivity(selectHour, selectMinutes);
+                    }
+                }).positiveText(R.string.goal_ok)
+                .negativeText(R.string.goal_cancel)
+                .negativeColor(mContext.getResources().getColor(R.color.colorPrimary))
+                .positiveColor(mContext.getResources().getColor(R.color.colorPrimary))
+                .show();
+    }
+
+    public void addNewInactivity(final int hour, final int minute) {
+        new MaterialDialog.Builder(mContext)
+                .title(R.string.edit_goal_name)
+                .content(R.string.goal_label_sleep)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(mContext.getString(R.string.goal_name_goal_sleep), "",
+                        new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                                if (input.length() == 0) {
+                                    sleepLableGoal = mContext.getString(R.string.def_goal_sleep_name) + " " + (mAllSleepGoal.size() + 1);
+                                } else {
+                                    sleepLableGoal = input.toString();
+                                }
+                                final SleepGoal newSleepGoal = new SleepGoal(sleepLableGoal, hour * 60 + minute, false);
+                                model.getSleepGoalDatabseHelper().add(newSleepGoal).subscribe(new Consumer<Boolean>() {
+                                    @Override
+                                    public void accept(Boolean aBoolean) throws Exception {
+                                        if (aBoolean) {
+                                            mAllSleepGoal.add(newSleepGoal);
+                                            mGoalAdapter.notifyDataSetChanged();
+                                        }
+                                    }
+                                });
+                            }
+                        }).negativeText(R.string.goal_cancel)
+                .negativeColor(mContext.getResources().getColor(R.color.colorPrimary))
+                .positiveColor(mContext.getResources().getColor(R.color.colorPrimary))
+                .show();
     }
 
     public void setBedtimeSwitchListener(OnBedtimeSwitchListener onAlarmSwitchedListener) {

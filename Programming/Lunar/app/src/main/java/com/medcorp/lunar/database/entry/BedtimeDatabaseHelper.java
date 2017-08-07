@@ -14,7 +14,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-/**
+/***
  * Created by Jason on 2017/6/8.
  */
 
@@ -71,8 +71,12 @@ public class BedtimeDatabaseHelper {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        bedtimeModel.deleteFromRealm();
-                        e.onNext(true);
+                        if (bedtimeModel != null) {
+                            bedtimeModel.deleteFromRealm();
+                            e.onNext(true);
+                        } else {
+                            e.onNext(true);
+                        }
                         e.onComplete();
                     }
                 });

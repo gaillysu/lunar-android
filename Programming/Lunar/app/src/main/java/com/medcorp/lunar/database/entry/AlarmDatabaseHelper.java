@@ -128,4 +128,5 @@ public class AlarmDatabaseHelper {
             }
         }).subscribeOn(AndroidSchedulers.mainThread());
     }
+
 }

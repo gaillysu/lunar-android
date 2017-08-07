@@ -22,7 +22,7 @@
     <string name="change_password">确定</string>
     <string name="cancel_update">取消</string>
     <string name="change_select_city">切换城市</string>
-    <string name="disable">关闭</string>
+    <string name="one_time_repeat">重复一次</string>
     <string name="time_able_afternoon">下午</string>
     <string name="time_able_morning">上午</string>
     <string name="permission_location_message">我们需要你的位置信息来访问手表及设置日出日落时间</string>
@@ -408,6 +408,7 @@
     <string name="steps_goal_three">8000 步</string>
     <string name="steps_goal_two">6000 步</string>
     <string name="sunday">日</string>
+    <string name="daily">每天</string>
     <string name="this_week_steps_identification_average">平均</string>
     <string name="this_week_steps_identification_one">你</string>
     <string name="this_week_steps_identification_two">平均步数</string>
