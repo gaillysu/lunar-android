@@ -51,4 +51,39 @@ public class PublicUtils {
         }
         return false;
     }
+
+    public static int[] countTime(int sleepGoal, int hourOfDay, int minuteOfHour, int weekday) {
+        int[] countTime = new int[3];
+        int hour = sleepGoal / 60;
+        int minute = sleepGoal % 60;
+        hourOfDay -= hour;
+        minuteOfHour -= minute;
+        if (minuteOfHour < 0) {
+            if (hourOfDay <= 0) {
+                hourOfDay = 24 + hourOfDay;
+                weekday -= 1;
+                minuteOfHour += 60;
+            } else {
+                hourOfDay -= 1;
+                minuteOfHour += 60;
+            }
+        } else {
+            if (hourOfDay <= 0) {
+                hourOfDay = 24 + hourOfDay;
+                weekday -= 1;
+                minuteOfHour += 60;
+            } else {
+                hourOfDay -= 1;
+                minuteOfHour += 60;
+            }
+        }
+
+        if (weekday == -1) {
+            weekday = 6;
+        }
+        countTime[0] = hourOfDay;
+        countTime[1] = minuteOfHour;
+        countTime[2] = weekday;
+        return countTime;
+    }
 }

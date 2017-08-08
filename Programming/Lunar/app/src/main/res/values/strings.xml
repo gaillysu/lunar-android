@@ -390,6 +390,7 @@
     <string name="saturday">S</string>
     <string name="sunday">S</string>
     <string name="daily">Daily</string>
+    <string name="disable">Disable</string>
     <string name="one_time_repeat">One time alarm</string>
     <string name="sans_serif" translatable="false">sans-serif</string>
     <string name="radial_numbers_typeface">sans-serif</string>

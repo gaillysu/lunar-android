@@ -18,13 +18,17 @@ public class BedtimeModel extends RealmObject {
     private int minute;
     private byte[] weekday;
     private boolean enable;
+    private int sleepHour;
+    private int sleepMinute;
 
     public BedtimeModel() {
     }
 
-    public BedtimeModel(String name, int sleepGoal, byte[] alarmNumber, int hour, int minute, byte[] weekday, boolean enable) {
+    public BedtimeModel(String name, int sleepGoal, byte[] alarmNumber, int sleepHour, int sleepMinute, int hour, int minute, byte[] weekday, boolean enable) {
         this.name = name;
         SleepGoal = sleepGoal;
+        this.sleepHour = sleepHour;
+        this.sleepMinute = sleepMinute;
         this.alarmNumber = alarmNumber;
         this.hour = hour;
         this.minute = minute;
@@ -92,6 +96,22 @@ public class BedtimeModel extends RealmObject {
         this.weekday = weekday;
     }
 
+    public int getSleepHour() {
+        return sleepHour;
+    }
+
+    public void setSleepHour(int sleepHour) {
+        this.sleepHour = sleepHour;
+    }
+
+    public int getSleepMinute() {
+        return sleepMinute;
+    }
+
+    public void setSleepMinute(int sleepMinute) {
+        this.sleepMinute = sleepMinute;
+    }
+
     @Override
     public String toString() {
 
@@ -112,10 +132,30 @@ public class BedtimeModel extends RealmObject {
             builder.append(minute);
         }
         return builder.toString();
-
     }
 
-    public String  getGoalString() {
+    public String getSellpTime(){
+
+        StringBuilder builder = new StringBuilder();
+        if (sleepHour == 0) {
+            builder.append("00");
+        } else if (sleepHour < 10) {
+            builder.append("0" + sleepHour);
+        } else {
+            builder.append(sleepHour);
+        }
+        builder.append(":");
+        if (sleepMinute == 0) {
+            builder.append("00");
+        } else if (sleepMinute < 10) {
+            builder.append("0" + sleepMinute);
+        } else {
+            builder.append(sleepMinute);
+        }
+        return builder.toString();
+    }
+
+    public String getGoalString() {
         StringBuilder builder = new StringBuilder();
         int goalHour = SleepGoal / 60;
         int goalMinute = SleepGoal % 60;

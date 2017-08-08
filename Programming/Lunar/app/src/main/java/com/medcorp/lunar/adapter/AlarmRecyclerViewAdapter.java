@@ -37,6 +37,7 @@ import com.medcorp.lunar.view.PickerView;
 import com.medcorp.lunar.view.customfontview.RobotoTextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -67,6 +68,8 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
     private int selectHour = 0;
     private String sleepLableGoal;
     private int selectMinutes = 0;
+    private OnAlarmConfigChangeListener onAlarmListener;
+    private OnBedtimeConfigChangeListener onBedtimeListener;
 
     public AlarmRecyclerViewAdapter(ApplicationModel model, Context context, List<Alarm> allNormalAlarm, List<BedtimeModel> bedtimeAllList) {
         this.model = model;
@@ -168,8 +171,8 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
             model.getBedTimeDatabaseHelper().getAll().subscribe(new Consumer<List<BedtimeModel>>() {
                 @Override
                 public void accept(List<BedtimeModel> alarms) throws Exception {
-                    for(BedtimeModel bedtimeModel : alarms){
-                        if(bedtimeModel.getId() == id){
+                    for (BedtimeModel bedtimeModel : alarms) {
+                        if (bedtimeModel.getId() == id) {
                             for (int i = 0; i < bedtimeModel.getWeekday().length; i++) {
                                 switch (bedtimeModel.getWeekday()[i]) {
                                     case 0:
@@ -195,7 +198,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                                         break;
                                 }
                             }
-                        }else{
+                        } else {
                             for (int i = 0; i < bedtimeModel.getWeekday().length; i++) {
                                 switch (bedtimeModel.getWeekday()[i]) {
                                     case 0:
@@ -320,11 +323,19 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         viewHolder.saturday.setOnCheckedChangeListener(this);
     }
 
-    private void saveNormalAlarmChangeConfig(ViewHolder viewHolder, int id) {
-
+    private void saveNormalAlarmChangeConfig(final ViewHolder viewHolder, int position) {
+        onAlarmListener.onConfigChangeListener(viewHolder.alarmSwitch.isChecked(), viewHolder.alarmNameTv.getText().toString(), position);
     }
 
-    private void saveBedtimeChangeConfig(ViewHolder viewHolder, int position) {
+    private void saveBedtimeChangeConfig(ViewHolder viewHolder, final int position) {
+        Collections.sort(manyWeekday);
+        byte[] weekday = new byte[manyWeekday.size()];
+        for (int i = 0; i < manyWeekday.size(); i++) {
+            weekday[i] = (byte) manyWeekday.get(i).intValue();
+        }
+        onBedtimeListener.onBedtimeConfigChangeListener(weekday, newBedtimeSleepGoal,
+                viewHolder.alarmNameTv.getText().toString(), position);
+
     }
 
     private void onClickButton(final ExpandableLayout expandableLayout) {
@@ -363,10 +374,11 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         final BedtimeModel bedtimeModel = bedtimeList.get(position);
         if (bedtimeModel != null) {
             viewHolder.editBedtimeAlarmEd.setText(bedtimeModel.getName());
+            viewHolder.repeatWeekDayTv.setText("");
             viewHolder.repeatWeekDayTv.setText(obtainWeekday(bedtimeModel.getWeekday()));
             viewHolder.alarmNameTv.setText(bedtimeModel.getName());
             viewHolder.showBedtimeGoalTv.setText(bedtimeModel.getGoalString());
-            viewHolder.sleepTimeTv.setText("23:30");
+            viewHolder.sleepTimeTv.setText(bedtimeModel.getSellpTime());
             viewHolder.wakeTimeTv.setText(bedtimeModel.toString());
             viewHolder.alarmSwitch.setChecked(bedtimeModel.isEnable());
             viewHolder.alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -403,37 +415,51 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         switch (buttonView.getId()) {
             case R.id.bedtime_sunday:
                 if (isChecked) {
-                    manyWeekday.add(0);
+                    if (!manyWeekday.contains(1)) {
+                        manyWeekday.add(0);
+                    }
                 }
                 break;
             case R.id.bedtime_monday:
                 if (isChecked) {
-                    manyWeekday.add(1);
+                    if (!manyWeekday.contains(1)) {
+                        manyWeekday.add(1);
+                    }
                 }
                 break;
             case R.id.bedtime_tuesday:
                 if (isChecked) {
-                    manyWeekday.add(2);
+                    if (!manyWeekday.contains(1)) {
+                        manyWeekday.add(2);
+                    }
                 }
                 break;
             case R.id.bedtime_wednesday:
                 if (isChecked) {
-                    manyWeekday.add(3);
+                    if (!manyWeekday.contains(1)) {
+                        manyWeekday.add(3);
+                    }
                 }
                 break;
             case R.id.bedtime_thursday:
                 if (isChecked) {
-                    manyWeekday.add(4);
+                    if (!manyWeekday.contains(1)) {
+                        manyWeekday.add(4);
+                    }
                 }
                 break;
             case R.id.bedtime_friday:
                 if (isChecked) {
-                    manyWeekday.add(5);
+                    if (!manyWeekday.contains(1)) {
+                        manyWeekday.add(5);
+                    }
                 }
                 break;
             case R.id.bedtime_saturday:
                 if (isChecked) {
-                    manyWeekday.add(6);
+                    if (!manyWeekday.contains(1)) {
+                        manyWeekday.add(6);
+                    }
                 }
                 break;
         }
@@ -555,6 +581,14 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 .show();
     }
 
+    public void setOnBedtimeConfigChangeListener(OnBedtimeConfigChangeListener onBedtimeConfigChangeListener) {
+        this.onBedtimeListener = onBedtimeConfigChangeListener;
+    }
+
+    public void setOnAlarmConfigChangeListener(OnAlarmConfigChangeListener onConfigChangeListener) {
+        this.onAlarmListener = onConfigChangeListener;
+    }
+
     public void setBedtimeSwitchListener(OnBedtimeSwitchListener onAlarmSwitchedListener) {
         this.onAlarmSwitchedListener = onAlarmSwitchedListener;
     }
@@ -585,5 +619,13 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
 
     public interface OnDeleteNormalAlarmListener {
         void onNormalAlarmDelete(int id, int position);
+    }
+
+    public interface OnBedtimeConfigChangeListener {
+        void onBedtimeConfigChangeListener(byte[] weekday, int newBedtimeSleepGoal, String s, int position);
+    }
+
+    public interface OnAlarmConfigChangeListener {
+        void onConfigChangeListener(boolean checked, String s, int position);
     }
 }
