@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,6 +45,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -218,42 +218,37 @@ public class AlarmFragment extends BaseObservableFragment
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         if (type == NORMAL_ALARM) {
                             if (editNewAlarmNameEd.getText().toString().isEmpty()) {
-                                getModel().getAlarmDatabaseHelper().getAll().subscribe(new Consumer<List<Alarm>>() {
-                                    @Override
-                                    public void accept(List<Alarm> alarms) throws Exception {
-                                        alarmName = getString(R.string.def_alarm_name) + alarms.size() + 1;
-                                    }
-                                });
+                                alarmName = getString(R.string.def_alarm_name) + alarmList.size() + 1;
                             } else {
                                 alarmName = editNewAlarmNameEd.getText().toString();
                             }
                             selectWeekdayDialog();
                         } else {
-                            if (TextUtils.isEmpty(editNewAlarmNameEd.getText().toString())) {
-                                getModel().getAlarmDatabaseHelper().getAll().subscribe(new Consumer<List<Alarm>>() {
+                            if (manyWeekday.size() > 0) {
+                                if (editNewAlarmNameEd.getText().toString().isEmpty()) {
+                                    alarmName = getString(R.string.def_bedtime_name) + allBedtimeModels.size() + 1;
+                                } else {
+                                    alarmName = editNewAlarmNameEd.getText().toString();
+                                }
+                                Collections.sort(manyWeekday);
+                                byte[] weekday = new byte[manyWeekday.size()];
+                                for (int i = 0; i < manyWeekday.size(); i++) {
+                                    weekday[i] = (byte) manyWeekday.get(i).intValue();
+                                }
+                                manyWeekday.clear();
+                                final BedtimeModel bedtimeModel = new BedtimeModel(alarmName, newBedtimeSleepGoal, weekday, mTimePicker.getHours(), mTimePicker.getMinutes(), weekday, true);
+                                getModel().getBedTimeDatabaseHelper().add(bedtimeModel).subscribe(new Consumer<Boolean>() {
                                     @Override
-                                    public void accept(List<Alarm> alarms) throws Exception {
-                                        alarmName = getString(R.string.def_bedtime_name) + alarms.size() + 1;
+                                    public void accept(Boolean aBoolean) throws Exception {
+                                        if (aBoolean) {
+                                            allBedtimeModels.add(bedtimeModel);
+                                            mAlarmRecyclerViewAdapter.notifyDataSetChanged();
+                                        }
                                     }
                                 });
                             } else {
-                                alarmName = editNewAlarmNameEd.getText().toString();
+                                ((MainActivity) getActivity()).showStateString(R.string.edit_alarm_repeat_weekday, false);
                             }
-                            byte[] weekday = new byte[manyWeekday.size()];
-                            for (int i = 0; i < manyWeekday.size(); i++) {
-                                weekday[i] = (byte) manyWeekday.get(i).intValue();
-                            }
-                            final BedtimeModel bedtimeModel = new BedtimeModel(alarmName, newBedtimeSleepGoal, weekday, mTimePicker.getHours(), mTimePicker.getMinutes(), weekday, true);
-                            getModel().getBedTimeDatabaseHelper().add(bedtimeModel).subscribe(new Consumer<Boolean>() {
-                                @Override
-                                public void accept(Boolean aBoolean) throws Exception {
-                                    if (aBoolean) {
-                                        allBedtimeModels.add(bedtimeModel);
-                                        mAlarmRecyclerViewAdapter.notifyDataSetChanged();
-                                    }
-                                }
-                            });
-
                         }
                     }
                 }).positiveText(R.string.goal_ok)
@@ -288,7 +283,7 @@ public class AlarmFragment extends BaseObservableFragment
                             });
                             return true;
                         } else {
-                            ToastHelper.showShortToast(AlarmFragment.this.getContext(), getString(R.string.normal_alarm_max_toast));
+                            ((MainActivity) getActivity()).showStateString(R.string.normal_alarm_max_toast, false);
                             return true;
                         }
                     }
@@ -468,46 +463,6 @@ public class AlarmFragment extends BaseObservableFragment
                 .positiveColor(getResources().getColor(R.color.colorPrimary))
                 .show();
     }
-
-    //    @Override
-    //    public boolean onOptionsItemSelected(MenuItem item) {
-    //        switch (item.getItemId()) {
-    //            case R.id.add_menu:
-    //                if (!getModel().isWatchConnected()) {
-    //                    ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-    //                    return false;
-    //                }
-    //                View selectType = LayoutInflater.from(AlarmFragment.this.getActivity()).inflate(R.layout.select_alarm_type_layout, null);
-    //                final Dialog dialog = new AlertDialog.Builder(AlarmFragment.this.getActivity()).create();
-    //                Button bedtime = (Button) selectType.findViewById(R.id.bedtime_bt);
-    //                Button normalAlarm = (Button) selectType.findViewById(R.id.normal_alarm_bt);
-    //                dialog.show();
-    //                Window window = dialog.getWindow();
-    //                window.setContentView(selectType);
-    //
-    //                bedtime.setOnClickListener(new View.OnClickListener() {
-    //                    @Override
-    //                    public void onClick(View v) {
-    //                        dialog.dismiss();
-    //                        Intent intent = new Intent(AlarmFragment.this.getActivity(),
-    //                                EditNewBedtimeActivity.class);
-    //                        startActivityForResult(intent, 0x02);
-    //                    }
-    //                });
-    //
-    //                normalAlarm.setOnClickListener(new View.OnClickListener() {
-    //                    @Override
-    //                    public void onClick(View v) {
-    //                        dialog.dismiss();
-    //                        Intent intent = new Intent(AlarmFragment.this.getActivity(),
-    //                                EditNewAlarmActivity.class);
-    //                        startActivityForResult(intent, 0x01);
-    //                    }
-    //                });
-    //                break;
-    //        }
-    //        return super.onOptionsItemSelected(item);
-    //    }
 
     private void syncAlarmByEditor(boolean delete) {
         if (!getModel().isWatchConnected()) {
@@ -764,8 +719,6 @@ public class AlarmFragment extends BaseObservableFragment
                                             getModel().getAlarmDatabaseHelper().remove(alarm.getId()).subscribe(new Consumer<Boolean>() {
                                                 @Override
                                                 public void accept(Boolean aBoolean) throws Exception {
-                                                    allBedtimeModels.remove(position);
-                                                    mAlarmRecyclerViewAdapter.notifyDataSetChanged();
                                                     getModel().getSyncController().setAlarm(alarm);
                                                 }
                                             });
@@ -775,6 +728,8 @@ public class AlarmFragment extends BaseObservableFragment
                             }
                         }
                     });
+                    allBedtimeModels.remove(position);
+                    mAlarmRecyclerViewAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -782,7 +737,6 @@ public class AlarmFragment extends BaseObservableFragment
 
     @Override
     public void onNormalAlarmDelete(final int id, final int position) {
-
         getModel().getAlarmDatabaseHelper().remove(id).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
