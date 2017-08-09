@@ -37,7 +37,6 @@ import com.medcorp.lunar.view.PickerView;
 import com.medcorp.lunar.view.customfontview.RobotoTextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -47,8 +46,7 @@ import io.reactivex.functions.Consumer;
 /***
  * Created by karl-john on 17/12/15.
  */
-public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecyclerViewAdapter.ViewHolder>
-        implements CompoundButton.OnCheckedChangeListener {
+public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecyclerViewAdapter.ViewHolder> {
 
     private OnBedtimeSwitchListener onAlarmSwitchedListener;
     private OnDeleteNormalAlarmListener onDeleteNormalAlarmListener;
@@ -56,7 +54,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
     private OnNormalAlarmSwitchListener normalAlarmSwitchListener;
     private Context context;
     private List<BedtimeModel> bedtimeList;
-    private List<Integer> manyWeekday;
     private SparseBooleanArray expandState = new SparseBooleanArray();
     private ApplicationModel model;
     private List<Alarm> normalAlarmList;
@@ -76,7 +73,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         mContext = context;
         this.normalAlarmList = allNormalAlarm;
         this.bedtimeList = bedtimeAllList;
-        manyWeekday = new ArrayList<>();
         mAllSleepGoal = new ArrayList<>();
         for (int i = 0; i < normalAlarmList.size() + bedtimeAllList.size(); i++) {
             expandState.append(i, true);
@@ -263,6 +259,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
             viewHolder.weekdayLL.setVisibility(View.VISIBLE);
             viewHolder.settingBedTimeGoal.setVisibility(View.VISIBLE);
             setBedtimeData(viewHolder, position);
+
         } else if (position > bedtimeList.size() - 1 && normalAlarmList.size() > 0) {
             viewHolder.weekdayLL.setVisibility(View.GONE);
             viewHolder.settingBedTimeGoal.setVisibility(View.GONE);
@@ -314,28 +311,53 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 showSleepGoalListDialog(viewHolder);
             }
         });
-        viewHolder.sunday.setOnCheckedChangeListener(this);
-        viewHolder.monday.setOnCheckedChangeListener(this);
-        viewHolder.tuesday.setOnCheckedChangeListener(this);
-        viewHolder.wednesday.setOnCheckedChangeListener(this);
-        viewHolder.thursday.setOnCheckedChangeListener(this);
-        viewHolder.friday.setOnCheckedChangeListener(this);
-        viewHolder.saturday.setOnCheckedChangeListener(this);
     }
+
+    //    private void registerAllCheckBoxListener(ViewHolder viewHolder, int position) {
+    //        viewHolder.sunday.setOnClickListener(this);
+    //        viewHolder.monday.setOnClickListener(this);
+    //        viewHolder.tuesday.setOnClickListener(this);
+    //        viewHolder.wednesday.setOnClickListener(this);
+    //        viewHolder.thursday.setOnClickListener(this);
+    //        viewHolder.friday.setOnClickListener(this);
+    //        viewHolder.saturday.setOnClickListener(this);
+    //    }
 
     private void saveNormalAlarmChangeConfig(final ViewHolder viewHolder, int position) {
         onAlarmListener.onConfigChangeListener(viewHolder.alarmSwitch.isChecked(), viewHolder.alarmNameTv.getText().toString(), position);
     }
 
     private void saveBedtimeChangeConfig(ViewHolder viewHolder, final int position) {
-        Collections.sort(manyWeekday);
+        //        byte[] weekday = new byte[manyWeekday.size()];
+        //        for (int i = 0; i < manyWeekday.size(); i++) {
+        //            weekday[i] = (byte) manyWeekday.get(i).intValue();
+        //        }
+
+        onBedtimeListener.onBedtimeConfigChangeListener(getWeekday(viewHolder), newBedtimeSleepGoal,
+                viewHolder.alarmNameTv.getText().toString(), position);
+    }
+
+    private byte[] getWeekday(ViewHolder viewHolder) {
+        List<Byte> manyWeekday = new ArrayList<>();
+        if (viewHolder.sunday.isChecked())
+            manyWeekday.add((byte) 0);
+        if (viewHolder.monday.isChecked())
+            manyWeekday.add((byte) 1);
+        if (viewHolder.tuesday.isChecked())
+            manyWeekday.add((byte) 2);
+        if (viewHolder.wednesday.isChecked())
+            manyWeekday.add((byte) 3);
+        if (viewHolder.thursday.isChecked())
+            manyWeekday.add((byte) 4);
+        if (viewHolder.friday.isChecked())
+            manyWeekday.add((byte) 5);
+        if (viewHolder.saturday.isChecked())
+            manyWeekday.add((byte) 6);
         byte[] weekday = new byte[manyWeekday.size()];
         for (int i = 0; i < manyWeekday.size(); i++) {
-            weekday[i] = (byte) manyWeekday.get(i).intValue();
+            weekday[i] = manyWeekday.get(i);
         }
-        onBedtimeListener.onBedtimeConfigChangeListener(weekday, newBedtimeSleepGoal,
-                viewHolder.alarmNameTv.getText().toString(), position);
-
+        return weekday;
     }
 
     private void onClickButton(final ExpandableLayout expandableLayout) {
@@ -347,6 +369,11 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         byte[] weekday = new byte[normalAlarmList.size()];
         for (int i = 0; i < normalAlarmList.size(); i++) {
             weekday[i] = normalAlarmList.get(i).getWeekDay();
+        }
+        if ((alarm.getWeekDay() & 0x80) == 0) {
+            viewHolder.alarmSwitch.setChecked(false);
+        } else {
+            viewHolder.alarmSwitch.setChecked(true);
         }
         if (alarm != null) {
             viewHolder.editBedtimeAlarmEd.setText(alarm.getLabel());
@@ -370,9 +397,15 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         }
     }
 
-    private void setBedtimeData(ViewHolder viewHolder, final int position) {
+    private void setBedtimeData(final ViewHolder viewHolder, final int position) {
         final BedtimeModel bedtimeModel = bedtimeList.get(position);
         if (bedtimeModel != null) {
+            //            byte[] weekday = bedtimeModel.getWeekday();
+            //            for (int i = 0; i < weekday.length; i++) {
+            //                manyWeekday.add((int) weekday[i]);
+            //            }
+            //            registerAllCheckBoxListener(viewHolder, position);
+            newBedtimeSleepGoal = bedtimeList.get(position).getSleepGoal();
             viewHolder.editBedtimeAlarmEd.setText(bedtimeModel.getName());
             viewHolder.repeatWeekDayTv.setText("");
             viewHolder.repeatWeekDayTv.setText(obtainWeekday(bedtimeModel.getWeekday()));
@@ -402,7 +435,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         StringBuffer weekdayString = new StringBuffer();
         for (int i = 0; i < weekday.length; i++) {
             if (i != weekday.length - 1) {
-                weekdayString.append(weekDayArray[weekday[i]] + " ,");
+                weekdayString.append(weekDayArray[(weekday[i] & 0x0F)] + " ,");
             } else {
                 weekdayString.append(weekDayArray[weekday[i]]);
             }
@@ -410,60 +443,119 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         return weekdayString.toString();
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
-            case R.id.bedtime_sunday:
-                if (isChecked) {
-                    if (!manyWeekday.contains(1)) {
-                        manyWeekday.add(0);
-                    }
-                }
-                break;
-            case R.id.bedtime_monday:
-                if (isChecked) {
-                    if (!manyWeekday.contains(1)) {
-                        manyWeekday.add(1);
-                    }
-                }
-                break;
-            case R.id.bedtime_tuesday:
-                if (isChecked) {
-                    if (!manyWeekday.contains(1)) {
-                        manyWeekday.add(2);
-                    }
-                }
-                break;
-            case R.id.bedtime_wednesday:
-                if (isChecked) {
-                    if (!manyWeekday.contains(1)) {
-                        manyWeekday.add(3);
-                    }
-                }
-                break;
-            case R.id.bedtime_thursday:
-                if (isChecked) {
-                    if (!manyWeekday.contains(1)) {
-                        manyWeekday.add(4);
-                    }
-                }
-                break;
-            case R.id.bedtime_friday:
-                if (isChecked) {
-                    if (!manyWeekday.contains(1)) {
-                        manyWeekday.add(5);
-                    }
-                }
-                break;
-            case R.id.bedtime_saturday:
-                if (isChecked) {
-                    if (!manyWeekday.contains(1)) {
-                        manyWeekday.add(6);
-                    }
-                }
-                break;
-        }
-    }
+    //    @Override
+    //    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    //        switch (buttonView.getId()) {
+    //            case R.id.bedtime_sunday:
+    //
+    //                if (!manyWeekday.contains(0) && isChecked) {
+    //                    manyWeekday.add(0);
+    //                } else if (manyWeekday.contains(0) && !isChecked) {
+    //                    manyWeekday.remove(new Integer(0));
+    //                }
+    //                break;
+    //            case R.id.bedtime_monday:
+    //                if (!manyWeekday.contains(1) && isChecked) {
+    //                    manyWeekday.add(1);
+    //                } else if (manyWeekday.contains(1) && !isChecked) {
+    //                    manyWeekday.remove(new Integer(1));
+    //                }
+    //                break;
+    //            case R.id.bedtime_tuesday:
+    //                if (!manyWeekday.contains(2) && isChecked) {
+    //                    manyWeekday.add(2);
+    //                } else if (manyWeekday.contains(2) && !isChecked) {
+    //                    manyWeekday.remove(new Integer(2));
+    //                }
+    //                break;
+    //            case R.id.bedtime_wednesday:
+    //                if (!manyWeekday.contains(3) && isChecked) {
+    //                    manyWeekday.add(3);
+    //                } else if (manyWeekday.contains(3) && !isChecked) {
+    //                    manyWeekday.remove(new Integer(3));
+    //                }
+    //                break;
+    //            case R.id.bedtime_thursday:
+    //                if (!manyWeekday.contains(4) && isChecked) {
+    //                    manyWeekday.add(4);
+    //                } else if (manyWeekday.contains(4) && !isChecked) {
+    //                    manyWeekday.remove(new Integer(4));
+    //                }
+    //                break;
+    //            case R.id.bedtime_friday:
+    //                if (!manyWeekday.contains(5) && isChecked) {
+    //                    manyWeekday.add(5);
+    //                } else if (manyWeekday.contains(5) && !isChecked) {
+    //                    manyWeekday.remove(new Integer(5));
+    //                }
+    //                break;
+    //            case R.id.bedtime_saturday:
+    //                if (!manyWeekday.contains(6) && isChecked) {
+    //                    manyWeekday.add(6);
+    //                } else if (manyWeekday.contains(6) && !isChecked) {
+    //                    manyWeekday.remove(new Integer(6));
+    //                }
+    //                break;
+    //        }
+    //    }
+
+
+    //    @Override
+    //    public void onClick(View v) {
+    //        switch (v.getId()) {
+    //            case R.id.bedtime_sunday:
+    //
+    //                if (!manyWeekday.contains(0)) {
+    //                    manyWeekday.add(0);
+    //                } else {
+    //                    manyWeekday.remove(new Integer(0));
+    //                }
+    //                break;
+    //            case R.id.bedtime_monday:
+    //                if (!manyWeekday.contains(1)) {
+    //                    manyWeekday.add(1);
+    //                } else {
+    //                    manyWeekday.remove(new Integer(1));
+    //                }
+    //                break;
+    //            case R.id.bedtime_tuesday:
+    //                if (!manyWeekday.contains(2)) {
+    //                    manyWeekday.add(2);
+    //                } else {
+    //                    manyWeekday.remove(new Integer(2));
+    //                }
+    //                break;
+    //            case R.id.bedtime_wednesday:
+    //                if (!manyWeekday.contains(3)) {
+    //                    manyWeekday.add(3);
+    //                } else {
+    //                    manyWeekday.remove(new Integer(3));
+    //                }
+    //                break;
+    //            case R.id.bedtime_thursday:
+    //                if (!manyWeekday.contains(4)) {
+    //                    manyWeekday.add(4);
+    //                } else {
+    //                    manyWeekday.remove(new Integer(4));
+    //                }
+    //                break;
+    //            case R.id.bedtime_friday:
+    //                if (!manyWeekday.contains(5)) {
+    //                    manyWeekday.add(5);
+    //                } else {
+    //                    manyWeekday.remove(new Integer(5));
+    //                }
+    //                break;
+    //            case R.id.bedtime_saturday:
+    //                if (!manyWeekday.contains(6)) {
+    //                    manyWeekday.add(6);
+    //                } else {
+    //                    manyWeekday.remove(new Integer(6));
+    //                }
+    //                break;
+    //        }
+    //    }
+
 
     private void showSleepGoalListDialog(final ViewHolder viewHolder) {
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext);

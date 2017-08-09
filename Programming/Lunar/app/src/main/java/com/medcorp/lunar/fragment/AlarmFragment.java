@@ -74,7 +74,6 @@ public class AlarmFragment extends BaseObservableFragment
     private AlarmRecyclerViewAdapter mAlarmRecyclerViewAdapter;
     private List<BedtimeModel> allBedtimeModels;
     private boolean showSyncAlarm = false;
-    private Alarm editAlarm;
 
     private Calendar calendar;
     private int mMinHour = 0;
@@ -277,7 +276,7 @@ public class AlarmFragment extends BaseObservableFragment
     }
 
     private void createWakeAlarm(int hour, int minute, byte weekday, String name, byte alarmNumber, boolean isEnable) {
-        final Alarm alarm = new Alarm(hour, minute, weekday, name, alarmNumber);
+        final Alarm alarm = new Alarm(hour, minute, (byte)(0x80|weekday), name, alarmNumber);
         alarm.setEnable(isEnable);
         getModel().getAlarmDatabaseHelper().add(alarm).subscribe(new Consumer<Boolean>() {
             @Override
@@ -295,7 +294,7 @@ public class AlarmFragment extends BaseObservableFragment
         int hourOfDay = time[0];
         int minuteOfHour = time[1];
         int Weekday = time[2];
-        final Alarm alarm = new Alarm(hourOfDay, minuteOfHour, (byte) Weekday, name, (byte) (alarmNumber + 13));
+        final Alarm alarm = new Alarm(hourOfDay, minuteOfHour, (byte) (0x80|Weekday), name, (byte) (alarmNumber + 13));
         alarm.setEnable(enable);
         getModel().getAlarmDatabaseHelper().add(alarm).subscribe(new Consumer<Boolean>() {
             @Override
@@ -827,13 +826,13 @@ public class AlarmFragment extends BaseObservableFragment
         for (int i = 0; i < oldBedtimeAlarmWeekday.length; i++) {
             if (!oldBedtimeWeekday.contains(weekday[i])) {
                 Alarm wakeAlarm = new Alarm(bedtimeModel.getSleepHour(), bedtimeModel.getSleepMinute()
-                        , weekday[i], bedtimeModel.getName(), weekday[i]);
+                        , (byte) (0x80 | weekday[i]), bedtimeModel.getName(), weekday[i]);
                 int[] time = PublicUtils.countTime(bedtimeModel.getSleepGoal(), bedtimeModel.getSleepHour()
                         , bedtimeModel.getSleepMinute(), weekday[i]);
                 int hourOfDay = time[0];
                 int minuteOfHour = time[1];
                 int Weekday = time[2];
-                Alarm sleepAlarm = new Alarm(hourOfDay, minuteOfHour, (byte) Weekday, bedtimeModel.getName()
+                Alarm sleepAlarm = new Alarm(hourOfDay, minuteOfHour, (byte) (0x80 | Weekday), bedtimeModel.getName()
                         , (byte) (weekday[i] + 13));
                 getModel().getSyncController().setAlarm(wakeAlarm);
                 getModel().getSyncController().setAlarm(sleepAlarm);
@@ -844,18 +843,18 @@ public class AlarmFragment extends BaseObservableFragment
                         getModel().getAlarmDatabaseHelper().remove(alarm.getId()).subscribe(new Consumer<Boolean>() {
                             @Override
                             public void accept(Boolean aBoolean) throws Exception {
-                                Log.i("jason","delete alarm");
+                                Log.i("jason", "delete alarm");
                             }
                         });
                     }
                 });
-                getModel().getAlarmDatabaseHelper().obtainAlarm(oldBedtimeAlarmWeekday[i]+13).subscribe(new Consumer<Alarm>() {
+                getModel().getAlarmDatabaseHelper().obtainAlarm(oldBedtimeAlarmWeekday[i] + 13).subscribe(new Consumer<Alarm>() {
                     @Override
                     public void accept(Alarm alarm) throws Exception {
                         getModel().getAlarmDatabaseHelper().remove(alarm.getId()).subscribe(new Consumer<Boolean>() {
                             @Override
                             public void accept(Boolean aBoolean) throws Exception {
-                                Log.i("jason","delete alarm");
+                                Log.i("jason", "delete alarm");
                             }
                         });
                     }

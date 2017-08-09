@@ -139,7 +139,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:gravity="center_vertical"
-                    android:text="sdcfsa"
                     android:textColor="@color/profile_fragment_text_color"
                     android:textSize="16sp"
                     />
@@ -163,7 +162,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:gravity="center_vertical"
-                    android:text="sdcfsa"
                     android:textColor="@color/profile_fragment_text_color"
                     android:textSize="16sp"
                     />
@@ -195,7 +193,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:gravity="center_vertical"
-                    android:text="sdcfsa"
                     android:textColor="@color/profile_fragment_text_color"
                     android:textSize="16sp"
                     />
