@@ -30,7 +30,6 @@
         <item>12 o\'clock</item>
     </string-array>
     <string-array name="week_day" translatable = "false">
-        <item name="disable">@string/disable</item>
         <item name="sunday">@string/normal_alarm_sunday</item>
         <item name="monday">@string/normal_alarm_monday</item>
         <item name="tuesday">@string/normal_alarm_tuesday</item>

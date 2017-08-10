@@ -556,5 +556,22 @@
     <string name="add_new_normal_alarm_dialog_title">添加鬧鐘</string>
     <string name="append_new_alarm_bedtime">休息鬧鐘</string>
     <string name="append_new_alarm_normal">鬧鐘</string>
+    <string name="disable">关闭</string>
+    <string name="edit_alarm_repeat_weekday">請設置重復時間</string>
+    <string name="edit_new_sleep_describe">添加時間</string>
+    <string name="edit_new_sleep_goal_bottom_dialog_title">選擇時間</string>
+    <string name="def_bedtime_name">作息闹钟</string>
+    <string name="normal_alarm_daily">每壹天</string>
+    <string name="normal_alarm_friday">禮拜五</string>
+    <string name="normal_alarm_max_toast">最多只能添加6個鬧鐘</string>
+    <string name="normal_alarm_monday">禮拜壹</string>
+    <string name="normal_alarm_one_time">只響壹次</string>
+    <string name="normal_alarm_saturday">禮拜六</string>
+    <string name="normal_alarm_sunday">禮拜天</string>
+    <string name="normal_alarm_thursday">禮拜四</string>
+    <string name="normal_alarm_tuesday">禮拜二</string>
+    <string name="normal_alarm_wednesday">禮拜三</string>
+    <string name="select_sleep_goal_describe">睡眠目標</string>
+    <string name="set_new_alarm_label">名字</string>
 
 </resources>

@@ -362,10 +362,11 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         }
         if (alarm != null) {
             viewHolder.editBedtimeAlarmEd.setText(alarm.getLabel());
-            viewHolder.repeatWeekDayTv.setText(obtainWeekday(new byte[]{alarm.getWeekDay()}));
+            String[] weekDayArray = context.getResources().getStringArray(R.array.alarm_week_day);
+            viewHolder.repeatWeekDayTv.setText(weekDayArray[alarm.getWeekDay() & 0x0F]);
             viewHolder.sleepTimeTv.setText(alarm.toString());
             viewHolder.alarmNameTv.setText(alarm.getLabel());
-            viewHolder.alarmSwitch.setChecked(alarm.isEnable());
+            viewHolder.alarmSwitch.setChecked(!((alarm.getWeekDay() & 0x0F) == 0));
             viewHolder.alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -415,7 +416,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         StringBuffer weekdayString = new StringBuffer();
         for (int i = 0; i < weekday.length; i++) {
             if (i != weekday.length - 1) {
-                weekdayString.append(weekDayArray[(weekday[i] & 0x0F)] + " ,");
+                weekdayString.append(weekDayArray[weekday[i]] + " ,");
             } else {
                 weekdayString.append(weekDayArray[weekday[i]]);
             }

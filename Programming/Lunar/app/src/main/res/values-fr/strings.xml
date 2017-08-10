@@ -559,4 +559,20 @@
     <string name="append_new_alarm_bedtime">Bedtime Alarm</string>
     <string name="append_new_alarm_normal">Normal Alarm</string>
     <string name="disable">Disable</string>
+    <string name="edit_alarm_repeat_weekday">Please set the repeat time</string>
+    <string name="edit_new_sleep_describe">Add presets</string>
+    <string name="edit_new_sleep_goal_bottom_dialog_title">Select presets</string>
+    <string name="def_bedtime_name">Bedtime</string>
+    <string name="normal_alarm_daily">daily alarm</string>
+    <string name="normal_alarm_friday">friday</string>
+    <string name="normal_alarm_max_toast">Add up to 6 alarm clocks at most</string>
+    <string name="normal_alarm_monday">monday</string>
+    <string name="normal_alarm_one_time">one time alarm</string>
+    <string name="normal_alarm_saturday">saturday</string>
+    <string name="normal_alarm_sunday">sunday</string>
+    <string name="normal_alarm_thursday">thursday</string>
+    <string name="normal_alarm_tuesday">tuesday</string>
+    <string name="normal_alarm_wednesday">wednesday</string>
+    <string name="select_sleep_goal_describe">Sleep Goal</string>
+    <string name="set_new_alarm_label">Create a label</string>
 </resources>
