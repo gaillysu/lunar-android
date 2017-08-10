@@ -320,7 +320,7 @@ public class AlarmFragment extends BaseObservableFragment
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                         final Alarm normalAlarm = new Alarm(mTimePicker.getHours(), mTimePicker.getMinutes(),
-                                (byte) which, alarmName, (byte) (alarmList.size() + 7));
+                                (byte) (0x80 | which) , alarmName, (byte) (alarmList.size() + 7));
                         if (normalAlarm.getAlarmNumber() < 13) {
                             getModel().getAlarmDatabaseHelper().add(normalAlarm).subscribe(new Consumer<Boolean>() {
                                 @Override

@@ -16,7 +16,6 @@
     <string name="permission_location_message">We need your location to search for your LunaR and to determine the sunset and sunrise time</string>
     <string name="my_watch_firmwer_version">Version </string>
     <string name="def_alarm_name">Alarm</string>
-    <string name="def_bedtime_name">bedtime</string>
     <string name="sunrise_activity_toolbar_title">Sunset Sunrise</string>
     <string name="my_watch_firmwer_version_describe">\" is now available for your LunaR!</string>
 
@@ -539,13 +538,13 @@
     <string name="minute_picker_description" translatable="false">Minutes circular slider</string>
     <string name="select_minutes" translatable="false">Select minutes</string>
     <string name="normal_alarm_max_toast">Add up to 6 alarm clocks at most</string>
-    <string name="normal_alarm_sunday">every sunday</string>
-    <string name="normal_alarm_monday">every monday</string>
-    <string name="normal_alarm_tuesday">every tuesday</string>
-    <string name="normal_alarm_wednesday">every wednesday</string>
-    <string name="normal_alarm_thursday">every thursday</string>
-    <string name="normal_alarm_friday">every friday</string>
-    <string name="normal_alarm_saturday">every saturday</string>
+    <string name="normal_alarm_sunday">sunday</string>
+    <string name="normal_alarm_monday">monday</string>
+    <string name="normal_alarm_tuesday">tuesday</string>
+    <string name="normal_alarm_wednesday">wednesday</string>
+    <string name="normal_alarm_thursday">thursday</string>
+    <string name="normal_alarm_friday">friday</string>
+    <string name="normal_alarm_saturday">saturday</string>
     <string name="normal_alarm_one_time">one time alarm</string>
     <string name="normal_alarm_daily">daily alarm</string>
 </resources>

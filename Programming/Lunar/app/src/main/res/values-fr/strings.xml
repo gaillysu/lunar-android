@@ -554,4 +554,9 @@
     <string name="settings_notifications_inactive_button_tv">Deactivate </string>
     <string name="edit_goal_name">Edit Name</string>
     <string name="edit_goal_time_text">Select Time</string>
+    <string name="add_new_bedtime_alarm_dialog_title">Set Bedtime</string>
+    <string name="add_new_normal_alarm_dialog_title">Set Alarm</string>
+    <string name="append_new_alarm_bedtime">Bedtime Alarm</string>
+    <string name="append_new_alarm_normal">Normal Alarm</string>
+    <string name="disable">Disable</string>
 </resources>

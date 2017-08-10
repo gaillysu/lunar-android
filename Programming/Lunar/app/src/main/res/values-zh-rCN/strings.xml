@@ -549,4 +549,9 @@
     <string name="settings_notifications_inactive_button_tv">关闭通知</string>
     <string name="edit_goal_name">编辑名称</string>
     <string name="edit_goal_time_text">设置时长</string>
+    <string name="add_new_bedtime_alarm_dialog_title">编辑休息闹钟</string>
+    <string name="add_new_normal_alarm_dialog_title">添加闹钟</string>
+    <string name="append_new_alarm_bedtime">休息闹钟</string>
+    <string name="append_new_alarm_normal">闹钟</string>
+    <string name="disable">关闭</string>
 </resources>
