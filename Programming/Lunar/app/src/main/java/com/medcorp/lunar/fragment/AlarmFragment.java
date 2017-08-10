@@ -62,10 +62,11 @@ import static com.wdullaer.materialdatetimepicker.time.TimePickerDialog.MINUTE_I
  * Created by karl-john on 11/12/15.
  */
 public class AlarmFragment extends BaseObservableFragment
-        implements RadialPickerLayout.OnValueSelectedListener, CompoundButton.OnCheckedChangeListener,
+        implements CompoundButton.OnCheckedChangeListener,
         AlarmRecyclerViewAdapter.OnBedtimeDeleteListener, AlarmRecyclerViewAdapter.OnNormalAlarmSwitchListener,
         AlarmRecyclerViewAdapter.OnDeleteNormalAlarmListener, AlarmRecyclerViewAdapter.OnBedtimeSwitchListener,
-        AlarmRecyclerViewAdapter.OnAlarmConfigChangeListener, AlarmRecyclerViewAdapter.OnBedtimeConfigChangeListener {
+        AlarmRecyclerViewAdapter.OnAlarmConfigChangeListener, AlarmRecyclerViewAdapter.OnBedtimeConfigChangeListener,
+        RadialPickerLayout.OnValueSelectedListener {
 
     @Bind(R.id.all_alarm_recycler_view)
     RecyclerView allAlarm;
@@ -276,7 +277,7 @@ public class AlarmFragment extends BaseObservableFragment
     }
 
     private void createWakeAlarm(int hour, int minute, byte weekday, String name, byte alarmNumber, boolean isEnable) {
-        final Alarm alarm = new Alarm(hour, minute, (byte)(0x80|weekday), name, alarmNumber);
+        final Alarm alarm = new Alarm(hour, minute, (byte) (0x80 | weekday), name, alarmNumber);
         alarm.setEnable(isEnable);
         getModel().getAlarmDatabaseHelper().add(alarm).subscribe(new Consumer<Boolean>() {
             @Override
@@ -294,7 +295,7 @@ public class AlarmFragment extends BaseObservableFragment
         int hourOfDay = time[0];
         int minuteOfHour = time[1];
         int Weekday = time[2];
-        final Alarm alarm = new Alarm(hourOfDay, minuteOfHour, (byte) (0x80|Weekday), name, (byte) (alarmNumber + 13));
+        final Alarm alarm = new Alarm(hourOfDay, minuteOfHour, (byte) (0x80 | Weekday), name, (byte) (alarmNumber + 13));
         alarm.setEnable(enable);
         getModel().getAlarmDatabaseHelper().add(alarm).subscribe(new Consumer<Boolean>() {
             @Override
@@ -565,7 +566,15 @@ public class AlarmFragment extends BaseObservableFragment
         } else if (pickerIndex == MINUTE_INDEX) {
             if (valueRespectsMinutesConstraint(newValue)) {
                 setMinute(newValue);
+                String announcement = String.format("%d", newValue);
                 mTimePicker.setContentDescription(mMinutePickerDescription + ": " + newValue);
+                if (mAllowAutoAdvance && autoAdvance) {
+                    setCurrentItemShowing(HOUR_INDEX, true, true, false);
+                    announcement += ". " + mTimePicker.getHours();
+                } else {
+                    mTimePicker.setContentDescription(mHourPickerDescription + ": " + newValue);
+                }
+                Utils.tryAccessibilityAnnounce(mTimePicker, announcement);
             }
         }
     }
@@ -591,8 +600,7 @@ public class AlarmFragment extends BaseObservableFragment
         Utils.tryAccessibilityAnnounce(mTimePicker, text);
     }
 
-    private void setCurrentItemShowing(int index, boolean animateCircle, boolean delayLabelAnimate,
-                                       boolean announce) {
+    private void setCurrentItemShowing(int index, boolean animateCircle, boolean delayLabelAnimate, boolean announce) {
         mTimePicker.setCurrentItemShowing(index, animateCircle);
         if (index == HOUR_INDEX) {
             int hours = mTimePicker.getHours();
@@ -815,7 +823,6 @@ public class AlarmFragment extends BaseObservableFragment
                     allBedtimeModels.remove(position);
                     allBedtimeModels.add(position, bedtimeModel);
                     mAlarmRecyclerViewAdapter.notifyDataSetChanged();
-
                 }
             }
         });
