@@ -27,11 +27,8 @@ public class SetGoalRequest extends BLERequestData {
     @Override
     public byte[][] getRawDataEx() {
 
-
         int goal_dist = 0; //unit ??cm
-
         int goal_steps = mGoal.getSteps();
-
         int goal_calories = 0; // unit ??
         int goal_time = 0; //unit ??
 

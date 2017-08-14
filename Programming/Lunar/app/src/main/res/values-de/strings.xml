@@ -465,7 +465,7 @@
     <string name="more_settings_steps_goal">Steps Goal</string>
     <string name="def_goal_sleep_name">Sleep Goal</string>
     <string name="sleep_goal_def_long">Long sleep</string>
-    <string name="sleep_goal_def_noon">Siesta</string>
+    <string name="sleep_goal_def_noon">Nap</string>
     <string name="sleep_goal_def_short">Short Sleep</string>
     <string name="sleep_unit_hour">h</string>
     <string name="sleep_unit_minute">min</string>
