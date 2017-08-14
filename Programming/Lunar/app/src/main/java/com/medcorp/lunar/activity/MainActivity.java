@@ -157,8 +157,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         userImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                finish();
+                startAndFinishActivity(ProfileActivity.class);
             }
         });
 
@@ -172,8 +171,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 intent.putExtra(getString(R.string.open_activity_is_tutorial), false);
-                startActivity(intent);
-                finish();
+                startAndFinishActivity(intent);
             }
         });
     }

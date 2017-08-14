@@ -24,6 +24,16 @@ public abstract class BaseActivity extends AppCompatActivity{
     public void startActivity(Class <?> cls) {
         Intent intent = new Intent(this, cls);
         startActivity(intent);
-        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+    }
+
+    public void startAndFinishActivity(Class <?> cls) {
+        Intent intent = new Intent(this, cls);
+        startActivity(intent);
+        finish();
+    }
+
+    public void startAndFinishActivity(Intent intent) {
+        startActivity(intent);
+        finish();
     }
 }

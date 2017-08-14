@@ -83,8 +83,7 @@ public class ForgetPasswordResultActivity extends BaseActivity {
                             getString(R.string.password_change_success));
                     Intent intent = new Intent(ForgetPasswordResultActivity.this, LoginActivity.class);
                     intent.putExtra(getString(R.string.open_activity_is_tutorial), false);
-                    startActivity(intent);
-                    finish();
+                    startAndFinishActivity(intent);
                 }
             }
         });

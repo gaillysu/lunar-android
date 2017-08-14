@@ -164,8 +164,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnTouchListen
                         showSnackbar(R.string.register_success);
                         Intent intent = new Intent(UserInfoActivity.this, LoginActivity.class);
                         intent.putExtra(getString(R.string.open_activity_is_tutorial), true);
-                        startActivity(intent);
-                        finish();
+                        startAndFinishActivity(intent);
                         break;
                 }
             }
@@ -258,9 +257,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnTouchListen
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            startActivity(SignupActivity.class);
-            finish();
-            overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
+            startAndFinishActivity(SignupActivity.class);
             return true;
         }
         return super.onKeyDown(keyCode, event);

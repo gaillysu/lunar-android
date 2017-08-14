@@ -25,8 +25,6 @@ public class TutorialPage3Activity extends BaseActivity {
 
     @OnClick(R.id.activity_tutorial_3_next_button)
     public void nextButtonClicked(){
-        startActivity(new Intent(this, TutorialPage4Activity.class));
-        overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
-        finish();
+        startAndFinishActivity(TutorialPage4Activity.class);
     }
 }

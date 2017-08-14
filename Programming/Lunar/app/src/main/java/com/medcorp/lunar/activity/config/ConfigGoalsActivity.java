@@ -224,14 +224,13 @@ public class ConfigGoalsActivity extends BaseActivity {
             int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
             final int buildingFirmwareVersion = getResources().getInteger(R.integer.launar_version);
             if (currentFirmwareVersion < buildingFirmwareVersion) {
-                startActivity(MyWatchActivity.class);
+                startAndFinishActivity(MyWatchActivity.class);
             } else {
-                startActivity(MainActivity.class);
+                startAndFinishActivity(MainActivity.class);
             }
         } else {
-            startActivity(MainActivity.class);
+            startAndFinishActivity(MainActivity.class);
         }
-        finish();
     }
 
     private String obtainString(String name, int time) {

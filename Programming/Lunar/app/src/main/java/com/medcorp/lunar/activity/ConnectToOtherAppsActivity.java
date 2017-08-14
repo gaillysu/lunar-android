@@ -70,7 +70,6 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 break;
         }
         return super.onOptionsItemSelected(item);

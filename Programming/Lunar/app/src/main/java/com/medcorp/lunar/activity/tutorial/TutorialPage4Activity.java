@@ -91,7 +91,7 @@ public class TutorialPage4Activity extends BaseActivity {
         Intent intent = new Intent(TutorialPage4Activity.this, DfuActivity.class);
         intent.putExtra(getString(R.string.key_manual_mode), true);
         intent.putExtra(getString(R.string.key_back_to_settings), false);
-        startActivity(intent);
+        startAndFinishActivity(intent);
         return true;
     }
 
