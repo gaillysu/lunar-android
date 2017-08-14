@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -23,11 +24,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.lunar.R;
+import com.medcorp.lunar.activity.login.LoginActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.cloud.med.MedNetworkOperation;
 import com.medcorp.lunar.model.User;
@@ -55,7 +60,7 @@ import me.nereo.multi_image_selector.MultiImageSelectorFragment;
 
 import static com.medcorp.lunar.R.style.AppTheme_Dark_Dialog;
 
-/**
+/***
  * Created by med on 16/4/6.
  */
 public class ProfileActivity extends BaseActivity {
@@ -74,6 +79,24 @@ public class ProfileActivity extends BaseActivity {
     LinearLayout editUserHeightL;
     @Bind(R.id.edit_user_weight_pop)
     LinearLayout editUserWeightL;
+    @Bind(R.id.profile_fragment_user_first_name_tv)
+    TextView firstName;
+    @Bind(R.id.profile_fragment_user_last_name_tv)
+    TextView lastName;
+    @Bind(R.id.profile_fragment_user_birthday_tv)
+    TextView userBirthday;
+    @Bind(R.id.profile_fragment_user_height_tv)
+    TextView userHeight;
+    @Bind(R.id.profile_fragment_user_weight_tv)
+    TextView userWeight;
+    @Bind(R.id.profile_user_gender_radio_group)
+    RadioGroup profileGender;
+    @Bind(R.id.profile_user_gender_female)
+    RadioButton female;
+    @Bind(R.id.profile_user_gender_male)
+    RadioButton male;
+    @Bind(R.id.profile_logout_bt)
+    AppCompatButton logoutButton;
 
     private User lunarUser;
     private int viewType;
@@ -97,6 +120,7 @@ public class ProfileActivity extends BaseActivity {
             @Override
             public void accept(User user) throws Exception {
                 lunarUser = user;
+                initView();
                 if (user.getUserEmail() != null) {
                     userEmail = user.getUserEmail();
                 } else {
@@ -110,16 +134,10 @@ public class ProfileActivity extends BaseActivity {
                 }
             }
         });
-        initView();
     }
 
 
     private void initView() {
-        final TextView firstName = (TextView) findViewById(R.id.profile_fragment_user_first_name_tv);
-        final TextView lastName = (TextView) findViewById(R.id.profile_fragment_user_last_name_tv);
-        final TextView userBirthday = (TextView) findViewById(R.id.profile_fragment_user_birthday_tv);
-        final TextView userHeight = (TextView) findViewById(R.id.profile_fragment_user_height_tv);
-        final TextView userWeight = (TextView) findViewById(R.id.profile_fragment_user_weight_tv);
 
         firstName.setText(TextUtils.isEmpty(lunarUser.getFirstName()) ? getString(R.string.edit_user_first_name) : lunarUser.getFirstName());
         lastName.setText(TextUtils.isEmpty(lunarUser.getLastName()) ? getString(R.string.edit_user_last_name) : lunarUser.getLastName());
@@ -128,6 +146,16 @@ public class ProfileActivity extends BaseActivity {
         userBirthday.setText(simpleDateFormat.format(new Date(lunarUser.getBirthday())));
         userHeight.setText(lunarUser.getHeight() + " cm");
         userWeight.setText(lunarUser.getWeight() + " kg");
+        if(lunarUser.isLogin()){
+            logoutButton.setVisibility(View.VISIBLE);
+        }else{
+            logoutButton.setVisibility(View.GONE);
+        }
+        if (lunarUser.getSex() == 1) {
+            male.setChecked(true);
+        } else {
+            female.setChecked(true);
+        }
 
         editLastName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,6 +189,17 @@ public class ProfileActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 editUserWeight(userWeight);
+            }
+        });
+
+        profileGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.profile_user_gender_male) {
+                    lunarUser.setSex(1);
+                } else {
+                    lunarUser.setSex(0);
+                }
             }
         });
     }
@@ -403,6 +442,51 @@ public class ProfileActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    @OnClick(R.id.profile_logout_bt)
+    public void logout() {
+        new MaterialDialog.Builder(this)
+                .title(getString(R.string.google_fit_log_out))
+                .content(getString(R.string.settings_sure))
+                .positiveText(R.string.goal_ok)
+                .negativeText(R.string.goal_cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        Intent newIntent = new Intent(ProfileActivity.this, LoginActivity.class);
+                        lunarUser.setIsLogin(false);
+                        getModel().saveUser(lunarUser);
+                        startActivity(newIntent);
+                        ProfileActivity.this.finish();
+                    }
+                })
+                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                .positiveColor(getResources().getColor(R.color.colorPrimary))
+                .show();
+    }
+
+    @OnClick(R.id.profile_delete_bt)
+    public void deleteProfiel(){
+        new MaterialDialog.Builder(this)
+                .title(getString(R.string.profile_delete_dialog_title))
+                .content(getString(R.string.profile_delete_dialog_prompt_user))
+                .positiveText(R.string.goal_ok)
+                .negativeText(R.string.goal_cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        getModel().getUserDatabaseHelper().remove(lunarUser.getUserID(),new Date(lunarUser.getCreatedDate()));
+                        Intent newIntent = new Intent(ProfileActivity.this, LoginActivity.class);
+                        lunarUser.setIsLogin(false);
+                        getModel().saveUser(lunarUser);
+                        startActivity(newIntent);
+                        ProfileActivity.this.finish();
+                    }
+                })
+                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                .positiveColor(getResources().getColor(R.color.colorPrimary))
+                .show();
     }
 
     @Override
