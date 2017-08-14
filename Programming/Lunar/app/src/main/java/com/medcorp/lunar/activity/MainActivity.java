@@ -81,7 +81,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     private TextView showUserFirstNameText;
 
-    private View rootView;
     private TextView userView;
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -101,7 +100,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         activeFragment = new Optional<>();
-        rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
         setSupportActionBar(toolbar);
         getSupportActionBar().setElevation(0);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);

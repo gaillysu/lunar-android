@@ -1,20 +1,20 @@
 package com.medcorp.lunar.event.bluetooth;
 
 
-import com.medcorp.lunar.model.WatchInfomation;
+import com.medcorp.lunar.model.WatchInformation;
 
 /**
  * Created by med on 16/11/8.
  */
 
 public class GetWatchInfoChangedEvent {
- final WatchInfomation watchInfomation;
+ final WatchInformation watchInformation;
 
-    public GetWatchInfoChangedEvent(WatchInfomation watchInfomation) {
-        this.watchInfomation = watchInfomation;
+    public GetWatchInfoChangedEvent(WatchInformation watchInformation) {
+        this.watchInformation = watchInformation;
     }
 
-    public WatchInfomation getWatchInfomation() {
-        return watchInfomation;
+    public WatchInformation getWatchInformation() {
+        return watchInformation;
     }
 }

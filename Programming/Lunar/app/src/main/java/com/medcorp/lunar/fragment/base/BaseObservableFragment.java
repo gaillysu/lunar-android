@@ -5,13 +5,12 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Explode;
 
-import com.medcorp.lunar.fragment.observer.FragmentObservable;
 
 
 /**
  * Created by karl-john on 16/12/15.
  */
-public abstract class BaseObservableFragment extends  BaseFragment implements FragmentObservable {
+public abstract class BaseObservableFragment extends  BaseFragment {
 
     public static BaseObservableFragment instantiate(Context context, String tag)
     {

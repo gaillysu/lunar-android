@@ -85,7 +85,7 @@ public class ConfigCityActivity extends BaseActivity {
     @OnClick(R.id.config_next_button)
     public void nextStep() {
         String text = localAddress.getText().toString();
-        if (text != null && !text.equals(getString(R.string.config_location_failed))) {
+        if (!text.equals(getString(R.string.config_location_failed))) {
             startAndFinishActivity(ConfigGoalsActivity.class);
         } else {
             ToastHelper.showShortToast(this, getString(R.string.config_location_city_is_null));

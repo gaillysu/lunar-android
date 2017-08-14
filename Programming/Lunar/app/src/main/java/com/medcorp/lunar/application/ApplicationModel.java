@@ -143,10 +143,6 @@ public class ApplicationModel extends Application {
     private UserDatabaseHelper userDatabaseHelper;
     private SolarDatabaseHelper solarDatabaseHelper;
     private CityWeatherDatabaseHelper cityWeatherDatabaseHelper;
-    private boolean firmwareUpdateAlertDailog = false;
-    //if it is -1, means mcu version hasn't be read
-    private int mcuFirmwareVersion = -1;
-    private int bleFirmwareVersion = -1;
     private GoogleFitManager googleFitManager;
     private GoogleFitTaskCounter googleFitTaskCounter;
     private CloudSyncManager cloudSyncManager;
@@ -159,7 +155,6 @@ public class ApplicationModel extends Application {
     private IWXAPI mIWXAPI;
     private Steps steps = null;
     private List<Steps> allSteps;
-    private boolean responseCode;
     private final String REALM_NAME = "med_lunar.realm";
     private Sleep mSleep;
     private boolean upDateIsSuccess;

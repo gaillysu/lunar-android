@@ -60,7 +60,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     private List<Alarm> alarmList;
     private AlarmArrayAdapter alarmArrayAdapter;
     private LayoutInflater inflater;
-    private Boolean isMondayChecked = false;
 
     private byte alarmSelectStyle = 0;
     private Button monday;
@@ -93,7 +92,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarmList, AlarmFragment.this);
                 alarmListView.setAdapter(alarmArrayAdapter);
                 alarmListView.setOnItemClickListener(AlarmFragment.this);
-                isMondayChecked = true;
             }
         });
     }
@@ -257,7 +255,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         i.putExtras(bundle);
         SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
         prefs.putString(getString(R.string.alarm_label), alarmList.get(position).getLabel());
-        prefs.commit();
+        prefs.apply();
         editAlarm = alarmList.get(position);
         startActivityForResult(i, 0);
     }
@@ -383,76 +381,35 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     }
 
 
-    private void initAlarmDialog(byte repeatday) {
-        switch (repeatday) {
+    private void initAlarmDialog(byte repeatDay) {
+        weekDay = repeatDay;
+        monday.setTextColor(getResources().getColor(R.color.text_color));
+        tuesday.setTextColor(getResources().getColor(R.color.text_color));
+        wednesday.setTextColor(getResources().getColor(R.color.text_color));
+        thursday.setTextColor(getResources().getColor(R.color.text_color));
+        friday.setTextColor(getResources().getColor(R.color.text_color));
+        saturday.setTextColor(getResources().getColor(R.color.text_color));
+        sunday.setTextColor(getResources().getColor(R.color.text_color));
+        switch (repeatDay) {
             case 2:
-                weekDay = repeatday;
                 monday.setTextColor(getResources().getColor(R.color.colorPrimary));
-                tuesday.setTextColor(getResources().getColor(R.color.text_color));
-                wednesday.setTextColor(getResources().getColor(R.color.text_color));
-                thursday.setTextColor(getResources().getColor(R.color.text_color));
-                friday.setTextColor(getResources().getColor(R.color.text_color));
-                saturday.setTextColor(getResources().getColor(R.color.text_color));
-                sunday.setTextColor(getResources().getColor(R.color.text_color));
                 break;
             case 3:
-                monday.setTextColor(getResources().getColor(R.color.text_color));
                 tuesday.setTextColor(getResources().getColor(R.color.colorPrimary));
-                wednesday.setTextColor(getResources().getColor(R.color.text_color));
-                thursday.setTextColor(getResources().getColor(R.color.text_color));
-                friday.setTextColor(getResources().getColor(R.color.text_color));
-                saturday.setTextColor(getResources().getColor(R.color.text_color));
-                sunday.setTextColor(getResources().getColor(R.color.text_color));
-                weekDay = repeatday;
                 break;
             case 4:
-                weekDay = repeatday;
-                monday.setTextColor(getResources().getColor(R.color.text_color));
-                tuesday.setTextColor(getResources().getColor(R.color.text_color));
                 wednesday.setTextColor(getResources().getColor(R.color.colorPrimary));
-                thursday.setTextColor(getResources().getColor(R.color.text_color));
-                friday.setTextColor(getResources().getColor(R.color.text_color));
-                saturday.setTextColor(getResources().getColor(R.color.text_color));
-                sunday.setTextColor(getResources().getColor(R.color.text_color));
                 break;
             case 5:
-                weekDay = repeatday;
-                monday.setTextColor(getResources().getColor(R.color.text_color));
-                tuesday.setTextColor(getResources().getColor(R.color.text_color));
-                wednesday.setTextColor(getResources().getColor(R.color.text_color));
                 thursday.setTextColor(getResources().getColor(R.color.colorPrimary));
-                friday.setTextColor(getResources().getColor(R.color.text_color));
-                saturday.setTextColor(getResources().getColor(R.color.text_color));
-                sunday.setTextColor(getResources().getColor(R.color.text_color));
                 break;
             case 6:
-                weekDay = repeatday;
-                monday.setTextColor(getResources().getColor(R.color.text_color));
-                tuesday.setTextColor(getResources().getColor(R.color.text_color));
-                wednesday.setTextColor(getResources().getColor(R.color.text_color));
-                thursday.setTextColor(getResources().getColor(R.color.text_color));
                 friday.setTextColor(getResources().getColor(R.color.colorPrimary));
-                saturday.setTextColor(getResources().getColor(R.color.text_color));
-                sunday.setTextColor(getResources().getColor(R.color.text_color));
                 break;
             case 7:
-                weekDay = repeatday;
-                monday.setTextColor(getResources().getColor(R.color.text_color));
-                tuesday.setTextColor(getResources().getColor(R.color.text_color));
-                wednesday.setTextColor(getResources().getColor(R.color.text_color));
-                thursday.setTextColor(getResources().getColor(R.color.text_color));
-                friday.setTextColor(getResources().getColor(R.color.text_color));
                 saturday.setTextColor(getResources().getColor(R.color.colorPrimary));
-                sunday.setTextColor(getResources().getColor(R.color.text_color));
                 break;
             case 1:
-                weekDay = repeatday;
-                monday.setTextColor(getResources().getColor(R.color.text_color));
-                tuesday.setTextColor(getResources().getColor(R.color.text_color));
-                wednesday.setTextColor(getResources().getColor(R.color.text_color));
-                thursday.setTextColor(getResources().getColor(R.color.text_color));
-                friday.setTextColor(getResources().getColor(R.color.text_color));
-                saturday.setTextColor(getResources().getColor(R.color.text_color));
                 sunday.setTextColor(getResources().getColor(R.color.colorPrimary));
                 break;
         }
@@ -466,7 +423,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 break;
             case R.id.tag_btn_tuesday:
                 initAlarmDialog((byte) 3);
-                weekDay = 3;
                 break;
             case R.id.tag_btn_wednesday:
                 initAlarmDialog((byte) 4);
