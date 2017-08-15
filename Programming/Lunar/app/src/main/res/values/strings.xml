@@ -47,7 +47,7 @@
     <string name="ble_connection_timeout_cancel">Cancel</string>
     <string name="ble_connection_timeout_help">Help</string>
     <string name="edit_user_first_name"> Click to set your first name</string>
-    <string name="edit_user_email"> Click to set your email name</string>
+    <string name="edit_user_email"> Click to set your email</string>
     <string name="edit_user_last_name">Click to set your last name</string>
     <string name="notification_call_title">Call</string>
     <string name="notification_sms_title">SMS</string>

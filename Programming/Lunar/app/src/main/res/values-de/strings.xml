@@ -552,7 +552,7 @@
     <string name="settings_notifications_inactive_button_tv">Deactivate </string>
     <string name="edit_goal_name">Edit Name</string>
     <string name="edit_goal_time_text">Select Time</string>
-    <string name="edit_user_email">Click to set your email name</string>
+    <string name="edit_user_email">Click to set your email</string>
     <string name="profile_delete_dialog_prompt_user">Are you sure you want to delete user?</string>
     <string name="profile_delete_dialog_title">Delete User</string>
     <string name="profile_delete_tv">Delete</string>
