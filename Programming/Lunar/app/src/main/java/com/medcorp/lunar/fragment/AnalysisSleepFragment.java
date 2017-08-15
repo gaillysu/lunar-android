@@ -1,6 +1,8 @@
 package com.medcorp.lunar.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
+import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.fragment.base.BaseFragment;
 import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.SleepData;
@@ -26,6 +29,8 @@ import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisSleepLineChart;
 import com.medcorp.lunar.view.graphs.SleepTodayChart;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -66,6 +71,7 @@ public class AnalysisSleepFragment extends BaseFragment {
     private SleepTodayChart todaySleepChart;
     private TipsView mMv;
     private SleepGoal mActiveSleepGoal;
+    private AnalysisStepsChartAdapter mAnalysisAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,6 +88,7 @@ public class AnalysisSleepFragment extends BaseFragment {
 
     private void initView(LayoutInflater inflater) {
         sleepList = new ArrayList<>(3);
+        mMv = new TipsView(AnalysisSleepFragment.this.getContext(), R.layout.custom_marker_view);
 
         todaySleepViewChart = inflater.inflate(R.layout.analysis_sleep_today_chart, null);
         thisWeekView = inflater.inflate(R.layout.analysis_sleep_chart_fragment_layout, null);
@@ -95,6 +102,15 @@ public class AnalysisSleepFragment extends BaseFragment {
         sleepList.add(thisWeekView);
         sleepList.add(lastMonthView);
 
+
+        mAnalysisAdapter = new AnalysisStepsChartAdapter(sleepList);
+        sleepViewPage.setAdapter(mAnalysisAdapter);
+        setChangeListener();
+        addUIControl(sleepList);
+        initData();
+    }
+
+    private void addUIControl(List<View> sleepList) {
         for (int i = 0; i < sleepList.size(); i++) {
             ImageView imageView = new ImageView(AnalysisSleepFragment.this.getContext());
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
@@ -107,40 +123,9 @@ public class AnalysisSleepFragment extends BaseFragment {
             }
             uiControl.addView(imageView, layoutParams);
         }
-        initData();
     }
 
-    private void initData() {
-        mMv = new TipsView(AnalysisSleepFragment.this.getContext(), R.layout.custom_marker_view);
-        getModel().getSleepGoalDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
-            @Override
-            public void accept(List<SleepGoal> sleepGoals) throws Exception {
-                if (sleepGoals.size() > 0) {
-                    for (SleepGoal sleepGoal : sleepGoals) {
-                        if (sleepGoal.isStatus()) {
-                            mActiveSleepGoal = sleepGoal;
-                            break;
-                        }
-                    }
-                }
-            }
-        });
-
-        if (mActiveSleepGoal == null) {
-            mActiveSleepGoal = new SleepGoal("Unknown", 360, true);
-        }
-
-        setData(sleepViewPage.getCurrentItem());
-        /**
-         * 'Sleep' is not the right way to put it into the chart because one evening and one night is spread
-         * through 2 'Sleep' Objects.Therefor we have a solution which is 'SleepData' We have therefor
-         * 'SleepDataHandler' to parse a List<Sleep> to List<SleepData>. Although, this needs to be tested.
-         * getDummyData is just for the 'dummy data'
-         */
-
-
-        AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(sleepList);
-        sleepViewPage.setAdapter(adapter);
+    private void setChangeListener() {
         sleepViewPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -166,6 +151,34 @@ public class AnalysisSleepFragment extends BaseFragment {
 
             }
         });
+    }
+
+    private void initData() {
+
+        getModel().getSleepGoalDatabseHelper().getAll().subscribe(new Consumer<List<SleepGoal>>() {
+            @Override
+            public void accept(List<SleepGoal> sleepGoals) throws Exception {
+                if (sleepGoals.size() > 0) {
+                    for (SleepGoal sleepGoal : sleepGoals) {
+                        if (sleepGoal.isStatus()) {
+                            mActiveSleepGoal = sleepGoal;
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
+        if (mActiveSleepGoal == null) {
+            mActiveSleepGoal = new SleepGoal("Unknown", 360, true);
+        }
+        setData(sleepViewPage.getCurrentItem());
+        /**
+         * 'Sleep' is not the right way to put it into the chart because one evening and one night is spread
+         * through 2 'Sleep' Objects.Therefor we have a solution which is 'SleepData' We have therefor
+         * 'SleepDataHandler' to parse a List<Sleep> to List<SleepData>. Although, this needs to be tested.
+         * getDummyData is just for the 'dummy data'
+         */
     }
 
     private void setThisWeekData(List<SleepData> thisWeekSleepData) {
@@ -308,5 +321,31 @@ public class AnalysisSleepFragment extends BaseFragment {
 
     public interface TodaySleepListener {
         void todaySleep(Sleep[] sleeps);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onEvent(OnSyncEvent event) {
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED | event.getStatus()
+                == OnSyncEvent.SYNC_EVENT.TODAY_SYNC_STOPPED) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    initData();
+                    mAnalysisAdapter.notifyDataSetChanged();
+                }
+            });
+        }
     }
 }

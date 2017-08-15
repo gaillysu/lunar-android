@@ -131,6 +131,7 @@ public class MyWatchActivity extends BaseActivity {
             public void run() {
                 myWatch.setBatteryLevel((int) batteryEvent.getBattery().getBatteryLevel());
                 initLunarData();
+                showWatchBattery.setText(batteryEvent.getBattery().getBatteryCapacity() + " %");
             }
         });
     }
@@ -138,13 +139,6 @@ public class MyWatchActivity extends BaseActivity {
     private void initLunarData() {
         mCurrentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
         firmwerUpdateInfomation.setText(getString(R.string.my_watch_firmwer_version) + " " + mCurrentFirmwareVersion);
-        String str_battery = this.getString(R.string.my_nevo_battery_low);
-        if (myWatch.getBatteryLevel() == 2) {
-            str_battery = this.getString(R.string.my_nevo_battery_full);
-        } else if (myWatch.getBatteryLevel() == 1) {
-            str_battery = this.getString(R.string.my_nevo_battery_half);
-        }
-        showWatchBattery.setText(str_battery);
         showWatchVersion.setText(myWatch.getAppVersion());
     }
 }

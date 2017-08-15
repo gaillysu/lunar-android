@@ -1,6 +1,8 @@
 package com.medcorp.lunar.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
+import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.fragment.base.BaseFragment;
 import com.medcorp.lunar.model.Solar;
 import com.medcorp.lunar.model.SolarGoal;
@@ -19,6 +22,9 @@ import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisSolarLineChart;
 import com.medcorp.lunar.view.graphs.DailySolarChart;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,6 +58,7 @@ public class AnalysisSolarFragment extends BaseFragment {
     private DailySolarChart todayChart;
     private TipsView mMarker;
     private SolarGoal solarGoal;
+    private AnalysisStepsChartAdapter mAnalysisAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,10 +74,22 @@ public class AnalysisSolarFragment extends BaseFragment {
         todayChartView = inflater.inflate(R.layout.analysis_solar_today_chart_fragment_layout, null);
         thisWeekView = inflater.inflate(R.layout.analysis_solar_chart_fragment_layout, null);
         lastMonthView = inflater.inflate(R.layout.analysis_solar_chart_fragment_layout, null);
+        todayChart = (DailySolarChart) todayChartView.findViewById(R.id.analysis_solar_today_chart);
+        thisWeekChart = (AnalysisSolarLineChart) thisWeekView.findViewById(R.id.analysis_solar_chart);
+        lastMonthChart = (AnalysisSolarLineChart) lastMonthView.findViewById(R.id.analysis_solar_chart);
+        mMarker = new TipsView(AnalysisSolarFragment.this.getContext(), R.layout.custom_marker_view);
         solarList.add(todayChartView);
         solarList.add(thisWeekView);
         solarList.add(lastMonthView);
+        mAnalysisAdapter = new AnalysisStepsChartAdapter(solarList);
+        solarViewPager.setAdapter(mAnalysisAdapter);
 
+        setChangeListener();
+        addUIControl(solarList);
+        initData();
+    }
+
+    public void addUIControl(List<View> solarList) {
         for (int i = 0; i < solarList.size(); i++) {
             ImageView imageView = new ImageView(AnalysisSolarFragment.this.getContext());
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
@@ -83,35 +102,9 @@ public class AnalysisSolarFragment extends BaseFragment {
             }
             uiControl.addView(imageView, params);
         }
-        initData();
     }
 
-    private void initData() {
-
-        todayChart = (DailySolarChart) todayChartView.findViewById(R.id.analysis_solar_today_chart);
-        thisWeekChart = (AnalysisSolarLineChart) thisWeekView.findViewById(R.id.analysis_solar_chart);
-        lastMonthChart = (AnalysisSolarLineChart) lastMonthView.findViewById(R.id.analysis_solar_chart);
-        mMarker = new TipsView(AnalysisSolarFragment.this.getContext(), R.layout.custom_marker_view);
-        getModel().getSolarGoalDatabaseHelper().getAll().subscribe(new Consumer<List<SolarGoal>>() {
-            @Override
-            public void accept(List<SolarGoal> solarGoals) throws Exception {
-                if (solarGoals.size() > 0) {
-                    for (SolarGoal goal : solarGoals) {
-                        if (goal.isStatus()) {
-                            solarGoal = goal;
-                        }
-                    }
-                }
-            }
-        });
-
-        if (solarGoal == null) {
-            solarGoal = new SolarGoal("Unknown", 60, true);
-        }
-
-        setData(solarViewPager.getCurrentItem());
-        AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(solarList);
-        solarViewPager.setAdapter(adapter);
+    private void setChangeListener() {
         solarViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -139,7 +132,27 @@ public class AnalysisSolarFragment extends BaseFragment {
 
             }
         });
+    }
 
+    private void initData() {
+        getModel().getSolarGoalDatabaseHelper().getAll().subscribe(new Consumer<List<SolarGoal>>() {
+            @Override
+            public void accept(List<SolarGoal> solarGoals) throws Exception {
+                if (solarGoals.size() > 0) {
+                    for (SolarGoal goal : solarGoals) {
+                        if (goal.isStatus()) {
+                            solarGoal = goal;
+                        }
+                    }
+                }
+            }
+        });
+
+        if (solarGoal == null) {
+            solarGoal = new SolarGoal("Unknown", 60, true);
+        }
+
+        setData(solarViewPager.getCurrentItem());
     }
 
     public int getAverageTimeOnBattery(List<Solar> list) {
@@ -215,5 +228,31 @@ public class AnalysisSolarFragment extends BaseFragment {
 
     public interface ObtainSolarListener {
         void obtainSolarData(List<Solar> solars);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onEvent(OnSyncEvent event) {
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED |
+                event.getStatus() == OnSyncEvent.SYNC_EVENT.TODAY_SYNC_STOPPED) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    initData();
+                    mAnalysisAdapter.notifyDataSetChanged();
+                }
+            });
+        }
     }
 }
