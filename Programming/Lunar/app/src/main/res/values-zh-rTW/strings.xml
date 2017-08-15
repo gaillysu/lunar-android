@@ -390,7 +390,7 @@
     <string name="register_account_message">沒有賬號?創建壹個</string>
     <string name="register_account_page_title">註冊</string>
     <string name="register_create_account">創建帳號</string>
-    <string name="register_email_error">輸入電郵地址</string>
+    <string name="register_email_error">輸入有效的電子郵件地址</string>
     <string name="register_failed">註冊失敗</string>
     <string name="register_first_name_hint">姓名</string>
     <string name="register_input_first_is_empty">姓名不能為空</string>
@@ -551,5 +551,12 @@
     <string name="settings_notifications_inactive_button_tv">關閉通知</string>
     <string name="edit_goal_name">編輯名稱</string>
     <string name="edit_goal_time_text">設置時長</string>
+    <string name="edit_user_email">請輸入您的郵箱!</string>
+    <string name="profile_delete_dialog_prompt_user">您確定刪除當前資料嗎?</string>
+    <string name="profile_delete_dialog_title">刪除帳號</string>
+    <string name="profile_delete_tv">刪除帳號</string>
+    <string name="profile_fragment_email_text">郵箱</string>
+    <string name="profile_input_user_email_dialog_title">郵件</string>
+    <string name="profile_logout_tv">註銷登錄</string>
 
 </resources>

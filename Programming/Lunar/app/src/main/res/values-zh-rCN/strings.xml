@@ -374,7 +374,7 @@
     <string name="register_account_message">没有账号?创建一个</string>
     <string name="register_account_page_title">注册</string>
     <string name="register_create_account">创建帐号</string>
-    <string name="register_email_error">输入电邮地址</string>
+    <string name="register_email_error">输入有效的电子邮件地址</string>
     <string name="register_failed">注册失败</string>
     <string name="register_first_name_hint">姓名</string>
     <string name="register_input_first_is_empty">姓名不能为空</string>
@@ -548,4 +548,11 @@
     <string name="settings_notifications_inactive_button_tv">关闭通知</string>
     <string name="edit_goal_name">编辑名称</string>
     <string name="edit_goal_time_text">设置时长</string>
+    <string name="edit_user_email">请输入您的邮箱!</string>
+    <string name="profile_delete_dialog_prompt_user">您确定删除当前资料吗?</string>
+    <string name="profile_delete_dialog_title">删除帐号</string>
+    <string name="profile_delete_tv">删除帐号</string>
+    <string name="profile_fragment_email_text">邮箱</string>
+    <string name="profile_input_user_email_dialog_title">邮箱</string>
+    <string name="profile_logout_tv">注销登录</string>
 </resources>

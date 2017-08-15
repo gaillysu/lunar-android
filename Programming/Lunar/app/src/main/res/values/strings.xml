@@ -339,6 +339,7 @@
     <string name="profile_fragment_user_height_text">Height</string>
     <string name="profile_fragment_user_weight_text">Weight</string>
     <string name="profile_input_user_first_name_dialog_title">Input FirstName</string>
+    <string name="profile_input_user_email_dialog_title">Input Email</string>
     <string name="profile_input_user_surname_dialog_title">Input Surname</string>
     <string name="profile_fragment_edit_first_name_edit_hint">Input Name</string>
     <string name="profile_fragment_input_user_surname_dialog_title">Input Surname</string>

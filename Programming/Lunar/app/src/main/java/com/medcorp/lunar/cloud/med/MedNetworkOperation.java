@@ -22,6 +22,7 @@ import com.medcorp.lunar.network.model.request.ChangePasswordRequest;
 import com.medcorp.lunar.network.model.request.CheckEmailRequest;
 import com.medcorp.lunar.network.model.request.CreateFacebookAccountRequest;
 import com.medcorp.lunar.network.model.request.CreateStepsRequest;
+import com.medcorp.lunar.network.model.request.DeleteUserAccountRequest;
 import com.medcorp.lunar.network.model.request.FaceBookAccountLoginRequest;
 import com.medcorp.lunar.network.model.request.RegisterNewAccountRequest;
 import com.medcorp.lunar.network.model.request.RequestForgotPasswordTokenRequest;
@@ -37,6 +38,7 @@ import com.medcorp.lunar.network.model.response.CheckWeChatAccountResponse;
 import com.medcorp.lunar.network.model.response.CreateFacebookAccountResponse;
 import com.medcorp.lunar.network.model.response.CreateStepsResponse;
 import com.medcorp.lunar.network.model.response.CreateWeChatAccountResponse;
+import com.medcorp.lunar.network.model.response.DeleteUserAccountResponse;
 import com.medcorp.lunar.network.model.response.FacebookLoginResponse;
 import com.medcorp.lunar.network.model.response.ObtainMoreSleepResponse;
 import com.medcorp.lunar.network.model.response.ObtainMoreStepsResponse;
@@ -494,6 +496,29 @@ public class MedNetworkOperation {
 
                     @Override
                     public void onSuccess(CreateFacebookAccountResponse o) {
+                        if (listener != null) {
+                            listener.onSuccess(o);
+                        }
+                    }
+                }));
+    }
+
+    public void deleteCurrentAccount(DeleteUserAccountRequest request,
+                                   final RequestResponseListener<DeleteUserAccountResponse> listener) {
+        Observable<DeleteUserAccountResponse> response = httpManager.createApiService().deleteAccount(
+                HttpManager.createRequestBody(mContext.getString(R.string.network_token), request));
+
+        httpManager.toSubscribe(mContext, response, SubscriberExtends.getInstance().getSubscriber(
+                new RequestResponse<DeleteUserAccountResponse>() {
+                    @Override
+                    public void onFailure(Throwable e) {
+                        if (listener != null) {
+                            listener.onFailed();
+                        }
+                    }
+
+                    @Override
+                    public void onSuccess(DeleteUserAccountResponse o) {
                         if (listener != null) {
                             listener.onSuccess(o);
                         }

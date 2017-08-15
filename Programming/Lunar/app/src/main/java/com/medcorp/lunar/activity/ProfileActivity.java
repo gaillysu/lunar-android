@@ -19,6 +19,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,12 +33,14 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.lunar.R;
-import com.medcorp.lunar.activity.login.LoginActivity;
+import com.medcorp.lunar.activity.tutorial.WelcomeActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.cloud.med.MedNetworkOperation;
 import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.network.listener.RequestResponseListener;
+import com.medcorp.lunar.network.model.request.DeleteUserAccountRequest;
 import com.medcorp.lunar.network.model.request.UpdateAccountInformationRequest;
+import com.medcorp.lunar.network.model.response.DeleteUserAccountResponse;
 import com.medcorp.lunar.network.model.response.UpdateAccountInformationResponse;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.PublicUtils;
@@ -69,10 +72,6 @@ public class ProfileActivity extends BaseActivity {
     Toolbar toolbar;
     @Bind(R.id.profile_activity_select_picture)
     ImageView mImageButton;
-    @Bind(R.id.profile_activity_edit_first_name)
-    LinearLayout editFirstNameL;
-    @Bind(R.id.profile_activity_edit_last_name)
-    LinearLayout editLastName;
     @Bind(R.id.edit_user_birthday_pop)
     LinearLayout editUserBirthday;
     @Bind(R.id.edit_user_height_pop)
@@ -97,6 +96,12 @@ public class ProfileActivity extends BaseActivity {
     RadioButton male;
     @Bind(R.id.profile_logout_bt)
     AppCompatButton logoutButton;
+    @Bind(R.id.profile_login_bt)
+    AppCompatButton loginButton;
+    @Bind(R.id.profile_delete_bt)
+    AppCompatButton deleteProfile;
+    @Bind(R.id.profile_fragment_user_user_email_tv)
+    TextView userEmailTv;
 
     private User lunarUser;
     private int viewType;
@@ -126,7 +131,7 @@ public class ProfileActivity extends BaseActivity {
                 } else {
                     userEmail = getString(R.string.watch_med_profile);
                 }
-                Bitmap bt = BitmapFactory.decodeFile(Preferences.getUserHeardPicturePath(ProfileActivity.this, userEmail));//从Sd中找头像，转换成Bitmap
+                Bitmap bt = BitmapFactory.decodeFile(Preferences.getUserHeardPicturePath(ProfileActivity.this, userEmail));
                 if (bt != null) {
                     mImageButton.setImageBitmap(PublicUtils.drawCircleView(bt));
                 } else {
@@ -138,7 +143,10 @@ public class ProfileActivity extends BaseActivity {
 
 
     private void initView() {
-
+        progressDialog = new ProgressDialog(this, AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(false);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage(getString(R.string.network_wait_text));
         firstName.setText(TextUtils.isEmpty(lunarUser.getFirstName()) ? getString(R.string.edit_user_first_name) : lunarUser.getFirstName());
         lastName.setText(TextUtils.isEmpty(lunarUser.getLastName()) ? getString(R.string.edit_user_last_name) : lunarUser.getLastName());
         //please strictly refer to our UI design Docs, the date format is dd,MMM,yyyy
@@ -146,30 +154,20 @@ public class ProfileActivity extends BaseActivity {
         userBirthday.setText(simpleDateFormat.format(new Date(lunarUser.getBirthday())));
         userHeight.setText(lunarUser.getHeight() + " cm");
         userWeight.setText(lunarUser.getWeight() + " kg");
-        if(lunarUser.isLogin()){
+        if (lunarUser.isLogin()) {
+            loginButton.setVisibility(View.GONE);
+            deleteProfile.setVisibility(View.VISIBLE);
             logoutButton.setVisibility(View.VISIBLE);
-        }else{
+        } else {
+            deleteProfile.setVisibility(View.GONE);
             logoutButton.setVisibility(View.GONE);
+            loginButton.setVisibility(View.VISIBLE);
         }
         if (lunarUser.getSex() == 1) {
             male.setChecked(true);
         } else {
             female.setChecked(true);
         }
-
-        editLastName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editUserName(lastName);
-            }
-        });
-
-        editFirstNameL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editUserName(firstName);
-            }
-        });
 
         editUserBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,6 +238,43 @@ public class ProfileActivity extends BaseActivity {
 
     }
 
+    @OnClick(R.id.profile_activity_edit_first_name)
+    public void editFirstName() {
+        editUserName(firstName);
+    }
+
+    @OnClick(R.id.profile_activity_edit_last_name)
+    public void editLastName() {
+        editUserName(lastName);
+    }
+
+    @OnClick(R.id.profile_login_bt)
+    public void loginButtonClick() {
+        startActivity(WelcomeActivity.class);
+    }
+
+    @OnClick(R.id.profile_fragment_user_user_email_tv)
+    public void writeEmail() {
+        String email = lunarUser.getUserEmail();
+        new MaterialDialog.Builder(this).title(getString(R.string.edit_profile))
+                .content(R.string.profile_input_user_email_dialog_title)
+                .inputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
+                .input(getResources().getString(R.string.profile_input_user_email_dialog_title),
+                        email, new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                                if (input.toString().length() > 0) {
+                                    if (Patterns.EMAIL_ADDRESS.matcher(input.toString()).matches()) {
+                                        userEmailTv.setText(input.toString());
+                                        lunarUser.setUserEmail(input.toString());
+                                    } else {
+                                        ToastHelper.showShortToast(ProfileActivity.this, getString(R.string.register_email_error));
+                                    }
+                                }
+                            }
+                        })
+                .negativeText(R.string.notification_cancel).positiveText(getString(R.string.notification_ok)).show();
+    }
 
     private void editUserWeight(final TextView userWeight) {
         viewType = 3;
@@ -318,10 +353,6 @@ public class ProfileActivity extends BaseActivity {
                 overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
                 break;
             case R.id.done_menu:
-                progressDialog = new ProgressDialog(this, AppTheme_Dark_Dialog);
-                progressDialog.setIndeterminate(false);
-                progressDialog.setCancelable(false);
-                progressDialog.setMessage(getString(R.string.network_wait_text));
                 progressDialog.show();
                 String format = new SimpleDateFormat("yyyy-MM-dd").format(lunarUser.getBirthday());
                 UpdateAccountInformationRequest request = new UpdateAccountInformationRequest(
@@ -454,10 +485,8 @@ public class ProfileActivity extends BaseActivity {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        Intent newIntent = new Intent(ProfileActivity.this, LoginActivity.class);
                         lunarUser.setIsLogin(false);
                         getModel().saveUser(lunarUser);
-                        startActivity(newIntent);
                         ProfileActivity.this.finish();
                     }
                 })
@@ -467,7 +496,7 @@ public class ProfileActivity extends BaseActivity {
     }
 
     @OnClick(R.id.profile_delete_bt)
-    public void deleteProfiel(){
+    public void deleteProfile() {
         new MaterialDialog.Builder(this)
                 .title(getString(R.string.profile_delete_dialog_title))
                 .content(getString(R.string.profile_delete_dialog_prompt_user))
@@ -476,17 +505,45 @@ public class ProfileActivity extends BaseActivity {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        getModel().getUserDatabaseHelper().remove(lunarUser.getUserID(),new Date(lunarUser.getCreatedDate()));
-                        Intent newIntent = new Intent(ProfileActivity.this, LoginActivity.class);
-                        lunarUser.setIsLogin(false);
-                        getModel().saveUser(lunarUser);
-                        startActivity(newIntent);
-                        ProfileActivity.this.finish();
+                        deleteCurrentAccount();
                     }
                 })
                 .negativeColor(getResources().getColor(R.color.colorPrimary))
                 .positiveColor(getResources().getColor(R.color.colorPrimary))
                 .show();
+    }
+
+    private void deleteCurrentAccount() {
+        progressDialog.show();
+        DeleteUserAccountRequest request = new DeleteUserAccountRequest(new Integer(lunarUser.getUserID()).intValue());
+        MedNetworkOperation.getInstance(this).deleteCurrentAccount(request,
+                new RequestResponseListener<DeleteUserAccountResponse>() {
+                    @Override
+                    public void onFailed() {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialog.dismiss();
+                                ToastHelper.showShortToast(ProfileActivity.this,
+                                        getString(R.string.save_update_user_info_failed));
+                                String userHeardPicturePath = Preferences.getUserHeardPicturePath(ProfileActivity.this, userEmail);
+                                new File(userHeardPicturePath).delete();
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onSuccess(DeleteUserAccountResponse response) {
+                        progressDialog.dismiss();
+                        if (response.getStatus() >= 0) {
+                            getModel().getUserDatabaseHelper().remove(lunarUser.getUserID(), new Date(lunarUser.getCreatedDate()));
+                            lunarUser.setIsLogin(false);
+                            getModel().saveUser(lunarUser);
+                            ProfileActivity.this.finish();
+                        }
+                    }
+                });
     }
 
     @Override
