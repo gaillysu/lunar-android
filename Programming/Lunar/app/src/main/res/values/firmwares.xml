@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="lunar_firmware" translatable="false">lunar_20170419_v17.zip</string>
-    <integer name="launar_version" translatable="false">17</integer>
+    <string name="lunar_firmware" translatable="false">lunar_20170815_v18.zip</string>
+    <integer name="launar_version" translatable="false">18</integer>
 
 </resources>
