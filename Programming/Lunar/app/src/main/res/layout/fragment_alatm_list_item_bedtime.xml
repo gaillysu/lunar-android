@@ -101,7 +101,6 @@
                 android:id="@+id/fragment_alarm_list_view_item_bedtime_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="sdafds"
                 android:textColor="@color/black"
                 android:textSize="13sp"
                 roboto:bold="true"/>
@@ -113,7 +112,6 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="40dp"
                 android:layout_toRightOf="@+id/fragment_alarm_list_view_item_bedtime_label"
-                android:text="adsad"
                 android:textColor="@color/alarm_repeat_text_color"
                 android:textSize="13sp"/>
 
@@ -138,11 +136,9 @@
             app:ael_expanded="false">
 
             <LinearLayout
-                android:id="@+id/alarm_adapter_item_weekday_ll"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:orientation="horizontal">
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -311,6 +307,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="54dp"
                     android:background="@null"
+                    android:maxLines="1"
                     android:textColor="@color/text_color"
                     android:textSize="13sp"/>
             </RelativeLayout>

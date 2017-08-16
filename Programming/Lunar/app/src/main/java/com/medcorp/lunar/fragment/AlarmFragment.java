@@ -320,7 +320,7 @@ public class AlarmFragment extends BaseObservableFragment
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                         final Alarm normalAlarm = new Alarm(mTimePicker.getHours(), mTimePicker.getMinutes(),
-                                (byte) (0x80 | which) , alarmName, (byte) (alarmList.size() + 7));
+                                (byte) (0x80 | which), alarmName, (byte) (alarmList.size() + 7));
                         if (normalAlarm.getAlarmNumber() < 13) {
                             getModel().getAlarmDatabaseHelper().add(normalAlarm).subscribe(new Consumer<Boolean>() {
                                 @Override
@@ -811,11 +811,12 @@ public class AlarmFragment extends BaseObservableFragment
     }
 
     @Override
-    public void onBedtimeConfigChangeListener(byte[] weekday, final int newBedtimeSleepGoal, final String name, final int position) {
+    public void onBedtimeConfigChangeListener(byte[] weekday,final String name, int hour, int minute, final int position) {
         final BedtimeModel bedtimeModel = allBedtimeModels.get(position);
         bedtimeModel.setName(name);
         bedtimeModel.setWeekday(weekday);
-        bedtimeModel.setSleepGoal(newBedtimeSleepGoal);
+        bedtimeModel.setSleepHour(hour);
+        bedtimeModel.setSleepMinute(minute);
         getModel().getBedTimeDatabaseHelper().update(bedtimeModel).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {

@@ -59,22 +59,15 @@ public class PublicUtils {
         hourOfDay -= hour;
         minuteOfHour -= minute;
         if (minuteOfHour < 0) {
-            if (hourOfDay <= 0) {
+            minuteOfHour += 60;
+            if (hourOfDay < 0) {
                 hourOfDay = 24 + hourOfDay;
                 weekday -= 1;
-                minuteOfHour += 60;
-            } else {
-                hourOfDay -= 1;
-                minuteOfHour += 60;
             }
         } else {
-            if (hourOfDay <= 0) {
+            if (hourOfDay < 0) {
                 hourOfDay = 24 + hourOfDay;
                 weekday -= 1;
-                minuteOfHour += 60;
-            } else {
-                hourOfDay -= 1;
-                minuteOfHour += 60;
             }
         }
 

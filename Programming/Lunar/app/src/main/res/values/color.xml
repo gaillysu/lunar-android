@@ -95,7 +95,7 @@
     <color name="user_info_sex_bg">#7ED8D1</color>
     <color name="left_menu_item_text_color">#aaaaaa</color>
     <color name="edit_alarm_item_text_color">#000000</color>
-    <color name="bedtime_item_background_color">#000000</color>
+    <color name="bedtime_item_background_color">#312E30</color>
     <color name="pie_chart_child_color">#7ED8D1</color>
     <color name="analysis_sleep_wake_line_color">#848484</color>
     <color name="analysis_sleep_light_line_color">#ac86cb</color>

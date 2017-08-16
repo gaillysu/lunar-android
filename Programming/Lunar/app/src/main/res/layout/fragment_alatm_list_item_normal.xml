@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.cm/tools"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/window_background_color"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/alarm_adapter_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="54dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/append_new_alarm_normal"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"/>
+
+    <LinearLayout
+        android:id="@+id/normal_item_root_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="bottom"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/setting_notfications"
+                    android:tint="@color/bedtime_icon_tint_color"/>
+
+                <com.medcorp.lunar.view.customfontview.RobotoTextView
+                    android:id="@+id/fragment_alarm_list_view_wake_up_time_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:text="jhggjh"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/black"
+                    android:textSize="39sp"
+                    roboto:thin="true"/>
+            </LinearLayout>
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/fragment_alarm_list_view_item_normal_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:focusable="false"
+                android:shadowColor="@color/colorPrimary"
+                android:theme="@style/my_switch_color"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/normal_item_show_alarm_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <com.medcorp.lunar.view.customfontview.RobotoTextView
+                android:id="@+id/fragment_alarm_list_view_item_normal_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                roboto:bold="true"/>
+
+            <com.medcorp.lunar.view.customfontview.RobotoTextView
+                android:id="@+id/fragment_alarm_list_view_item_normal_repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="40dp"
+                android:layout_toRightOf="@+id/fragment_alarm_list_view_item_bedtime_label"
+                android:textColor="@color/alarm_repeat_text_color"
+                android:textSize="13sp"/>
+
+            <ImageButton
+                android:id="@+id/normal_open_expandable_ib"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="18dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_open_expandable_icon"/>
+        </RelativeLayout>
+
+        <com.github.aakira.expandablelayout.ExpandableLinearLayout
+            android:id="@+id/normal_item_expandable_edit_layout"
+            android:layout_width="match_parent"
+            android:layout_height="108dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            app:ael_duration="400"
+            app:ael_expanded="false">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/edit_normal_alarm_label_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_edit_bedtime_alarm_label"
+                    android:tint="@color/colorAccent"/>
+
+                <EditText
+                    android:id="@+id/edit_normal_alarm_label_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="54dp"
+                    android:background="@null"
+                    android:maxLines="1"
+                    android:textColor="@color/text_color"
+                    android:textSize="13sp"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/bedtime_icon_tint_color"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/edit_normal_delete_alarm_ll"
+                    android:layout_width="match_parent"
+                    android:layout_marginRight="40dp"
+                    android:layout_height="48dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_delete_alarm"
+                        android:tint="@color/colorAccent"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="54dp"
+                        android:text="@string/edit_notification_delete_item"
+                        android:textColor="@color/text_color"
+                        android:textSize="13sp"/>
+                </RelativeLayout>
+
+                <ImageButton
+                    android:id="@+id/close_edit_expandable_ib"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_alignRight="@+id/edit_bedtime_delete_alarm_ll"
+                    android:layout_marginRight="18dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_close_expandable_icon"/>
+            </RelativeLayout>
+        </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+        <View
+            android:id="@+id/fragment_alarm_list_view_item_bottom_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bedtime_icon_tint_color"/>
+    </LinearLayout>
+</LinearLayout>
