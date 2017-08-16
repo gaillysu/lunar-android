@@ -406,6 +406,7 @@ public class GoalsSettingActivity extends BaseActivity {
                                     public void accept(Boolean aBoolean) throws Exception {
                                         if (aBoolean) {
                                             mStepsGoalList.add(stepsGoal);
+                                            getModel().setStepsGoal(stepsGoal);
                                             presetArrayAdapter.notifyDataSetChanged();
                                         } else {
                                             ToastHelper.showShortToast(GoalsSettingActivity.this, getString(R.string.save_filed));
