@@ -536,8 +536,10 @@ public class AlarmFragment extends BaseObservableFragment
         mSelectHours = res.getString(R.string.select_hours);
         mMinutePickerDescription = res.getString(R.string.minute_picker_description);
         mSelectMinutes = res.getString(R.string.select_minutes);
-        mTimePicker.initialize(AlarmFragment.this.getContext(), new HapticFeedbackController(AlarmFragment.this.getContext()), calendar.get(Calendar.HOUR_OF_DAY)
-                , calendar.get(Calendar.MINUTE), true, mMinHour, mMaxHour, mMinMinute, mMaxMinute);
+        mTimePicker.initialize(AlarmFragment.this.getContext(),
+                new HapticFeedbackController(AlarmFragment.this.getContext()),
+                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),
+                true, mMinHour, mMaxHour, mMinMinute, mMaxMinute);
         mTimePicker.setCurrentItemShowing(calendar.HOUR_OF_DAY, true);
         int currentItemShowing = HOUR_INDEX;
         if (savedInstanceState != null &&
@@ -600,7 +602,8 @@ public class AlarmFragment extends BaseObservableFragment
         Utils.tryAccessibilityAnnounce(mTimePicker, text);
     }
 
-    private void setCurrentItemShowing(int index, boolean animateCircle, boolean delayLabelAnimate, boolean announce) {
+    private void setCurrentItemShowing(int index, boolean animateCircle, boolean delayLabelAnimate,
+                                       boolean announce) {
         mTimePicker.setCurrentItemShowing(index, animateCircle);
         if (index == HOUR_INDEX) {
             int hours = mTimePicker.getHours();

@@ -25,9 +25,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="20dp"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:paddingRight="16dp"
+        android:paddingTop="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -105,14 +105,13 @@
                 android:src="@drawable/ic_open_expandable_icon"/>
         </RelativeLayout>
 
-        <com.github.aakira.expandablelayout.ExpandableLinearLayout
+        <LinearLayout
             android:id="@+id/normal_item_expandable_edit_layout"
             android:layout_width="match_parent"
-            android:layout_height="108dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            app:ael_duration="400"
-            app:ael_expanded="false">
+            android:orientation="vertical">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
@@ -152,8 +151,8 @@
                 <RelativeLayout
                     android:id="@+id/edit_normal_delete_alarm_ll"
                     android:layout_width="match_parent"
-                    android:layout_marginRight="40dp"
-                    android:layout_height="48dp">
+                    android:layout_height="48dp"
+                    android:layout_marginRight="40dp">
 
                     <ImageView
                         android:layout_width="20dp"
@@ -177,13 +176,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_alignRight="@+id/edit_bedtime_delete_alarm_ll"
+                    android:layout_centerVertical="true"
                     android:layout_marginRight="18dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_close_expandable_icon"/>
             </RelativeLayout>
-        </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+        </LinearLayout>
         <View
             android:id="@+id/fragment_alarm_list_view_item_bottom_line"
             android:layout_width="match_parent"

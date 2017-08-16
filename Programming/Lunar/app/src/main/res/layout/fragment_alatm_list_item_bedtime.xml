@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -43,6 +43,7 @@
                     android:id="@+id/bedtime_item_sleep_icon"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
+                    android:layout_alignBottom="@+id/fragment_alarm_list_view_sleep_time_item"
                     android:layout_gravity="bottom"
                     android:src="@drawable/moon_icon"
                     android:tint="@color/bedtime_icon_tint_color"/>
@@ -52,8 +53,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
+                    android:layout_toRightOf="@+id/bedtime_item_sleep_icon"
                     android:gravity="bottom"
-                    android:text="jhggjh"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@color/black"
                     android:textSize="39sp"
@@ -63,8 +64,10 @@
                     android:id="@+id/bedtime_item_wake_up_icon"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    android:layout_alignBottom="@+id/fragment_alarm_list_view_sleep_time_item"
                     android:layout_gravity="bottom"
                     android:layout_marginLeft="30dp"
+                    android:layout_toRightOf="@+id/fragment_alarm_list_view_sleep_time_item"
                     android:scaleType="fitXY"
                     android:src="@drawable/setting_notfications"
                     android:tint="@color/bedtime_icon_tint_color"/>
@@ -73,13 +76,13 @@
                     android:id="@+id/fragment_alarm_list_view_wake_up_time_item"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/bedtime_item_wake_up_icon"
                     android:gravity="bottom"
-                    android:text="jhggjh"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@color/black"
                     android:textSize="39sp"
                     roboto:thin="true"/>
-            </LinearLayout>
+            </RelativeLayout>
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/fragment_alarm_list_view_item_bedtime_switch"
@@ -126,14 +129,12 @@
                 android:src="@drawable/ic_open_expandable_icon"/>
         </RelativeLayout>
 
-        <com.github.aakira.expandablelayout.ExpandableLinearLayout
+        <LinearLayout
             android:id="@+id/bedtime_item_expandable_edit_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            app:ael_duration="400"
-            app:ael_expanded="false">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -325,8 +326,8 @@
                 <RelativeLayout
                     android:id="@+id/edit_bedtime_delete_alarm_ll"
                     android:layout_width="match_parent"
-                    android:layout_marginRight="40dp"
-                    android:layout_height="48dp">
+                    android:layout_height="48dp"
+                    android:layout_marginRight="40dp">
 
                     <ImageView
                         android:layout_width="20dp"
@@ -350,13 +351,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_alignRight="@+id/edit_bedtime_delete_alarm_ll"
+                    android:layout_centerVertical="true"
                     android:layout_marginRight="18dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_close_expandable_icon"/>
             </RelativeLayout>
-        </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+        </LinearLayout>
+
         <View
             android:id="@+id/fragment_alarm_list_view_item_bottom_line"
             android:layout_width="match_parent"

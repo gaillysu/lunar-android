@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.text.InputType;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +23,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.github.aakira.expandablelayout.ExpandableLayout;
-import com.github.aakira.expandablelayout.ExpandableLayoutListenerAdapter;
-import com.github.aakira.expandablelayout.ExpandableLinearLayout;
-import com.github.aakira.expandablelayout.Utils;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.application.ApplicationModel;
 import com.medcorp.lunar.model.Alarm;
@@ -55,7 +50,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
     private OnNormalAlarmSwitchListener normalAlarmSwitchListener;
     private Context context;
     private List<BedtimeModel> bedtimeList;
-    private SparseBooleanArray expandState = new SparseBooleanArray();
     private ApplicationModel model;
     private List<Alarm> normalAlarmList;
     private ListView mAllSleepGoalList;
@@ -76,9 +70,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
         this.normalAlarmList = allNormalAlarm;
         this.bedtimeList = bedtimeAllList;
         mAllSleepGoal = new ArrayList<>();
-        for (int i = 0; i < normalAlarmList.size() + bedtimeAllList.size(); i++) {
-            expandState.append(i, true);
-        }
     }
 
 
@@ -96,13 +87,12 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof BedtimeViewHolder) {
+        if (position < bedtimeList.size()) {
             ((BedtimeViewHolder) holder).initView(position);
             ((BedtimeViewHolder) holder).setBedtimeData(position);
             ((BedtimeViewHolder) holder).setDataForItem(position);
 
-        }
-        if (holder instanceof NormalAlarmViewHolder) {
+        } else {
             ((NormalAlarmViewHolder) holder).initView(position - bedtimeList.size());
             ((NormalAlarmViewHolder) holder).setNormalAlarmData(position - bedtimeList.size());
         }
@@ -142,7 +132,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
         @Bind(R.id.edit_normal_delete_alarm_ll)
         RelativeLayout deleteBedtime;
         @Bind(R.id.normal_item_expandable_edit_layout)
-        ExpandableLinearLayout expandable;
+        LinearLayout expandable;
         @Bind(R.id.normal_open_expandable_ib)
         ImageButton openExpandableIb;
         @Bind(R.id.close_edit_expandable_ib)
@@ -158,23 +148,27 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
 
         public NormalAlarmViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(itemView);
+            ButterKnife.bind(this, itemView);
         }
 
         private void initView(final int position) {
             openExpandableIb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickButton(expandable);
+                    showInfoRl.setVisibility(View.GONE);
+                    bottomLine.setVisibility(View.GONE);
+                    rootView.setBackgroundColor(context.getResources().getColor(R.color.bedtime_item_background_color));
                 }
             });
             closeExpandableIb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickButton(expandable);
-                    saveNormalAlarmChangeConfig(alarmSwitch.isChecked(), alarmNameTv.getText().toString() != null
-                            ? alarmNameTv.getText().toString()
-                            : normalAlarmList.get(position - bedtimeList.size()).getLabel(), position - bedtimeList.size());
+                    rootView.setBackgroundColor(context.getResources().getColor(R.color.window_background_color));
+                    showInfoRl.setVisibility(View.VISIBLE);
+                    bottomLine.setVisibility(View.VISIBLE);
+                    saveNormalAlarmChangeConfig(alarmSwitch.isChecked(),
+                            alarmNameTv.getText().toString() != null ? alarmNameTv.getText().toString()
+                                    : normalAlarmList.get(position).getLabel(), position);
                 }
             });
         }
@@ -218,9 +212,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
         onAlarmListener.onConfigChangeListener(isChecked, name, position);
     }
 
-    private void onClickButton(final ExpandableLayout expandableLayout) {
-        expandableLayout.toggle();
-    }
 
     class BedtimeViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.fragment_alarm_list_view_sleep_time_item)
@@ -254,7 +245,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
         @Bind(R.id.edit_bedtime_delete_alarm_ll)
         RelativeLayout deleteBedtime;
         @Bind(R.id.bedtime_item_expandable_edit_layout)
-        ExpandableLinearLayout expandable;
+        LinearLayout expandable;
         @Bind(R.id.bedtime_open_expandable_ib)
         ImageButton openExpandableIb;
         @Bind(R.id.close_edit_expandable_ib)
@@ -349,10 +340,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
         }
 
         public void setDataForItem(int position) {
-            setIsRecyclable(false);
-            expandable.setInRecyclerView(true);
-            expandable.setExpanded(expandState.get(position));
-            expandable.setInterpolator(Utils.createInterpolator(Utils.LINEAR_OUT_SLOW_IN_INTERPOLATOR));
             //init title
             if (bedtimeList.size() > 0 && position == 0) {
                 titleTv.setVisibility(View.VISIBLE);
@@ -386,35 +373,21 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
                     }
                 });
             }
-
-
-            expandable.setListener(new ExpandableLayoutListenerAdapter() {
-                @Override
-                public void onPreOpen() {
-                    showInfoRl.setVisibility(View.GONE);
-                    bottomLine.setVisibility(View.GONE);
-                    rootView.setBackgroundColor(context.getResources().getColor(R.color.bedtime_item_background_color));
-                    expandState.put(position, true);
-                }
-
-                @Override
-                public void onPreClose() {
-                    rootView.setBackgroundColor(context.getResources().getColor(R.color.window_background_color));
-                    showInfoRl.setVisibility(View.VISIBLE);
-                    bottomLine.setVisibility(View.VISIBLE);
-                    expandState.put(position, false);
-                }
-            });
             openExpandableIb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickButton(expandable);
+
+                    showInfoRl.setVisibility(View.GONE);
+                    bottomLine.setVisibility(View.GONE);
+                    rootView.setBackgroundColor(context.getResources().getColor(R.color.bedtime_item_background_color));
                 }
             });
             closeExpandableIb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickButton(expandable);
+                    rootView.setBackgroundColor(context.getResources().getColor(R.color.window_background_color));
+                    showInfoRl.setVisibility(View.VISIBLE);
+                    bottomLine.setVisibility(View.VISIBLE);
                     saveBedtimeChangeConfig(position);
                 }
             });
