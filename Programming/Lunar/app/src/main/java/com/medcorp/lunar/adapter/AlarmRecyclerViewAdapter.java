@@ -1,5 +1,6 @@
 package com.medcorp.lunar.adapter;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -118,7 +120,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
     }
 
 
-    class NormalAlarmViewHolder extends RecyclerView.ViewHolder {
+    class NormalAlarmViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @Bind(R.id.fragment_alarm_list_view_wake_up_time_item)
         RobotoTextView wakeTimeTv;
         @Bind(R.id.fragment_alarm_list_view_item_normal_switch)
@@ -145,34 +147,42 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
         TextView titleTv;
         @Bind(R.id.fragment_alarm_list_view_item_bottom_line)
         View bottomLine;
+        int itemHeight = 0;
+        private int itemPosition = 0;
 
         public NormalAlarmViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            openExpandableIb.setOnClickListener(this);
+            closeExpandableIb.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == R.id.normal_open_expandable_ib) {
+                showInfoRl.setVisibility(View.GONE);
+                bottomLine.setVisibility(View.GONE);
+                rootView.setBackgroundColor(context.getResources().getColor(R.color.bedtime_item_background_color));
+                toggleConnect(true);
+            } else if (v.getId() == R.id.close_edit_expandable_ib) {
+                rootView.setBackgroundColor(context.getResources().getColor(R.color.window_background_color));
+                showInfoRl.setVisibility(View.VISIBLE);
+                bottomLine.setVisibility(View.VISIBLE);
+                saveNormalAlarmChangeConfig(alarmSwitch.isChecked(),
+                        alarmNameTv.getText().toString() != null ? alarmNameTv.getText().toString()
+                                : normalAlarmList.get(itemPosition).getLabel(), itemPosition);
+                toggleConnect(false);
+            }
         }
 
         private void initView(final int position) {
-            openExpandableIb.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showInfoRl.setVisibility(View.GONE);
-                    bottomLine.setVisibility(View.GONE);
-                    rootView.setBackgroundColor(context.getResources().getColor(R.color.bedtime_item_background_color));
-                }
-            });
-            closeExpandableIb.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    rootView.setBackgroundColor(context.getResources().getColor(R.color.window_background_color));
-                    showInfoRl.setVisibility(View.VISIBLE);
-                    bottomLine.setVisibility(View.VISIBLE);
-                    saveNormalAlarmChangeConfig(alarmSwitch.isChecked(),
-                            alarmNameTv.getText().toString() != null ? alarmNameTv.getText().toString()
-                                    : normalAlarmList.get(position).getLabel(), position);
-                }
-            });
+            itemPosition = position;
+            if (position == 0) {
+                titleTv.setVisibility(View.VISIBLE);
+            } else {
+                titleTv.setVisibility(View.GONE);
+            }
         }
-
 
         private void setNormalAlarmData(final int position) {
             final Alarm alarm = normalAlarmList.get(position);
@@ -186,6 +196,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
                 alarmSwitch.setChecked(true);
             }
             if (alarm != null) {
+                wakeTimeTv.setText(alarm.toString());
                 editBedtimeAlarmEd.setText(alarm.getLabel());
                 String[] weekDayArray = context.getResources().getStringArray(R.array.alarm_week_day);
                 repeatWeekDayTv.setText(weekDayArray[alarm.getWeekDay() & 0x0F]);
@@ -205,6 +216,31 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
                     }
                 });
             }
+        }
+
+        private void toggleConnect(boolean isExpandable) {
+            if (itemHeight == 0) {
+                itemHeight = rootView.getHeight();
+            }
+            ValueAnimator valueAnimation;
+            if (isExpandable) {
+                expandable.setVisibility(View.VISIBLE);
+                valueAnimation = ValueAnimator.ofInt(itemHeight, (int) (itemHeight * 1.6));
+            } else {
+                expandable.setVisibility(View.GONE);
+                valueAnimation = ValueAnimator.ofInt((int) (itemHeight * 1.6), itemHeight);
+            }
+            valueAnimation.setDuration(100);
+            valueAnimation.setInterpolator(new LinearInterpolator());
+            valueAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    Integer value = (Integer) animation.getAnimatedValue();
+                    rootView.getLayoutParams().height = value.intValue();
+                    rootView.requestLayout();
+                }
+            });
+            valueAnimation.start();
         }
     }
 
@@ -260,6 +296,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
         View bottomLine;
         @Bind(R.id.edit_bedtime_alarm_goal_tv)
         TextView showBedtimeGoalTv;
+        int itemHeight = 0;
 
         public BedtimeViewHolder(View view) {
             super(view);
@@ -267,6 +304,11 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
         }
 
         private void initView(final int position) {
+            if (position == 0) {
+                titleTv.setVisibility(View.VISIBLE);
+            } else {
+                titleTv.setVisibility(View.GONE);
+            }
             if (position < bedtimeList.size()) {
                 final int id = bedtimeList.get(position).getId();
                 model.getBedTimeDatabaseHelper().getAll().subscribe(new Consumer<List<BedtimeModel>>() {
@@ -376,10 +418,10 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
             openExpandableIb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     showInfoRl.setVisibility(View.GONE);
                     bottomLine.setVisibility(View.GONE);
                     rootView.setBackgroundColor(context.getResources().getColor(R.color.bedtime_item_background_color));
+                    toggleConnect(true);
                 }
             });
             closeExpandableIb.setOnClickListener(new View.OnClickListener() {
@@ -389,6 +431,8 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
                     showInfoRl.setVisibility(View.VISIBLE);
                     bottomLine.setVisibility(View.VISIBLE);
                     saveBedtimeChangeConfig(position);
+                    toggleConnect(false);
+
                 }
             });
 
@@ -398,6 +442,31 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter {
                     showSleepGoalListDialog(showBedtimeGoalTv, position);
                 }
             });
+        }
+
+        private void toggleConnect(boolean isExpandable) {
+            if (itemHeight == 0) {
+                itemHeight = rootView.getHeight();
+            }
+            ValueAnimator valueAnimation;
+            if (isExpandable) {
+                expandable.setVisibility(View.VISIBLE);
+                valueAnimation = ValueAnimator.ofInt(itemHeight, itemHeight * 3);
+            } else {
+                expandable.setVisibility(View.GONE);
+                valueAnimation = ValueAnimator.ofInt(itemHeight * 3, itemHeight);
+            }
+            valueAnimation.setDuration(300);
+            valueAnimation.setInterpolator(new LinearInterpolator());
+            valueAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    Integer value = (Integer) animation.getAnimatedValue();
+                    rootView.getLayoutParams().height = value.intValue();
+                    rootView.requestLayout();
+                }
+            });
+            valueAnimation.start();
         }
 
         private void saveBedtimeChangeConfig(final int position) {
