@@ -5,17 +5,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/all_alarm_recycler_view"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/window_background_color"
         android:scrollbars="none">
-    </android.support.v7.widget.RecyclerView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.medcorp.lunar.view.ListViewForScrollView
+                android:id="@+id/all_bedtime_alarm_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/window_background_color"
+                android:divider="@null"
+                android:scrollbars="none"/>
+
+            <com.medcorp.lunar.view.ListViewForScrollView
+                android:id="@+id/all_normal_alarm_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/all_bedtime_alarm_list_view"
+                android:background="@color/window_background_color"
+                android:divider="@null"
+                android:scrollbars="none"/>
+        </RelativeLayout>
+    </ScrollView>
 
     <net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         app:fab_addButtonColorNormal="@color/colorAccent"
@@ -35,9 +55,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_colorNormal="@color/colorAccent"
-            app:fab_size="mini"
             app:fab_colorPressed="@color/colorAccent"
-            app:fab_icon="@drawable/moon_icon"/>
-
+            app:fab_icon="@drawable/moon_icon"
+            app:fab_size="mini"/>
     </net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu>
+
 </RelativeLayout>

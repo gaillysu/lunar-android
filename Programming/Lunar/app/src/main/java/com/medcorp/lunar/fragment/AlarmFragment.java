@@ -4,8 +4,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.text.InputType;
 import android.util.Log;
@@ -27,6 +25,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.adapter.AlarmRecyclerViewAdapter;
+import com.medcorp.lunar.adapter.NormalAlarmAdapter;
 import com.medcorp.lunar.adapter.ShowAllSleepGoalAdapter;
 import com.medcorp.lunar.event.bluetooth.RequestResponseEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
@@ -61,15 +60,16 @@ import static com.wdullaer.materialdatetimepicker.time.TimePickerDialog.MINUTE_I
 /***
  * Created by karl-john on 11/12/15.
  */
-public class AlarmFragment extends BaseObservableFragment
-        implements CompoundButton.OnCheckedChangeListener,
-        AlarmRecyclerViewAdapter.OnBedtimeDeleteListener, AlarmRecyclerViewAdapter.OnNormalAlarmSwitchListener,
-        AlarmRecyclerViewAdapter.OnDeleteNormalAlarmListener, AlarmRecyclerViewAdapter.OnBedtimeSwitchListener,
-        AlarmRecyclerViewAdapter.OnAlarmConfigChangeListener, AlarmRecyclerViewAdapter.OnBedtimeConfigChangeListener,
-        RadialPickerLayout.OnValueSelectedListener {
+public class AlarmFragment extends BaseObservableFragment implements CompoundButton.OnCheckedChangeListener,
+        AlarmRecyclerViewAdapter.OnBedtimeDeleteListener, AlarmRecyclerViewAdapter.OnBedtimeSwitchListener,
+         AlarmRecyclerViewAdapter.OnBedtimeConfigChangeListener, RadialPickerLayout.OnValueSelectedListener,
+        NormalAlarmAdapter.OnDeleteNormalAlarmListener, NormalAlarmAdapter.OnNormalAlarmSwitchListener,
+        NormalAlarmAdapter.OnAlarmConfigChangeListener {
 
-    @Bind(R.id.all_alarm_recycler_view)
-    RecyclerView allAlarm;
+    @Bind(R.id.all_bedtime_alarm_list_view)
+    ListView bedtimeList;
+    @Bind(R.id.all_normal_alarm_list_view)
+    ListView normalList;
 
     private List<Alarm> alarmList;
     private AlarmRecyclerViewAdapter mAlarmRecyclerViewAdapter;
@@ -98,6 +98,7 @@ public class AlarmFragment extends BaseObservableFragment
     private int newBedtimeSleepGoal = 0;
     private int selectHour = 0;
     private int selectMinutes = 0;
+    private NormalAlarmAdapter normalAdaapter;
 
     private TextView mShowGoalText;
     private List<Integer> manyWeekday = new ArrayList<>();
@@ -118,15 +119,17 @@ public class AlarmFragment extends BaseObservableFragment
     }
 
     private void initView() {
-        allAlarm.setLayoutManager(new LinearLayoutManager(AlarmFragment.this.getContext()));
-        mAlarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter(getModel(), AlarmFragment.this.getContext(), alarmList, allBedtimeModels);
+        mAlarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter(AlarmFragment.this.getContext(),getModel(),allBedtimeModels);
         mAlarmRecyclerViewAdapter.setBedtimeDeleteListener(AlarmFragment.this);
         mAlarmRecyclerViewAdapter.setBedtimeSwitchListener(AlarmFragment.this);
-        mAlarmRecyclerViewAdapter.setDeleteNormalAlarmListener(AlarmFragment.this);
-        mAlarmRecyclerViewAdapter.setNormalAlarmSwitchListener(AlarmFragment.this);
-        mAlarmRecyclerViewAdapter.setOnAlarmConfigChangeListener(this);
         mAlarmRecyclerViewAdapter.setOnBedtimeConfigChangeListener(this);
-        allAlarm.setAdapter(mAlarmRecyclerViewAdapter);
+        bedtimeList.setAdapter(mAlarmRecyclerViewAdapter);
+
+        normalAdaapter = new NormalAlarmAdapter(AlarmFragment.this.getContext(),alarmList);
+        normalAdaapter.setDeleteNormalAlarmListener(AlarmFragment.this);
+        normalAdaapter.setNormalAlarmSwitchListener(AlarmFragment.this);
+        normalAdaapter.setOnAlarmConfigChangeListener(AlarmFragment.this);
+        normalList.setAdapter(normalAdaapter);
     }
 
     @Override
@@ -156,6 +159,7 @@ public class AlarmFragment extends BaseObservableFragment
                     public void accept(List<BedtimeModel> bedtimeModels) throws Exception {
                         allBedtimeModels.addAll(bedtimeModels);
                         mAlarmRecyclerViewAdapter.notifyDataSetChanged();
+                        normalAdaapter.notifyDataSetChanged();
                     }
                 });
             }
@@ -327,7 +331,7 @@ public class AlarmFragment extends BaseObservableFragment
                                 public void accept(Boolean aBoolean) throws Exception {
                                     if (aBoolean) {
                                         alarmList.add(normalAlarm);
-                                        mAlarmRecyclerViewAdapter.notifyDataSetChanged();
+                                        normalAdaapter.notifyDataSetChanged();
                                     }
                                 }
                             });
@@ -789,7 +793,7 @@ public class AlarmFragment extends BaseObservableFragment
                         }
                     });
                     alarmList.remove(position);
-                    mAlarmRecyclerViewAdapter.notifyDataSetChanged();
+                    normalAdaapter.notifyDataSetChanged();
                 }
             }
         });
@@ -806,7 +810,7 @@ public class AlarmFragment extends BaseObservableFragment
                 if (aBoolean) {
                     alarmList.remove(position);
                     alarmList.add(position, alarm);
-                    mAlarmRecyclerViewAdapter.notifyDataSetChanged();
+                    normalAdaapter.notifyDataSetChanged();
                     getModel().getSyncController().setAlarm(alarm);
                 }
             }
