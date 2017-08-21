@@ -5,33 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.medcorp.lunar.view.ListViewForScrollView
+            <ListView
                 android:id="@+id/all_bedtime_alarm_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/window_background_color"
                 android:divider="@null"
                 android:scrollbars="none"/>
-
-            <com.medcorp.lunar.view.ListViewForScrollView
-                android:id="@+id/all_normal_alarm_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/all_bedtime_alarm_list_view"
-                android:background="@color/window_background_color"
-                android:divider="@null"
-                android:scrollbars="none"/>
-        </RelativeLayout>
-    </ScrollView>
 
     <net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu
         android:layout_width="wrap_content"

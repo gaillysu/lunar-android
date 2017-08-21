@@ -25,7 +25,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.MainActivity;
 import com.medcorp.lunar.adapter.AlarmRecyclerViewAdapter;
-import com.medcorp.lunar.adapter.NormalAlarmAdapter;
 import com.medcorp.lunar.adapter.ShowAllSleepGoalAdapter;
 import com.medcorp.lunar.event.bluetooth.RequestResponseEvent;
 import com.medcorp.lunar.fragment.base.BaseObservableFragment;
@@ -63,13 +62,11 @@ import static com.wdullaer.materialdatetimepicker.time.TimePickerDialog.MINUTE_I
 public class AlarmFragment extends BaseObservableFragment implements CompoundButton.OnCheckedChangeListener,
         AlarmRecyclerViewAdapter.OnBedtimeDeleteListener, AlarmRecyclerViewAdapter.OnBedtimeSwitchListener,
          AlarmRecyclerViewAdapter.OnBedtimeConfigChangeListener, RadialPickerLayout.OnValueSelectedListener,
-        NormalAlarmAdapter.OnDeleteNormalAlarmListener, NormalAlarmAdapter.OnNormalAlarmSwitchListener,
-        NormalAlarmAdapter.OnAlarmConfigChangeListener {
+        AlarmRecyclerViewAdapter.OnAlarmConfigChangeListener, AlarmRecyclerViewAdapter.OnDeleteNormalAlarmListener
+        , AlarmRecyclerViewAdapter.OnNormalAlarmSwitchListener {
 
     @Bind(R.id.all_bedtime_alarm_list_view)
     ListView bedtimeList;
-    @Bind(R.id.all_normal_alarm_list_view)
-    ListView normalList;
 
     private List<Alarm> alarmList;
     private AlarmRecyclerViewAdapter mAlarmRecyclerViewAdapter;
@@ -98,7 +95,6 @@ public class AlarmFragment extends BaseObservableFragment implements CompoundBut
     private int newBedtimeSleepGoal = 0;
     private int selectHour = 0;
     private int selectMinutes = 0;
-    private NormalAlarmAdapter normalAdaapter;
 
     private TextView mShowGoalText;
     private List<Integer> manyWeekday = new ArrayList<>();
@@ -119,17 +115,15 @@ public class AlarmFragment extends BaseObservableFragment implements CompoundBut
     }
 
     private void initView() {
-        mAlarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter(AlarmFragment.this.getContext(),getModel(),allBedtimeModels);
+        mAlarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter(bedtimeList,AlarmFragment.this.getContext(),getModel(),allBedtimeModels,alarmList);
         mAlarmRecyclerViewAdapter.setBedtimeDeleteListener(AlarmFragment.this);
         mAlarmRecyclerViewAdapter.setBedtimeSwitchListener(AlarmFragment.this);
         mAlarmRecyclerViewAdapter.setOnBedtimeConfigChangeListener(this);
+        mAlarmRecyclerViewAdapter.setDeleteNormalAlarmListener(AlarmFragment.this);
+        mAlarmRecyclerViewAdapter.setNormalAlarmSwitchListener(AlarmFragment.this);
+        mAlarmRecyclerViewAdapter.setOnAlarmConfigChangeListener(AlarmFragment.this);
         bedtimeList.setAdapter(mAlarmRecyclerViewAdapter);
 
-        normalAdaapter = new NormalAlarmAdapter(AlarmFragment.this.getContext(),alarmList);
-        normalAdaapter.setDeleteNormalAlarmListener(AlarmFragment.this);
-        normalAdaapter.setNormalAlarmSwitchListener(AlarmFragment.this);
-        normalAdaapter.setOnAlarmConfigChangeListener(AlarmFragment.this);
-        normalList.setAdapter(normalAdaapter);
     }
 
     @Override
@@ -154,12 +148,12 @@ public class AlarmFragment extends BaseObservableFragment implements CompoundBut
                         alarmList.add(alarm);
                     }
                 }
+                mAlarmRecyclerViewAdapter.notifyDataSetChanged();
                 getModel().getBedTimeDatabaseHelper().getAll().subscribe(new Consumer<List<BedtimeModel>>() {
                     @Override
                     public void accept(List<BedtimeModel> bedtimeModels) throws Exception {
                         allBedtimeModels.addAll(bedtimeModels);
                         mAlarmRecyclerViewAdapter.notifyDataSetChanged();
-                        normalAdaapter.notifyDataSetChanged();
                     }
                 });
             }
@@ -331,7 +325,7 @@ public class AlarmFragment extends BaseObservableFragment implements CompoundBut
                                 public void accept(Boolean aBoolean) throws Exception {
                                     if (aBoolean) {
                                         alarmList.add(normalAlarm);
-                                        normalAdaapter.notifyDataSetChanged();
+                                        mAlarmRecyclerViewAdapter.notifyDataSetChanged();
                                     }
                                 }
                             });
@@ -793,7 +787,7 @@ public class AlarmFragment extends BaseObservableFragment implements CompoundBut
                         }
                     });
                     alarmList.remove(position);
-                    normalAdaapter.notifyDataSetChanged();
+                    mAlarmRecyclerViewAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -810,7 +804,7 @@ public class AlarmFragment extends BaseObservableFragment implements CompoundBut
                 if (aBoolean) {
                     alarmList.remove(position);
                     alarmList.add(position, alarm);
-                    normalAdaapter.notifyDataSetChanged();
+                    mAlarmRecyclerViewAdapter.notifyDataSetChanged();
                     getModel().getSyncController().setAlarm(alarm);
                 }
             }

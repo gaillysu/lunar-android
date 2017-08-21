@@ -20,7 +20,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,13 +46,14 @@ import io.reactivex.functions.Consumer;
 /***
  * Created by karl-john on 17/12/15.
  */
-public class AlarmRecyclerViewAdapter extends BaseAdapter {
+public class AlarmBedtimeListViewAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<BedtimeModel> bedtimeList;
     private ListView mAllSleepGoalList;
     private List<SleepGoal> mAllSleepGoal;
     private int bedtimeItemHeight = 0;
+    private int normalItemHeight = 0;
     private ApplicationModel model;
     private OnBedtimeSwitchListener onAlarmSwitchedListener;
     private OnBedtimeDeleteListener listener;
@@ -65,24 +65,24 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
     private int selectHour = 0;
     private int selectMinutes = 0;
     private String sleepLableGoal;
+    private BedtimeItemHeightChangeListener onListChangeHeight;
     private List<Alarm> normalList;
-    private static final int ITEM_TYPE_BEDTIME = 0x03;
-    private static final int ITEM_TYPE_NORMAL = 0x04;
-    private int normalItemHeight = 0;
-    private ListView listView;
+    private static final int BEDTIME_VIEW_TYPE = 0X04;
+    private static final int NORMAL_VIEW_TYPE = 0X05;
 
-    public AlarmRecyclerViewAdapter(ListView listView, Context context, ApplicationModel model, List<BedtimeModel> bedtimeAllList, List<Alarm> alarmList) {
+
+    public AlarmBedtimeListViewAdapter(Context context, ApplicationModel model
+            , List<BedtimeModel> bedtimeAllList, List<Alarm> normalList) {
         mContext = context;
         this.model = model;
-        this.normalList = alarmList;
-        this.listView = listView;
         this.bedtimeList = bedtimeAllList;
         mAllSleepGoal = new ArrayList<>();
+        this.normalList = normalList;
     }
 
     @Override
     public int getCount() {
-        return bedtimeList.size()+normalList.size();
+        return bedtimeList.size() + normalList.size();
     }
 
     @Override
@@ -90,7 +90,8 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         if (position < bedtimeList.size()) {
             return bedtimeList.get(position) != null ? bedtimeList.get(position) : null;
         }
-        return normalList.get(position - bedtimeList.size()) != null ? normalList.get(position - bedtimeList.size()) : null;
+        position -= position - bedtimeList.size();
+        return normalList.get(position) != null ? normalList.get(position) : null;
     }
 
     @Override
@@ -101,14 +102,14 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
         if (position < bedtimeList.size()) {
-            return ITEM_TYPE_BEDTIME;
+            return BEDTIME_VIEW_TYPE;
         }
-        return ITEM_TYPE_NORMAL;
+        return NORMAL_VIEW_TYPE;
     }
 
     @Override
     public int getViewTypeCount() {
-        return 100;
+        return 2;
     }
 
     @Override
@@ -116,7 +117,7 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         BedtimeViewHolder bedtimeHolder = null;
         NormalAlarmViewHolder normalHolder = null;
         switch (getItemViewType(position)) {
-            case ITEM_TYPE_BEDTIME:
+            case BEDTIME_VIEW_TYPE:
                 if (convertView == null) {
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_alatm_list_item_bedtime, parent, false);
                     bedtimeHolder = new BedtimeViewHolder(convertView);
@@ -127,7 +128,7 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
                 initView(bedtimeHolder, position);
                 setBedtimeData(bedtimeHolder, position);
                 break;
-            case ITEM_TYPE_NORMAL:
+            case NORMAL_VIEW_TYPE:
                 if (convertView == null) {
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_alatm_list_item_normal, parent, false);
                     normalHolder = new NormalAlarmViewHolder(convertView);
@@ -141,6 +142,10 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         return convertView;
     }
 
+
+    /***
+     * set bedtime
+     * */
 
     class BedtimeViewHolder {
         @Bind(R.id.fragment_alarm_list_view_sleep_time_item)
@@ -203,76 +208,74 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         } else {
             holder.titleTv.setVisibility(View.GONE);
         }
-        if (position < bedtimeList.size()) {
-            final int id = bedtimeList.get(position).getId();
-            model.getBedTimeDatabaseHelper().getAll().subscribe(new Consumer<List<BedtimeModel>>() {
-                @Override
-                public void accept(List<BedtimeModel> alarms) throws Exception {
-                    for (BedtimeModel bedtimeModel : alarms) {
-                        if (bedtimeModel.getId() == id) {
-                            for (int i = 0; i < bedtimeModel.getWeekday().length; i++) {
-                                switch (bedtimeModel.getWeekday()[i]) {
-                                    case 0:
-                                        holder.sunday.setChecked(true);
-                                        break;
-                                    case 1:
-                                        holder.monday.setChecked(true);
-                                        break;
-                                    case 2:
-                                        holder.tuesday.setChecked(true);
-                                        break;
-                                    case 3:
-                                        holder.wednesday.setChecked(true);
-                                        break;
-                                    case 4:
-                                        holder.thursday.setChecked(true);
-                                        break;
-                                    case 5:
-                                        holder.friday.setChecked(true);
-                                        break;
-                                    case 6:
-                                        holder.saturday.setChecked(true);
-                                        break;
-                                }
+        final int id = bedtimeList.get(position).getId();
+        model.getBedTimeDatabaseHelper().getAll().subscribe(new Consumer<List<BedtimeModel>>() {
+            @Override
+            public void accept(List<BedtimeModel> alarms) throws Exception {
+                for (BedtimeModel bedtimeModel : alarms) {
+                    if (bedtimeModel.getId() == id) {
+                        for (int i = 0; i < bedtimeModel.getWeekday().length; i++) {
+                            switch (bedtimeModel.getWeekday()[i]) {
+                                case 0:
+                                    holder.sunday.setChecked(true);
+                                    break;
+                                case 1:
+                                    holder.monday.setChecked(true);
+                                    break;
+                                case 2:
+                                    holder.tuesday.setChecked(true);
+                                    break;
+                                case 3:
+                                    holder.wednesday.setChecked(true);
+                                    break;
+                                case 4:
+                                    holder.thursday.setChecked(true);
+                                    break;
+                                case 5:
+                                    holder.friday.setChecked(true);
+                                    break;
+                                case 6:
+                                    holder.saturday.setChecked(true);
+                                    break;
                             }
-                        } else {
-                            for (int i = 0; i < bedtimeModel.getWeekday().length; i++) {
-                                switch (bedtimeModel.getWeekday()[i]) {
-                                    case 0:
-                                        holder.sunday.setClickable(false);
-                                        holder.sunday.setBackground(mContext.getResources().getDrawable(R.drawable.shape_circle_weekday));
-                                        break;
-                                    case 1:
-                                        holder.monday.setClickable(false);
-                                        holder.monday.setBackground(mContext.getResources().getDrawable(R.drawable.shape_circle_weekday));
-                                        break;
-                                    case 2:
-                                        holder.tuesday.setClickable(false);
-                                        holder.tuesday.setBackground(mContext.getResources().getDrawable(R.drawable.shape_circle_weekday));
-                                        break;
-                                    case 3:
-                                        holder.wednesday.setClickable(false);
-                                        holder.wednesday.setBackground(mContext.getResources().getDrawable(R.drawable.shape_circle_weekday));
-                                        break;
-                                    case 4:
-                                        holder.thursday.setClickable(false);
-                                        holder.thursday.setBackground(mContext.getResources().getDrawable(R.drawable.shape_circle_weekday));
-                                        break;
-                                    case 5:
-                                        holder.friday.setClickable(false);
-                                        holder.friday.setBackground(mContext.getResources().getDrawable(R.drawable.shape_circle_weekday));
-                                        break;
-                                    case 6:
-                                        holder.saturday.setClickable(false);
-                                        holder.saturday.setBackground(mContext.getResources().getDrawable(R.drawable.shape_circle_weekday));
-                                        break;
-                                }
+                        }
+                    } else {
+                        for (int i = 0; i < bedtimeModel.getWeekday().length; i++) {
+                            switch (bedtimeModel.getWeekday()[i]) {
+                                case 0:
+                                    holder.sunday.setClickable(false);
+                                    holder.sunday.setBackground(mContext.getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                    break;
+                                case 1:
+                                    holder.monday.setClickable(false);
+                                    holder.monday.setBackground(mContext.getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                    break;
+                                case 2:
+                                    holder.tuesday.setClickable(false);
+                                    holder.tuesday.setBackground(mContext.getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                    break;
+                                case 3:
+                                    holder.wednesday.setClickable(false);
+                                    holder.wednesday.setBackground(mContext.getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                    break;
+                                case 4:
+                                    holder.thursday.setClickable(false);
+                                    holder.thursday.setBackground(mContext.getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                    break;
+                                case 5:
+                                    holder.friday.setClickable(false);
+                                    holder.friday.setBackground(mContext.getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                    break;
+                                case 6:
+                                    holder.saturday.setClickable(false);
+                                    holder.saturday.setBackground(mContext.getResources().getDrawable(R.drawable.shape_circle_weekday));
+                                    break;
                             }
                         }
                     }
                 }
-            });
-        }
+            }
+        });
     }
 
     private void setBedtimeData(final BedtimeViewHolder holder, final int position) {
@@ -364,9 +367,8 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
             }
         });
         valueAnimation.start();
-        setListViewHeightBasedOnChildren(listView);
+        onListChangeHeight.onListItemHeightChange();
     }
-
 
     public String obtainWeekday(byte[] weekday) {
         String[] weekDayArray = mContext.getResources().getStringArray(R.array.alarm_week_day);
@@ -395,6 +397,7 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
                 mAllSleepGoalList.setAdapter(mGoalAdapter);
             }
         });
+
         mAllSleepGoalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -415,6 +418,7 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
                 }
             }
         });
+
         Button addPresetsGoal = (Button) allGoalBottomView.findViewById(R.id.add_presets_sleep_goal_bt);
         addPresetsGoal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -539,10 +543,10 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
                 .show();
     }
 
-
     /***
-     * normal adapter
+     * set normal data
      */
+
     class NormalAlarmViewHolder {
         @Bind(R.id.fragment_alarm_list_view_wake_up_time_item)
         RobotoTextView wakeTimeTv;
@@ -577,53 +581,53 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
     }
 
 
-    private void setNormalData(final NormalAlarmViewHolder holder, final int position) {
-
-        holder.openExpandableIb.setOnClickListener(new View.OnClickListener() {
+    private void setNormalData(final NormalAlarmViewHolder normalHolder, final int position) {
+        normalHolder.openExpandableIb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setExpandableClick(v, holder);
+                setExpandableClick(v, normalHolder);
             }
         });
-        holder.closeExpandableIb.setOnClickListener(new View.OnClickListener() {
+        normalHolder.closeExpandableIb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setExpandableClick(v, holder);
+                setExpandableClick(v, normalHolder);
             }
         });
 
         if (position == 0) {
-            holder.titleTv.setVisibility(View.VISIBLE);
+            normalHolder.titleTv.setVisibility(View.VISIBLE);
         } else {
-            holder.titleTv.setVisibility(View.GONE);
+            normalHolder.titleTv.setVisibility(View.GONE);
         }
         final Alarm alarm = normalList.get(position);
         if ((alarm.getWeekDay() & 0x80) == 0) {
-            holder.alarmSwitch.setChecked(false);
+            normalHolder.alarmSwitch.setChecked(false);
         } else {
-            holder.alarmSwitch.setChecked(true);
+            normalHolder.alarmSwitch.setChecked(true);
         }
         if (alarm != null) {
-            holder.wakeTimeTv.setText(alarm.toString());
-            holder.editBedtimeAlarmEd.setText(alarm.getLabel());
+            normalHolder.wakeTimeTv.setText(alarm.toString());
+            normalHolder.editBedtimeAlarmEd.setText(alarm.getLabel());
             String[] weekDayArray = mContext.getResources().getStringArray(R.array.alarm_week_day);
-            holder.repeatWeekDayTv.setText(weekDayArray[alarm.getWeekDay() & 0x0F]);
-            holder.alarmNameTv.setText(alarm.getLabel());
-            holder.alarmSwitch.setChecked(!((alarm.getWeekDay() & 0x0F) == 0));
-            holder.alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            normalHolder.repeatWeekDayTv.setText(weekDayArray[alarm.getWeekDay() & 0x0F]);
+            normalHolder.alarmNameTv.setText(alarm.getLabel());
+            normalHolder.alarmSwitch.setChecked(!((alarm.getWeekDay() & 0x0F) == 0));
+            normalHolder.alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     normalAlarmSwitchListener.onNormalAlarmSwitch((SwitchCompat) buttonView, alarm);
                 }
             });
 
-            holder.deleteBedtime.setOnClickListener(new View.OnClickListener() {
+            normalHolder.deleteBedtime.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onDeleteNormalAlarmListener.onNormalAlarmDelete(alarm.getId(), position);
                 }
             });
         }
+
     }
 
     public void setExpandableClick(View v, final NormalAlarmViewHolder holder) {
@@ -656,26 +660,24 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
             }
         });
         valueAnimation.start();
-        setListViewHeightBasedOnChildren(listView);
+        onListChangeHeight.onListItemHeightChange();
     }
 
-    public void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            return;
-        }
-        int totalHeight = 0;
-        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight;
-        listView.setLayoutParams(params);
+    public void setOnAlarmConfigChangeListener(OnAlarmConfigChangeListener onConfigChangeListener) {
+        this.onAlarmListener = onConfigChangeListener;
     }
 
+    public void setNormalAlarmSwitchListener(OnNormalAlarmSwitchListener normalAlarmSwitchListener) {
+        this.normalAlarmSwitchListener = normalAlarmSwitchListener;
+    }
+
+    public void setDeleteNormalAlarmListener(OnDeleteNormalAlarmListener onDeleteNormalAlarmListener) {
+        this.onDeleteNormalAlarmListener = onDeleteNormalAlarmListener;
+    }
+
+    public void setListHeightChangeListener(BedtimeItemHeightChangeListener listener) {
+        this.onListChangeHeight = listener;
+    }
 
     public void setOnBedtimeConfigChangeListener(OnBedtimeConfigChangeListener onBedtimeConfigChangeListener) {
         this.onBedtimeListener = onBedtimeConfigChangeListener;
@@ -704,17 +706,8 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         void onBedtimeConfigChangeListener(byte[] weekday, String name, int sleepHOur, int sleepMinute, int position);
     }
 
-
-    public void setOnAlarmConfigChangeListener(OnAlarmConfigChangeListener onConfigChangeListener) {
-        this.onAlarmListener = onConfigChangeListener;
-    }
-
-    public void setNormalAlarmSwitchListener(OnNormalAlarmSwitchListener normalAlarmSwitchListener) {
-        this.normalAlarmSwitchListener = normalAlarmSwitchListener;
-    }
-
-    public void setDeleteNormalAlarmListener(OnDeleteNormalAlarmListener onDeleteNormalAlarmListener) {
-        this.onDeleteNormalAlarmListener = onDeleteNormalAlarmListener;
+    public interface BedtimeItemHeightChangeListener {
+        void onListItemHeightChange();
     }
 
     public interface OnNormalAlarmSwitchListener {
