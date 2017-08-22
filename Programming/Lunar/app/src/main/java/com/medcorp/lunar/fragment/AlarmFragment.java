@@ -61,12 +61,12 @@ import static com.wdullaer.materialdatetimepicker.time.TimePickerDialog.MINUTE_I
  */
 public class AlarmFragment extends BaseObservableFragment implements CompoundButton.OnCheckedChangeListener,
         AlarmRecyclerViewAdapter.OnBedtimeDeleteListener, AlarmRecyclerViewAdapter.OnBedtimeSwitchListener,
-         AlarmRecyclerViewAdapter.OnBedtimeConfigChangeListener, RadialPickerLayout.OnValueSelectedListener,
+        AlarmRecyclerViewAdapter.OnBedtimeConfigChangeListener, RadialPickerLayout.OnValueSelectedListener,
         AlarmRecyclerViewAdapter.OnAlarmConfigChangeListener, AlarmRecyclerViewAdapter.OnDeleteNormalAlarmListener
         , AlarmRecyclerViewAdapter.OnNormalAlarmSwitchListener {
 
     @Bind(R.id.all_bedtime_alarm_list_view)
-    ListView bedtimeList;
+    ListView allAlarmlistView;
 
     private List<Alarm> alarmList;
     private AlarmRecyclerViewAdapter mAlarmRecyclerViewAdapter;
@@ -115,14 +115,14 @@ public class AlarmFragment extends BaseObservableFragment implements CompoundBut
     }
 
     private void initView() {
-        mAlarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter(bedtimeList,AlarmFragment.this.getContext(),getModel(),allBedtimeModels,alarmList);
+        mAlarmRecyclerViewAdapter = new AlarmRecyclerViewAdapter(AlarmFragment.this.getContext(), getModel(), allBedtimeModels, alarmList);
         mAlarmRecyclerViewAdapter.setBedtimeDeleteListener(AlarmFragment.this);
         mAlarmRecyclerViewAdapter.setBedtimeSwitchListener(AlarmFragment.this);
         mAlarmRecyclerViewAdapter.setOnBedtimeConfigChangeListener(this);
         mAlarmRecyclerViewAdapter.setDeleteNormalAlarmListener(AlarmFragment.this);
         mAlarmRecyclerViewAdapter.setNormalAlarmSwitchListener(AlarmFragment.this);
         mAlarmRecyclerViewAdapter.setOnAlarmConfigChangeListener(AlarmFragment.this);
-        bedtimeList.setAdapter(mAlarmRecyclerViewAdapter);
+        allAlarmlistView.setAdapter(mAlarmRecyclerViewAdapter);
 
     }
 
@@ -794,10 +794,12 @@ public class AlarmFragment extends BaseObservableFragment implements CompoundBut
     }
 
     @Override
-    public void onConfigChangeListener(boolean checked, String name, final int position) {
+    public void onConfigChangeListener(boolean checked, String name, int hour, int minute, final int position) {
         final Alarm alarm = alarmList.get(position);
         alarm.setEnable(checked);
         alarm.setLabel(name);
+        alarm.setMinute(minute);
+        alarm.setHour(hour);
         getModel().getAlarmDatabaseHelper().update(alarm).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
@@ -812,12 +814,17 @@ public class AlarmFragment extends BaseObservableFragment implements CompoundBut
     }
 
     @Override
-    public void onBedtimeConfigChangeListener(byte[] weekday,final String name, int hour, int minute, final int position) {
+    public void onBedtimeConfigChangeListener(byte[] weekday, final String name, int sleepHour,
+                                              int sleepMinute, int wakeHour, int wakeMinute,
+                                              int sleepGoal,final int position) {
         final BedtimeModel bedtimeModel = allBedtimeModels.get(position);
         bedtimeModel.setName(name);
         bedtimeModel.setWeekday(weekday);
-        bedtimeModel.setSleepHour(hour);
-        bedtimeModel.setSleepMinute(minute);
+        bedtimeModel.setSleepHour(sleepHour);
+        bedtimeModel.setSleepMinute(sleepMinute);
+        bedtimeModel.setHour(wakeHour);
+        bedtimeModel.setMinute(wakeMinute);
+        bedtimeModel.setSleepGoal(sleepGoal);
         getModel().getBedTimeDatabaseHelper().update(bedtimeModel).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {

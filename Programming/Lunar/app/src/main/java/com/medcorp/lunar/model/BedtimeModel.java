@@ -134,7 +134,7 @@ public class BedtimeModel extends RealmObject {
         return builder.toString();
     }
 
-    public String getSellpTime(){
+    public String getSleepTime() {
 
         StringBuilder builder = new StringBuilder();
         if (sleepHour == 0) {
@@ -156,24 +156,6 @@ public class BedtimeModel extends RealmObject {
     }
 
     public String getGoalString() {
-        StringBuilder builder = new StringBuilder();
-        int goalHour = SleepGoal / 60;
-        int goalMinute = SleepGoal % 60;
-        if (goalHour == 0) {
-            builder.append("00");
-        } else if (goalHour < 10) {
-            builder.append("0" + goalHour);
-        } else {
-            builder.append(goalHour);
-        }
-        builder.append(":");
-        if (goalMinute == 0) {
-            builder.append("00");
-        } else if (goalMinute < 10) {
-            builder.append("0" + goalMinute);
-        } else {
-            builder.append(goalMinute);
-        }
-        return builder.toString();
+        return(SleepGoal/60==0?"":SleepGoal/60)+"hour"+(SleepGoal%60==0?"":SleepGoal%60+"min");
     }
 }

@@ -70,7 +70,6 @@ public class PublicUtils {
                 weekday -= 1;
             }
         }
-
         if (weekday == -1) {
             weekday = 6;
         }
@@ -78,5 +77,26 @@ public class PublicUtils {
         countTime[1] = minuteOfHour;
         countTime[2] = weekday;
         return countTime;
+    }
+
+    public static String getTimeString(int hour,int minute) {
+
+        StringBuilder builder = new StringBuilder();
+        if (hour == 0) {
+            builder.append("00");
+        } else if (hour < 10) {
+            builder.append("0" + hour);
+        } else {
+            builder.append(hour);
+        }
+        builder.append(":");
+        if (minute == 0) {
+            builder.append("00");
+        } else if (minute < 10) {
+            builder.append("0" + minute);
+        } else {
+            builder.append(minute);
+        }
+        return builder.toString();
     }
 }

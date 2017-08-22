@@ -3,14 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
+    android:layout_height="match_parent">
     <ListView
         android:id="@+id/all_bedtime_alarm_list_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/window_background_color"
+        android:layout_height="fill_parent"
         android:divider="@null"
         android:scrollbars="none"/>
 
@@ -19,6 +16,7 @@
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
         app:fab_addButtonColorNormal="@color/colorAccent"
         app:fab_addButtonColorPressed="@color/colorAccent">
 

@@ -7,7 +7,6 @@
     android:background="@color/window_background_color"
     android:orientation="vertical">
 
-
     <TextView
         android:id="@+id/alarm_adapter_item_title"
         android:layout_width="wrap_content"
@@ -96,11 +95,10 @@
 
             <ImageButton
                 android:id="@+id/normal_open_expandable_ib"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="20dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="18dp"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_open_expandable_icon"/>
         </RelativeLayout>

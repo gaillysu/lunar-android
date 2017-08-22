@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,6 +42,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
 
+import static com.medcorp.lunar.R.id.edit_bedtime_alarm_time_ll;
+
 /***
  * Created by karl-john on 17/12/15.
  */
@@ -65,18 +65,19 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
     private int selectHour = 0;
     private int selectMinutes = 0;
     private String sleepLableGoal;
+    private int newSleepGoalTime = 0;
     private List<Alarm> normalList;
     private static final int ITEM_TYPE_BEDTIME = 0x03;
     private static final int ITEM_TYPE_NORMAL = 0x04;
     private int normalItemHeight = 0;
-    private ListView listView;
     private BedtimeModel mCurrentBedtime;
+    private int alarmHour = 0;
+    private int alarmMinute = 0;
 
-    public AlarmRecyclerViewAdapter(ListView listView, Context context, ApplicationModel model, List<BedtimeModel> bedtimeAllList, List<Alarm> alarmList) {
+    public AlarmRecyclerViewAdapter(Context context, ApplicationModel model, List<BedtimeModel> bedtimeAllList, List<Alarm> alarmList) {
         mContext = context;
         this.model = model;
         this.normalList = alarmList;
-        this.listView = listView;
         this.bedtimeList = bedtimeAllList;
         mAllSleepGoal = new ArrayList<>();
     }
@@ -189,7 +190,7 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         View bottomLine;
         @Bind(R.id.edit_bedtime_alarm_goal_tv)
         TextView showBedtimeGoalTv;
-        @Bind(R.id.edit_bedtime_alarm_time_ll)
+        @Bind(edit_bedtime_alarm_time_ll)
         RelativeLayout editTime;
 
         public BedtimeViewHolder(View view) {
@@ -272,6 +273,9 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
     }
 
     private void setBedtimeData(final BedtimeViewHolder holder, final int position) {
+        alarmHour = bedtimeList.get(position).getHour();
+        alarmMinute = bedtimeList.get(position).getMinute();
+        newSleepGoalTime = bedtimeList.get(position).getSleepGoal();
         holder.closeExpandableIb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -287,13 +291,19 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         holder.editTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        bedtimeList.get(position).setHour(hourOfDay);
-                        bedtimeList.get(position).setMinute(minute);
-                    }
-                }, bedtimeList.get(position).getHour(), bedtimeList.get(position).getMinute(), false)
+                new TimePickerDialog(mContext, R.style.NevoDialogStyle,
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                alarmHour = hourOfDay;
+                                alarmMinute = minute;
+                                int[] sleepTime = PublicUtils.countTime(newSleepGoalTime,
+                                        hourOfDay, minute, bedtimeList.get(position).getWeekday()[0]);
+
+                                holder.sleepTimeTv.setText(PublicUtils.getTimeString(sleepTime[0],sleepTime[1]));
+                                holder.wakeTimeTv.setText(PublicUtils.getTimeString(hourOfDay,minute));
+                            }
+                        }, bedtimeList.get(position).getHour(), bedtimeList.get(position).getMinute(), true)
                         .show();
             }
         });
@@ -305,7 +315,7 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
             holder.repeatWeekDayTv.setText(obtainWeekday(mCurrentBedtime.getWeekday()));
             holder.alarmNameTv.setText(mCurrentBedtime.getName());
             holder.showBedtimeGoalTv.setText(mCurrentBedtime.getGoalString());
-            holder.sleepTimeTv.setText(mCurrentBedtime.getSellpTime());
+            holder.sleepTimeTv.setText(mCurrentBedtime.getSleepTime());
             holder.wakeTimeTv.setText(mCurrentBedtime.toString());
             holder.alarmSwitch.setChecked(mCurrentBedtime.isEnable());
             holder.alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -325,7 +335,7 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         holder.settingBedTimeGoal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSleepGoalListDialog(holder.showBedtimeGoalTv, position);
+                showSleepGoalListDialog(holder, position);
             }
         });
     }
@@ -340,14 +350,14 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
             holder.bottomLine.setVisibility(View.GONE);
             holder.expandable.setVisibility(View.VISIBLE);
             holder.rootView.setBackgroundColor(mContext.getResources().getColor(R.color.bedtime_item_background_color));
-            valueAnimation = ValueAnimator.ofInt(bedtimeItemHeight, (int) (bedtimeItemHeight * 3.5));
+            valueAnimation = ValueAnimator.ofInt(bedtimeItemHeight, (int) (bedtimeItemHeight * 3.6));
         } else if (v.getId() == R.id.close_edit_expandable_ib) {
             holder.rootView.setBackgroundColor(mContext.getResources().getColor(R.color.window_background_color));
             holder.showInfoRl.setVisibility(View.VISIBLE);
             holder.bottomLine.setVisibility(View.VISIBLE);
             holder.expandable.setVisibility(View.GONE);
-            saveBedtimeChangeConfig(holder, position);
-            valueAnimation = ValueAnimator.ofInt((int) (bedtimeItemHeight * 3.5), bedtimeItemHeight);
+            saveBedtimeChangeConfig(holder, alarmHour, alarmMinute, position);
+            valueAnimation = ValueAnimator.ofInt((int) (bedtimeItemHeight * 3.6), bedtimeItemHeight);
         }
         valueAnimation.setDuration(100);
         valueAnimation.setInterpolator(new LinearInterpolator());
@@ -360,7 +370,6 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
             }
         });
         valueAnimation.start();
-        setListViewHeightBasedOnChildren(listView);
     }
 
 
@@ -377,7 +386,7 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         return weekdayString.toString();
     }
 
-    private void showSleepGoalListDialog(final TextView showBedtimeGoalTv, int position) {
+    private void showSleepGoalListDialog(final BedtimeViewHolder holder,int pos) {
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext);
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View allGoalBottomView = inflater.inflate(R.layout.show_sleep_goal_bottom_dialog_view, null);
@@ -391,24 +400,17 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
                 mAllSleepGoalList.setAdapter(mGoalAdapter);
             }
         });
+        final BedtimeModel bedtimeModel = bedtimeList.get(pos);
         mAllSleepGoalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                bottomSheetDialog.dismiss();
+                 bottomSheetDialog.dismiss();
                 SleepGoal sleepGoal = mAllSleepGoal.get(position);
-                if (sleepGoal != null) {
-                    if (position < bedtimeList.size()) {
-                        showBedtimeGoalTv.setText(sleepGoal.toString());
-                        final BedtimeModel bedtimeModel = bedtimeList.get(position);
-                        bedtimeModel.setSleepGoal(sleepGoal.getGoalDuration());
-                        model.getBedTimeDatabaseHelper().update(bedtimeModel).subscribe(new Consumer<Boolean>() {
-                            @Override
-                            public void accept(Boolean aBoolean) throws Exception {
-                                Log.i("jason", "bedtime sleep goal update");
-                            }
-                        });
-                    }
-                }
+                int[] sleepTime = PublicUtils.countTime(sleepGoal.getGoalDuration(), bedtimeModel.getHour()
+                        , bedtimeModel.getMinute(), bedtimeModel.getWeekday()[0]);
+                holder.sleepTimeTv.setText(PublicUtils.getTimeString(sleepTime[0],sleepTime[1]));
+                holder.showBedtimeGoalTv.setText(sleepGoal.toString());
+                newSleepGoalTime = sleepGoal.getGoalDuration();
             }
         });
         Button addPresetsGoal = (Button) allGoalBottomView.findViewById(R.id.add_presets_sleep_goal_bt);
@@ -423,14 +425,13 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         bottomSheetDialog.show();
     }
 
-    private void saveBedtimeChangeConfig(BedtimeViewHolder holder, int position) {
+    private void saveBedtimeChangeConfig(BedtimeViewHolder holder, int hour, int minute, int position) {
         BedtimeModel bedtimeModel = bedtimeList.get(position);
-        int[] sleepTime = PublicUtils.countTime(bedtimeModel.getSleepGoal(),
-                bedtimeModel.getHour(), bedtimeModel.getMinute(), bedtimeModel.getWeekday()[0]);
-        onBedtimeListener.onBedtimeConfigChangeListener(getWeekday(holder),
-                holder.editBedtimeAlarmEd.getText().toString() != null
-                        ? holder.editBedtimeAlarmEd.getText().toString()
-                        : bedtimeModel.getName(), sleepTime[0], sleepTime[1], position);
+        int[] sleepTime = PublicUtils.countTime(newSleepGoalTime,
+                hour, minute, bedtimeModel.getWeekday()[0]);
+        onBedtimeListener.onBedtimeConfigChangeListener(getWeekday(holder), holder.editBedtimeAlarmEd.getText().toString() != null
+                        ? holder.editBedtimeAlarmEd.getText().toString() : bedtimeModel.getName(),
+                sleepTime[0], sleepTime[1], hour, minute, newSleepGoalTime, position);
     }
 
     private byte[] getWeekday(BedtimeViewHolder holder) {
@@ -566,6 +567,8 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         TextView titleTv;
         @Bind(R.id.fragment_alarm_list_view_item_bottom_line)
         View bottomLine;
+        @Bind(edit_bedtime_alarm_time_ll)
+        RelativeLayout editTime;
 
         public NormalAlarmViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);
@@ -574,17 +577,16 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
 
 
     private void setNormalData(final NormalAlarmViewHolder holder, final int position) {
-
         holder.openExpandableIb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setExpandableClick(v, holder);
+                setExpandableClick(v, holder, position);
             }
         });
         holder.closeExpandableIb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setExpandableClick(v, holder);
+                setExpandableClick(v, holder, position);
             }
         });
 
@@ -599,6 +601,22 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         } else {
             holder.alarmSwitch.setChecked(true);
         }
+
+        holder.editTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(mContext, R.style.NevoDialogStyle,
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                alarmHour = hourOfDay;
+                                alarmMinute = minute;
+                                holder.wakeTimeTv.setText(hourOfDay + ":" + minute);
+                            }
+                        }, bedtimeList.get(position).getHour(), bedtimeList.get(position).getMinute(), true)
+                        .show();
+            }
+        });
         if (alarm != null) {
             holder.wakeTimeTv.setText(alarm.toString());
             holder.editBedtimeAlarmEd.setText(alarm.getLabel());
@@ -622,7 +640,7 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         }
     }
 
-    public void setExpandableClick(View v, final NormalAlarmViewHolder holder) {
+    public void setExpandableClick(View v, final NormalAlarmViewHolder holder, int position) {
         ValueAnimator valueAnimation = null;
         if (normalItemHeight == 0) {
             normalItemHeight = holder.rootView.getHeight();
@@ -630,16 +648,19 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         if (v.getId() == R.id.normal_open_expandable_ib) {
             holder.showInfoRl.setVisibility(View.GONE);
             holder.bottomLine.setVisibility(View.GONE);
-            holder.rootView.setBackgroundColor(mContext.getResources().getColor(R.color.bedtime_item_background_color));
+            holder.rootView.setBackgroundColor(mContext.getResources().
+                    getColor(R.color.bedtime_item_background_color));
             holder.expandable.setVisibility(View.VISIBLE);
-            valueAnimation = ValueAnimator.ofInt(normalItemHeight, (int) (normalItemHeight * 1.6));
+            valueAnimation = ValueAnimator.ofInt(normalItemHeight, (int) (normalItemHeight * 2.4));
         } else if (v.getId() == R.id.close_edit_expandable_ib) {
             holder.rootView.setBackgroundColor(
                     mContext.getResources().getColor(R.color.window_background_color));
             holder.showInfoRl.setVisibility(View.VISIBLE);
             holder.bottomLine.setVisibility(View.VISIBLE);
             holder.expandable.setVisibility(View.GONE);
-            valueAnimation = ValueAnimator.ofInt((int) (normalItemHeight * 1.6), normalItemHeight);
+            valueAnimation = ValueAnimator.ofInt((int) (normalItemHeight * 2.4), normalItemHeight);
+            onAlarmListener.onConfigChangeListener(holder.alarmSwitch.isChecked(),
+                    holder.alarmNameTv.getText().toString(), alarmHour, alarmMinute, position);
         }
         valueAnimation.setDuration(100);
         valueAnimation.setInterpolator(new LinearInterpolator());
@@ -652,27 +673,7 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
             }
         });
         valueAnimation.start();
-        setListViewHeightBasedOnChildren(listView);
     }
-
-    public void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            return;
-        }
-        int totalHeight = 0;
-        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight
-                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
-    }
-
 
     public void setOnBedtimeConfigChangeListener(OnBedtimeConfigChangeListener onBedtimeConfigChangeListener) {
         this.onBedtimeListener = onBedtimeConfigChangeListener;
@@ -698,7 +699,8 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
 
 
     public interface OnBedtimeConfigChangeListener {
-        void onBedtimeConfigChangeListener(byte[] weekday, String name, int sleepHOur, int sleepMinute, int position);
+        void onBedtimeConfigChangeListener(byte[] weekday, String name, int sleepHOur, int sleepMinute
+                , int wakeHour, int wakeMinute, int sleepGoal, int position);
     }
 
 
@@ -724,8 +726,7 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
     }
 
     public interface OnAlarmConfigChangeListener {
-        void onConfigChangeListener(boolean checked, String s, int position);
+        void onConfigChangeListener(boolean checked, String s, int hour, int minute, int position);
     }
-
 }
 
