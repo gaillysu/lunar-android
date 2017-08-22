@@ -51,6 +51,17 @@
         <item name="only_one">@string/one_time_repeat</item>
         <item name="daily">@string/daily</item>
     </string-array>
+    <string-array name="alarm_weekday" translatable = "false">
+        <item name="sunday">@string/alarm_sunday</item>
+        <item name="monday">@string/alarm_monday</item>
+        <item name="tuesday">@string/alarm_tuesday</item>
+        <item name="wednesday">@string/alarm_wednesday</item>
+        <item name="thursday">@string/alarm_thursday</item>
+        <item name="friday">@string/alarm_friday</item>
+        <item name="saturday">@string/alarm_saturday</item>
+        <item name="only_one">@string/alarm_one_time</item>
+        <item name="daily">@string/alarm_daily</item>
+    </string-array>
     <string-array name="solar_describe_battery_text" translatable="false">
         <item>Solar</item>
         <item>Battery</item>

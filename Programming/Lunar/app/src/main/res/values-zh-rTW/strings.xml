@@ -573,5 +573,19 @@
     <string name="normal_alarm_wednesday">禮拜三</string>
     <string name="select_sleep_goal_describe">睡眠目標</string>
     <string name="set_new_alarm_label">名字</string>
+    <string name="alarm_daily">每天</string>
+    <string name="alarm_edit_time_describe">選擇時間</string>
+    <string name="alarm_friday">五</string>
+    <string name="alarm_monday">一</string>
+    <string name="alarm_one_time">只響壹次</string>
+    <string name="alarm_saturday">六</string>
+    <string name="alarm_sunday">日</string>
+    <string name="alarm_thursday">四</string>
+    <string name="alarm_tuesday">二</string>
+    <string name="alarm_wednesday">三</string>
+    <string name="time_unit_hour">&#160;小時&#160;</string>
+    <string name="time_unit_hours">&#160;小时&#160;</string>
+    <string name="time_unit_middle">&#160;</string>
+    <string name="time_unit_minutes">&#160;分钟</string>
 
 </resources>

@@ -9,6 +9,8 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.net.Uri;
 
+import com.medcorp.lunar.R;
+
 import java.io.FileNotFoundException;
 import java.util.Locale;
 
@@ -79,7 +81,7 @@ public class PublicUtils {
         return countTime;
     }
 
-    public static String getTimeString(int hour,int minute) {
+    public static String getTimeString(int hour, int minute) {
 
         StringBuilder builder = new StringBuilder();
         if (hour == 0) {
@@ -96,6 +98,23 @@ public class PublicUtils {
             builder.append("0" + minute);
         } else {
             builder.append(minute);
+        }
+        return builder.toString();
+    }
+
+    public static String getGoalString(Context context, int hour, int minute) {
+
+        StringBuffer builder = new StringBuffer();
+        if (hour == 1) {
+            builder.append(hour + context.getString(R.string.time_unit_hour));
+        } else if (hour > 1) {
+            builder.append(hour + context.getString(R.string.time_unit_hours));
+        }
+        if (hour > 0 && minute > 0) {
+            builder.append(context.getString(R.string.time_unit_middle)
+                    + minute + context.getString(R.string.time_unit_minutes));
+        } else if (minute > 0) {
+            builder.append(minute + context.getString(R.string.time_unit_minutes));
         }
         return builder.toString();
     }

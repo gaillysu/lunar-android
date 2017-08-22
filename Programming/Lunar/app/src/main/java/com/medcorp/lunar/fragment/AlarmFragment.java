@@ -201,7 +201,8 @@ public class AlarmFragment extends BaseObservableFragment implements CompoundBut
             @Override
             public void accept(SleepGoal sleepGoal) throws Exception {
                 newBedtimeSleepGoal = sleepGoal.getGoalDuration();
-                mShowGoalText.setText(sleepGoal.toString());
+                mShowGoalText.setText(PublicUtils.getGoalString(AlarmFragment.this.getContext(),
+                        sleepGoal.getGoalDuration() / 60, sleepGoal.getGoalDuration() % 60));
             }
         });
         showGoalLL.setOnClickListener(new View.OnClickListener() {
@@ -303,7 +304,6 @@ public class AlarmFragment extends BaseObservableFragment implements CompoundBut
                 }
             }
         });
-
     }
 
     private void selectWeekdayDialog() {
@@ -795,6 +795,11 @@ public class AlarmFragment extends BaseObservableFragment implements CompoundBut
 
     @Override
     public void onConfigChangeListener(boolean checked, String name, int hour, int minute, final int position) {
+        if (!getModel().isWatchConnected()) {
+            mAlarmRecyclerViewAdapter.notifyDataSetChanged();
+            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+            return;
+        }
         final Alarm alarm = alarmList.get(position);
         alarm.setEnable(checked);
         alarm.setLabel(name);
@@ -816,7 +821,12 @@ public class AlarmFragment extends BaseObservableFragment implements CompoundBut
     @Override
     public void onBedtimeConfigChangeListener(byte[] weekday, final String name, int sleepHour,
                                               int sleepMinute, int wakeHour, int wakeMinute,
-                                              int sleepGoal,final int position) {
+                                              int sleepGoal, final int position) {
+        if (!getModel().isWatchConnected()) {
+            mAlarmRecyclerViewAdapter.notifyDataSetChanged();
+            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+            return;
+        }
         final BedtimeModel bedtimeModel = allBedtimeModels.get(position);
         bedtimeModel.setName(name);
         bedtimeModel.setWeekday(weekday);

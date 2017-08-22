@@ -299,9 +299,8 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
                                 alarmMinute = minute;
                                 int[] sleepTime = PublicUtils.countTime(newSleepGoalTime,
                                         hourOfDay, minute, bedtimeList.get(position).getWeekday()[0]);
-
-                                holder.sleepTimeTv.setText(PublicUtils.getTimeString(sleepTime[0],sleepTime[1]));
-                                holder.wakeTimeTv.setText(PublicUtils.getTimeString(hourOfDay,minute));
+                                holder.sleepTimeTv.setText(PublicUtils.getTimeString(sleepTime[0], sleepTime[1]));
+                                holder.wakeTimeTv.setText(PublicUtils.getTimeString(hourOfDay, minute));
                             }
                         }, bedtimeList.get(position).getHour(), bedtimeList.get(position).getMinute(), true)
                         .show();
@@ -314,7 +313,8 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
             holder.repeatWeekDayTv.setText("");
             holder.repeatWeekDayTv.setText(obtainWeekday(mCurrentBedtime.getWeekday()));
             holder.alarmNameTv.setText(mCurrentBedtime.getName());
-            holder.showBedtimeGoalTv.setText(mCurrentBedtime.getGoalString());
+            holder.showBedtimeGoalTv.setText(PublicUtils.getGoalString(mContext, mCurrentBedtime.getSleepGoal()/60
+                    , mCurrentBedtime.getSleepGoal()%60));
             holder.sleepTimeTv.setText(mCurrentBedtime.getSleepTime());
             holder.wakeTimeTv.setText(mCurrentBedtime.toString());
             holder.alarmSwitch.setChecked(mCurrentBedtime.isEnable());
@@ -350,16 +350,16 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
             holder.bottomLine.setVisibility(View.GONE);
             holder.expandable.setVisibility(View.VISIBLE);
             holder.rootView.setBackgroundColor(mContext.getResources().getColor(R.color.bedtime_item_background_color));
-            valueAnimation = ValueAnimator.ofInt(bedtimeItemHeight, (int) (bedtimeItemHeight * 3.6));
+            valueAnimation = ValueAnimator.ofInt(bedtimeItemHeight, (int) (bedtimeItemHeight * 3.4));
         } else if (v.getId() == R.id.close_edit_expandable_ib) {
             holder.rootView.setBackgroundColor(mContext.getResources().getColor(R.color.window_background_color));
             holder.showInfoRl.setVisibility(View.VISIBLE);
             holder.bottomLine.setVisibility(View.VISIBLE);
             holder.expandable.setVisibility(View.GONE);
             saveBedtimeChangeConfig(holder, alarmHour, alarmMinute, position);
-            valueAnimation = ValueAnimator.ofInt((int) (bedtimeItemHeight * 3.6), bedtimeItemHeight);
+            valueAnimation = ValueAnimator.ofInt((int) (bedtimeItemHeight * 3.4), bedtimeItemHeight);
         }
-        valueAnimation.setDuration(100);
+        valueAnimation.setDuration(150);
         valueAnimation.setInterpolator(new LinearInterpolator());
         valueAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -374,7 +374,7 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
 
 
     public String obtainWeekday(byte[] weekday) {
-        String[] weekDayArray = mContext.getResources().getStringArray(R.array.alarm_week_day);
+        String[] weekDayArray = mContext.getResources().getStringArray(R.array.alarm_weekday);
         StringBuffer weekdayString = new StringBuffer();
         for (int i = 0; i < weekday.length; i++) {
             if (i != weekday.length - 1) {
@@ -386,7 +386,7 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         return weekdayString.toString();
     }
 
-    private void showSleepGoalListDialog(final BedtimeViewHolder holder,int pos) {
+    private void showSleepGoalListDialog(final BedtimeViewHolder holder, int pos) {
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext);
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View allGoalBottomView = inflater.inflate(R.layout.show_sleep_goal_bottom_dialog_view, null);
@@ -404,12 +404,13 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         mAllSleepGoalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                 bottomSheetDialog.dismiss();
+                bottomSheetDialog.dismiss();
                 SleepGoal sleepGoal = mAllSleepGoal.get(position);
                 int[] sleepTime = PublicUtils.countTime(sleepGoal.getGoalDuration(), bedtimeModel.getHour()
                         , bedtimeModel.getMinute(), bedtimeModel.getWeekday()[0]);
-                holder.sleepTimeTv.setText(PublicUtils.getTimeString(sleepTime[0],sleepTime[1]));
-                holder.showBedtimeGoalTv.setText(sleepGoal.toString());
+                holder.sleepTimeTv.setText(PublicUtils.getTimeString(sleepTime[0], sleepTime[1]));
+                holder.showBedtimeGoalTv.setText(PublicUtils.getGoalString(mContext,
+                        sleepGoal.getGoalDuration() / 60, sleepGoal.getGoalDuration() % 60));
                 newSleepGoalTime = sleepGoal.getGoalDuration();
             }
         });
@@ -429,7 +430,8 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
         BedtimeModel bedtimeModel = bedtimeList.get(position);
         int[] sleepTime = PublicUtils.countTime(newSleepGoalTime,
                 hour, minute, bedtimeModel.getWeekday()[0]);
-        onBedtimeListener.onBedtimeConfigChangeListener(getWeekday(holder), holder.editBedtimeAlarmEd.getText().toString() != null
+        onBedtimeListener.onBedtimeConfigChangeListener(getWeekday(holder),
+                holder.editBedtimeAlarmEd.getText().toString() != null
                         ? holder.editBedtimeAlarmEd.getText().toString() : bedtimeModel.getName(),
                 sleepTime[0], sleepTime[1], hour, minute, newSleepGoalTime, position);
     }
@@ -611,19 +613,20 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 alarmHour = hourOfDay;
                                 alarmMinute = minute;
-                                holder.wakeTimeTv.setText(hourOfDay + ":" + minute);
+                                holder.wakeTimeTv.setText(PublicUtils.getTimeString(hourOfDay, minute));
                             }
-                        }, bedtimeList.get(position).getHour(), bedtimeList.get(position).getMinute(), true)
+                        }, normalList.get(position).getHour(), normalList.get(position).getMinute(), true)
                         .show();
             }
         });
         if (alarm != null) {
             holder.wakeTimeTv.setText(alarm.toString());
             holder.editBedtimeAlarmEd.setText(alarm.getLabel());
-            String[] weekDayArray = mContext.getResources().getStringArray(R.array.alarm_week_day);
+            String[] weekDayArray = mContext.getResources().getStringArray(R.array.alarm_weekday);
             holder.repeatWeekDayTv.setText(weekDayArray[alarm.getWeekDay() & 0x0F]);
             holder.alarmNameTv.setText(alarm.getLabel());
             holder.alarmSwitch.setChecked(!((alarm.getWeekDay() & 0x0F) == 0));
+
             holder.alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -651,18 +654,18 @@ public class AlarmRecyclerViewAdapter extends BaseAdapter {
             holder.rootView.setBackgroundColor(mContext.getResources().
                     getColor(R.color.bedtime_item_background_color));
             holder.expandable.setVisibility(View.VISIBLE);
-            valueAnimation = ValueAnimator.ofInt(normalItemHeight, (int) (normalItemHeight * 2.4));
+            valueAnimation = ValueAnimator.ofInt(normalItemHeight, (int) (normalItemHeight * 2.3));
         } else if (v.getId() == R.id.close_edit_expandable_ib) {
             holder.rootView.setBackgroundColor(
                     mContext.getResources().getColor(R.color.window_background_color));
             holder.showInfoRl.setVisibility(View.VISIBLE);
             holder.bottomLine.setVisibility(View.VISIBLE);
             holder.expandable.setVisibility(View.GONE);
-            valueAnimation = ValueAnimator.ofInt((int) (normalItemHeight * 2.4), normalItemHeight);
+            valueAnimation = ValueAnimator.ofInt((int) (normalItemHeight * 2.3), normalItemHeight);
             onAlarmListener.onConfigChangeListener(holder.alarmSwitch.isChecked(),
                     holder.alarmNameTv.getText().toString(), alarmHour, alarmMinute, position);
         }
-        valueAnimation.setDuration(100);
+        valueAnimation.setDuration(150);
         valueAnimation.setInterpolator(new LinearInterpolator());
         valueAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override

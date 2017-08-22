@@ -11,10 +11,11 @@
     <TextView
         android:id="@+id/alarm_adapter_item_title"
         android:layout_width="wrap_content"
-        android:layout_height="54dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
+        android:layout_marginTop="20dp"
         android:text="@string/append_new_alarm_bedtime"
         android:textColor="@color/colorAccent"
         android:textSize="18sp"
@@ -137,6 +138,7 @@
             android:id="@+id/fragment_alarm_list_view_item_bottom_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginTop="8dp"
             android:background="@color/bedtime_icon_tint_color"/>
     </LinearLayout>
 </LinearLayout>

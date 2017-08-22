@@ -575,4 +575,18 @@
     <string name="normal_alarm_wednesday">wednesday</string>
     <string name="select_sleep_goal_describe">Sleep Goal</string>
     <string name="set_new_alarm_label">Create a label</string>
+    <string name="alarm_daily">Daily alarm</string>
+    <string name="alarm_edit_time_describe">Reselect time</string>
+    <string name="alarm_friday">Fri</string>
+    <string name="alarm_monday">Mon</string>
+    <string name="alarm_one_time">One time alarm</string>
+    <string name="alarm_saturday">Sat</string>
+    <string name="alarm_sunday">Sun</string>
+    <string name="alarm_thursday">Thu</string>
+    <string name="alarm_tuesday">Tue</string>
+    <string name="alarm_wednesday">Wed</string>
+    <string name="time_unit_hour">&#160;hour&#160;</string>
+    <string name="time_unit_hours">&#160;hours&#160;</string>
+    <string name="time_unit_middle">&#160;and&#160;</string>
+    <string name="time_unit_minutes">&#160;minutes</string>
 </resources>

@@ -539,13 +539,27 @@
     <string name="select_minutes" translatable="false">Select minutes</string>
     <string name="normal_alarm_max_toast">Add up to 6 alarm clocks at most</string>
     <string name="def_bedtime_name">Bedtime</string>
-    <string name="normal_alarm_sunday">sunday</string>
-    <string name="normal_alarm_monday">monday</string>
-    <string name="normal_alarm_tuesday">tuesday</string>
-    <string name="normal_alarm_wednesday">wednesday</string>
-    <string name="normal_alarm_thursday">thursday</string>
-    <string name="normal_alarm_friday">friday</string>
-    <string name="normal_alarm_saturday">saturday</string>
-    <string name="normal_alarm_one_time">one time alarm</string>
-    <string name="normal_alarm_daily">daily alarm</string>
+    <string name="normal_alarm_sunday">Sunday</string>
+    <string name="normal_alarm_monday">Monday</string>
+    <string name="normal_alarm_tuesday">Tuesday</string>
+    <string name="normal_alarm_wednesday">Wednesday</string>
+    <string name="normal_alarm_thursday">Thursday</string>
+    <string name="normal_alarm_friday">Friday</string>
+    <string name="normal_alarm_saturday">Saturday</string>
+    <string name="normal_alarm_one_time">One time alarm</string>
+    <string name="normal_alarm_daily">Daily alarm</string>
+    <string name="alarm_sunday">Sun</string>
+    <string name="alarm_monday">Mon</string>
+    <string name="alarm_tuesday">Tue</string>
+    <string name="alarm_wednesday">Wed</string>
+    <string name="alarm_thursday">Thu</string>
+    <string name="alarm_friday">Fri</string>
+    <string name="alarm_saturday">Sat</string>
+    <string name="alarm_one_time">One time alarm</string>
+    <string name="alarm_daily">Daily alarm</string>
+    <string name="time_unit_hour">&#160;hour&#160;</string>
+    <string name="time_unit_hours">&#160;hours&#160;</string>
+    <string name="time_unit_minutes">&#160;minutes</string>
+    <string name="time_unit_middle">&#160;and&#160;</string>
+    <string name="add_alarm_dialog_describe">Select your wake up time.</string>
 </resources>

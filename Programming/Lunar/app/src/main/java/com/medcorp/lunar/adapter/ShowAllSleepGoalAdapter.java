@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.model.SleepGoal;
+import com.medcorp.lunar.util.PublicUtils;
 
 import java.util.List;
 
@@ -57,7 +58,8 @@ public class ShowAllSleepGoalAdapter extends BaseAdapter {
         }
         SleepGoal sleepGoal = allSleepGoal.get(position);
         if(sleepGoal!=null){
-            viewholder.goalText.setText(sleepGoal.getGoalName()+" - "+sleepGoal.toString());
+            viewholder.goalText.setText(sleepGoal.getGoalName()+" - "
+                    + PublicUtils.getGoalString(context,sleepGoal.getGoalDuration()/60,sleepGoal.getGoalDuration()%60));
         }
         return convertView;
     }
