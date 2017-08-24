@@ -1,18 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/window_background_color"
-              android:orientation="vertical">
-
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <ListView
-        android:id="@+id/fragment_alarm_list_view"
+        android:id="@+id/all_bedtime_alarm_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:listSelector="?android:attr/selectableItemBackground"
-        android:scrollbars="none"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:divider="@color/my_device_right_show_version_text_color"
-        android:dividerHeight="1dp"/>
-</LinearLayout>
+        android:layout_height="fill_parent"
+        android:divider="@null"
+        android:scrollbars="none"/>
+
+    <net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu
+        android:layout_width="50dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        app:fab_addButtonColorNormal="@color/colorAccent"
+        app:fab_addButtonColorPressed="@color/colorAccent">
+
+        <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
+            android:id="@+id/alarm_fragment_add_new_normal_alarm_ft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/colorAccent"
+            app:fab_colorPressed="@color/colorAccent"
+            app:fab_icon="@drawable/ic_bedtime_icon"
+            app:fab_size="mini"/>
+
+        <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
+            android:id="@+id/alarm_fragment_add_new_bedtime_alarm_ft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/colorAccent"
+            app:fab_colorPressed="@color/colorAccent"
+            app:fab_icon="@drawable/moon_icon"
+            app:fab_size="mini"/>
+    </net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu>
+</RelativeLayout>

@@ -50,6 +50,10 @@
         <item name="tabIndicatorHeight">2dp</item>
     </style>
 
+    <style name="myEditStyle" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/colorAccent</item>
+    </style>
 
     <style name="NevoTabLayoutTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">18sp</item>
@@ -129,22 +133,6 @@
         <item name="android:background">@color/baseBackground</item>
     </style>
 
-    <style name="new_alarm_clock_repeat_days_llyt">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">horizontal</item>
-    </style>
-
-    <style name="new_alarm_clock_repeat_days_tag_btn">
-        <item name="android:layout_width">35dp</item>
-        <item name="android:layout_height">35dp</item>
-        <item name="android:checked">false</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:layout_marginLeft">3dp</item>
-        <item name="android:textColor">@drawable/text_color_toggle_btn_circle</item>
-    </style>
 
     <style name="Animation_profile_popupwindow">
         <item name="android:windowEnterAnimation">@anim/popupwindow_entry_anim</item>
@@ -156,6 +144,7 @@
         <item name="colorSwitchThumbNormal">@android:color/white</item>
         <item name="android:colorForeground">@android:color/white</item>
     </style>
+
     <style name="MyEditText" parent="Theme.AppCompat.Light">
         <item name="colorControlActivated">@color/colorAccent</item>
     </style>

@@ -126,7 +126,6 @@ import java.util.TimerTask;
 
 import io.reactivex.functions.Consumer;
 import io.realm.Realm;
-import rx.subjects.BehaviorSubject;
 
 public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<Void> {
     private final static String TAG = "SyncControllerImpl";
@@ -698,7 +697,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     private void resetAllAlarms() {
         //pls refer to R12 command 0x41, use 0x225588bb to reset all alarms
-        Alarm resetAlarm = new Alarm(0xbb, 0x88, (byte) 0x22, "", (byte) 0, (byte) 0x55);
+        Alarm resetAlarm = new Alarm(0xbb, 0x88, (byte) 0x22, "",(byte) 0x55);
         setAlarm(resetAlarm);
     }
 
