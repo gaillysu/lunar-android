@@ -10,7 +10,7 @@ import com.medcorp.lunar.R;
 import com.medcorp.lunar.view.customfontview.RobotoTextView;
 
 
-/**
+/***
  * Created by gaillysu on 16/1/19.
  */
 public class AlarmEditAdapter extends BaseAdapter {
@@ -25,7 +25,7 @@ public class AlarmEditAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 5;
+        return 4;
     }
 
     @Override
@@ -60,9 +60,6 @@ public class AlarmEditAdapter extends BaseAdapter {
             title.setText(weekDay);
             summary.setText(context.getString(R.string.alarm_set_week_day));
         } else if (position == 3) {
-            title.setText(alarm.getAlarmType()==0?context.getString(R.string.edit_alarm_sleep):context.getString(R.string.edit_alarm_wake));
-            summary.setText(context.getString(R.string.Edit_alarm_type));
-        } else if (position == 4) {
             summary.setVisibility(View.GONE);
             title.setVisibility(View.GONE);
             delete.setVisibility(View.VISIBLE);

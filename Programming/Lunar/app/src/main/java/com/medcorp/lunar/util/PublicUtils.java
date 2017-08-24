@@ -9,6 +9,8 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.net.Uri;
 
+import com.medcorp.lunar.R;
+
 import java.io.FileNotFoundException;
 import java.util.Locale;
 
@@ -50,5 +52,70 @@ public class PublicUtils {
             return true;
         }
         return false;
+    }
+
+    public static int[] countTime(int sleepGoal, int hourOfDay, int minuteOfHour, int weekday) {
+        int[] countTime = new int[3];
+        int hour = sleepGoal / 60;
+        int minute = sleepGoal % 60;
+        hourOfDay -= hour;
+        minuteOfHour -= minute;
+        if (minuteOfHour < 0) {
+            minuteOfHour += 60;
+            if (hourOfDay < 0) {
+                hourOfDay = 24 + hourOfDay;
+                weekday -= 1;
+            }
+        } else {
+            if (hourOfDay < 0) {
+                hourOfDay = 24 + hourOfDay;
+                weekday -= 1;
+            }
+        }
+        if (weekday == -1) {
+            weekday = 6;
+        }
+        countTime[0] = hourOfDay;
+        countTime[1] = minuteOfHour;
+        countTime[2] = weekday;
+        return countTime;
+    }
+
+    public static String getTimeString(int hour, int minute) {
+
+        StringBuilder builder = new StringBuilder();
+        if (hour == 0) {
+            builder.append("00");
+        } else if (hour < 10) {
+            builder.append("0" + hour);
+        } else {
+            builder.append(hour);
+        }
+        builder.append(":");
+        if (minute == 0) {
+            builder.append("00");
+        } else if (minute < 10) {
+            builder.append("0" + minute);
+        } else {
+            builder.append(minute);
+        }
+        return builder.toString();
+    }
+
+    public static String getGoalString(Context context, int hour, int minute) {
+
+        StringBuffer builder = new StringBuffer();
+        if (hour == 1) {
+            builder.append(hour + context.getString(R.string.time_unit_hour));
+        } else if (hour > 1) {
+            builder.append(hour + context.getString(R.string.time_unit_hours));
+        }
+        if (hour > 0 && minute > 0) {
+            builder.append(context.getString(R.string.time_unit_middle)
+                    + minute + context.getString(R.string.time_unit_minutes));
+        } else if (minute > 0) {
+            builder.append(minute + context.getString(R.string.time_unit_minutes));
+        }
+        return builder.toString();
     }
 }

@@ -116,7 +116,7 @@
 
     <string name="tutorial_next_step_text">Next Step</string>
 
-    <string name="tutorial_5_text">Trying to connect with LunaR.Make sure you to keep LunaR  in reach of your phone!</string>
+    <string name="tutorial_5_text">Now let\'s configure LunaR to your preferences.</string>
 
     <string name="tutorial_failed_title">Connection failed</string>
     <string name="tutorial_failed_try_again">Try Again</string>
@@ -381,14 +381,18 @@
     <string name="edit_alarm_repeat">Repeat</string>
     <string name="edit_alarm_name">Alarm Name</string>
     <string name="input_legitimate_value">Please enter a valid value from 1 to 7</string>
-    <string name="monday">Mon</string>
-    <string name="tuesday">Tue</string>
-    <string name="wednesday">Wed</string>
-    <string name="thursday">Thu</string>
-    <string name="friday">Fri</string>
-    <string name="saturday">Sat</string>
-    <string name="sunday">Sun</string>
+    <string name="monday">M</string>
+    <string name="tuesday">T</string>
+    <string name="wednesday">W</string>
+    <string name="thursday">T</string>
+    <string name="friday">F</string>
+    <string name="saturday">S</string>
+    <string name="sunday">S</string>
+    <string name="daily">Daily</string>
     <string name="disable">Disable</string>
+    <string name="one_time_repeat">One time alarm</string>
+    <string name="sans_serif" translatable="false">sans-serif</string>
+    <string name="radial_numbers_typeface" translatable="false">sans-serif</string>
     <string name="every_day">Every </string>
     <string name="Edit_alarm_type">Edit Alarm type</string>
     <string name="edit_alarm_sleep">Sleep Alarm</string>
@@ -414,12 +418,12 @@
     <string name="tutorial_1_text">Use your LunaR watch to set, track and analyse\n your personal health and fitness data</string>
     <string name="tutorial_1_lets_activate">Activate LunaR</string>
     <string name="change_select_city">Change city</string>
-    <string name="tutorial_3_text">Pull out the crown out and turn to set the time on LunR.Be aware that the hands doesn\'t sync with your phone\'s time.</string>
+    <string name="tutorial_3_text">Pull out the crown out and turn to set the time on LunaR .Be aware that the hands doesn\'t sync with your phone\'s time.</string>
     <string name="tutorial_2_text">Tap the Settings button and turn\n Bluetooth on.</string>
     <string name="tutorial_2_continue">Turn Bluetooth on</string>
     <string name="tutorial_4_title">Turn on LunaR </string>
-    <string name="tutorial_4_text">Push any of the lower buttons to turn on LunaR. the LED ar 12 o\'clock will blink white.</string>
-    <string name="tutorial_5_title">Searching</string>
+    <string name="tutorial_4_text">Push any button to turn on LunaR\'s bluetooth. But for now, press the lower right button. The 12 o\'clock LED will blink white.</string>
+    <string name="tutorial_5_title">Connected</string>
     <string name="tutorial_failed_text">Make sure your phone\'s bluetooth is enabled and that the LED on the LunaR is blinking.</string>
     <string name="in_app_notification_found_nevo">Found LunaR!</string>
     <string name="in_app_notification_nevo_disconnected">LunaR disconnected.</string>
@@ -518,10 +522,44 @@
     <string name="update_watch_firmware_careful_third">Don\'t press and buttons on LunaR while upgrading</string>
     <string name="add_new_activity_goal_fb">Activity goal</string>
     <string name="add_new_inactivity_goal_fb">Inactivity goal</string>
+
+    <string name="append_new_alarm_bedtime">Bedtime Alarm</string>
+    <string name="append_new_alarm_normal">Normal Alarm</string>
     <string name="and_new_sunshine_fb">Sunshine goal</string>
     <string name="more_setting_activity_title">Activity</string>
     <string name="more_setting_inactivity_title">Inactivity</string>
     <string name="more_setting_sunshine_title">Sunshine</string>
     <string name="save_filed">Save Filed</string>
     <string name="snack_title">Actions</string>
+    <string name="add_new_normal_alarm_dialog_title">Set Alarm</string>
+    <string name="add_new_bedtime_alarm_dialog_title">Set Bedtime</string>
+    <string name="hour_picker_description" translatable="false">Hours circular slider</string>
+    <string name="select_hours" translatable="false">Select hours</string>
+    <string name="minute_picker_description" translatable="false">Minutes circular slider</string>
+    <string name="select_minutes" translatable="false">Select minutes</string>
+    <string name="normal_alarm_max_toast">Add up to 6 alarm clocks at most</string>
+    <string name="def_bedtime_name">Bedtime</string>
+    <string name="normal_alarm_sunday">Sunday</string>
+    <string name="normal_alarm_monday">Monday</string>
+    <string name="normal_alarm_tuesday">Tuesday</string>
+    <string name="normal_alarm_wednesday">Wednesday</string>
+    <string name="normal_alarm_thursday">Thursday</string>
+    <string name="normal_alarm_friday">Friday</string>
+    <string name="normal_alarm_saturday">Saturday</string>
+    <string name="normal_alarm_one_time">One time alarm</string>
+    <string name="normal_alarm_daily">Daily alarm</string>
+    <string name="alarm_sunday">Sun</string>
+    <string name="alarm_monday">Mon</string>
+    <string name="alarm_tuesday">Tue</string>
+    <string name="alarm_wednesday">Wed</string>
+    <string name="alarm_thursday">Thu</string>
+    <string name="alarm_friday">Fri</string>
+    <string name="alarm_saturday">Sat</string>
+    <string name="alarm_one_time">One time alarm</string>
+    <string name="alarm_daily">Daily alarm</string>
+    <string name="time_unit_hour">&#160;hour&#160;</string>
+    <string name="time_unit_hours">&#160;hours&#160;</string>
+    <string name="time_unit_minutes">&#160;minutes</string>
+    <string name="time_unit_middle">&#160;and&#160;</string>
+    <string name="add_alarm_dialog_describe">Select your wake up time.</string>
 </resources>

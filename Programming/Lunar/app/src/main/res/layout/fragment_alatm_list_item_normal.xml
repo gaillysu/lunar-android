@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/window_background_color"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/alarm_adapter_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/append_new_alarm_normal"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/normal_item_root_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="bottom"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/setting_notfications"
+                    android:tint="@color/bedtime_icon_tint_color"/>
+
+                <com.medcorp.lunar.view.customfontview.RobotoTextView
+                    android:id="@+id/fragment_alarm_list_view_wake_up_time_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:text="jhggjh"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/black"
+                    android:textSize="39sp"
+                    roboto:thin="true"/>
+            </LinearLayout>
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/fragment_alarm_list_view_item_normal_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:focusable="false"
+                android:shadowColor="@color/colorPrimary"
+                android:theme="@style/my_switch_color"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/normal_item_show_alarm_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <com.medcorp.lunar.view.customfontview.RobotoTextView
+                android:id="@+id/fragment_alarm_list_view_item_normal_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                roboto:bold="true"/>
+
+            <com.medcorp.lunar.view.customfontview.RobotoTextView
+                android:id="@+id/fragment_alarm_list_view_item_normal_repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="40dp"
+                android:layout_toRightOf="@+id/fragment_alarm_list_view_item_normal_label"
+                android:textColor="@color/alarm_repeat_text_color"
+                android:textSize="13sp"/>
+
+            <ImageButton
+                android:id="@+id/normal_open_expandable_ib"
+                android:layout_width="40dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_open_expandable_icon"/>
+        </RelativeLayout>
+
+        <include
+            layout="@layout/normal_item_edit_view"
+            android:visibility="gone"/>
+
+        <View
+            android:id="@+id/fragment_alarm_list_view_item_bottom_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/bedtime_icon_tint_color"/>
+    </LinearLayout>
+</LinearLayout>

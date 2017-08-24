@@ -95,6 +95,24 @@ public class AlarmDatabaseHelper {
         }).subscribeOn(AndroidSchedulers.mainThread());
     }
 
+    public Observable<Alarm> obtainAlarm(final int alarmNumber) {
+        return Observable.create(new ObservableOnSubscribe<Alarm>() {
+            @Override
+            public void subscribe(ObservableEmitter<Alarm> e) throws Exception {
+                Alarm obtainAlarm = null;
+                Alarm alarm = mRealm.where(Alarm.class).equalTo(mContext.getString(R.string.alarm_number)
+                        , alarmNumber).findFirst();
+                if (alarm != null) {
+                    obtainAlarm = mRealm.copyFromRealm(alarm);
+                } else {
+                    obtainAlarm = new Alarm();
+                }
+                e.onNext(obtainAlarm);
+                e.onComplete();
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread());
+    }
+
     public Observable<List<Alarm>> getAll() {
         return Observable.create(new ObservableOnSubscribe<List<Alarm>>() {
             @Override
@@ -110,4 +128,5 @@ public class AlarmDatabaseHelper {
             }
         }).subscribeOn(AndroidSchedulers.mainThread());
     }
+
 }

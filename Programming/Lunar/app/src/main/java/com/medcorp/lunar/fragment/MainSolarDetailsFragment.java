@@ -83,6 +83,12 @@ public class MainSolarDetailsFragment extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getModel().getBatteryLevelOfWatch();
+    }
+
     private void initData() {
         mPositionLocal = Preferences.getLocation(MainSolarDetailsFragment.this.getContext());
         String app_version = "";
