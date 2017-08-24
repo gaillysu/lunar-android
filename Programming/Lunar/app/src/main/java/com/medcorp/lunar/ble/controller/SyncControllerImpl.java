@@ -305,7 +305,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                             //save watch infomation into preference
                             Preferences.setWatchId(mContext, watchInfoPacket.getWatchID());
                             Preferences.setWatchModel(mContext, watchInfoPacket.getWatchModel());
-                            EventBus.getDefault().post(new GetWatchInfoChangedEvent(getWatchInfomation()));
+                            EventBus.getDefault().post(new GetWatchInfoChangedEvent(getWatchInformation()));
                         } else if ((byte) ReadDailyTrackerInfoRequest.HEADER == lunarData.getRawData()[1]) {
                             if (!mSyncAllFlag) {
                                 DailyTrackerInfoPacket infopacket = new DailyTrackerInfoPacket(packet.getPackets());
@@ -432,7 +432,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                                 }
                                 //end update
                                 //here save solar time to local database when watch ID>1
-                                if (getWatchInfomation().getWatchID() > 1) {
+                                if (getWatchInformation().getWatchID() > 1) {
                                     final Solar solar = new Solar(new Date(history.getCreated()));
                                     solar.setDate((Common.removeTimeFromDate(solar.getCreatedDate())).getTime());
                                     solar.setUserId(Integer.parseInt(user.getUserID()));
