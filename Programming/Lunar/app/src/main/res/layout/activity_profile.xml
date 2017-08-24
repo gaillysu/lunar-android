@@ -11,7 +11,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
         android:scrollbars="none">
 
         <LinearLayout
@@ -71,232 +70,253 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical"
                 android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="34dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/profile_user_information_title"
+                    android:textColor="@color/profile_fragment_text_value_color"
+                    android:textSize="14sp"/>
+
+                <LinearLayout
+                    android:id="@+id/profile_activity_edit_first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_weight="1"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:gravity="center_vertical"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/profile_activity_edit_first_name"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/profile_fragment_first_name_text"
+                        android:textColor="@color/profile_fragment_text_value_color"
+                        android:textSize="14sp"/>
+
+                    <EditText
+                        android:id="@+id/profile_fragment_user_first_name_tv"
                         android:layout_width="match_parent"
-                        android:layout_height="54dp"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:background="@null"
                         android:gravity="center_vertical"
-                        android:orientation="vertical">
+                        android:hint="@string/edit_user_first_name"
+                        android:singleLine="true"
+                        android:textColor="@color/profile_fragment_text_color"
+                        android:textColorHint="@color/profile_fragment_text_color"
+                        android:textSize="14sp"/>
 
-                        <TextView
-                            android:id="@+id/profile_fragment_user_first_name_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:gravity="center_vertical"
-                            android:text="@string/edit_user_first_name"
-                            android:textColor="@color/profile_fragment_text_color"
-                            android:textSize="14sp"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/profile_fragment_first_name_text"
-                            android:textColor="@color/profile_fragment_text_value_color"
-                            android:textSize="14sp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/profile_activity_edit_last_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="54dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
-            <LinearLayout
-                android:id="@+id/edit_user_birthday_pop"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/profile_fragment_user_birthday_text"
-                    android:textColor="@color/profile_fragment_text_value_color"
-                    android:textSize="18sp"
-                    />
-
-                <TextView
-                    android:id="@+id/profile_fragment_user_birthday_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/profile_fragment_text_color"
-                    android:textSize="16sp"
-                    />
-
-                        <TextView
-                            android:id="@+id/profile_fragment_user_last_name_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:gravity="center_vertical"
-                            android:text="@string/edit_user_last_name"
-                            android:textColor="@color/profile_fragment_text_color"
-                            android:textSize="14sp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/profile_fragment_last_name_text"
-                            android:textColor="@color/profile_fragment_text_value_color"
-                            android:textSize="14sp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/profile_activity_edit_user_email"
-                        android:layout_width="match_parent"
-                        android:layout_height="54dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/profile_fragment_user_user_email_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:gravity="center_vertical"
-                            android:text="@string/edit_user_email"
-                            android:textColor="@color/profile_fragment_text_color"
-                            android:textSize="14sp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/profile_fragment_email_text"
-                            android:textColor="@color/profile_fragment_text_value_color"
-                            android:textSize="14sp"/>
-                    </LinearLayout>
                 </LinearLayout>
 
-                <View
+                <LinearLayout
+                    android:id="@+id/profile_activity_edit_last_name"
                     android:layout_width="match_parent"
-                    android:layout_height="0.8dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/colorPrimary"/>
+                    android:layout_height="54dp"
+                    android:layout_weight="1"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/profile_fragment_last_name_text"
+                        android:textColor="@color/profile_fragment_text_value_color"
+                        android:textSize="14sp"/>
+
+                    <EditText
+                        android:id="@+id/profile_fragment_user_last_name_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:background="@null"
+                        android:gravity="center_vertical"
+                        android:hint="@string/edit_user_last_name"
+                        android:singleLine="true"
+                        android:textColor="@color/profile_fragment_text_color"
+                        android:textColorHint="@color/profile_fragment_text_color"
+                        android:textSize="14sp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/profile_activity_edit_user_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_weight="1"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/profile_fragment_email_text"
+                        android:textColor="@color/profile_fragment_text_value_color"
+                        android:textSize="14sp"/>
+
+                    <EditText
+                        android:id="@+id/profile_fragment_user_user_email_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:background="@null"
+                        android:gravity="center_vertical"
+                        android:hint="@string/edit_user_email"
+                        android:singleLine="true"
+                        android:textColor="@color/profile_fragment_text_color"
+                        android:textColorHint="@color/profile_fragment_text_color"
+                        android:textSize="14sp"/>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:gravity="center_vertical"
                     android:orientation="vertical">
-                    android:textColor="@color/profile_fragment_text_color"
-                    android:textSize="16sp"
-                    />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/profile_user_more_about_you_title"
+                        android:textColor="@color/profile_fragment_text_value_color"
+                        android:textSize="14sp"/>
 
                     <LinearLayout
                         android:id="@+id/edit_user_birthday_pop"
                         android:layout_width="match_parent"
                         android:layout_height="54dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/profile_fragment_user_birthday_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:gravity="center_vertical"
-                            android:textColor="@color/profile_fragment_text_color"
-                            android:textSize="14sp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_gravity="center_vertical"
-                            android:text="@string/profile_fragment_user_birthday_text"
-                            android:textColor="@color/profile_fragment_text_value_color"
-                            android:textSize="14sp"/>
+                            android:src="@drawable/ic_icon_birthday"/>
 
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="54dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center_vertical"
+                                android:text="@string/profile_fragment_user_birthday_text"
+                                android:textColor="@color/profile_fragment_text_value_color"
+                                android:textSize="14sp"/>
+
+                            <TextView
+                                android:id="@+id/profile_fragment_user_birthday_tv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:autoLink="all"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/profile_fragment_text_color"
+                                android:textSize="14sp"/>
+                        </LinearLayout>
                     </LinearLayout>
-                <TextView
-                    android:id="@+id/profile_fragment_user_weight_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/profile_fragment_text_color"
-                    android:textSize="16sp"
-                    />
 
                     <LinearLayout
                         android:id="@+id/edit_user_height_pop"
                         android:layout_width="match_parent"
                         android:layout_height="54dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/profile_fragment_user_height_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:gravity="center_vertical"
-                            android:textColor="@color/profile_fragment_text_color"
-                            android:textSize="14sp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_gravity="center_vertical"
-                            android:text="@string/profile_fragment_user_height_text"
-                            android:textColor="@color/profile_fragment_text_value_color"
-                            android:textSize="14sp"/>
+                            android:src="@drawable/ic_icon_height"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="54dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center_vertical"
+                                android:text="@string/profile_fragment_user_height_text"
+                                android:textColor="@color/profile_fragment_text_value_color"
+                                android:textSize="14sp"/>
+
+                            <TextView
+                                android:id="@+id/profile_fragment_user_height_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/profile_fragment_text_color"
+                                android:textSize="14sp"/>
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/edit_user_weight_pop"
                         android:layout_width="match_parent"
                         android:layout_height="54dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/profile_fragment_user_weight_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:gravity="center_vertical"
-                            android:textColor="@color/profile_fragment_text_color"
-                            android:textSize="14sp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_gravity="center_vertical"
-                            android:text="@string/profile_fragment_user_weight_text"
-                            android:textColor="@color/profile_fragment_text_value_color"
-                            android:textSize="14sp"/>
+                            android:src="@drawable/ic_icon_weight"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="54dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center_vertical"
+                                android:text="@string/profile_fragment_user_weight_text"
+                                android:textColor="@color/profile_fragment_text_value_color"
+                                android:textSize="14sp"/>
+
+                            <TextView
+                                android:id="@+id/profile_fragment_user_weight_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/profile_fragment_text_color"
+                                android:textSize="14sp"/>
+                        </LinearLayout>
                     </LinearLayout>
 
                     <android.support.v7.widget.AppCompatButton
@@ -306,16 +326,6 @@
                         android:background="@android:color/transparent"
                         android:gravity="center_vertical|start"
                         android:text="@string/profile_logout_tv"
-                        android:textAllCaps="false"
-                        android:textColor="@color/pie_chart_child_color"/>
-
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/profile_login_bt"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@android:color/transparent"
-                        android:gravity="center_vertical|start"
-                        android:text="@string/login_page_activity_title"
                         android:textAllCaps="false"
                         android:textColor="@color/pie_chart_child_color"/>
 

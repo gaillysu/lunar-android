@@ -8,8 +8,6 @@ import com.medcorp.lunar.model.WatchInformation;
 
 import net.medcorp.library.ble.model.request.BLERequestData;
 
-import rx.subjects.BehaviorSubject;
-
 /**
  * this class define some functions for communication with Nevo,
  * all UI activity or Fragment should use this interface,
@@ -47,8 +45,6 @@ public interface SyncController {
     return Nevo connect true or false
      */
 	public boolean isConnected();
-
-    public BehaviorSubject<Boolean> isConnectedObservable();
 
     /*
     set Steps StepsGoal

@@ -23,8 +23,8 @@ import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -33,7 +33,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.lunar.R;
-import com.medcorp.lunar.activity.tutorial.WelcomeActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.cloud.med.MedNetworkOperation;
 import com.medcorp.lunar.model.User;
@@ -72,16 +71,10 @@ public class ProfileActivity extends BaseActivity {
     Toolbar toolbar;
     @Bind(R.id.profile_activity_select_picture)
     ImageView mImageButton;
-    @Bind(R.id.edit_user_birthday_pop)
-    LinearLayout editUserBirthday;
-    @Bind(R.id.edit_user_height_pop)
-    LinearLayout editUserHeightL;
-    @Bind(R.id.edit_user_weight_pop)
-    LinearLayout editUserWeightL;
     @Bind(R.id.profile_fragment_user_first_name_tv)
-    TextView firstName;
+    EditText firstName;
     @Bind(R.id.profile_fragment_user_last_name_tv)
-    TextView lastName;
+    EditText lastName;
     @Bind(R.id.profile_fragment_user_birthday_tv)
     TextView userBirthday;
     @Bind(R.id.profile_fragment_user_height_tv)
@@ -96,12 +89,10 @@ public class ProfileActivity extends BaseActivity {
     RadioButton male;
     @Bind(R.id.profile_logout_bt)
     AppCompatButton logoutButton;
-    @Bind(R.id.profile_login_bt)
-    AppCompatButton loginButton;
     @Bind(R.id.profile_delete_bt)
     AppCompatButton deleteProfile;
     @Bind(R.id.profile_fragment_user_user_email_tv)
-    TextView userEmailTv;
+    EditText userEmailTv;
 
     private User lunarUser;
     private int viewType;
@@ -143,82 +134,31 @@ public class ProfileActivity extends BaseActivity {
 
 
     private void initView() {
-<<<<<<< HEAD
         progressDialog = new ProgressDialog(this, AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
         progressDialog.setMessage(getString(R.string.network_wait_text));
-        firstName.setText(TextUtils.isEmpty(lunarUser.getFirstName()) ? getString(R.string.edit_user_first_name) : lunarUser.getFirstName());
-        lastName.setText(TextUtils.isEmpty(lunarUser.getLastName()) ? getString(R.string.edit_user_last_name) : lunarUser.getLastName());
-        //please strictly refer to our UI design Docs, the date format is dd,MMM,yyyy
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
-        userBirthday.setText(simpleDateFormat.format(new Date(lunarUser.getBirthday())));
-        userHeight.setText(lunarUser.getHeight() + " cm");
-        userWeight.setText(lunarUser.getWeight() + " kg");
         if (lunarUser.isLogin()) {
-            loginButton.setVisibility(View.GONE);
             deleteProfile.setVisibility(View.VISIBLE);
             logoutButton.setVisibility(View.VISIBLE);
         } else {
             deleteProfile.setVisibility(View.GONE);
             logoutButton.setVisibility(View.GONE);
-            loginButton.setVisibility(View.VISIBLE);
         }
         if (lunarUser.getSex() == 1) {
             male.setChecked(true);
         } else {
             female.setChecked(true);
         }
-
-        final TextView firstName = (TextView) findViewById(R.id.profile_fragment_user_first_name_tv);
-        final TextView lastName = (TextView) findViewById(R.id.profile_fragment_user_last_name_tv);
-        final TextView userBirthday = (TextView) findViewById(R.id.profile_fragment_user_birthday_tv);
-        final TextView userHeight = (TextView) findViewById(R.id.profile_fragment_user_height_tv);
-        final TextView userWeight = (TextView) findViewById(R.id.profile_fragment_user_weight_tv);
         if (lunarUser != null) {
             firstName.setText(TextUtils.isEmpty(lunarUser.getFirstName()) ? getString(R.string.edit_user_first_name) : lunarUser.getFirstName());
             lastName.setText(TextUtils.isEmpty(lunarUser.getLastName()) ? getString(R.string.edit_user_last_name) : lunarUser.getLastName());
             //please strictly refer to our UI design Docs, the date format is dd,MMM,yyyy
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
-            userBirthday.setText(simpleDateFormat.format(new Date(lunarUser.getBirthday())));
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+            userBirthday.setText(dateFormat.format(new Date(lunarUser.getBirthday())));
             userHeight.setText(lunarUser.getHeight() + " cm");
             userWeight.setText(lunarUser.getWeight() + " kg");
         }
-
-        editLastName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editUserName(lastName);
-            }
-        });
-
-        editFirstNameL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editUserName(firstName);
-            }
-        });
-
-        editUserBirthday.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editUserBirthday(userBirthday);
-            }
-        });
-
-        editUserHeightL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editUserHeight(userHeight);
-            }
-        });
-
-        editUserWeightL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editUserWeight(userWeight);
-            }
-        });
 
         profileGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -278,12 +218,7 @@ public class ProfileActivity extends BaseActivity {
         editUserName(lastName);
     }
 
-    @OnClick(R.id.profile_login_bt)
-    public void loginButtonClick() {
-        startActivity(WelcomeActivity.class);
-    }
-
-    @OnClick(R.id.profile_fragment_user_user_email_tv)
+    @OnClick(R.id.profile_activity_edit_user_email)
     public void writeEmail() {
         String email = lunarUser.getUserEmail();
         new MaterialDialog.Builder(this).title(getString(R.string.edit_profile))
@@ -306,7 +241,8 @@ public class ProfileActivity extends BaseActivity {
                 .negativeText(R.string.notification_cancel).positiveText(getString(R.string.notification_ok)).show();
     }
 
-    private void editUserWeight(final TextView userWeight) {
+    @OnClick(R.id.edit_user_weight_pop)
+    public void editUserWeight(final TextView userWeight) {
         viewType = 3;
         final DatePickerPopWin pickerPopWin3 = new DatePickerPopWin.Builder(this,
                 new DatePickerPopWin.OnDatePickedListener() {
@@ -324,8 +260,8 @@ public class ProfileActivity extends BaseActivity {
         pickerPopWin3.showPopWin(this);
     }
 
-    private void editUserHeight(final TextView userHeight) {
-
+    @OnClick(R.id.edit_user_height_pop)
+    public void editUserHeight(final TextView userHeight) {
         viewType = 2;
         final DatePickerPopWin pickerPopWin2 = new DatePickerPopWin.Builder(this,
                 new DatePickerPopWin.OnDatePickedListener() {
@@ -343,7 +279,8 @@ public class ProfileActivity extends BaseActivity {
         pickerPopWin2.showPopWin(this);
     }
 
-    private void editUserBirthday(final TextView birthdayText) {
+    @OnClick(R.id.edit_user_birthday_pop)
+    public void editUserBirthday(final TextView birthdayText) {
         viewType = 1;
         final DatePickerPopWin pickerPopWin = new DatePickerPopWin.Builder(this,
                 new DatePickerPopWin.OnDatePickedListener() {
