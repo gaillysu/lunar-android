@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.medcorp.lunar.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.lunar.ble.model.goal.NumberOfStepsGoal;
-import com.medcorp.lunar.model.GoalBase;
 
 import net.medcorp.library.ble.model.request.BLERequestData;
 
@@ -13,8 +12,8 @@ import net.medcorp.library.ble.model.request.BLERequestData;
  */
 public class SetGoalRequest extends BLERequestData {
     public  final static  byte HEADER = 0x22;
-    private GoalBase mGoal = new NumberOfStepsGoal(NumberOfStepsGoal.LOW);
-    public SetGoalRequest(Context context, GoalBase goal )
+    private NumberOfStepsGoal mGoal = new NumberOfStepsGoal(7000);
+    public SetGoalRequest(Context context, NumberOfStepsGoal goal )
     {
         super(new GattAttributesDataSourceImpl(context));
         mGoal = goal;
@@ -28,18 +27,13 @@ public class SetGoalRequest extends BLERequestData {
     @Override
     public byte[][] getRawDataEx() {
 
-        byte level = (byte)(mGoal.getGoalIntensity().ordinal());
-        byte display = 0;  //default is step goal showing
         int goal_dist = 0; //unit ??cm
-
-        int goal_steps = mGoal.getType().equals(NumberOfStepsGoal.TYPE) ? mGoal.getValue() : 0;
-
-        int goal_carlories = 0; // unit ??
+        int goal_steps = mGoal.getSteps();
+        int goal_calories = 0; // unit ??
         int goal_time = 0; //unit ??
 
-
         return new byte[][] {
-                {0,HEADER,level,display,
+                {0,HEADER,0,0,
                         (byte) (goal_dist&0xFF),
                         (byte) ((goal_dist>>8)&0xFF),
                         (byte) ((goal_dist>>16)&0xFF),
@@ -48,10 +42,10 @@ public class SetGoalRequest extends BLERequestData {
                         (byte) ((goal_steps>>8)&0xFF),
                         (byte) ((goal_steps>>16)&0xFF),
                         (byte) ((goal_steps>>24)&0xFF),
-                        (byte) (goal_carlories&0xFF),
-                        (byte) ((goal_carlories>>8)&0xFF),
-                        (byte) ((goal_carlories>>16)&0xFF),
-                        (byte) ((goal_carlories>>24)&0xFF),
+                        (byte) (goal_calories&0xFF),
+                        (byte) ((goal_calories>>8)&0xFF),
+                        (byte) ((goal_calories>>16)&0xFF),
+                        (byte) ((goal_calories>>24)&0xFF),
                         (byte) (goal_time&0xFF),
                         (byte) ((goal_time>>8)&0xFF),
                         (byte) ((goal_time>>16)&0xFF),
@@ -67,7 +61,6 @@ public class SetGoalRequest extends BLERequestData {
 
     @Override
     public byte getHeader() {
-
         return HEADER;
     }
 

@@ -81,7 +81,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     private TextView showUserFirstNameText;
 
-    private View rootView;
     private TextView userView;
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -101,7 +100,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         activeFragment = new Optional<>();
-        rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
         setSupportActionBar(toolbar);
         getSupportActionBar().setElevation(0);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
@@ -157,8 +155,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         userImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                finish();
+                startAndFinishActivity(ProfileActivity.class);
             }
         });
 
@@ -172,8 +169,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 intent.putExtra(getString(R.string.open_activity_is_tutorial), false);
-                startActivity(intent);
-                finish();
+                startAndFinishActivity(intent);
             }
         });
     }

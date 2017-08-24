@@ -26,7 +26,6 @@ public class Alarm extends RealmObject{
     private int minute;
     private byte weekDay;
     private String label;
-    private byte alarmType;
     private byte alarmNumber;
     private boolean enable;
 
@@ -34,12 +33,11 @@ public class Alarm extends RealmObject{
 
     }
 
-    public Alarm(int hour, int minute, byte weekDay, String label, byte alarmType, byte alarmNumber) {
+    public Alarm(int hour, int minute, byte weekDay, String label, byte alarmNumber) {
         this.hour = hour;
         this.minute = minute;
         this.weekDay = weekDay;
         this.label = label;
-        this.alarmType = alarmType;
         this.alarmNumber = alarmNumber;
     }
 
@@ -97,15 +95,6 @@ public class Alarm extends RealmObject{
 
     public void setEnable(boolean enable) {
         this.enable = enable;
-    }
-
-
-    public byte getAlarmType() {
-        return alarmType;
-    }
-
-    public void setAlarmType(byte alarmType) {
-        this.alarmType = alarmType;
     }
 
     @Override

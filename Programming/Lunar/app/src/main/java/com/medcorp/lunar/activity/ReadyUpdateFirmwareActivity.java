@@ -47,9 +47,8 @@ public class ReadyUpdateFirmwareActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(this.getString(R.string.key_firmwares)
                 , (ArrayList<String>) Common.getAllBuildInZipFirmwareURLs(this
-                        , getModel().getSyncController().getWatchInfomation().getWatchID()));
+                        , getModel().getSyncController().getWatchInformation().getWatchID()));
         intent.putExtras(bundle);
-        startActivity(intent);
-        finish();
+        startAndFinishActivity(intent);
     }
 }

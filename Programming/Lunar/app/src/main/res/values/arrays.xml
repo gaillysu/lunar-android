@@ -29,8 +29,18 @@
         <item>10 o\'clock</item>
         <item>12 o\'clock</item>
     </string-array>
-    <string-array name="week_day" translatable="false">
-        <item name="disable">@string/disable</item>
+    <string-array name="week_day" translatable = "false">
+        <item name="sunday">@string/normal_alarm_sunday</item>
+        <item name="monday">@string/normal_alarm_monday</item>
+        <item name="tuesday">@string/normal_alarm_tuesday</item>
+        <item name="wednesday">@string/normal_alarm_wednesday</item>
+        <item name="thursday">@string/normal_alarm_thursday</item>
+        <item name="friday">@string/normal_alarm_friday</item>
+        <item name="saturday">@string/normal_alarm_saturday</item>
+        <item name="only_one">@string/normal_alarm_one_time</item>
+        <item name="daily">@string/normal_alarm_daily</item>
+    </string-array>
+    <string-array name="alarm_week_day" translatable = "false">
         <item name="sunday">@string/sunday</item>
         <item name="monday">@string/monday</item>
         <item name="tuesday">@string/tuesday</item>
@@ -38,6 +48,19 @@
         <item name="thursday">@string/thursday</item>
         <item name="friday">@string/friday</item>
         <item name="saturday">@string/saturday</item>
+        <item name="only_one">@string/one_time_repeat</item>
+        <item name="daily">@string/daily</item>
+    </string-array>
+    <string-array name="alarm_weekday" translatable = "false">
+        <item name="sunday">@string/alarm_sunday</item>
+        <item name="monday">@string/alarm_monday</item>
+        <item name="tuesday">@string/alarm_tuesday</item>
+        <item name="wednesday">@string/alarm_wednesday</item>
+        <item name="thursday">@string/alarm_thursday</item>
+        <item name="friday">@string/alarm_friday</item>
+        <item name="saturday">@string/alarm_saturday</item>
+        <item name="only_one">@string/alarm_one_time</item>
+        <item name="daily">@string/alarm_daily</item>
     </string-array>
     <string-array name="solar_describe_battery_text" translatable="false">
         <item>Solar</item>

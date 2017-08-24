@@ -63,7 +63,6 @@ public class ConfigTimeSyncActivity extends BaseActivity implements RadioGroup.O
 
     @OnClick(R.id.config_next_button)
     public void gotoConfigCity(){
-        startActivity(ConfigCityActivity.class);
-        finish();
+        startAndFinishActivity(ConfigCityActivity.class);
     }
 }

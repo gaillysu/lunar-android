@@ -228,7 +228,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         Bundle bundle = getIntent().getExtras();
         manualMode = bundle.getBoolean(getString(R.string.key_manual_mode), false);
         if (manualMode) {
-            firmwareURLs = Common.getAllBuildInZipFirmwareURLs(this, getModel().getSyncController().getWatchInfomation().getWatchID());
+            firmwareURLs = Common.getAllBuildInZipFirmwareURLs(this, getModel().getSyncController().getWatchInformation().getWatchID());
         } else {
             firmwareURLs = bundle.getStringArrayList(getString(R.string.key_firmwares));
         }
@@ -438,7 +438,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                         .setForceDfu(false)
                         .setPacketsReceiptNotificationsEnabled(true)
                         .setPacketsReceiptNotificationsValue(DfuServiceInitiator.DEFAULT_PRN_VALUE);
-                starter.setZip(Common.getBuildInZipFirmwareRawResID(mContext, getModel().getSyncController().getWatchInfomation().getWatchID()));
+                starter.setZip(Common.getBuildInZipFirmwareRawResID(mContext, getModel().getSyncController().getWatchInformation().getWatchID()));
                 Log.i(TAG, "***********dfu library starts DfuService*******" + "address = " + dfuAddress);
                 starter.start(mContext, DfuService.class);
             }

@@ -27,6 +27,7 @@ import com.medcorp.lunar.ble.model.goal.NumberOfStepsGoal;
 import com.medcorp.lunar.cloud.CloudSyncManager;
 import com.medcorp.lunar.database.LunarAllModules;
 import com.medcorp.lunar.database.entry.AlarmDatabaseHelper;
+import com.medcorp.lunar.database.entry.BedtimeDatabaseHelper;
 import com.medcorp.lunar.database.entry.CityWeatherDatabaseHelper;
 import com.medcorp.lunar.database.entry.LedLampDatabase;
 import com.medcorp.lunar.database.entry.SleepDatabaseHelper;
@@ -143,10 +144,6 @@ public class ApplicationModel extends Application {
     private UserDatabaseHelper userDatabaseHelper;
     private SolarDatabaseHelper solarDatabaseHelper;
     private CityWeatherDatabaseHelper cityWeatherDatabaseHelper;
-    private boolean firmwareUpdateAlertDailog = false;
-    //if it is -1, means mcu version hasn't be read
-    private int mcuFirmwareVersion = -1;
-    private int bleFirmwareVersion = -1;
     private GoogleFitManager googleFitManager;
     private GoogleFitTaskCounter googleFitTaskCounter;
     private CloudSyncManager cloudSyncManager;
@@ -159,7 +156,6 @@ public class ApplicationModel extends Application {
     private IWXAPI mIWXAPI;
     private Steps steps = null;
     private List<Steps> allSteps;
-    private boolean responseCode;
     private final String REALM_NAME = "med_lunar.realm";
     private Sleep mSleep;
     private boolean upDateIsSuccess;
@@ -167,6 +163,7 @@ public class ApplicationModel extends Application {
     private Sleep mYesterdaySleep;
     private Sleep[] todaySleep;
     private static ApplicationModel mModel;
+    private BedtimeDatabaseHelper bedtimeDatabaseHelper;
 
     @Override
     public void onCreate() {
@@ -197,6 +194,7 @@ public class ApplicationModel extends Application {
         weatherManager = new WeatherManager(this);
         ledDataBase = new LedLampDatabase(this);
         locationController = new LocationController(this);
+        bedtimeDatabaseHelper = new BedtimeDatabaseHelper(this);
         mIWXAPI = WXAPIFactory.createWXAPI(this, getString(R.string.we_chat_app_id), true);
         updateGoogleFit();
         if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(getString(R.string.key_preset), false)) {
@@ -903,6 +901,10 @@ public class ApplicationModel extends Application {
         }
     }
 
+    public BedtimeDatabaseHelper getBedTimeDatabaseHelper() {
+        return bedtimeDatabaseHelper;
+    }
+
     public CloudSyncManager getCloudSyncManager() {
         return cloudSyncManager;
     }
@@ -916,7 +918,7 @@ public class ApplicationModel extends Application {
     }
 
     public Observable<User> getUser() {
-        return  userDatabaseHelper.getLoginUser();
+        return userDatabaseHelper.getLoginUser();
     }
 
     @Override
@@ -1174,7 +1176,7 @@ public class ApplicationModel extends Application {
 
 
     private void addDefAlarm() {
-        addAlarm(new Alarm(21, 0, (byte) (0), getString(R.string.def_alarm_one), (byte) 0, (byte) 13)).subscribe(new Consumer<Boolean>() {
+        addAlarm(new Alarm(21, 0, (byte) (1), getString(R.string.def_alarm_one), (byte) 7)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
@@ -1182,7 +1184,7 @@ public class ApplicationModel extends Application {
                 }
             }
         });
-        addAlarm(new Alarm(8, 0, (byte) (0), getString(R.string.def_alarm_two), (byte) 1, (byte) 0)).subscribe(new Consumer<Boolean>() {
+        addAlarm(new Alarm(8, 0, (byte) (2), getString(R.string.def_alarm_two), (byte) 8)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {

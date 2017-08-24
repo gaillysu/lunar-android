@@ -143,6 +143,7 @@ public class ProfileActivity extends BaseActivity {
 
 
     private void initView() {
+<<<<<<< HEAD
         progressDialog = new ProgressDialog(this, AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
@@ -168,6 +169,35 @@ public class ProfileActivity extends BaseActivity {
         } else {
             female.setChecked(true);
         }
+
+        final TextView firstName = (TextView) findViewById(R.id.profile_fragment_user_first_name_tv);
+        final TextView lastName = (TextView) findViewById(R.id.profile_fragment_user_last_name_tv);
+        final TextView userBirthday = (TextView) findViewById(R.id.profile_fragment_user_birthday_tv);
+        final TextView userHeight = (TextView) findViewById(R.id.profile_fragment_user_height_tv);
+        final TextView userWeight = (TextView) findViewById(R.id.profile_fragment_user_weight_tv);
+        if (lunarUser != null) {
+            firstName.setText(TextUtils.isEmpty(lunarUser.getFirstName()) ? getString(R.string.edit_user_first_name) : lunarUser.getFirstName());
+            lastName.setText(TextUtils.isEmpty(lunarUser.getLastName()) ? getString(R.string.edit_user_last_name) : lunarUser.getLastName());
+            //please strictly refer to our UI design Docs, the date format is dd,MMM,yyyy
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
+            userBirthday.setText(simpleDateFormat.format(new Date(lunarUser.getBirthday())));
+            userHeight.setText(lunarUser.getHeight() + " cm");
+            userWeight.setText(lunarUser.getWeight() + " kg");
+        }
+
+        editLastName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editUserName(lastName);
+            }
+        });
+
+        editFirstNameL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editUserName(firstName);
+            }
+        });
 
         editUserBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -348,9 +378,7 @@ public class ProfileActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                startActivity(MainActivity.class);
-                finish();
-                overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
+                startAndFinishActivity(MainActivity.class);
                 break;
             case R.id.done_menu:
                 progressDialog.show();

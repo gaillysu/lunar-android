@@ -70,9 +70,7 @@ public class SignupActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            startActivity(WelcomeActivity.class);
-            finish();
-            overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
+            startAndFinishActivity(WelcomeActivity.class);
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -102,8 +100,7 @@ public class SignupActivity extends BaseActivity {
                     intent.putExtra(getString(R.string.user_register_password), password);
                     intent.putExtra(getString(R.string.user_register_first_name), firstName);
                     intent.putExtra(getString(R.string.user_register_last_name), lastName);
-                    startActivity(intent);
-                    finish();
+                    startAndFinishActivity(intent);
                 } else {
                     ToastHelper.showShortToast(SignupActivity.this, getString(R.string.check_email_message));
                 }

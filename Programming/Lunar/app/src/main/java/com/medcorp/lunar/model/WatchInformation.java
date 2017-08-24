@@ -3,7 +3,7 @@ package com.medcorp.lunar.model;
 /**
  * Created by med on 16/8/4.
  */
-public class WatchInfomation {
+public class WatchInformation {
 
     private byte watchID;
 

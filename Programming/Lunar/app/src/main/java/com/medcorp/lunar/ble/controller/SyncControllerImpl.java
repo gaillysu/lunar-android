@@ -29,6 +29,7 @@ import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.application.ApplicationModel;
 import com.medcorp.lunar.ble.datasource.GattAttributesDataSourceImpl;
+import com.medcorp.lunar.ble.model.goal.NumberOfStepsGoal;
 import com.medcorp.lunar.ble.model.packet.BatteryLevelPacket;
 import com.medcorp.lunar.ble.model.packet.ChargingNotificationPacket;
 import com.medcorp.lunar.ble.model.packet.DailyStepsPacket;
@@ -75,14 +76,13 @@ import com.medcorp.lunar.event.bluetooth.SolarConvertEvent;
 import com.medcorp.lunar.model.Alarm;
 import com.medcorp.lunar.model.Battery;
 import com.medcorp.lunar.model.DailyHistory;
-import com.medcorp.lunar.model.GoalBase;
 import com.medcorp.lunar.model.Sleep;
 import com.medcorp.lunar.model.SleepGoal;
 import com.medcorp.lunar.model.Solar;
 import com.medcorp.lunar.model.SolarGoal;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.User;
-import com.medcorp.lunar.model.WatchInfomation;
+import com.medcorp.lunar.model.WatchInformation;
 import com.medcorp.lunar.util.BatteryLowNotificationUtils;
 import com.medcorp.lunar.util.Common;
 import com.medcorp.lunar.util.LinklossNotificationUtils;
@@ -127,8 +127,6 @@ import java.util.TimerTask;
 import io.reactivex.functions.Consumer;
 import io.realm.Realm;
 
-import static com.medcorp.lunar.R.drawable.user;
-
 public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<Void> {
     private final static String TAG = "SyncControllerImpl";
 
@@ -143,13 +141,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     private List<DailyHistory> savedDailyHistory = new ArrayList<DailyHistory>();
     private int mCurrentDay = 0;
-    private int mTimeOutcount = 0;
-    private long mLastPressAkey = 0;
+    private int mTimeOutCount = 0;
     private boolean mSyncAllFlag = false;
-    private boolean initAlarm = true;
-    private boolean initNotification = true;
     private boolean isHoldRequest = false;
-    private boolean isPendingsunriseAndsunset = true;
+    private boolean isPendingSunriseAndSunset = true;
     private final Object lockObject = new Object();
     private boolean setSunriseAndSunsetSuccess = false;
     //IMPORT!!!!, every get connected, will do sync profile data and activity data with Nevo
@@ -161,6 +156,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     private long LITTLE_SYNC_INTERVAL = 10000L; //10s
     private Timer autoSyncTimer = null;
 
+    // Reactive Stuff
+    private BehaviorSubject<Boolean> connectedObservable = BehaviorSubject.create(false);
+
     private void startTimer() {
         if (autoSyncTimer != null)
             autoSyncTimer.cancel();
@@ -169,7 +167,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         autoSyncTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                //here do little sync to refesh current steps
+                //here do little sync to refresh current steps
                 getStepsAndGoal();
                 //for new Lunar UI, query adc every 10s to show solar charging status
                 sendRequest(new TestModeRequest(mContext, TestModeRequest.MODE_F4));
@@ -219,20 +217,20 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 connectionController.sendRequest(request);
             }
         });
-
     }
 
     @Override
     public void setNotification(boolean init) {
         //TODO: lunar notification use med-library ???
+        // No, need custom.
     }
 
     @Override
-    public WatchInfomation getWatchInfomation() {
-        WatchInfomation watchInfomation = new WatchInfomation();
-        watchInfomation.setWatchID((byte) Preferences.getWatchId(mContext));
-        watchInfomation.setWatchModel((byte) Preferences.getWatchModel(mContext));
-        return watchInfomation;
+    public WatchInformation getWatchInformation() {
+        WatchInformation watchInformation = new WatchInformation();
+        watchInformation.setWatchID((byte) Preferences.getWatchId(mContext));
+        watchInformation.setWatchModel((byte) Preferences.getWatchModel(mContext));
+        return watchInformation;
     }
 
     @Subscribe
@@ -306,7 +304,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                             //save watch infomation into preference
                             Preferences.setWatchId(mContext, watchInfoPacket.getWatchID());
                             Preferences.setWatchModel(mContext, watchInfoPacket.getWatchModel());
-                            EventBus.getDefault().post(new GetWatchInfoChangedEvent(getWatchInfomation()));
+                            EventBus.getDefault().post(new GetWatchInfoChangedEvent(getWatchInformation()));
                         } else if ((byte) ReadDailyTrackerInfoRequest.HEADER == lunarData.getRawData()[1]) {
                             if (!mSyncAllFlag) {
                                 DailyTrackerInfoPacket infopacket = new DailyTrackerInfoPacket(packet.getPackets());
@@ -433,7 +431,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                                 }
                                 //end update
                                 //here save solar time to local database when watch ID>1
-                                if (getWatchInfomation().getWatchID() > 1) {
+                                if (getWatchInformation().getWatchID() > 1) {
                                     final Solar solar = new Solar(new Date(history.getCreated()));
                                     solar.setDate((Common.removeTimeFromDate(solar.getCreatedDate())).getTime());
                                     solar.setUserId(Integer.parseInt(user.getUserID()));
@@ -525,7 +523,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     public void onEvent(BLEConnectionStateChangedEvent stateChangedEvent) {
 
         if (stateChangedEvent.isConnected()) {
-            mTimeOutcount = 0;
+            mTimeOutCount = 0;
             //step1:setRTC, should defer about 2s for waiting the Callback characteristic enable Notify
             //and wait reading FW version done , then do setRTC.
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -547,7 +545,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //                    }
                     setRtc();
                     setWorldClockOffset();
-                    if (isPendingsunriseAndsunset) {
+                    if (isPendingSunriseAndSunset) {
                         //when get local location, will calculate sunrise and sunset time and send it to watch
                         EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.START));
                     }
@@ -587,14 +585,14 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 }
             }
             if (!setSunriseAndSunsetSuccess) {
-                isPendingsunriseAndsunset = true;
+                isPendingSunriseAndSunset = true;
                 EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.FAILED));
             } else {
-                isPendingsunriseAndsunset = false;
+                isPendingSunriseAndSunset = false;
             }
         } else {
             //pending it and send it when got connected next time.
-            isPendingsunriseAndsunset = true;
+            isPendingSunriseAndSunset = true;
         }
     }
 
@@ -645,8 +643,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         } else {
             EventBus.getDefault().post(new OnSyncEvent(OnSyncEvent.SYNC_EVENT.TODAY_SYNC_STOPPED));
         }
-        mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, Calendar.getInstance().getTimeInMillis()).commit();
-        mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.LAST_SYNC_TIME_ZONE, TimeZone.getDefault().getID()).commit();
+        mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, Calendar.getInstance().getTimeInMillis()).apply();
+        mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.LAST_SYNC_TIME_ZONE, TimeZone.getDefault().getID()).apply();
         //tell history to refresh
     }
 
@@ -688,7 +686,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     }
 
     @Override
-    public void setGoal(GoalBase goal) {
+    public void setGoal(NumberOfStepsGoal goal) {
         sendRequest(new SetGoalRequest(mContext, goal));
     }
 
@@ -699,7 +697,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     private void resetAllAlarms() {
         //pls refer to R12 command 0x41, use 0x225588bb to reset all alarms
-        Alarm resetAlarm = new Alarm(0xbb, 0x88, (byte) 0x22, "", (byte) 0, (byte) 0x55);
+        Alarm resetAlarm = new Alarm(0xbb, 0x88, (byte) 0x22, "",(byte) 0x55);
         setAlarm(resetAlarm);
     }
 
@@ -713,12 +711,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         sendRequest(new GetBatteryLevelRequest(mContext));
     }
 
-    /**
-     * @ledpattern, define Led light pattern, 0 means off all led, 0xFFFFFF means light on all led( include color and white)
-     * 0x7FF means light on all white led (bit0~bit10), 0x3F0000 means light on all color led (bit16~bit21)
-     * other value, light on the related led
-     * @motorOnOff, vibrator true or flase
-     */
     @Override
     public void findDevice() {
         sendRequest(new FindWatchRequest(mContext));
@@ -732,6 +724,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     @Override
     public boolean isConnected() {
         return connectionController.isConnected();
+    }
+
+    @Override
+    public BehaviorSubject<Boolean> isConnectedObservable() {
+        return this.connectedObservable;
     }
 
     @Override
@@ -755,9 +752,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         mLocalService.setPairedWatch(null);
         //step3:reset MAC address and firstly run flag and big sync stamp
         connectionController.forgetSavedAddress();
-        getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, true).commit();
+        getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, true).apply();
         //when forget the watch, force a big sync when got connected again
-        getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, 0).commit();
+        getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, 0).apply();
         //reset watch ID and watch model to nevo
         Preferences.setWatchId(mContext, 1);
     }
@@ -826,10 +823,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     @Override
     public Void visit(BLEConnectTimeoutException e) {
-        mTimeOutcount = mTimeOutcount + 1;
+        mTimeOutCount = mTimeOutCount + 1;
         //when reconnect is more than 3, popup message to user to reopen bluetooth or restart smartphone
-        if (mTimeOutcount == 3) {
-            mTimeOutcount = 0;
+        if (mTimeOutCount == 3) {
+            mTimeOutCount = 0;
             showMessage(R.string.ble_connection_timeout_title, R.string.ble_connect_timeout);
         }
         return null;
@@ -844,7 +841,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     Toast.makeText(getContext(), R.string.ble_not_supported, Toast.LENGTH_LONG).show();
                 }
             });
-        } catch (Exception e2) {
+        } catch (Exception ignored) {
 
         }
         return null;
@@ -859,7 +856,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     Toast.makeText(getContext(), R.string.ble_unstable, Toast.LENGTH_LONG).show();
                 }
             });
-        } catch (Exception e3) {
+        } catch (Exception ignored) {
         }
         return null;
     }
@@ -873,7 +870,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     Toast.makeText(getContext(), R.string.ble_deactivated, Toast.LENGTH_LONG).show();
                 }
             });
-        } catch (Exception e1) {
+        } catch (Exception ignored) {
         }
         return null;
     }
@@ -904,7 +901,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 if (intent.getAction().equals(Intent.ACTION_TIMEZONE_CHANGED)) {
                     Log.i("LocalService", "timezone got changed," + TimeZone.getDefault().getDisplayName() + "," + TimeZone.getDefault().getID());
                     localTimeZone = TimeZone.getDefault();
-                    //Timezone changed,reconnect watch and will setRTC again by current tomezone time
+                    //Timezone changed,reconnect watch and will setRTC again by current timezone time
                     ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).disconnect();
                     ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).scan();
                 }
@@ -973,21 +970,17 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             });
         }
 
-        public class LocalBinder extends Binder {
+        class LocalBinder extends Binder {
 
-            public void PopupMessage(int titleID, int msgID) {
+            void PopupMessage(int titleID, int msgID) {
                 LocalService.this.PopupMessage(titleID, msgID);
             }
 
-            public void findCellPhone() {
+            void findCellPhone() {
                 LocalService.this.findCellPhone();
             }
 
-            public String getPairedWatch() {
-                return LocalService.this.pairedBleAddress.notEmpty() ? LocalService.this.pairedBleAddress.get() : null;
-            }
-
-            public void setPairedWatch(String address) {
+            void setPairedWatch(String address) {
                 LocalService.this.pairedBleAddress.set(address);
             }
         }
@@ -1018,8 +1011,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     }
 
     @Override
-    public void setBleConnectTimeout(int timeoutInminutes) {
-        sendRequest(new SetBleConnectTimeoutRequest(mContext, timeoutInminutes));
+    public void setBleConnectTimeout(int timeoutInMinutes) {
+        sendRequest(new SetBleConnectTimeoutRequest(mContext, timeoutInMinutes));
     }
 
     @Override

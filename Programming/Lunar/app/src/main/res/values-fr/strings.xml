@@ -8,12 +8,13 @@
     <string name="def_alarm_two">Alarm 2</string>
     <string name="def_goal_name">Goal</string>
     <string name="choose_activity_title_choose_city_tv">Choose a City</string>
-    <string name="disable">Disable</string>
+    <string name="one_time_repeat">One time alarm</string>
     <string name="sunset_activity_title_yesterday">YESTERDAY</string>
     <string name="sunset_activity_title_tv">TODAY</string>
     <string name="sunset_activity_title_tomorrow">TOMORROW</string>
     <string name="sunrise_activity_toolbar_title">Sunset Sunrise</string>
-    <string name="sunday">Sun</string>
+    <string name="sunday">S</string>
+    <string name="daily">Daily</string>
     <string name="steps_goal_two">6000 steps</string>
     <string name="steps_goal_three">8000 steps</string>
     <string name="steps_goal_one">4500 steps</string>
@@ -66,7 +67,7 @@
     <string name="forget_password_result_prompt">Check your inbox</string>
     <string name="forget_password_result_prompt_user_check_email">Please open the link we’ve  sent and verify your e-mail ad- dress.</string>
     <string name="forget_password_send_request_bt_text">SEND</string>
-    <string name="friday">Fri</string>
+    <string name="friday">F</string>
     <string name="google_fit_cancel">Cancel</string>
     <string name="google_fit_log_out">Log out</string>
     <string name="google_fit_log_out_message">Do you want to disable Google Fit?</string>
@@ -125,7 +126,7 @@
     <string name="main_steps_fragment_title">Steps</string>
     <string name="menu_drawer_hometime">Digital Time</string>
     <string name="more_setting_place_home">Home Time</string>
-    <string name="monday">Mon</string>
+    <string name="monday">M</string>
     <string name="more_setting_place_local">Local Time</string>
     <string name="more_setting_place_time">Watch digital time</string>
     <string name="more_setting_unit">Unit</string>
@@ -188,7 +189,7 @@
     <string name="register_to_login">Already a member? Login</string>
     <string name="register_user_info_page_next_text">Next</string>
     <string name="register_user_info_page_text">Register</string>
-    <string name="saturday">Sat</string>
+    <string name="saturday">S</string>
     <string name="save_notification_ok">Notification Saved</string>
     <string name="settings_more">Goals</string>
     <string name="settings_login">Log in</string>
@@ -206,7 +207,7 @@
     <string name="time_able_morning">am</string>
     <string name="time_able_afternoon">pm</string>
     <string name="tips_user_account_password">Email must not be empty</string>
-    <string name="thursday">Thu</string>
+    <string name="thursday">T</string>
     <string name="unit_length">mi</string>
     <string name="unit_cal">kcal</string>
     <string name="user_info_back_text">Back</string>
@@ -220,9 +221,9 @@
     <string name="validic_enable_message">Please login firstly</string>
     <string name="validic_pin_code_title">Input PIN code</string>
     <string name="validic_pin_code">pin code</string>
-    <string name="wednesday">Wed</string>
+    <string name="wednesday">W</string>
     <string name="sleep_time">Time</string>
-    <string name="tuesday">Tue</string>
+    <string name="tuesday">T</string>
 
 
     <string name="app_name">LunaR</string>
@@ -466,7 +467,7 @@
     <string name="more_settings_steps_goal">Steps Goal</string>
     <string name="def_goal_sleep_name">Sleep Goal</string>
     <string name="sleep_goal_def_long">Long sleep</string>
-    <string name="sleep_goal_def_noon">Siesta</string>
+    <string name="sleep_goal_def_noon">Nap</string>
     <string name="sleep_goal_def_short">Short Sleep</string>
     <string name="sleep_unit_hour">h</string>
     <string name="sleep_unit_minute">min</string>
@@ -560,4 +561,39 @@
     <string name="profile_fragment_email_text">Email</string>
     <string name="profile_input_user_email_dialog_title">Input Email</string>
     <string name="profile_logout_tv">Logout</string>
+    <string name="add_new_bedtime_alarm_dialog_title">Set Bedtime</string>
+    <string name="add_new_normal_alarm_dialog_title">Set Alarm</string>
+    <string name="append_new_alarm_bedtime">Bedtime Alarm</string>
+    <string name="append_new_alarm_normal">Normal Alarm</string>
+    <string name="disable">Disable</string>
+    <string name="edit_alarm_repeat_weekday">Please set the repeat time</string>
+    <string name="edit_new_sleep_describe">Add presets</string>
+    <string name="edit_new_sleep_goal_bottom_dialog_title">Select presets</string>
+    <string name="def_bedtime_name">Bedtime</string>
+    <string name="normal_alarm_daily">daily alarm</string>
+    <string name="normal_alarm_friday">friday</string>
+    <string name="normal_alarm_max_toast">Add up to 6 alarm clocks at most</string>
+    <string name="normal_alarm_monday">monday</string>
+    <string name="normal_alarm_one_time">one time alarm</string>
+    <string name="normal_alarm_saturday">saturday</string>
+    <string name="normal_alarm_sunday">sunday</string>
+    <string name="normal_alarm_thursday">thursday</string>
+    <string name="normal_alarm_tuesday">tuesday</string>
+    <string name="normal_alarm_wednesday">wednesday</string>
+    <string name="select_sleep_goal_describe">Sleep Goal</string>
+    <string name="set_new_alarm_label">Create a label</string>
+    <string name="alarm_daily">Daily alarm</string>
+    <string name="alarm_edit_time_describe">Reselect time</string>
+    <string name="alarm_friday">Fri</string>
+    <string name="alarm_monday">Mon</string>
+    <string name="alarm_one_time">One time alarm</string>
+    <string name="alarm_saturday">Sat</string>
+    <string name="alarm_sunday">Sun</string>
+    <string name="alarm_thursday">Thu</string>
+    <string name="alarm_tuesday">Tue</string>
+    <string name="alarm_wednesday">Wed</string>
+    <string name="time_unit_hour">&#160;hour&#160;</string>
+    <string name="time_unit_hours">&#160;hours&#160;</string>
+    <string name="time_unit_middle">&#160;and&#160;</string>
+    <string name="time_unit_minutes">&#160;minutes</string>
 </resources>

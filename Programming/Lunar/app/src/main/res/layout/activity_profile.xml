@@ -115,6 +115,33 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/edit_user_birthday_pop"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/profile_fragment_user_birthday_text"
+                    android:textColor="@color/profile_fragment_text_value_color"
+                    android:textSize="18sp"
+                    />
+
+                <TextView
+                    android:id="@+id/profile_fragment_user_birthday_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/profile_fragment_text_color"
+                    android:textSize="16sp"
+                    />
 
                         <TextView
                             android:id="@+id/profile_fragment_user_last_name_tv"
@@ -177,6 +204,9 @@
                     android:layout_marginTop="10dp"
                     android:gravity="center_vertical"
                     android:orientation="vertical">
+                    android:textColor="@color/profile_fragment_text_color"
+                    android:textSize="16sp"
+                    />
 
                     <LinearLayout
                         android:id="@+id/edit_user_birthday_pop"
@@ -205,6 +235,15 @@
                             android:textSize="14sp"/>
 
                     </LinearLayout>
+                <TextView
+                    android:id="@+id/profile_fragment_user_weight_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/profile_fragment_text_color"
+                    android:textSize="16sp"
+                    />
 
                     <LinearLayout
                         android:id="@+id/edit_user_height_pop"

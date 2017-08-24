@@ -26,7 +26,7 @@ public class NotificationDataHelper {
     public void saveState(Notification applicationNotification){
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(applicationNotification.getOnOffTag(), applicationNotification.isOn());
-        editor.commit();
+        editor.apply();
     }
 
     public Notification getState(Notification applicationNotification){
@@ -34,16 +34,14 @@ public class NotificationDataHelper {
         return applicationNotification;
     }
 
-    public void setNotificationAppList(Set<String> appList)
-    {
+    public void setNotificationAppList(Set<String> appList) {
         SharedPreferences.Editor editor = pref.edit();
         editor.putStringSet(APPLIST,appList);
-        editor.commit();
+        editor.apply();
     }
-    public Set<String> getNotificationAppList()
-    {
-        Set<String> appList = pref.getStringSet(APPLIST,new HashSet<String>());
-        return appList;
+
+    public Set<String> getNotificationAppList() {
+        return pref.getStringSet(APPLIST,new HashSet<String>());
     }
 
     public static Set<String> getAllPackages(final Context context) {

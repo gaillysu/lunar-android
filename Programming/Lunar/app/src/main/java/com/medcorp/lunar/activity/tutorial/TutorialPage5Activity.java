@@ -58,8 +58,7 @@ public class TutorialPage5Activity extends BaseActivity {
     private void startConnectedActivity()
     {
         Preferences.alreadyConnect(this,true);
-        startActivity(TutorialPageSuccessActivity.class);
-        finish();
+        startAndFinishActivity(TutorialPageSuccessActivity.class);
     }
 
     @Override
