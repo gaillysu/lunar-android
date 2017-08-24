@@ -2,13 +2,13 @@ package com.medcorp.lunar.ble.controller;
 
 import android.content.Context;
 
+import com.medcorp.lunar.ble.model.goal.NumberOfStepsGoal;
 import com.medcorp.lunar.model.Alarm;
-import com.medcorp.lunar.model.GoalBase;
-import com.medcorp.lunar.model.WatchInfomation;
+import com.medcorp.lunar.model.WatchInformation;
 
 import net.medcorp.library.ble.model.request.BLERequestData;
 
-import java.util.List;
+import rx.subjects.BehaviorSubject;
 
 /**
  * this class define some functions for communication with Nevo,
@@ -48,11 +48,13 @@ public interface SyncController {
      */
 	public boolean isConnected();
 
+    public BehaviorSubject<Boolean> isConnectedObservable();
+
     /*
     set Steps StepsGoal
     inputL goal =  new NumberOfStepsGoal(XXXX)
      */
-	public void setGoal( GoalBase goal);
+	public void setGoal( NumberOfStepsGoal goal);
 
     public void setAlarm( Alarm alarm);
     /*
@@ -98,7 +100,7 @@ public interface SyncController {
      */
     public void setNotification(boolean init);
 
-    public WatchInfomation getWatchInfomation();
+    public WatchInformation getWatchInformation();
 
     /**
      * for some customize ROM(xiaomi,meizhu...), the notification listener service perhaps got killed, here force system notification manager to restart it
@@ -112,4 +114,5 @@ public interface SyncController {
     public int getBluetoothStatus();
     public void setBleConnectTimeout(int timeoutInminutes);
     public void setChargingNotification(byte chargingThreshold,boolean enablePhoneNotification);
+    public void setLeftKeyFunction(int function);
 }

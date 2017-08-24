@@ -30,9 +30,7 @@ public class SplashActivity extends BaseActivity {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                startActivity(WelcomeActivity.class);
-                                finish();
-                                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                                startAndFinishActivity(WelcomeActivity.class);
                             }
                         }, 1500);
                     }else{
@@ -41,18 +39,14 @@ public class SplashActivity extends BaseActivity {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        startActivity(new Intent(SplashActivity.this, ConfigTimeSyncActivity.class));
-                                        finish();
-                                        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                                        startAndFinishActivity(ConfigTimeSyncActivity.class);
                                     }
                                 }, 1500);
                             } else{
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                                        finish();
-                                        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                                        startAndFinishActivity(MainActivity.class);
                                     }
                                 }, 1500);
                             }
@@ -60,9 +54,7 @@ public class SplashActivity extends BaseActivity {
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    startActivity(TutorialPage1Activity.class);
-                                    finish();
-                                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                                    startAndFinishActivity(TutorialPage1Activity.class);
                                 }
                             }, 1500);
                         }
@@ -73,18 +65,14 @@ public class SplashActivity extends BaseActivity {
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    startActivity(new Intent(SplashActivity.this, ConfigTimeSyncActivity.class));
-                                    finish();
-                                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                                    startAndFinishActivity(ConfigTimeSyncActivity.class);
                                 }
                             }, 1500);
                         } else{
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                                    finish();
-                                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                                    startAndFinishActivity(MainActivity.class);
                                 }
                             }, 1500);
                         }
@@ -92,9 +80,7 @@ public class SplashActivity extends BaseActivity {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                startActivity(TutorialPage1Activity.class);
-                                finish();
-                                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                                startAndFinishActivity(TutorialPage1Activity.class);
                             }
                         }, 1500);
                     }

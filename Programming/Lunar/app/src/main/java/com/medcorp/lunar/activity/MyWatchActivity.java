@@ -90,8 +90,7 @@ public class MyWatchActivity extends BaseActivity {
             showFirmwerVersion.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(ReadyUpdateFirmwareActivity.class);
-                    finish();
+                    startAndFinishActivity(ReadyUpdateFirmwareActivity.class);
                 }
             });
         } else {

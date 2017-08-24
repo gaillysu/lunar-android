@@ -59,10 +59,8 @@ public class AnalysisSleepFragment extends BaseFragment {
     LinearLayout uiControl;
 
     private List<View> sleepList;
-    private View thisWeekView;
-    private View todaySleepViewChart;
-    private View lastMonthView;
-    private AnalysisSleepLineChart thisWeekChart, lastMonthChart;
+    private AnalysisSleepLineChart thisWeekChart;
+    private AnalysisSleepLineChart lastMonthChart;
     private SleepTodayChart todaySleepChart;
     private TipsView mMv;
     private SleepGoal mActiveSleepGoal;
@@ -83,9 +81,9 @@ public class AnalysisSleepFragment extends BaseFragment {
     private void initView(LayoutInflater inflater) {
         sleepList = new ArrayList<>(3);
 
-        todaySleepViewChart = inflater.inflate(R.layout.analysis_sleep_today_chart, null);
-        thisWeekView = inflater.inflate(R.layout.analysis_sleep_chart_fragment_layout, null);
-        lastMonthView = inflater.inflate(R.layout.analysis_sleep_chart_fragment_layout, null);
+        View todaySleepViewChart = inflater.inflate(R.layout.analysis_sleep_today_chart, null);
+        View thisWeekView = inflater.inflate(R.layout.analysis_sleep_chart_fragment_layout, null);
+        View lastMonthView = inflater.inflate(R.layout.analysis_sleep_chart_fragment_layout, null);
 
         todaySleepChart = (SleepTodayChart) todaySleepViewChart.findViewById(R.id.analysis_sleep_today_chart);
         thisWeekChart = (AnalysisSleepLineChart) thisWeekView.findViewById(R.id.analysis_sleep_chart);

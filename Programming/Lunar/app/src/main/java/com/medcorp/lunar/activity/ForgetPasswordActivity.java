@@ -94,8 +94,7 @@ public class ForgetPasswordActivity extends BaseActivity {
                     intent.putExtra(getString(R.string.forget_password_token), requestTokenResponse.getUser().getPassword_token());
                     intent.putExtra(getString(R.string.user_email_account), email);
                     intent.putExtra(getString(R.string.user_id), requestTokenResponse.getUser().getId());
-                    startActivity(intent);
-                    finish();
+                    startAndFinishActivity(intent);
                 } else {
                     ToastHelper.showShortToast(ForgetPasswordActivity.this, requestTokenResponse.getMessage());
                 }
@@ -108,7 +107,6 @@ public class ForgetPasswordActivity extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             startActivity(LoginActivity.class);
             finish();
-            overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
             return true;
         }
         return super.onKeyDown(keyCode, event);

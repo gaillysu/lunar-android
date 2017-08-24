@@ -55,8 +55,7 @@ public class TutorialPage2Activity extends BaseActivity {
     @OnClick(R.id.activity_tutorial_2_continue_button)
     public void continueClicked() {
         if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-            startActivity(TutorialPage3Activity.class);
-            finish();
+            startAndFinishActivity(TutorialPage3Activity.class);
         } else {
             new MaterialDialog.Builder(this)
                     .content(R.string.tutorial_2_dialog_positive)

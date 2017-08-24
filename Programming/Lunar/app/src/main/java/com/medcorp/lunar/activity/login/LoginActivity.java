@@ -84,9 +84,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            startActivity(WelcomeActivity.class);
-            finish();
-            overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
+            startAndFinishActivity(WelcomeActivity.class);
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -165,11 +163,10 @@ public class LoginActivity extends BaseActivity {
                 setResult(RESULT_OK, null);
                 Preferences.saveIsFirstLogin(LoginActivity.this, false);
                 if (getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, false)) {
-                    startActivity(TutorialPage1Activity.class);
+                    startAndFinishActivity(TutorialPage1Activity.class);
                 } else {
-                    startActivity(MainActivity.class);
+                    startAndFinishActivity(MainActivity.class);
                 }
-                finish();
             }
         });
     }
@@ -178,8 +175,7 @@ public class LoginActivity extends BaseActivity {
     public void forgetPassword() {
         Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
         intent.putExtra(getString(R.string.user_email_account), email);
-        startActivity(intent);
-        finish();
+        startAndFinishActivity(intent);
     }
 
     public void onLoginFailed() {
@@ -195,8 +191,7 @@ public class LoginActivity extends BaseActivity {
                 public void onClick(MaterialDialog dialog, DialogAction which) {
                     Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
                     intent.putExtra(getString(R.string.user_email_account), email);
-                    startActivity(intent);
-                    finish();
+                    startAndFinishActivity(intent);
                 }
             }).show();
         }

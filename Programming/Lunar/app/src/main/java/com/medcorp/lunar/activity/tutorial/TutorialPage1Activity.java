@@ -25,7 +25,7 @@ public class TutorialPage1Activity extends BaseActivity {
 
     @OnClick(R.id.activity_tutorial_1_activate_button)
     public void activateClicked() {
-        startActivity(TutorialPage2Activity.class);
-        finish();
+        startAndFinishActivity(TutorialPage2Activity.class);
+
     }
 }

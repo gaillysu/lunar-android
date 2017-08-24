@@ -276,9 +276,7 @@ public class ProfileActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                startActivity(MainActivity.class);
-                finish();
-                overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
+                startAndFinishActivity(MainActivity.class);
                 break;
             case R.id.done_menu:
                 progressDialog = new ProgressDialog(this, AppTheme_Dark_Dialog);
