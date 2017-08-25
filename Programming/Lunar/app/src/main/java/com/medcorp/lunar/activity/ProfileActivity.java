@@ -20,18 +20,17 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.cloud.med.MedNetworkOperation;
@@ -46,11 +45,10 @@ import com.medcorp.lunar.util.PublicUtils;
 import com.medcorp.lunar.view.ToastHelper;
 
 import java.io.File;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -72,28 +70,23 @@ public class ProfileActivity extends BaseActivity {
     @Bind(R.id.profile_activity_select_picture)
     ImageView mImageButton;
     @Bind(R.id.profile_fragment_user_first_name_tv)
-    EditText firstName;
+    TextView firstName;
     @Bind(R.id.profile_fragment_user_last_name_tv)
-    EditText lastName;
+    TextView lastName;
     @Bind(R.id.profile_fragment_user_birthday_tv)
     TextView userBirthday;
     @Bind(R.id.profile_fragment_user_height_tv)
     TextView userHeight;
     @Bind(R.id.profile_fragment_user_weight_tv)
     TextView userWeight;
-    @Bind(R.id.profile_user_gender_radio_group)
-    RadioGroup profileGender;
-    @Bind(R.id.profile_user_gender_female)
-    RadioButton female;
-    @Bind(R.id.profile_user_gender_male)
-    RadioButton male;
     @Bind(R.id.profile_logout_bt)
     AppCompatButton logoutButton;
     @Bind(R.id.profile_delete_bt)
     AppCompatButton deleteProfile;
     @Bind(R.id.profile_fragment_user_user_email_tv)
-    EditText userEmailTv;
-
+    TextView userEmailTv;
+    @Bind(R.id.profile_fragment_user_gender_tv)
+    TextView userGender;
     private User lunarUser;
     private int viewType;
     private String userEmail;
@@ -101,6 +94,9 @@ public class ProfileActivity extends BaseActivity {
     protected static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
     private ArrayList<String> mSelectPath;
     private ProgressDialog progressDialog;
+    private Calendar calendar = Calendar.getInstance();
+    private int height = 0;
+    private int weight = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,11 +141,7 @@ public class ProfileActivity extends BaseActivity {
             deleteProfile.setVisibility(View.GONE);
             logoutButton.setVisibility(View.GONE);
         }
-        if (lunarUser.getSex() == 1) {
-            male.setChecked(true);
-        } else {
-            female.setChecked(true);
-        }
+
         if (lunarUser != null) {
             firstName.setText(TextUtils.isEmpty(lunarUser.getFirstName()) ? getString(R.string.edit_user_first_name) : lunarUser.getFirstName());
             lastName.setText(TextUtils.isEmpty(lunarUser.getLastName()) ? getString(R.string.edit_user_last_name) : lunarUser.getLastName());
@@ -158,18 +150,8 @@ public class ProfileActivity extends BaseActivity {
             userBirthday.setText(dateFormat.format(new Date(lunarUser.getBirthday())));
             userHeight.setText(lunarUser.getHeight() + " cm");
             userWeight.setText(lunarUser.getWeight() + " kg");
+            userGender.setText(getResources().getStringArray(R.array.profile_gender)[lunarUser.getSex()]);
         }
-
-        profileGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.profile_user_gender_male) {
-                    lunarUser.setSex(1);
-                } else {
-                    lunarUser.setSex(0);
-                }
-            }
-        });
     }
 
     @Override
@@ -178,7 +160,6 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void editUserName(final TextView nameText) {
-
         String content = null;
         String hintName = null;
         if (nameText.getId() == R.id.profile_fragment_user_first_name_tv) {
@@ -241,68 +222,119 @@ public class ProfileActivity extends BaseActivity {
                 .negativeText(R.string.notification_cancel).positiveText(getString(R.string.notification_ok)).show();
     }
 
-    @OnClick(R.id.edit_user_weight_pop)
-    public void editUserWeight(final TextView userWeight) {
-        viewType = 3;
-        final DatePickerPopWin pickerPopWin3 = new DatePickerPopWin.Builder(this,
-                new DatePickerPopWin.OnDatePickedListener() {
+    @OnClick(R.id.edit_user_gender_pop)
+    public void editGender() {
+        new MaterialDialog.Builder(this)
+                .title(R.string.setting_user_gender_dialog_title)
+                .items(R.array.profile_gender)
+                .itemsCallbackSingleChoice(lunarUser.getSex(), new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
-                    public void onDatePickCompleted(int year, int month,
-                                                    int day, String dateDesc) {
-                        userWeight.setText(dateDesc + " kg");
-                        lunarUser.setWeight(new Integer(dateDesc).intValue());
+                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        lunarUser.setSex(which);
+                        userGender.setText(getResources().getStringArray(R.array.profile_gender)[which]);
+                        return true;
                     }
-                }).viewStyle(viewType)
-                .viewTextSize(25)
-                .dateChose(lunarUser.getWeight() + "")
-                .build();
+                }).positiveText(R.string.mis_permission_dialog_ok)
+                .negativeText(R.string.mis_permission_dialog_cancel)
+                .positiveColorRes(R.color.colorPrimary)
+                .negativeColorRes(R.color.colorPrimary)
+                .show();
+    }
 
-        pickerPopWin3.showPopWin(this);
+    @OnClick(R.id.edit_user_weight_pop)
+    public void editUserWeight() {
+
+        View view = LayoutInflater.from(this).inflate(R.layout.number_picker_layout, null);
+        TextView unitText = (TextView) view.findViewById(R.id.dialog_unit);
+        unitText.setText("kg");
+        NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker_group);
+        numberPicker.setMinValue(30);
+        numberPicker.setMaxValue(200);
+        numberPicker.setValue(lunarUser.getWeight());
+        numberPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                userWeight.setText(newVal + " kg");
+                weight = newVal;
+            }
+        });
+        new MaterialDialog.Builder(this)
+                .title(R.string.setting_user_weight_dialog_title)
+                .customView(view, false)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        lunarUser.setWeight(weight);
+                    }
+                }).positiveText(R.string.mis_permission_dialog_ok)
+                .negativeText(R.string.mis_permission_dialog_cancel)
+                .positiveColorRes(R.color.colorPrimary)
+                .negativeColorRes(R.color.colorPrimary)
+                .show();
     }
 
     @OnClick(R.id.edit_user_height_pop)
-    public void editUserHeight(final TextView userHeight) {
-        viewType = 2;
-        final DatePickerPopWin pickerPopWin2 = new DatePickerPopWin.Builder(this,
-                new DatePickerPopWin.OnDatePickedListener() {
+    public void editUserHeight() {
+        View view = LayoutInflater.from(this).inflate(R.layout.number_picker_layout, null);
+        TextView unitText = (TextView) view.findViewById(R.id.dialog_unit);
+        unitText.setText("cm");
+        NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker_group);
+        numberPicker.setMinValue(120);
+        numberPicker.setMaxValue(320);
+        numberPicker.setValue(lunarUser.getHeight());
+        numberPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                userHeight.setText(newVal + " cm");
+                height = newVal;
+            }
+        });
+        new MaterialDialog.Builder(this)
+                .title(R.string.setting_user_height_dialog_title)
+                .customView(view, false)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onDatePickCompleted(int year, int month,
-                                                    int day, String dateDesc) {
-                        userHeight.setText(dateDesc + " cm");
-                        lunarUser.setHeight(new Integer(dateDesc).intValue());
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        lunarUser.setHeight(height);
                     }
-                }).viewStyle(viewType)
-                .viewTextSize(25)
-                .dateChose(lunarUser.getHeight() + "")
-                .build();
-
-        pickerPopWin2.showPopWin(this);
+                }).positiveText(R.string.mis_permission_dialog_ok)
+                .negativeText(R.string.mis_permission_dialog_cancel)
+                .positiveColorRes(R.color.colorPrimary)
+                .negativeColorRes(R.color.colorPrimary)
+                .show();
     }
 
     @OnClick(R.id.edit_user_birthday_pop)
-    public void editUserBirthday(final TextView birthdayText) {
-        viewType = 1;
-        final DatePickerPopWin pickerPopWin = new DatePickerPopWin.Builder(this,
-                new DatePickerPopWin.OnDatePickedListener() {
+    public void editUserBirthday() {
+        if (lunarUser.getBirthday() != 0) {
+            calendar.setTimeInMillis(lunarUser.getBirthday());
+        }
+        View inflate = LayoutInflater.from(this).inflate(R.layout.date_picker_dialog_layout, null);
+        DatePicker datepicker = (DatePicker) inflate.findViewById(R.id.setting_user_birthday_dp);
+        datepicker.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)
+                , calendar.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
                     @Override
-                    public void onDatePickCompleted(int year, int month,
-                                                    int day, String dateDesc) {
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                        try {
-                            Date date = dateFormat.parse(dateDesc);
-                            birthdayText.setText(new SimpleDateFormat("dd MMM yyyy", Locale.US).format(date));
-                            lunarUser.setBirthday(date.getTime());
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                    public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        calendar.set(Calendar.MONTH, monthOfYear);
+                        calendar.set(Calendar.YEAR, year);
+                        userBirthday.setText(dayOfMonth + " - " +
+                                new SimpleDateFormat("MMM").format(calendar.getTime()) + " - " + year);
                     }
-                }).viewStyle(viewType)
-                .viewTextSize(25) // pick view text size
-                .minYear(Integer.valueOf(new SimpleDateFormat("yyyy").format(new Date())) - 100) //min year in loop
-                .maxYear(Integer.valueOf(new SimpleDateFormat("yyyy").format(new Date())) + 1)
-                .dateChose(new SimpleDateFormat("yyyy-MM-dd").format(new Date(lunarUser.getBirthday()))) // date chose when init popwindow
-                .build();
-        pickerPopWin.showPopWin(this);
+                });
+        new MaterialDialog.Builder(this).title(getString(R.string.setting_user_birthday))
+                .customView(inflate, false)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        lunarUser.setBirthday(calendar.getTimeInMillis());
+                    }
+                }).positiveText(R.string.mis_permission_dialog_ok)
+                .negativeText(R.string.mis_permission_dialog_cancel)
+                .positiveColorRes(R.color.colorPrimary)
+                .negativeColorRes(R.color.colorPrimary).show();
     }
 
     @Override

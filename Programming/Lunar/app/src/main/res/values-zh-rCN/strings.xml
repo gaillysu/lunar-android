@@ -591,4 +591,12 @@
     <string name="time_unit_hours">&#160;小时&#160;</string>
     <string name="time_unit_middle">&#160;</string>
     <string name="time_unit_minutes">&#160;分钟</string>
+    <string name="add_alarm_dialog_describe">设置闹钟时间</string>
+    <string name="profile_fragment_user_gender_text">性别</string>
+    <string name="profile_user_information_title">个人信息</string>
+    <string name="profile_user_more_about_you_title">更多信息</string>
+    <string name="setting_user_birthday">选择出生日期</string>
+    <string name="setting_user_gender_dialog_title">选择性别</string>
+    <string name="setting_user_height_dialog_title">选择身高</string>
+    <string name="setting_user_weight_dialog_title">选择体重</string>
 </resources>

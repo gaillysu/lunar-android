@@ -596,4 +596,12 @@
     <string name="time_unit_hours">&#160;hours&#160;</string>
     <string name="time_unit_middle">&#160;and&#160;</string>
     <string name="time_unit_minutes">&#160;minutes</string>
+    <string name="add_alarm_dialog_describe">Select your wake up time.</string>
+    <string name="profile_fragment_user_gender_text">gender</string>
+    <string name="profile_user_information_title">Basic information</string>
+    <string name="profile_user_more_about_you_title">More about you</string>
+    <string name="setting_user_birthday">Setting Your Birthday</string>
+    <string name="setting_user_gender_dialog_title">Setting Your Gender</string>
+    <string name="setting_user_height_dialog_title">Setting Your Height</string>
+    <string name="setting_user_weight_dialog_title">Setting Your Weight</string>
 </resources>
