@@ -154,7 +154,7 @@ public class ProfileActivity extends BaseActivity {
             //please strictly refer to our UI design Docs, the date format is dd,MMM,yyyy
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
             userBirthday.setText(dateFormat.format(new Date(lunarUser.getBirthday())));
-            userHeight.setText(lunarUser.getHeight() + " cm");
+            userHeight.setText(lunarUser.getHeight() / 100 + "m " + lunarUser.getHeight() % 100 + "cm");
             userWeight.setText(lunarUser.getWeight() + " kg");
             userGender.setText(getResources().getStringArray(R.array.profile_gender)[lunarUser.getSex()]);
         }
@@ -230,7 +230,7 @@ public class ProfileActivity extends BaseActivity {
         numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                userHeight.setText(newVal + " cm");
+                userHeight.setText(newVal / 100 + "m " + newVal % 100 + "cm");
                 height = newVal;
             }
         });

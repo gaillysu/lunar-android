@@ -21,6 +21,7 @@
     <color name="textColor">#333</color>
     <color name="textColorPrimaryInverse">@android:color/white</color>
     <color name="notification_divider_color">#C8C7CC</color>
+    <color name="profile_divider_view_background">#95989A</color>
     <color name="user_sex_text_normal_color">#95989A</color>
     <color name="user_info_text_select_color">@android:color/white</color>
     <color name="tutorial_black">#ff000000</color>
