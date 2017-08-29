@@ -56,8 +56,6 @@
     <string name="edit_home_position_city">Position City</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="edit_notification_item_name">Edit</string>
-    <string name="edit_user_last_name">Click to set your last name</string>
-    <string name="edit_user_first_name">Click to set your first name</string>
     <string name="email_format_error">Invalid Email format</string>
     <string name="every_day">Every</string>
     <string name="forget_password_activity_page_dec">Tell us the email-address you used to register a LunaR-account. Within minutes after the request you will receive a new temporary password.</string>
@@ -151,7 +149,7 @@
     <string name="profile_fragment_first_name_text">First Name</string>
     <string name="profile_fragment_input_surname_edit_hint">Surname</string>
     <string name="profile_fragment_input_user_surname_dialog_title">Input Surname</string>
-    <string name="profile_fragment_last_name_text">Surname</string>
+    <string name="profile_fragment_last_name_text">Last Name</string>
     <string name="profile_fragment_user_birthday_text">Birthday</string>
     <string name="profile_fragment_user_height_text">Height</string>
     <string name="profile_fragment_user_weight_text">Weight</string>
@@ -553,7 +551,6 @@
     <string name="settings_notifications_inactive_button_tv">Deactivate </string>
     <string name="edit_goal_name">Edit Name</string>
     <string name="edit_goal_time_text">Select Time</string>
-    <string name="edit_user_email">Click to set your email</string>
     <string name="profile_delete_dialog_prompt_user">Are you sure you want to delete user?</string>
     <string name="profile_delete_dialog_title">Delete User</string>
     <string name="profile_delete_tv">Delete</string>

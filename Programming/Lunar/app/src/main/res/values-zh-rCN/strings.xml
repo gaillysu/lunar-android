@@ -105,8 +105,6 @@
     <string name="dfu_error_other">升级异常错误.</string>
     <string name="dfu_update_message">正在升级&#8230;</string>
     <string name="dfu_update_available">有可升级的固件版本.</string>
-    <string name="edit_user_first_name">请设置您的名字!</string>
-    <string name="edit_user_last_name">请设置你的姓氏!</string>
     <string name="notification_allow">允许通知</string>
     <string name="notification">通知</string>
     <string name="notification_led_red">红灯</string>

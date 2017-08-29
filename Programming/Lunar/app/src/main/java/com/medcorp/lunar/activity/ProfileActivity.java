@@ -17,7 +17,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -25,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -70,9 +70,9 @@ public class ProfileActivity extends BaseActivity {
     @Bind(R.id.profile_activity_select_picture)
     ImageView mImageButton;
     @Bind(R.id.profile_fragment_user_first_name_tv)
-    TextView firstName;
+    EditText firstName;
     @Bind(R.id.profile_fragment_user_last_name_tv)
-    TextView lastName;
+    EditText lastName;
     @Bind(R.id.profile_fragment_user_birthday_tv)
     TextView userBirthday;
     @Bind(R.id.profile_fragment_user_height_tv)
@@ -84,11 +84,10 @@ public class ProfileActivity extends BaseActivity {
     @Bind(R.id.profile_delete_bt)
     AppCompatButton deleteProfile;
     @Bind(R.id.profile_fragment_user_user_email_tv)
-    TextView userEmailTv;
+    EditText userEmailTv;
     @Bind(R.id.profile_fragment_user_gender_tv)
     TextView userGender;
     private User lunarUser;
-    private int viewType;
     private String userEmail;
     private static final int REQUEST_IMAGE = 2;
     protected static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
@@ -143,8 +142,15 @@ public class ProfileActivity extends BaseActivity {
         }
 
         if (lunarUser != null) {
-            firstName.setText(TextUtils.isEmpty(lunarUser.getFirstName()) ? getString(R.string.edit_user_first_name) : lunarUser.getFirstName());
-            lastName.setText(TextUtils.isEmpty(lunarUser.getLastName()) ? getString(R.string.edit_user_last_name) : lunarUser.getLastName());
+            if (!TextUtils.isEmpty(lunarUser.getFirstName())) {
+                firstName.setText(lunarUser.getFirstName());
+            }
+            if (!TextUtils.isEmpty(lunarUser.getLastName())) {
+                lastName.setText(lunarUser.getLastName());
+            }
+            if (!TextUtils.isEmpty(lunarUser.getUserEmail())) {
+                userEmailTv.setText(userEmail);
+            }
             //please strictly refer to our UI design Docs, the date format is dd,MMM,yyyy
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
             userBirthday.setText(dateFormat.format(new Date(lunarUser.getBirthday())));
@@ -157,69 +163,6 @@ public class ProfileActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         finish();
-    }
-
-    private void editUserName(final TextView nameText) {
-        String content = null;
-        String hintName = null;
-        if (nameText.getId() == R.id.profile_fragment_user_first_name_tv) {
-            content = getString(R.string.profile_input_user_first_name_dialog_title);
-            hintName = lunarUser.getFirstName();
-        } else if (nameText.getId() == R.id.profile_fragment_user_last_name_tv) {
-            content = getString(R.string.profile_fragment_input_user_surname_dialog_title);
-            hintName = lunarUser.getLastName();
-        }
-
-        new MaterialDialog.Builder(this).title(getString(R.string.edit_profile)).content(content)
-                .inputType(InputType.TYPE_CLASS_TEXT).input(getResources().getString(R.string.profile_fragment_edit_first_name_edit_hint),
-                hintName, new MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(MaterialDialog dialog, CharSequence input) {
-                        if (input.toString().length() > 0) {
-                            nameText.setText(input.toString());
-                            if (nameText.getId() == R.id.profile_fragment_user_first_name_tv) {
-                                lunarUser.setFirstName(input.toString());
-                            } else if (nameText.getId() == R.id.profile_fragment_user_last_name_tv) {
-                                lunarUser.setLastName(input.toString());
-                            }
-                        }
-                    }
-                })
-                .negativeText(R.string.notification_cancel).positiveText(getString(R.string.notification_ok)).show();
-
-    }
-
-    @OnClick(R.id.profile_activity_edit_first_name)
-    public void editFirstName() {
-        editUserName(firstName);
-    }
-
-    @OnClick(R.id.profile_activity_edit_last_name)
-    public void editLastName() {
-        editUserName(lastName);
-    }
-
-    @OnClick(R.id.profile_activity_edit_user_email)
-    public void writeEmail() {
-        String email = lunarUser.getUserEmail();
-        new MaterialDialog.Builder(this).title(getString(R.string.edit_profile))
-                .content(R.string.profile_input_user_email_dialog_title)
-                .inputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
-                .input(getResources().getString(R.string.profile_input_user_email_dialog_title),
-                        email, new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(MaterialDialog dialog, CharSequence input) {
-                                if (input.toString().length() > 0) {
-                                    if (Patterns.EMAIL_ADDRESS.matcher(input.toString()).matches()) {
-                                        userEmailTv.setText(input.toString());
-                                        lunarUser.setUserEmail(input.toString());
-                                    } else {
-                                        ToastHelper.showShortToast(ProfileActivity.this, getString(R.string.register_email_error));
-                                    }
-                                }
-                            }
-                        })
-                .negativeText(R.string.notification_cancel).positiveText(getString(R.string.notification_ok)).show();
     }
 
     @OnClick(R.id.edit_user_gender_pop)
@@ -350,6 +293,27 @@ public class ProfileActivity extends BaseActivity {
                 startAndFinishActivity(MainActivity.class);
                 break;
             case R.id.done_menu:
+                String userLastName = lastName.getText().toString();
+                String userFirstName = firstName.getText().toString();
+                String userEmail = userEmailTv.getText().toString();
+                if (userFirstName.isEmpty()) {
+                    ToastHelper.showShortToast(this, R.string.register_input_first_is_empty);
+                    break;
+                } else {
+                    lunarUser.setFirstName(userFirstName);
+                }
+                if (userLastName.isEmpty()) {
+                    ToastHelper.showShortToast(this, R.string.register_input_first_is_empty);
+                    break;
+                } else {
+                    lunarUser.setLastName(userLastName);
+                }
+                if (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
+                    userEmailTv.setText(userEmail);
+                    lunarUser.setUserEmail(userEmail);
+                } else {
+                    ToastHelper.showShortToast(ProfileActivity.this, getString(R.string.register_email_error));
+                }
                 progressDialog.show();
                 String format = new SimpleDateFormat("yyyy-MM-dd").format(lunarUser.getBirthday());
                 UpdateAccountInformationRequest request = new UpdateAccountInformationRequest(

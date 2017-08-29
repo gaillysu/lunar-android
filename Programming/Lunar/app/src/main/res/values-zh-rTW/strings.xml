@@ -19,8 +19,6 @@
     <string name="tell_user_update_more_alarm">低版本中最多只可以添加三個鬧鍾!</string>
     <string name="in_app_notification_no_goal">請選擇你的目標。</string>
     <string name="forget_password_input_new_password">新密碼</string>
-    <string name="edit_user_first_name">請設置您的名字!</string>
-    <string name="edit_user_last_name">請設置你的姓氏!</string>
     <string name="def_alarm_one">鬧鍾 1</string>
     <string name="def_alarm_two">鬧鍾 3</string>
     <string name="def_goal_name">目標</string>

@@ -164,7 +164,13 @@
     <style name="hintAppearance" parent="TextAppearance.AppCompat">
         <item name="android:textSize">14sp</item>
     </style>
-
+    <style name="hintTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/profile_fragment_text_value_color</item>
+        <item name="android:textColorHighlight">@color/profile_fragment_text_value_color</item>
+        <item name="android:textColorHint">@color/profile_fragment_text_value_color</item>
+        <item name="android:textColorLink">@color/profile_fragment_text_value_color</item>
+    </style>
     <style name="pop_window_animation_style">
         <item name="android:windowEnterAnimation">@anim/popupwindow_entry_anim</item>
         <item name="android:windowExitAnimation">@anim/popupwindow_out_anim</item>
