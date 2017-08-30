@@ -86,12 +86,12 @@ public class Preferences {
     public static void  setHotKey(Context context,int hotkey) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(context.getString(R.string.key_hot_key), hotkey).apply();
+        editor.putInt(context.getString(R.string.key_hot), hotkey).apply();
     }
 
     public static int getHotKey(Context context) {
         init(context);
-        return preferences.getInt(context.getString(R.string.key_hot_key),0);
+        return preferences.getInt(context.getString(R.string.key_hot),0);
     }
 
     public static boolean getIsFirstLogin(Context context) {
