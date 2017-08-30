@@ -156,8 +156,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     private long LITTLE_SYNC_INTERVAL = 10000L; //10s
     private Timer autoSyncTimer = null;
 
-    // Reactive Stuff
-    private BehaviorSubject<Boolean> connectedObservable = BehaviorSubject.create(false);
 
     private void startTimer() {
         if (autoSyncTimer != null)
@@ -724,11 +722,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     @Override
     public boolean isConnected() {
         return connectionController.isConnected();
-    }
-
-    @Override
-    public BehaviorSubject<Boolean> isConnectedObservable() {
-        return this.connectedObservable;
     }
 
     @Override

@@ -35,7 +35,7 @@
     <string name="key_prefs_is_metrics" translatable="false">is_not_metrics</string>
     <string name="key_is_already_connect" translatable="false">is_already_connect</string>
     <string name="key_prefs_is_home" translatable="false">is_select_city</string>
-    <string name="key_init_alarm" translatable="false"> is_init_alarm</string>
+    <string name="key_hot" translatable="false"> hot_key</string>
     <string name="key_first_setting" translatable="false">is_first_setting</string>
     <string name="key_prefs_watch_id" translatable="false">watch_id</string>
     <string name="key_prefs_watch_model" translatable="false">watch_model</string>
