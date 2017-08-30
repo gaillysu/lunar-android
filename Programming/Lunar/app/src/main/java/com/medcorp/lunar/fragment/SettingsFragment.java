@@ -389,7 +389,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                                 Preferences.setHotKey(getContext(), selectHotKey);
                                 deviceListMenu.get(5).setSubtitle(getHotKeySubtitle(selectHotKey));
                                 mSettingDeviceAdapter.notifyDataSetChanged();
-                                //TODO sync hot key to watch
+                                getModel().getSyncController().setLeftKeyFunction(selectHotKey);
                             }
                         })
                         .cancelable(false)
