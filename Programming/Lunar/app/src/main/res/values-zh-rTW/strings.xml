@@ -587,5 +587,10 @@
     <string name="time_unit_hours">&#160;小时&#160;</string>
     <string name="time_unit_middle">&#160;</string>
     <string name="time_unit_minutes">&#160;分钟</string>
+    <string name="add_alarm_dialog_describe">輸選擇鬧鐘時間</string>
+    <string name="hot_key_describe">如果手邊沒有連接,將在手表連接的時候同步.</string>
+    <string name="hot_key_dialog_control_music">調節音樂</string>
+    <string name="hot_key_dialog_find_my_phone">尋找我的手機</string>
+    <string name="hot_key_dialog_remote_camera">控制照相機</string>
 
 </resources>

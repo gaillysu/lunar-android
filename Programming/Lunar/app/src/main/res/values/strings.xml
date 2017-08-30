@@ -239,7 +239,8 @@
     <string name="settings_support">Support</string>
     <string name="settings_about">About</string>
     <string name="settings_forget_watch">Forget watch</string>
-    <string name="settings_hot_key">Hot key</string>
+    <string name="settings_hot_key" translatable="false">Hot key</string>
+    <string name="settings_hot_key_dialog_title" translatable="false">Hot Key</string>
     <string name="settings_sure">Are you sure?</string>
     <string name="settings_other_apps">Connect to other apps</string>
     <string name="settings_other_apps_short">Other apps</string>

@@ -117,7 +117,8 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
         deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_bluetooth_scan),
                 scanDurationSubTitle, R.drawable.ic_scan_bluetooth));
         deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
-        deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_hot_key), R.drawable.ic_start));
+
+        deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_hot_key), getHotKeySubtitle(Preferences.getHotKey(getContext())),R.drawable.ic_start));
         mSettingDeviceAdapter = new SettingMenuAdapter(getContext(), deviceListMenu, this);
         settingDeviceLIstView.setAdapter(mSettingDeviceAdapter);
         settingDeviceLIstView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -126,6 +127,22 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                 deviceListItemClick(position);
             }
         });
+    }
+
+    public String getHotKeySubtitle(int hotKey){
+        String hotKeySubtitle = null;
+        switch(hotKey){
+            case 0:
+                hotKeySubtitle = getString(R.string.hot_key_dialog_find_my_phone);
+                break;
+            case 1:
+                hotKeySubtitle = getString(R.string.hot_key_dialog_control_music);
+                break;
+            case 2:
+                hotKeySubtitle = getString(R.string.hot_key_dialog_remote_camera);
+                break;
+        }
+        return hotKeySubtitle;
     }
 
     private void initLocalData() {
@@ -313,7 +330,6 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                         .show();
                 break;
             case 5:
-                int hotkey = Preferences.getHotkey(getContext());
                 View inflate = LayoutInflater.from(getContext()).inflate(R.layout.hot_key_dialog_content, null);
                 LinearLayout findMyPhone = (LinearLayout) inflate.findViewById(R.id.hot_key_find_my_phone);
                 final LinearLayout remoteCamera = (LinearLayout) inflate.findViewById(R.id.hot_key_remote_camera);
@@ -321,7 +337,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                 final CheckBox findMyPhoneCheckBox = (CheckBox) inflate.findViewById(R.id.hot_key_find_my_phone_ck);
                 final CheckBox remoteCameraCheckBox = (CheckBox) inflate.findViewById(R.id.hot_key_remote_camera_ck);
                 final CheckBox controlMusicCheckBox = (CheckBox) inflate.findViewById(R.id.hot_key_control_music_ck);
-                switch (hotkey) {
+                switch (Preferences.getHotKey(getContext())) {
                     case 0:
                         findMyPhoneCheckBox.setChecked(true);
                         remoteCameraCheckBox.setChecked(false);
@@ -364,13 +380,15 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                         selectHotKey = 2;
                     }
                 });
-                new MaterialDialog.Builder(getContext()).title(R.string.settings_hot_key)
+                new MaterialDialog.Builder(getContext()).title(R.string.settings_hot_key_dialog_title)
                         .customView(inflate, false).negativeText(android.R.string.no)
                         .positiveText(android.R.string.yes)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(MaterialDialog dialog, DialogAction which) {
-                                Preferences.setHotKry(getContext(), selectHotKey);
+                                Preferences.setHotKey(getContext(), selectHotKey);
+                                deviceListMenu.get(5).setSubtitle(getHotKeySubtitle(selectHotKey));
+                                mSettingDeviceAdapter.notifyDataSetChanged();
                                 //TODO sync hot key to watch
                             }
                         })

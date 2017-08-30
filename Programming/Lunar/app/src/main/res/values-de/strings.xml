@@ -588,5 +588,10 @@
     <string name="time_unit_hours">&#160;hours&#160;</string>
     <string name="time_unit_middle">&#160;and&#160;</string>
     <string name="time_unit_minutes">&#160;minutes</string>
+    <string name="add_alarm_dialog_describe">Select your wake up time.</string>
+    <string name="hot_key_describe">If your LunaR Watch is not connected,it will sync as soon as it gets connected.</string>
+    <string name="hot_key_dialog_control_music">Control music</string>
+    <string name="hot_key_dialog_find_my_phone">Find my phone</string>
+    <string name="hot_key_dialog_remote_camera">Remote camera</string>
 
 </resources>
