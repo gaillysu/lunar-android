@@ -360,6 +360,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                         findMyPhoneCheckBox.setChecked(true);
                         remoteCameraCheckBox.setChecked(false);
                         controlMusicCheckBox.setChecked(false);
+                        selectHotKey  = 0;
                     }
                 });
                 controlMusic.setOnClickListener(new View.OnClickListener() {
