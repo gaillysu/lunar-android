@@ -66,4 +66,6 @@
     <string name="edit_new_sleep_goal_bottom_dialog_title">Select presets</string>
     <string name="edit_alarm_repeat_weekday">Please set the repeat time</string>
     <string name="alarm_edit_time_describe">Reselect time</string>
+    <string name="profile_user_information_title">Basic information</string>
+    <string name="profile_user_more_about_you_title">More about you</string>
 </resources>

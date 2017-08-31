@@ -15,35 +15,40 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.cloud.med.MedNetworkOperation;
 import com.medcorp.lunar.model.User;
 import com.medcorp.lunar.network.listener.RequestResponseListener;
+import com.medcorp.lunar.network.model.request.DeleteUserAccountRequest;
 import com.medcorp.lunar.network.model.request.UpdateAccountInformationRequest;
+import com.medcorp.lunar.network.model.response.DeleteUserAccountResponse;
 import com.medcorp.lunar.network.model.response.UpdateAccountInformationResponse;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.util.PublicUtils;
 import com.medcorp.lunar.view.ToastHelper;
 
 import java.io.File;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -55,7 +60,7 @@ import me.nereo.multi_image_selector.MultiImageSelectorFragment;
 
 import static com.medcorp.lunar.R.style.AppTheme_Dark_Dialog;
 
-/**
+/***
  * Created by med on 16/4/6.
  */
 public class ProfileActivity extends BaseActivity {
@@ -64,24 +69,33 @@ public class ProfileActivity extends BaseActivity {
     Toolbar toolbar;
     @Bind(R.id.profile_activity_select_picture)
     ImageView mImageButton;
-    @Bind(R.id.profile_activity_edit_first_name)
-    LinearLayout editFirstNameL;
-    @Bind(R.id.profile_activity_edit_last_name)
-    LinearLayout editLastName;
-    @Bind(R.id.edit_user_birthday_pop)
-    LinearLayout editUserBirthday;
-    @Bind(R.id.edit_user_height_pop)
-    LinearLayout editUserHeightL;
-    @Bind(R.id.edit_user_weight_pop)
-    LinearLayout editUserWeightL;
-
+    @Bind(R.id.profile_fragment_user_first_name_tv)
+    EditText firstName;
+    @Bind(R.id.profile_fragment_user_last_name_tv)
+    EditText lastName;
+    @Bind(R.id.profile_fragment_user_birthday_tv)
+    TextView userBirthday;
+    @Bind(R.id.profile_fragment_user_height_tv)
+    TextView userHeight;
+    @Bind(R.id.profile_fragment_user_weight_tv)
+    TextView userWeight;
+    @Bind(R.id.profile_logout_bt)
+    AppCompatButton logoutButton;
+    @Bind(R.id.profile_delete_bt)
+    AppCompatButton deleteProfile;
+    @Bind(R.id.profile_fragment_user_user_email_tv)
+    EditText userEmailTv;
+    @Bind(R.id.profile_fragment_user_gender_tv)
+    TextView userGender;
     private User lunarUser;
-    private int viewType;
     private String userEmail;
     private static final int REQUEST_IMAGE = 2;
     protected static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
     private ArrayList<String> mSelectPath;
     private ProgressDialog progressDialog;
+    private Calendar calendar = Calendar.getInstance();
+    private int height = 0;
+    private int weight = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,12 +111,13 @@ public class ProfileActivity extends BaseActivity {
             @Override
             public void accept(User user) throws Exception {
                 lunarUser = user;
+                initView();
                 if (user.getUserEmail() != null) {
                     userEmail = user.getUserEmail();
                 } else {
                     userEmail = getString(R.string.watch_med_profile);
                 }
-                Bitmap bt = BitmapFactory.decodeFile(Preferences.getUserHeardPicturePath(ProfileActivity.this, userEmail));//从Sd中找头像，转换成Bitmap
+                Bitmap bt = BitmapFactory.decodeFile(Preferences.getUserHeardPicturePath(ProfileActivity.this, userEmail));
                 if (bt != null) {
                     mImageButton.setImageBitmap(PublicUtils.drawCircleView(bt));
                 } else {
@@ -110,61 +125,39 @@ public class ProfileActivity extends BaseActivity {
                 }
             }
         });
-        initView();
     }
 
 
     private void initView() {
-
-        final TextView firstName = (TextView) findViewById(R.id.profile_fragment_user_first_name_tv);
-        final TextView lastName = (TextView) findViewById(R.id.profile_fragment_user_last_name_tv);
-        final TextView userBirthday = (TextView) findViewById(R.id.profile_fragment_user_birthday_tv);
-        final TextView userHeight = (TextView) findViewById(R.id.profile_fragment_user_height_tv);
-        final TextView userWeight = (TextView) findViewById(R.id.profile_fragment_user_weight_tv);
-        if (lunarUser != null) {
-            firstName.setText(TextUtils.isEmpty(lunarUser.getFirstName()) ? getString(R.string.edit_user_first_name) : lunarUser.getFirstName());
-            lastName.setText(TextUtils.isEmpty(lunarUser.getLastName()) ? getString(R.string.edit_user_last_name) : lunarUser.getLastName());
-            //please strictly refer to our UI design Docs, the date format is dd,MMM,yyyy
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
-            userBirthday.setText(simpleDateFormat.format(new Date(lunarUser.getBirthday())));
-            userHeight.setText(lunarUser.getHeight() + " cm");
-            userWeight.setText(lunarUser.getWeight() + " kg");
+        progressDialog = new ProgressDialog(this, AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(false);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage(getString(R.string.network_wait_text));
+        if (lunarUser.isLogin()) {
+            deleteProfile.setVisibility(View.VISIBLE);
+            logoutButton.setVisibility(View.VISIBLE);
+        } else {
+            deleteProfile.setVisibility(View.GONE);
+            logoutButton.setVisibility(View.GONE);
         }
 
-        editLastName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editUserName(lastName);
+        if (lunarUser != null) {
+            if (!TextUtils.isEmpty(lunarUser.getFirstName())) {
+                firstName.setText(lunarUser.getFirstName());
             }
-        });
-
-        editFirstNameL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editUserName(firstName);
+            if (!TextUtils.isEmpty(lunarUser.getLastName())) {
+                lastName.setText(lunarUser.getLastName());
             }
-        });
-
-        editUserBirthday.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editUserBirthday(userBirthday);
+            if (!TextUtils.isEmpty(lunarUser.getUserEmail())) {
+                userEmailTv.setText(userEmail);
             }
-        });
-
-        editUserHeightL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editUserHeight(userHeight);
-            }
-        });
-
-        editUserWeightL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editUserWeight(userWeight);
-            }
-        });
+            //please strictly refer to our UI design Docs, the date format is dd,MMM,yyyy
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+            userBirthday.setText(dateFormat.format(new Date(lunarUser.getBirthday())));
+            userHeight.setText(lunarUser.getHeight() / 100 + "m " + lunarUser.getHeight() % 100 + "cm");
+            userWeight.setText(lunarUser.getWeight() + " kg");
+            userGender.setText(getResources().getStringArray(R.array.profile_gender)[lunarUser.getSex()]);
+        }
     }
 
     @Override
@@ -172,98 +165,119 @@ public class ProfileActivity extends BaseActivity {
         finish();
     }
 
-    private void editUserName(final TextView nameText) {
+    @OnClick(R.id.edit_user_gender_pop)
+    public void editGender() {
+        new MaterialDialog.Builder(this)
+                .title(R.string.setting_user_gender_dialog_title)
+                .items(R.array.profile_gender)
+                .itemsCallbackSingleChoice(lunarUser.getSex(), new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        lunarUser.setSex(which);
+                        userGender.setText(getResources().getStringArray(R.array.profile_gender)[which]);
+                        return true;
+                    }
+                }).positiveText(R.string.mis_permission_dialog_ok)
+                .negativeText(R.string.mis_permission_dialog_cancel)
+                .positiveColorRes(R.color.colorPrimary)
+                .negativeColorRes(R.color.colorPrimary)
+                .show();
+    }
 
-        String content = null;
-        String hintName = null;
-        if (nameText.getId() == R.id.profile_fragment_user_first_name_tv) {
-            content = getString(R.string.profile_input_user_first_name_dialog_title);
-            hintName = lunarUser.getFirstName();
-        } else if (nameText.getId() == R.id.profile_fragment_user_last_name_tv) {
-            content = getString(R.string.profile_fragment_input_user_surname_dialog_title);
-            hintName = lunarUser.getLastName();
+    @OnClick(R.id.edit_user_weight_pop)
+    public void editUserWeight() {
+
+        View view = LayoutInflater.from(this).inflate(R.layout.number_picker_layout, null);
+        TextView unitText = (TextView) view.findViewById(R.id.dialog_unit);
+        unitText.setText("kg");
+        NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker_group);
+        numberPicker.setMinValue(30);
+        numberPicker.setMaxValue(200);
+        numberPicker.setValue(lunarUser.getWeight());
+        numberPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                userWeight.setText(newVal + " kg");
+                weight = newVal;
+            }
+        });
+        new MaterialDialog.Builder(this)
+                .title(R.string.setting_user_weight_dialog_title)
+                .customView(view, false)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        lunarUser.setWeight(weight);
+                    }
+                }).positiveText(R.string.mis_permission_dialog_ok)
+                .negativeText(R.string.mis_permission_dialog_cancel)
+                .positiveColorRes(R.color.colorPrimary)
+                .negativeColorRes(R.color.colorPrimary)
+                .show();
+    }
+
+    @OnClick(R.id.edit_user_height_pop)
+    public void editUserHeight() {
+        View view = LayoutInflater.from(this).inflate(R.layout.number_picker_layout, null);
+        TextView unitText = (TextView) view.findViewById(R.id.dialog_unit);
+        unitText.setText("cm");
+        NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker_group);
+        numberPicker.setMinValue(120);
+        numberPicker.setMaxValue(320);
+        numberPicker.setValue(lunarUser.getHeight());
+        numberPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                userHeight.setText(newVal / 100 + "m " + newVal % 100 + "cm");
+                height = newVal;
+            }
+        });
+        new MaterialDialog.Builder(this)
+                .title(R.string.setting_user_height_dialog_title)
+                .customView(view, false)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        lunarUser.setHeight(height);
+                    }
+                }).positiveText(R.string.mis_permission_dialog_ok)
+                .negativeText(R.string.mis_permission_dialog_cancel)
+                .positiveColorRes(R.color.colorPrimary)
+                .negativeColorRes(R.color.colorPrimary)
+                .show();
+    }
+
+    @OnClick(R.id.edit_user_birthday_pop)
+    public void editUserBirthday() {
+        if (lunarUser.getBirthday() != 0) {
+            calendar.setTimeInMillis(lunarUser.getBirthday());
         }
-
-        new MaterialDialog.Builder(this).title(getString(R.string.edit_profile)).content(content)
-                .inputType(InputType.TYPE_CLASS_TEXT).input(getResources().getString(R.string.profile_fragment_edit_first_name_edit_hint),
-                hintName, new MaterialDialog.InputCallback() {
+        View inflate = LayoutInflater.from(this).inflate(R.layout.date_picker_dialog_layout, null);
+        DatePicker datepicker = (DatePicker) inflate.findViewById(R.id.setting_user_birthday_dp);
+        datepicker.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)
+                , calendar.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
                     @Override
-                    public void onInput(MaterialDialog dialog, CharSequence input) {
-                        if (input.toString().length() > 0) {
-                            nameText.setText(input.toString());
-                            if (nameText.getId() == R.id.profile_fragment_user_first_name_tv) {
-                                lunarUser.setFirstName(input.toString());
-                            } else if (nameText.getId() == R.id.profile_fragment_user_last_name_tv) {
-                                lunarUser.setLastName(input.toString());
-                            }
-                        }
+                    public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        calendar.set(Calendar.MONTH, monthOfYear);
+                        calendar.set(Calendar.YEAR, year);
+                        userBirthday.setText(dayOfMonth + " - " +
+                                new SimpleDateFormat("MMM").format(calendar.getTime()) + " - " + year);
                     }
-                })
-                .negativeText(R.string.notification_cancel).positiveText(getString(R.string.notification_ok)).show();
-
-    }
-
-
-    private void editUserWeight(final TextView userWeight) {
-        viewType = 3;
-        final DatePickerPopWin pickerPopWin3 = new DatePickerPopWin.Builder(this,
-                new DatePickerPopWin.OnDatePickedListener() {
+                });
+        new MaterialDialog.Builder(this).title(getString(R.string.setting_user_birthday))
+                .customView(inflate, false)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onDatePickCompleted(int year, int month,
-                                                    int day, String dateDesc) {
-                        userWeight.setText(dateDesc + " kg");
-                        lunarUser.setWeight(new Integer(dateDesc).intValue());
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        lunarUser.setBirthday(calendar.getTimeInMillis());
                     }
-                }).viewStyle(viewType)
-                .viewTextSize(25)
-                .dateChose(lunarUser.getWeight() + "")
-                .build();
-
-        pickerPopWin3.showPopWin(this);
-    }
-
-    private void editUserHeight(final TextView userHeight) {
-
-        viewType = 2;
-        final DatePickerPopWin pickerPopWin2 = new DatePickerPopWin.Builder(this,
-                new DatePickerPopWin.OnDatePickedListener() {
-                    @Override
-                    public void onDatePickCompleted(int year, int month,
-                                                    int day, String dateDesc) {
-                        userHeight.setText(dateDesc + " cm");
-                        lunarUser.setHeight(new Integer(dateDesc).intValue());
-                    }
-                }).viewStyle(viewType)
-                .viewTextSize(25)
-                .dateChose(lunarUser.getHeight() + "")
-                .build();
-
-        pickerPopWin2.showPopWin(this);
-    }
-
-    private void editUserBirthday(final TextView birthdayText) {
-        viewType = 1;
-        final DatePickerPopWin pickerPopWin = new DatePickerPopWin.Builder(this,
-                new DatePickerPopWin.OnDatePickedListener() {
-                    @Override
-                    public void onDatePickCompleted(int year, int month,
-                                                    int day, String dateDesc) {
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                        try {
-                            Date date = dateFormat.parse(dateDesc);
-                            birthdayText.setText(new SimpleDateFormat("dd MMM yyyy", Locale.US).format(date));
-                            lunarUser.setBirthday(date.getTime());
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).viewStyle(viewType)
-                .viewTextSize(25) // pick view text size
-                .minYear(Integer.valueOf(new SimpleDateFormat("yyyy").format(new Date())) - 100) //min year in loop
-                .maxYear(Integer.valueOf(new SimpleDateFormat("yyyy").format(new Date())) + 1)
-                .dateChose(new SimpleDateFormat("yyyy-MM-dd").format(new Date(lunarUser.getBirthday()))) // date chose when init popwindow
-                .build();
-        pickerPopWin.showPopWin(this);
+                }).positiveText(R.string.mis_permission_dialog_ok)
+                .negativeText(R.string.mis_permission_dialog_cancel)
+                .positiveColorRes(R.color.colorPrimary)
+                .negativeColorRes(R.color.colorPrimary).show();
     }
 
     @Override
@@ -279,10 +293,27 @@ public class ProfileActivity extends BaseActivity {
                 startAndFinishActivity(MainActivity.class);
                 break;
             case R.id.done_menu:
-                progressDialog = new ProgressDialog(this, AppTheme_Dark_Dialog);
-                progressDialog.setIndeterminate(false);
-                progressDialog.setCancelable(false);
-                progressDialog.setMessage(getString(R.string.network_wait_text));
+                String userLastName = lastName.getText().toString();
+                String userFirstName = firstName.getText().toString();
+                String userEmail = userEmailTv.getText().toString();
+                if (userFirstName.isEmpty()) {
+                    ToastHelper.showShortToast(this, R.string.register_input_first_is_empty);
+                    break;
+                } else {
+                    lunarUser.setFirstName(userFirstName);
+                }
+                if (userLastName.isEmpty()) {
+                    ToastHelper.showShortToast(this, R.string.register_input_first_is_empty);
+                    break;
+                } else {
+                    lunarUser.setLastName(userLastName);
+                }
+                if (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
+                    userEmailTv.setText(userEmail);
+                    lunarUser.setUserEmail(userEmail);
+                } else {
+                    ToastHelper.showShortToast(ProfileActivity.this, getString(R.string.register_email_error));
+                }
                 progressDialog.show();
                 String format = new SimpleDateFormat("yyyy-MM-dd").format(lunarUser.getBirthday());
                 UpdateAccountInformationRequest request = new UpdateAccountInformationRequest(
@@ -403,6 +434,77 @@ public class ProfileActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    @OnClick(R.id.profile_logout_bt)
+    public void logout() {
+        new MaterialDialog.Builder(this)
+                .title(getString(R.string.google_fit_log_out))
+                .content(getString(R.string.settings_sure))
+                .positiveText(R.string.goal_ok)
+                .negativeText(R.string.goal_cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        lunarUser.setIsLogin(false);
+                        getModel().saveUser(lunarUser);
+                        ProfileActivity.this.finish();
+                    }
+                })
+                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                .positiveColor(getResources().getColor(R.color.colorPrimary))
+                .show();
+    }
+
+    @OnClick(R.id.profile_delete_bt)
+    public void deleteProfile() {
+        new MaterialDialog.Builder(this)
+                .title(getString(R.string.profile_delete_dialog_title))
+                .content(getString(R.string.profile_delete_dialog_prompt_user))
+                .positiveText(R.string.goal_ok)
+                .negativeText(R.string.goal_cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        deleteCurrentAccount();
+                    }
+                })
+                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                .positiveColor(getResources().getColor(R.color.colorPrimary))
+                .show();
+    }
+
+    private void deleteCurrentAccount() {
+        progressDialog.show();
+        DeleteUserAccountRequest request = new DeleteUserAccountRequest(new Integer(lunarUser.getUserID()).intValue());
+        MedNetworkOperation.getInstance(this).deleteCurrentAccount(request,
+                new RequestResponseListener<DeleteUserAccountResponse>() {
+                    @Override
+                    public void onFailed() {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialog.dismiss();
+                                ToastHelper.showShortToast(ProfileActivity.this,
+                                        getString(R.string.save_update_user_info_failed));
+                                String userHeardPicturePath = Preferences.getUserHeardPicturePath(ProfileActivity.this, userEmail);
+                                new File(userHeardPicturePath).delete();
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onSuccess(DeleteUserAccountResponse response) {
+                        progressDialog.dismiss();
+                        if (response.getStatus() >= 0) {
+                            getModel().getUserDatabaseHelper().remove(lunarUser.getUserID(), new Date(lunarUser.getCreatedDate()));
+                            lunarUser.setIsLogin(false);
+                            getModel().saveUser(lunarUser);
+                            ProfileActivity.this.finish();
+                        }
+                    }
+                });
     }
 
     @Override

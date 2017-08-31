@@ -32,14 +32,11 @@ public class AnalysisFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                AnalysisStepsFragment analysisStepsFragment = (AnalysisStepsFragment) AnalysisStepsFragment.instantiate(context, AnalysisStepsFragment.class.getName());
-                return analysisStepsFragment;
+                return AnalysisStepsFragment.instantiate(context, AnalysisStepsFragment.class.getName());
             case 1:
-                AnalysisSleepFragment analysisSleepFragment = (AnalysisSleepFragment) AnalysisSleepFragment.instantiate(context, AnalysisSleepFragment.class.getName());
-                return analysisSleepFragment;
+                return  AnalysisSleepFragment.instantiate(context, AnalysisSleepFragment.class.getName());
             case 2:
-                AnalysisSolarFragment analysisSolarFragment = (AnalysisSolarFragment) AnalysisSolarFragment.instantiate(context, AnalysisSolarFragment.class.getName());
-                return analysisSolarFragment;
+                return AnalysisSolarFragment.instantiate(context, AnalysisSolarFragment.class.getName());
             default:
                 return null;
         }

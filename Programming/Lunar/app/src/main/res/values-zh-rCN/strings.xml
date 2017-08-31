@@ -105,8 +105,6 @@
     <string name="dfu_error_other">升级异常错误.</string>
     <string name="dfu_update_message">正在升级&#8230;</string>
     <string name="dfu_update_available">有可升级的固件版本.</string>
-    <string name="edit_user_first_name">请设置您的名字!</string>
-    <string name="edit_user_last_name">请设置你的姓氏!</string>
     <string name="notification_allow">允许通知</string>
     <string name="notification">通知</string>
     <string name="notification_led_red">红灯</string>
@@ -374,7 +372,7 @@
     <string name="register_account_message">没有账号?创建一个</string>
     <string name="register_account_page_title">注册</string>
     <string name="register_create_account">创建帐号</string>
-    <string name="register_email_error">输入电邮地址</string>
+    <string name="register_email_error">输入有效的电子邮件地址</string>
     <string name="register_failed">注册失败</string>
     <string name="register_first_name_hint">姓名</string>
     <string name="register_input_first_is_empty">姓名不能为空</string>
@@ -549,6 +547,13 @@
     <string name="settings_notifications_inactive_button_tv">关闭通知</string>
     <string name="edit_goal_name">编辑名称</string>
     <string name="edit_goal_time_text">设置时长</string>
+    <string name="edit_user_email">请输入您的邮箱!</string>
+    <string name="profile_delete_dialog_prompt_user">您确定删除当前资料吗?</string>
+    <string name="profile_delete_dialog_title">删除帐号</string>
+    <string name="profile_delete_tv">删除帐号</string>
+    <string name="profile_fragment_email_text">邮箱</string>
+    <string name="profile_input_user_email_dialog_title">邮箱</string>
+    <string name="profile_logout_tv">注销登录</string>
     <string name="add_new_bedtime_alarm_dialog_title">编辑休息闹钟</string>
     <string name="add_new_normal_alarm_dialog_title">添加闹钟</string>
     <string name="append_new_alarm_bedtime">休息闹钟</string>
@@ -584,4 +589,12 @@
     <string name="time_unit_hours">&#160;小时&#160;</string>
     <string name="time_unit_middle">&#160;</string>
     <string name="time_unit_minutes">&#160;分钟</string>
+    <string name="add_alarm_dialog_describe">设置闹钟时间</string>
+    <string name="profile_fragment_user_gender_text">性别</string>
+    <string name="profile_user_information_title">个人信息</string>
+    <string name="profile_user_more_about_you_title">更多信息</string>
+    <string name="setting_user_birthday">选择出生日期</string>
+    <string name="setting_user_gender_dialog_title">选择性别</string>
+    <string name="setting_user_height_dialog_title">选择身高</string>
+    <string name="setting_user_weight_dialog_title">选择体重</string>
 </resources>

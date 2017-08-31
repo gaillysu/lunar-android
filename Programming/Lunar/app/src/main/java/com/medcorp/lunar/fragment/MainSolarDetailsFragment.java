@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.event.bluetooth.BatteryEvent;
 import com.medcorp.lunar.event.bluetooth.GetWatchInfoChangedEvent;
+import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.event.bluetooth.PositionAddressChangeEvent;
 import com.medcorp.lunar.event.bluetooth.SolarConvertEvent;
 import com.medcorp.lunar.fragment.base.BaseFragment;
@@ -73,8 +74,8 @@ public class MainSolarDetailsFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        initData();
         EventBus.getDefault().register(this);
+        initData();
     }
 
     @Override
@@ -229,6 +230,19 @@ public class MainSolarDetailsFragment extends BaseFragment {
                 initData();
             }
         });
+    }
+
+    @Subscribe
+    public void onEvent(final OnSyncEvent event) {
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED
+                | event.getStatus() == OnSyncEvent.SYNC_EVENT.TODAY_SYNC_STOPPED) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    initData();
+                }
+            });
+        }
     }
 
     private String countTime(int goalDuration) {

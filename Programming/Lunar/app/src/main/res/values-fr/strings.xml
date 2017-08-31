@@ -56,8 +56,6 @@
     <string name="edit_home_position_city">Position City</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="edit_notification_item_name">Edit</string>
-    <string name="edit_user_last_name">Click to set your last name</string>
-    <string name="edit_user_first_name">Click to set your first name</string>
     <string name="email_format_error">Invalid Email format</string>
     <string name="every_day">Every</string>
     <string name="forget_password_activity_page_dec">Tell us the email-address you used to register a LunaR-account. Within minutes after the request you will receive a new temporary password.</string>
@@ -151,7 +149,7 @@
     <string name="profile_fragment_first_name_text">First Name</string>
     <string name="profile_fragment_input_surname_edit_hint">Surname</string>
     <string name="profile_fragment_input_user_surname_dialog_title">Input Surname</string>
-    <string name="profile_fragment_last_name_text">Surname</string>
+    <string name="profile_fragment_last_name_text">Last Name</string>
     <string name="profile_fragment_user_birthday_text">Birthday</string>
     <string name="profile_fragment_user_height_text">Height</string>
     <string name="profile_fragment_user_weight_text">Weight</string>
@@ -554,6 +552,12 @@
     <string name="settings_notifications_inactive_button_tv">Deactivate </string>
     <string name="edit_goal_name">Edit Name</string>
     <string name="edit_goal_time_text">Select Time</string>
+    <string name="profile_delete_dialog_prompt_user">Are you sure you want to delete user?</string>
+    <string name="profile_delete_dialog_title">Delete User</string>
+    <string name="profile_delete_tv">Delete</string>
+    <string name="profile_fragment_email_text">Email</string>
+    <string name="profile_input_user_email_dialog_title">Input Email</string>
+    <string name="profile_logout_tv">Logout</string>
     <string name="add_new_bedtime_alarm_dialog_title">Set Bedtime</string>
     <string name="add_new_normal_alarm_dialog_title">Set Alarm</string>
     <string name="append_new_alarm_bedtime">Bedtime Alarm</string>
@@ -589,4 +593,12 @@
     <string name="time_unit_hours">&#160;hours&#160;</string>
     <string name="time_unit_middle">&#160;and&#160;</string>
     <string name="time_unit_minutes">&#160;minutes</string>
+    <string name="add_alarm_dialog_describe">Select your wake up time.</string>
+    <string name="profile_fragment_user_gender_text">Gender</string>
+    <string name="profile_user_information_title">Basic information</string>
+    <string name="profile_user_more_about_you_title">More about you</string>
+    <string name="setting_user_birthday">Set Your Birthday</string>
+    <string name="setting_user_gender_dialog_title">Set Your Gender</string>
+    <string name="setting_user_height_dialog_title">Set Your Height</string>
+    <string name="setting_user_weight_dialog_title">Set Your Weight</string>
 </resources>
