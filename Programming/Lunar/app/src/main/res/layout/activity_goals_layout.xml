@@ -38,7 +38,7 @@
         android:layout_height="40dp"
         android:layout_below="@+id/activity_goals_describe"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="40dp">
+        android:layout_marginTop="60dp">
 
         <TextView
             android:id="@+id/activity_goals_step_tv"
@@ -67,7 +67,7 @@
         android:layout_height="40dp"
         android:layout_below="@+id/activity_goals_step_goal_ll"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="40dp">
 
         <TextView
             android:id="@+id/activity_goals_sleep_tv"
@@ -96,7 +96,7 @@
         android:layout_height="40dp"
         android:layout_below="@+id/activity_goals_sleep_goal_ll"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="40dp">
 
         <TextView
             android:id="@+id/activity_goals_solar_tv"
@@ -122,7 +122,7 @@
         android:id="@+id/config_next_button"
         style="@style/TutorialButton"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="54dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="60dp"
