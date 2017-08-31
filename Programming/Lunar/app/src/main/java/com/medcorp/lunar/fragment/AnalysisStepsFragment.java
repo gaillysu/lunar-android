@@ -1,6 +1,8 @@
 package com.medcorp.lunar.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.adapter.AnalysisStepsChartAdapter;
+import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.fragment.base.BaseFragment;
 import com.medcorp.lunar.model.Steps;
 import com.medcorp.lunar.model.StepsGoal;
@@ -19,6 +22,9 @@ import com.medcorp.lunar.util.TimeUtil;
 import com.medcorp.lunar.view.TipsView;
 import com.medcorp.lunar.view.graphs.AnalysisStepsLineChart;
 import com.medcorp.lunar.view.graphs.DailyStepsBarChart;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,48 +64,32 @@ public class AnalysisStepsFragment extends BaseFragment {
     private List<Steps> lastMonthData = new ArrayList<>();
     private TipsView marker;
     private int userWeight;
+    private AnalysisStepsChartAdapter mAnalysisAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View stepsView = inflater.inflate(R.layout.analysis_fragment_child_steps_fragment, container, false);
         ButterKnife.bind(this, stepsView);
+
         initView(inflater);
-        initData();
         return stepsView;
     }
 
-    private void initData() {
-        todayStepsChart = (DailyStepsBarChart) todayWeek.findViewById(R.id.analysis_step_chart);
-        thisWeekChart = (AnalysisStepsLineChart) thisWeekView.findViewById(R.id.analysis_step_this_week_chart_lc);
-        lastMonthChart = (AnalysisStepsLineChart) lastMonthView.findViewById(R.id.analysis_step_this_week_chart_lc);
+    @Override
+    public void onStart() {
+        super.onStart();
+        initData();
+        EventBus.getDefault().register(this);
+    }
 
-        marker = new TipsView(AnalysisStepsFragment.this.getContext(), R.layout.custom_marker_view);
+    private void initData() {
         /**
          * Added max in 'addData', max is the time spam in days, in 'this week' and
          * 'last week' this is 7 because 7 days is equal to a week.
          * In this month this is 30 (or 31) because there are 30 days in a month.
-         *
          */
-        getModel().getAllGoal(new MainClockFragment.ObtainGoalListener() {
-            @Override
-            public void obtainGoal(List<StepsGoal> list) {
-                if (list != null) {
-                    for (StepsGoal stepsGoal : list) {
-                        if (stepsGoal.isStatus()) {
-                            mActiveStepsGoal = stepsGoal;
-                            break;
-                        }
-                    }
-                }
-            }
-        });
-        if (mActiveStepsGoal == null) {
-            mActiveStepsGoal = new StepsGoal("Unknown", true, 10000);
-        }
-
-        setDesText(0);
+        setDesText(chartViewPager.getCurrentItem());
         setDataInChart(chartViewPager.getCurrentItem());
-
     }
 
     private void initView(LayoutInflater inflater) {
@@ -107,10 +97,39 @@ public class AnalysisStepsFragment extends BaseFragment {
         todayWeek = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout, null);
         thisWeekView = inflater.inflate(R.layout.analysis_steps_this_week_chart, null);
         lastMonthView = inflater.inflate(R.layout.analysis_steps_this_week_chart, null);
-
+        marker = new TipsView(AnalysisStepsFragment.this.getContext(), R.layout.custom_marker_view);
+        todayStepsChart = (DailyStepsBarChart) todayWeek.findViewById(R.id.analysis_step_chart);
+        thisWeekChart = (AnalysisStepsLineChart) thisWeekView.findViewById(R.id.analysis_step_this_week_chart_lc);
+        lastMonthChart = (AnalysisStepsLineChart) lastMonthView.findViewById(R.id.analysis_step_this_week_chart_lc);
         stepsDataList.add(todayWeek);
         stepsDataList.add(thisWeekView);
         stepsDataList.add(lastMonthView);
+        getModel().getAllGoal(new MainClockFragment.ObtainGoalListener() {
+            @Override
+            public void obtainGoal(List<StepsGoal> list) {
+                if (list != null) {
+                    for (StepsGoal stepsGoal : list) {
+                        if (stepsGoal.isStatus()) {
+                            mAnalysisAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+        addUIControl(stepsDataList);
+
+
+        if (mActiveStepsGoal == null) {
+            mActiveStepsGoal = new StepsGoal("Unknown", true, 10000);
+        }
+        mAnalysisAdapter = new AnalysisStepsChartAdapter(stepsDataList);
+        chartViewPager.setAdapter(mAnalysisAdapter);
+        setPageChangeListener();
+
+    }
+
+    private void addUIControl(List<View> stepsDataList) {
 
         for (int i = 0; i < stepsDataList.size(); i++) {
             ImageView imageView = new ImageView(AnalysisStepsFragment.this.getContext());
@@ -125,8 +144,9 @@ public class AnalysisStepsFragment extends BaseFragment {
             uiPageControl.addView(imageView, layoutParams);
         }
 
-        AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(stepsDataList);
-        chartViewPager.setAdapter(adapter);
+    }
+
+    private void setPageChangeListener() {
         chartViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -276,5 +296,25 @@ public class AnalysisStepsFragment extends BaseFragment {
 
     public interface OnStepsGetListener {
         void onStepsGet(List<Steps> stepsList);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onEvent(OnSyncEvent event) {
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED | event.getStatus()
+                == OnSyncEvent.SYNC_EVENT.TODAY_SYNC_STOPPED) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    setDesText(chartViewPager.getCurrentItem());
+                    setDataInChart(chartViewPager.getCurrentItem());
+                }
+            });
+        }
     }
 }
