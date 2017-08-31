@@ -156,7 +156,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     private long LITTLE_SYNC_INTERVAL = 10000L; //10s
     private Timer autoSyncTimer = null;
 
-    // Reactive Stuff
+
     private void startTimer() {
         if (autoSyncTimer != null)
             autoSyncTimer.cancel();

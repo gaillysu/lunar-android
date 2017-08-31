@@ -83,15 +83,15 @@ public class Preferences {
     }
 
 
-    public static void startInitAlarm(Context context, boolean isInit) {
+    public static void  setHotKey(Context context,int hotkey) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(context.getString(R.string.key_init_alarm), isInit);
+        editor.putInt(context.getString(R.string.key_hot), hotkey).apply();
     }
 
-    public static boolean getisInitAlarm(Context context) {
+    public static int getHotKey(Context context) {
         init(context);
-        return preferences.getBoolean(context.getString(R.string.key_init_alarm), true);
+        return preferences.getInt(context.getString(R.string.key_hot),0);
     }
 
     public static boolean getIsFirstLogin(Context context) {

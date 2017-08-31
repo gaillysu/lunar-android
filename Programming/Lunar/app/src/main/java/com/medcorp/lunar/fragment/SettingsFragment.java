@@ -9,7 +9,9 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -31,8 +33,6 @@ import com.medcorp.lunar.util.LinklossNotificationUtils;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.view.ToastHelper;
 import com.xw.repo.BubbleSeekBar;
-
-import net.medcorp.library.ble.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -64,7 +64,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
     private int batteryPercent;
     private SettingMenuAdapter mSettingAppAdapter;
     private SettingMenuAdapter mSettingLocalAdapter;
-
+    private int selectHotKey = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -117,6 +117,8 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
         deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_bluetooth_scan),
                 scanDurationSubTitle, R.drawable.ic_scan_bluetooth));
         deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
+
+        deviceListMenu.add(new SettingsMenuItem(getString(R.string.settings_hot_key), getHotKeySubtitle(Preferences.getHotKey(getContext())),R.drawable.ic_start));
         mSettingDeviceAdapter = new SettingMenuAdapter(getContext(), deviceListMenu, this);
         settingDeviceLIstView.setAdapter(mSettingDeviceAdapter);
         settingDeviceLIstView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -125,6 +127,22 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                 deviceListItemClick(position);
             }
         });
+    }
+
+    public String getHotKeySubtitle(int hotKey){
+        String hotKeySubtitle = null;
+        switch(hotKey){
+            case 0:
+                hotKeySubtitle = getString(R.string.hot_key_dialog_find_my_phone);
+                break;
+            case 1:
+                hotKeySubtitle = getString(R.string.hot_key_dialog_control_music);
+                break;
+            case 2:
+                hotKeySubtitle = getString(R.string.hot_key_dialog_remote_camera);
+                break;
+        }
+        return hotKeySubtitle;
     }
 
     private void initLocalData() {
@@ -142,10 +160,7 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                 //listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getUser().isLogin()));
                 if (user.isLogin()) {
                     localListMenu.add(new SettingsMenuItem(getString(R.string.google_fit_log_out), R.drawable.logout_icon));
-                } else {
-                    localListMenu.add(new SettingsMenuItem(getString(R.string.login_page_activity_title), R.drawable.ic_login_setting_page));
                 }
-
                 mSettingLocalAdapter = new SettingMenuAdapter(getContext(), localListMenu, SettingsFragment.this);
                 settingLocalListView.setAdapter(mSettingLocalAdapter);
                 settingLocalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -314,6 +329,74 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                         .positiveColor(getResources().getColor(R.color.colorPrimary))
                         .show();
                 break;
+            case 5:
+                View inflate = LayoutInflater.from(getContext()).inflate(R.layout.hot_key_dialog_content, null);
+                LinearLayout findMyPhone = (LinearLayout) inflate.findViewById(R.id.hot_key_find_my_phone);
+                final LinearLayout remoteCamera = (LinearLayout) inflate.findViewById(R.id.hot_key_remote_camera);
+                final LinearLayout controlMusic = (LinearLayout) inflate.findViewById(R.id.hot_key_control_music);
+                final CheckBox findMyPhoneCheckBox = (CheckBox) inflate.findViewById(R.id.hot_key_find_my_phone_ck);
+                final CheckBox remoteCameraCheckBox = (CheckBox) inflate.findViewById(R.id.hot_key_remote_camera_ck);
+                final CheckBox controlMusicCheckBox = (CheckBox) inflate.findViewById(R.id.hot_key_control_music_ck);
+                switch (Preferences.getHotKey(getContext())) {
+                    case 0:
+                        findMyPhoneCheckBox.setChecked(true);
+                        remoteCameraCheckBox.setChecked(false);
+                        controlMusicCheckBox.setChecked(false);
+                        break;
+                    case 1:
+                        findMyPhoneCheckBox.setChecked(false);
+                        remoteCameraCheckBox.setChecked(false);
+                        controlMusicCheckBox.setChecked(true);
+                        break;
+                    case 2:
+                        findMyPhoneCheckBox.setChecked(false);
+                        remoteCameraCheckBox.setChecked(true);
+                        controlMusicCheckBox.setChecked(false);
+                        break;
+                }
+                findMyPhone.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        findMyPhoneCheckBox.setChecked(true);
+                        remoteCameraCheckBox.setChecked(false);
+                        controlMusicCheckBox.setChecked(false);
+                    }
+                });
+                controlMusic.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        findMyPhoneCheckBox.setChecked(false);
+                        remoteCameraCheckBox.setChecked(false);
+                        controlMusicCheckBox.setChecked(true);
+                        selectHotKey = 1;
+                    }
+                });
+                remoteCamera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        findMyPhoneCheckBox.setChecked(false);
+                        remoteCameraCheckBox.setChecked(true);
+                        controlMusicCheckBox.setChecked(false);
+                        selectHotKey = 2;
+                    }
+                });
+                new MaterialDialog.Builder(getContext()).title(R.string.settings_hot_key_dialog_title)
+                        .customView(inflate, false).negativeText(android.R.string.no)
+                        .positiveText(android.R.string.yes)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(MaterialDialog dialog, DialogAction which) {
+                                Preferences.setHotKey(getContext(), selectHotKey);
+                                deviceListMenu.get(5).setSubtitle(getHotKeySubtitle(selectHotKey));
+                                mSettingDeviceAdapter.notifyDataSetChanged();
+                                getModel().getSyncController().setLeftKeyFunction(selectHotKey);
+                            }
+                        })
+                        .cancelable(false)
+                        .negativeColor(getResources().getColor(R.color.colorPrimary))
+                        .positiveColor(getResources().getColor(R.color.colorPrimary))
+                        .show();
+                break;
         }
     }
 
@@ -338,33 +421,24 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                 getModel().getUser().subscribe(new Consumer<User>() {
                     @Override
                     public void accept(final User lunarUser) throws Exception {
-                        if (!lunarUser.isLogin()) {
-                            getModel().removeUser(lunarUser);
-                            Intent newIntent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
-                            SettingsFragment.this.getContext().getSharedPreferences(Constants.PREF_NAME, 0)
-                                    .edit().putBoolean(Constants.FIRST_FLAG, true);
-                            startActivity(newIntent);
-                        } else {
-                            new MaterialDialog.Builder(SettingsFragment.this.getContext())
-                                    .title(getString(R.string.google_fit_log_out))
-                                    .content(getString(R.string.settings_sure))
-                                    .positiveText(R.string.goal_ok)
-                                    .negativeText(R.string.goal_cancel)
-                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            Intent newIntent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
-                                            lunarUser.setIsLogin(false);
-                                            getModel().saveUser(lunarUser);
-                                            startActivity(newIntent);
-                                            SettingsFragment.this.getActivity().finish();
-                                        }
-                                    })
-                                    .negativeColor(getResources().getColor(R.color.colorPrimary))
-                                    .positiveColor(getResources().getColor(R.color.colorPrimary))
-                                    .show();
-
-                        }
+                        new MaterialDialog.Builder(SettingsFragment.this.getContext())
+                                .title(getString(R.string.google_fit_log_out))
+                                .content(getString(R.string.settings_sure))
+                                .positiveText(R.string.goal_ok)
+                                .negativeText(R.string.goal_cancel)
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        Intent newIntent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
+                                        lunarUser.setIsLogin(false);
+                                        getModel().saveUser(lunarUser);
+                                        startActivity(newIntent);
+                                        SettingsFragment.this.getActivity().finish();
+                                    }
+                                })
+                                .negativeColor(getResources().getColor(R.color.colorPrimary))
+                                .positiveColor(getResources().getColor(R.color.colorPrimary))
+                                .show();
                     }
                 });
 

@@ -593,6 +593,12 @@
     <string name="time_unit_middle">&#160;and&#160;</string>
     <string name="time_unit_minutes">&#160;minutes</string>
     <string name="add_alarm_dialog_describe">Select your wake up time.</string>
+
+    <string name="hot_key_describe">If your LunaR Watch is not connected,it will sync as soon as it gets connected.</string>
+    <string name="hot_key_dialog_control_music">Control music</string>
+    <string name="hot_key_dialog_find_my_phone">Find my phone</string>
+    <string name="hot_key_dialog_remote_camera">Remote camera</string>
+
     <string name="profile_fragment_user_gender_text">Gender</string>
     <string name="profile_user_information_title">Basic information</string>
     <string name="profile_user_more_about_you_title">More about you</string>
@@ -600,5 +606,6 @@
     <string name="setting_user_gender_dialog_title">Set Your Gender</string>
     <string name="setting_user_height_dialog_title">Set Your Height</string>
     <string name="setting_user_weight_dialog_title">Set Your Weight</string>
+
 
 </resources>

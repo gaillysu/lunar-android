@@ -26,13 +26,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.medcorp.lunar.R;
-import com.medcorp.lunar.activity.login.LoginActivity;
+import com.medcorp.lunar.activity.tutorial.WelcomeActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.event.bluetooth.OnSyncEvent;
 import com.medcorp.lunar.fragment.AlarmFragment;
@@ -129,14 +128,14 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         getModel().getUser().subscribe(new Consumer<User>() {
             @Override
             public void accept(User user) throws Exception {
-                initView(userImageView,user);
+                initView(userImageView, user);
                 currentUser = user;
             }
         });
 
     }
 
-    private void initView(ImageButton userImageView ,User user) {
+    private void initView(ImageButton userImageView, User user) {
         String userEmail = null;
         if (user.isLogin()) {
             userEmail = user.getUserEmail();
@@ -167,9 +166,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                intent.putExtra(getString(R.string.open_activity_is_tutorial), false);
-                startAndFinishActivity(intent);
+                startActivity(WelcomeActivity.class);
             }
         });
     }
@@ -236,7 +233,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     public void onDrawerOpened(View drawerView) {
         userView.setText(currentUser.getUserEmail());
         showUserFirstNameText.setText(currentUser.isLogin() ?
-                (currentUser.getFirstName() != null ?currentUser.getFirstName() : "") +
+                (currentUser.getFirstName() != null ? currentUser.getFirstName() : "") +
                         " " + (currentUser.getLastName() != null ?
                         currentUser.getLastName() : "") : "");
     }
