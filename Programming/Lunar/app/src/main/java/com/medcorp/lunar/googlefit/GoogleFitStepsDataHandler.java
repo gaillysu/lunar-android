@@ -68,7 +68,7 @@ public class GoogleFitStepsDataHandler {
 
     public DataSet getStepsDataSet(){
         DataSet dataSet = getDataSetFromType(DataType.TYPE_STEP_COUNT_DELTA);
-        for (Steps steps : stepsList) {
+            for (Steps steps : stepsList) {
             if (steps.getHourlySteps() == null){
                 continue;
             }

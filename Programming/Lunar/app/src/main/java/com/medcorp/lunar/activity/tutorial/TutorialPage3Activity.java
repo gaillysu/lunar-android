@@ -1,12 +1,9 @@
 package com.medcorp.lunar.activity.tutorial;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
-
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.base.BaseActivity;
-
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 

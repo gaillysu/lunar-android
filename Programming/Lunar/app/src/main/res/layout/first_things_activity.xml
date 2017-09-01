@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:roboto="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/baseBackground"
+                android:gravity="center"
+                android:orientation="vertical">
+
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
+        android:id="@+id/first_things_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:gravity="center_horizontal"
+        android:text="@string/first_things_activity_title"
+        android:textColor="@color/black"
+        android:textSize="45sp"
+        roboto:bold="true"/>
+
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
+        android:id="@+id/first_things_describe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/first_things_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:paddingTop="5dp"
+        android:text="@string/first_things_activity_describe"
+        android:textColor="@color/left_menu_item_text_color"
+        android:textSize="15sp"/>
+
+    <com.medcorp.lunar.view.customfontview.RobotoTextView
+        android:id="@+id/first_things_sub_describe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/first_things_describe"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        roboto:bold="true"
+        android:gravity="center"
+        android:paddingTop="5dp"
+        android:text="@string/first_things_activity_sub_describe"
+        android:textColor="@color/tutorial_text_color"
+        android:textSize="15sp"/>
+
+    <LinearLayout
+        android:id="@+id/first_things_content_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/shape_first_things_button">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="@string/first_things_turn_notifications"
+                android:textColor="@color/text_color"
+                android:textSize="14sp"/>
+
+            <ImageButton
+                android:id="@+id/first_things_access_notification"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_right_icon"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/shape_first_things_button">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="@string/first_things_access_location"
+                android:textColor="@color/text_color"
+                android:textSize="14sp"/>
+
+            <ImageButton
+                android:id="@+id/first_things_access_location"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_right_icon"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/shape_first_things_button">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="@string/first_things_access_google_fit"
+                android:textColor="@color/text_color"
+                android:textSize="14sp"/>
+
+            <ImageButton
+                android:id="@+id/first_things_access_google_fit"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_right_icon"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <com.medcorp.lunar.view.customfontview.RobotoButton
+        android:id="@+id/first_things_start_button"
+        style="@style/TutorialButton"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_below="@+id/first_things_content_group"
+        android:layout_marginTop="25dp"
+        android:text="@string/first_things_button_text"
+        android:textColor="@color/tutorial_text_color"/>
+
+</RelativeLayout>
