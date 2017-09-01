@@ -337,7 +337,8 @@ public class SettingsFragment extends BaseObservableFragment implements OnChecke
                 final CheckBox findMyPhoneCheckBox = (CheckBox) inflate.findViewById(R.id.hot_key_find_my_phone_ck);
                 final CheckBox remoteCameraCheckBox = (CheckBox) inflate.findViewById(R.id.hot_key_remote_camera_ck);
                 final CheckBox controlMusicCheckBox = (CheckBox) inflate.findViewById(R.id.hot_key_control_music_ck);
-                switch (Preferences.getHotKey(getContext())) {
+                selectHotKey = Preferences.getHotKey(getContext());
+                switch (selectHotKey) {
                     case 0:
                         findMyPhoneCheckBox.setChecked(true);
                         remoteCameraCheckBox.setChecked(false);
