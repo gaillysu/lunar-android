@@ -102,7 +102,8 @@
     <string name="notification_connect_content">your Nevo has got connected</string>
     <string name="notification_disconnect_title">Nevo disconnect</string>
     <string name="notification_disconnect_content">your Nevo has got disconnect</string>
-
+    <string name="access_google_fit_message">Are you sure to link your GoogleFit</string>
+    <string name="first_access_google_fit">Link GoogleFit</string>
     <string name="first_things_activity_title">First things first</string>
     <string name="tutorial_1_title">Let\'s get started!</string>
 

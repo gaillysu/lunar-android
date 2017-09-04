@@ -60,6 +60,7 @@
         android:paddingRight="40dp">
 
         <RelativeLayout
+            android:id="@+id/first_things_access_notification_rl"
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:background="@drawable/shape_first_things_button">
@@ -73,19 +74,19 @@
                 android:textColor="@color/text_color"
                 android:textSize="14sp"/>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/first_things_access_notification"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
-                android:background="@android:color/transparent"
+                android:layout_marginRight="8dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_right_icon"/>
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/first_things_access_location_rl"
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:layout_marginTop="15dp"
@@ -100,19 +101,19 @@
                 android:textColor="@color/text_color"
                 android:textSize="14sp"/>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/first_things_access_location"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
-                android:background="@android:color/transparent"
+                android:layout_marginRight="8dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_right_icon"/>
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/first_things_access_google_fit_rl"
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:layout_marginTop="15dp"
@@ -127,14 +128,13 @@
                 android:textColor="@color/text_color"
                 android:textSize="14sp"/>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/first_things_access_google_fit"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
-                android:background="@android:color/transparent"
+                android:layout_marginRight="8dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_right_icon"/>
         </RelativeLayout>
