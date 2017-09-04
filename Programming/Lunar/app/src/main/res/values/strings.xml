@@ -53,6 +53,10 @@
     <string name="notification_calendar_title">Calendar</string>
     <string name="notification_wechat_title">WeChat</string>
     <string name="notification_whatsapp_title">WhatsApp</string>
+    <string name="notification_qq_title">QQ</string>
+    <string name="notification_twitter_title">Twitter</string>
+    <string name="notification_instagram_title">Instagram</string>
+    <string name="notification_messenger_title">Messenger</string>
 
     <string name="location_access_title">This app needs location access</string>
 

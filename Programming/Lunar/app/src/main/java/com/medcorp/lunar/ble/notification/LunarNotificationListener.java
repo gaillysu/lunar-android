@@ -25,11 +25,14 @@ import com.medcorp.lunar.ble.datasource.NotificationDataHelper;
 import com.medcorp.lunar.ble.model.notification.CalendarNotification;
 import com.medcorp.lunar.ble.model.notification.EmailNotification;
 import com.medcorp.lunar.ble.model.notification.FacebookNotification;
+import com.medcorp.lunar.ble.model.notification.InstagramNotification;
+import com.medcorp.lunar.ble.model.notification.MessengerNotification;
 import com.medcorp.lunar.ble.model.notification.OtherAppNotification;
+import com.medcorp.lunar.ble.model.notification.QQNotification;
 import com.medcorp.lunar.ble.model.notification.SmsNotification;
 import com.medcorp.lunar.ble.model.notification.TelephoneNotification;
+import com.medcorp.lunar.ble.model.notification.TwitterNotification;
 import com.medcorp.lunar.ble.model.notification.WeChatNotification;
-import com.medcorp.lunar.ble.model.notification.WhatsappNotification;
 import com.medcorp.lunar.ble.model.request.LedLightOnOffRequest;
 import com.medcorp.lunar.util.Preferences;
 
@@ -122,6 +125,10 @@ public class LunarNotificationListener extends NotificationBaseListenerService i
                 }
             }
             else if(getAppListbyType(R.array.SMS_APPS).contains(statusBarNotification.getPackageName())) {
+                if(helper.getState(new MessengerNotification()).isOn() && statusBarNotification.getPackageName().contains("com.facebook")) {
+                    sendNotification(Preferences.getNotificationColor(this, new MessengerNotification(),mApplicationModel).getHexColor());
+                    return;
+                }
                 if(helper.getState(new SmsNotification()).isOn()) {
                     sendNotification(Preferences.getNotificationColor(this, new SmsNotification(),mApplicationModel).getHexColor());
                 }
@@ -138,12 +145,21 @@ public class LunarNotificationListener extends NotificationBaseListenerService i
                     sendNotification(Preferences.getNotificationColor(this, new FacebookNotification(),mApplicationModel).getHexColor());
                 }
             } else if(statusBarNotification.getPackageName().contains("com.tencent") && getAppListbyType(R.array.SOCIAL_APPS).contains(statusBarNotification.getPackageName())){
-                if(helper.getState(new WeChatNotification()).isOn()) {
+                if(helper.getState(new WeChatNotification()).isOn() && statusBarNotification.getPackageName().contains(".mm")) {
                     sendNotification(Preferences.getNotificationColor(this, new WeChatNotification(),mApplicationModel).getHexColor());
+                    return;
                 }
-            } else if(statusBarNotification.getPackageName().contains("com.whatsapp")&& getAppListbyType(R.array.SOCIAL_APPS).contains(statusBarNotification.getPackageName())){
-                if(helper.getState(new WhatsappNotification()).isOn()) {
-                    sendNotification(Preferences.getNotificationColor(this, new WhatsappNotification(),mApplicationModel).getHexColor());
+                if(helper.getState(new QQNotification()).isOn() && (statusBarNotification.getPackageName().contains(".qq") || statusBarNotification.getPackageName().contains(".mobileqq"))) {
+                    sendNotification(Preferences.getNotificationColor(this, new QQNotification(),mApplicationModel).getHexColor());
+                    return;
+                }
+            } else if(statusBarNotification.getPackageName().contains("com.twitter") && getAppListbyType(R.array.SOCIAL_APPS).contains(statusBarNotification.getPackageName())){
+                if(helper.getState(new TwitterNotification()).isOn()) {
+                    sendNotification(Preferences.getNotificationColor(this, new TwitterNotification(),mApplicationModel).getHexColor());
+                }
+            } else if(statusBarNotification.getPackageName().contains("com.instagram")&& getAppListbyType(R.array.SOCIAL_APPS).contains(statusBarNotification.getPackageName())){
+                if(helper.getState(new InstagramNotification()).isOn()) {
+                    sendNotification(Preferences.getNotificationColor(this, new InstagramNotification(),mApplicationModel).getHexColor());
                 }
             } else {
                 Log.v(TAG, "Unknown Notification : "+statusBarNotification.getPackageName());

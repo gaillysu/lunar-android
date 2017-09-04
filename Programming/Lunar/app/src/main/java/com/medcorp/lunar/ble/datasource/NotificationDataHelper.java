@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.preference.PreferenceManager;
 
 import com.medcorp.lunar.ble.model.notification.Notification;
+import com.medcorp.lunar.ble.model.notification.OtherAppNotification;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -30,7 +31,12 @@ public class NotificationDataHelper {
     }
 
     public Notification getState(Notification applicationNotification){
-        applicationNotification.setState(pref.getBoolean(applicationNotification.getOnOffTag(),false));
+        boolean defaultOn = true;
+        if(applicationNotification instanceof OtherAppNotification)
+        {
+            defaultOn = false;
+        }
+        applicationNotification.setState(pref.getBoolean(applicationNotification.getOnOffTag(),defaultOn));
         return applicationNotification;
     }
 

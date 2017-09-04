@@ -30,12 +30,15 @@ import com.medcorp.lunar.ble.model.color.NevoLed;
 import com.medcorp.lunar.ble.model.notification.CalendarNotification;
 import com.medcorp.lunar.ble.model.notification.EmailNotification;
 import com.medcorp.lunar.ble.model.notification.FacebookNotification;
+import com.medcorp.lunar.ble.model.notification.InstagramNotification;
+import com.medcorp.lunar.ble.model.notification.MessengerNotification;
 import com.medcorp.lunar.ble.model.notification.Notification;
 import com.medcorp.lunar.ble.model.notification.OtherAppNotification;
+import com.medcorp.lunar.ble.model.notification.QQNotification;
 import com.medcorp.lunar.ble.model.notification.SmsNotification;
 import com.medcorp.lunar.ble.model.notification.TelephoneNotification;
+import com.medcorp.lunar.ble.model.notification.TwitterNotification;
 import com.medcorp.lunar.ble.model.notification.WeChatNotification;
-import com.medcorp.lunar.ble.model.notification.WhatsappNotification;
 import com.medcorp.lunar.ble.notification.LunarNotificationListener;
 import com.medcorp.lunar.util.Preferences;
 import com.medcorp.lunar.view.ToastHelper;
@@ -109,20 +112,26 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
 
         List<Notification> allNotifications = new ArrayList<>();
         NotificationDataHelper dataHelper = new NotificationDataHelper(this);
-
-        Notification applicationNotification = new TelephoneNotification();
+        //add fixed Apps: total 10
+        Notification applicationNotification = new CalendarNotification();
         allNotifications.add(dataHelper.getState(applicationNotification));
         applicationNotification = new SmsNotification();
         allNotifications.add(dataHelper.getState(applicationNotification));
-        applicationNotification = new EmailNotification();
+        applicationNotification = new WeChatNotification();
+        allNotifications.add(dataHelper.getState(applicationNotification));
+        applicationNotification = new QQNotification();
+        allNotifications.add(dataHelper.getState(applicationNotification));
+        applicationNotification = new TelephoneNotification();
+        allNotifications.add(dataHelper.getState(applicationNotification));
+        applicationNotification = new TwitterNotification();
         allNotifications.add(dataHelper.getState(applicationNotification));
         applicationNotification = new FacebookNotification();
         allNotifications.add(dataHelper.getState(applicationNotification));
-        applicationNotification = new CalendarNotification();
+        applicationNotification = new EmailNotification();
         allNotifications.add(dataHelper.getState(applicationNotification));
-        applicationNotification = new WeChatNotification();
+        applicationNotification = new InstagramNotification();
         allNotifications.add(dataHelper.getState(applicationNotification));
-        applicationNotification = new WhatsappNotification();
+        applicationNotification = new MessengerNotification();
         allNotifications.add(dataHelper.getState(applicationNotification));
 
         for (Notification notification : allNotifications) {

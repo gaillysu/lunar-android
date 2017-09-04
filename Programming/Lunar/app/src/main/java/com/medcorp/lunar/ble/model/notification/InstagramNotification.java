@@ -9,17 +9,23 @@ import com.medcorp.lunar.ble.model.notification.visitor.NotificationVisitor;
 /**
  * Created by Karl on 9/30/15.
  */
-public class WhatsappNotification extends Notification {
+public class InstagramNotification extends Notification {
 
-    private final String ON_OFF_TAG = "whatsapp";
-    private final String TAG = "whatsappchoosencolor";
+    private static final String ON_OFF_TAG = "instagram";
+    private final String TAG = "instagramchoosencolor";
 
-    public WhatsappNotification() {
+
+    public InstagramNotification() {
         super(false);
     }
 
-    public WhatsappNotification(boolean state) {
+    public InstagramNotification(boolean state) {
         super(state);
+    }
+
+    @Override
+    public String getTag() {
+        return TAG;
     }
 
     @Override
@@ -29,12 +35,12 @@ public class WhatsappNotification extends Notification {
 
     @Override
     public int getStringResource() {
-        return R.string.notification_whatsapp_title;
+        return R.string.notification_instagram_title;
     }
 
     @Override
     public int getImageResource() {
-        return R.drawable.whatsapp_notification;
+        return R.drawable.wechart_notification;
     }
 
     @Override
@@ -43,13 +49,7 @@ public class WhatsappNotification extends Notification {
     }
 
     @Override
-    public String getTag() {
-        return TAG;
-    }
-
-    @Override
     public <T> T accept(NotificationVisitor<T> visitor) {
         return visitor.visit(this);
     }
-
 }

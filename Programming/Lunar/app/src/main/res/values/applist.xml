@@ -17,6 +17,7 @@
             <item>com.sonyericsson.conversations</item>
             <item>com.htc.sense.mms</item>
             <item>com.facebook.orca</item>
+            <item>com.facebook.mlite</item>
         </string-array>
 
         <string-array name="EMAIL_APPS" translatable="false">
