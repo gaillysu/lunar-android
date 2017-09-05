@@ -343,7 +343,6 @@ public class ProfileActivity extends BaseActivity {
                                         getModel().saveUser(lunarUser);
                                         startActivity(MainActivity.class);
                                         finish();
-                                        overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
                                     }
                                 });
                             }

@@ -461,7 +461,7 @@
     <string name="def_goal_sleep_name">睡眠目标</string>
     <string name="sleep_goal_def_weekend">周末</string>
     <string name="sleep_goal_def_weekdays">工作日</string>
-    <string name="sleep_unit_hour">小时</string>
+    <string name="sleep_unit_hour">小时 </string>
     <string name="sleep_unit_minute">分钟</string>
     <string name="solar_goal_def_long">大目标</string>
     <string name="solar_goal_def_short">短时目标</string>

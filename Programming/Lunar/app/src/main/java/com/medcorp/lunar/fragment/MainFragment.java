@@ -74,8 +74,5 @@ public class MainFragment extends BaseObservableFragment {
         }
     }
 
-    public interface ObtainGoalListener {
-        void obtainGoal(List<StepsGoal> list);
-    }
 }
 
