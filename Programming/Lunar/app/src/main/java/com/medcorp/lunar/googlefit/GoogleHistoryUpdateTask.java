@@ -1,6 +1,7 @@
 package com.medcorp.lunar.googlefit;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.Fitness;
@@ -10,6 +11,8 @@ import com.medcorp.lunar.event.google.fit.GoogleFitUpdateEvent;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.concurrent.TimeUnit;
+
+import roboguice.util.temp.Ln;
 
 /**
  * Created by karl-john on 18/2/16.
@@ -25,9 +28,8 @@ public class GoogleHistoryUpdateTask extends AsyncTask<DataSet,Void,Boolean>{
     @Override
     protected Boolean doInBackground(DataSet... dataSets) {
         DataSet dataSet = dataSets[0];
-        if (googleApiClient == null || dataSet == null) {
+        if (googleApiClient == null || dataSet == null || dataSet.isEmpty()) {
             return false;
-
         }
 
         com.google.android.gms.common.api.Status insertStatus = Fitness.HistoryApi.insertData(googleApiClient, dataSet).await(1, TimeUnit.MINUTES);

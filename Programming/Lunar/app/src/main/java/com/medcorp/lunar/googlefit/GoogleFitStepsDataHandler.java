@@ -12,6 +12,7 @@ import com.medcorp.lunar.model.Steps;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class GoogleFitStepsDataHandler {
 
-    private List<Steps> stepsList;
+    private List<Steps> stepsList = new ArrayList<>();
     private Context context;
 
     public GoogleFitStepsDataHandler(List<Steps> stepsList, Context context) {
