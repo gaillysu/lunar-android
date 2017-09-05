@@ -17,7 +17,7 @@
     <string name="register_input_first_is_empty">User name cannot be empty</string>
     <!--login-->
     <string name="forget_password_activity_title_dec">Forget Password</string>
-    <string name="forget_password_activity_page_dec">Tell us the email-address you used to register a LunaR-account. Within minutes after the request you will receive a new temporary password.</string>
+    <string name="forget_password_activity_page_dec">Tell us the email-address you used to register\n a LunaR-account. Within minutes after the request\n you will receive a new temporary password.</string>
     <string name="forget_password_send_request_bt_text">SEND</string>
     <string name="tips_user_account_password">Email must not be empty</string>
     <string name="email_format_error">Invalid Email format</string>

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.EditText;
@@ -40,7 +41,10 @@ public class ForgetPasswordActivity extends BaseActivity {
         setContentView(R.layout.forget_passwor_activity_layout);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        editEmail.setText(intent.getStringExtra(getString(R.string.user_email_account)));
+        String userEmail = intent.getStringExtra(getString(R.string.user_email_account));
+        if (userEmail != null) {
+            editEmail.setText(userEmail);
+        }
     }
 
     @OnClick(R.id.forget_password_send_bt)
