@@ -160,7 +160,6 @@ public class SelectLocalCityActivity extends BaseActivity {
     private void back() {
         setResult(0x02);
         finish();
-        overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
     }
 
     @Override

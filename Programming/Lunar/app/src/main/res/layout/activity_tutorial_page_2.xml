@@ -16,8 +16,7 @@
         android:gravity="center"
         android:text="@string/tutorial_out_shipping_mode_title"
         android:textColor="@color/text_color"
-        android:textSize="45sp"
-        roboto:bold="true"/>
+        android:textSize="45sp" />
 
     <TextView
         android:id="@+id/activity_tutorial_page2_notice_textview"
@@ -28,8 +27,8 @@
         android:layout_gravity="center"
         android:layout_marginTop="15dp"
         android:gravity="center"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
         android:paddingTop="5dp"
         android:text="@string/tutorial_shipping_mode_describe_text"
         android:textColor="@color/left_menu_item_text_color"

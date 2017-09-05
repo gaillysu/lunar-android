@@ -114,13 +114,15 @@
 
     <string name="tutorial_next_step_text">Next Step</string>
 
-    <string name="tutorial_5_text">Now let\'s configure LunaR to your preferences.</string>
+    <string name="tutorial_5_title">Searching</string>
+    <string name="tutorial_5_text">Trying to connect with LunaR. Make sure you keep LunaR in reach of your phone!</string>
 
     <string name="tutorial_failed_title">Connection failed</string>
     <string name="tutorial_failed_try_again">Try Again</string>
 
     <string name="tutorial_success_title">Connected</string>
-    <string name="tutorial_success_tap_to_continue">Tap to continue</string>
+    <string name="tutorial_success_text">Now let\'s configure LunaR to your preferences. </string>
+    <string name="tutorial_success_tap_to_continue">Tap to Continue</string>
 
     <string name="sleep_sleep_duration">Sleep duration</string>
     <string name="sleep_sleep_time">Sleep time</string>
@@ -143,9 +145,8 @@
     <string name="edit_goal_name">Edit Name</string>
 
 
-    <string name="sleep_goal_def_long">Long sleep</string>
-    <string name="sleep_goal_def_noon">Nap</string>
-    <string name="sleep_goal_def_short">Short Sleep</string>
+    <string name="sleep_goal_def_weekend">Weekend</string>
+    <string name="sleep_goal_def_weekdays">Weekdays</string>
     <string name="sleep_unit_hour">h</string>
     <string name="sleep_unit_minute">min</string>
 
@@ -430,8 +431,7 @@
     <string name="tutorial_2_continue">Turn Bluetooth on</string>
     <string name="tutorial_4_title">Turn on LunaR </string>
     <string name="tutorial_4_text">Push any button to turn on LunaR\'s bluetooth. But for now, press the lower right button. The 12 o\'clock LED will blink white.</string>
-    <string name="tutorial_5_title">Connected</string>
-    <string name="tutorial_failed_text">Make sure your phone\'s bluetooth is enabled and that the LED on the LunaR is blinking.</string>
+    <string name="tutorial_failed_text">Make sure your phone\'s bluetooth is enabled and that you\'ve at least pressed one button on your LunaR.</string>
     <string name="in_app_notification_found_nevo">Found LunaR!</string>
     <string name="in_app_notification_nevo_disconnected">LunaR disconnected.</string>
     <string name="in_app_notification_searching">Searching for LunaR&#8230;</string>

@@ -14,7 +14,6 @@
         android:text="@string/tutorial_failed_title"
         android:textColor="@color/white"
         android:textSize="45sp"
-        roboto:bold="true"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
 

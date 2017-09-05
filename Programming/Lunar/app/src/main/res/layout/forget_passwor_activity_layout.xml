@@ -5,21 +5,23 @@
               android:layout_height="match_parent"
               android:background="@drawable/login_background"
               android:focusable="true"
+    android:focusableInTouchMode="true"
               android:orientation="vertical">
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="160dp">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_centerInParent="true"
         android:text="@string/forget_password_activity_title_dec"
         android:textColor="@color/text_color"
         android:textSize="30dp"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
         android:background="@color/window_background_color"
         android:orientation="vertical">
 
@@ -27,8 +29,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
             android:layout_marginTop="30dp"
             android:text="@string/forget_password_activity_page_dec"
             android:textColor="@color/text_color"
@@ -39,7 +41,7 @@
             android:layout_height="48dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/shape_input_email_account_bg"
             android:gravity="center_vertical"
             android:paddingTop="2dp"
@@ -54,10 +56,10 @@
                 android:hint="@string/log_in_email"
                 android:gravity="center_vertical"
                 android:paddingLeft="8dp"
-                android:textColor="@color/text_color"
+                android:textAllCaps="false"
                 android:textColorHint="@color/text_color"
                 android:textSize="16sp"
-                />
+                android:inputType="textEmailAddress" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
@@ -69,6 +71,7 @@
             android:layout_marginTop="12dp"
             android:background="@drawable/shape_login_button_bg"
             android:gravity="center"
+            android:textAllCaps="false"
             android:text="@string/forget_password_send_request_bt_text"
             android:textColor="@color/text_color"
             android:textSize="20sp"/>

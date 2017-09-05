@@ -64,7 +64,7 @@
     <string name="forget_password_result_email_address_text">A email has been sent to:</string>
     <string name="forget_password_result_prompt">Check your inbox</string>
     <string name="forget_password_result_prompt_user_check_email">Please open the link we’ve  sent and verify your e-mail ad- dress.</string>
-    <string name="forget_password_send_request_bt_text">SEND</string>
+    <string name="forget_password_send_request_bt_text">Send</string>
     <string name="friday">F</string>
     <string name="google_fit_cancel">Cancel</string>
     <string name="google_fit_log_out">Log out</string>
@@ -463,9 +463,8 @@
     <string name="more_settings_solar_goal">Solar Goal</string>
     <string name="more_settings_steps_goal">Steps Goal</string>
     <string name="def_goal_sleep_name">Sleep Goal</string>
-    <string name="sleep_goal_def_long">Long sleep</string>
-    <string name="sleep_goal_def_noon">Nap</string>
-    <string name="sleep_goal_def_short">Short Sleep</string>
+    <string name="sleep_goal_def_weekend">Weekend</string>
+    <string name="sleep_goal_def_weekdays">Weekdays</string>
     <string name="sleep_unit_hour">h</string>
     <string name="sleep_unit_minute">min</string>
     <string name="solar_goal_def_long">Long</string>
@@ -606,6 +605,7 @@
     <string name="setting_user_gender_dialog_title">Set Your Gender</string>
     <string name="setting_user_height_dialog_title">Set Your Height</string>
     <string name="setting_user_weight_dialog_title">Set Your Weight</string>
+    <string name="tutorial_success_text">"Now let's configure LunaR to your preferences. "</string>
 
 
 </resources>

@@ -14,31 +14,28 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="70dp"
         android:gravity="center"
-        android:text="@string/tutorial_5_title"
+        android:text="@string/tutorial_success_title"
         android:textColor="@color/black"
-        android:textSize="45sp"
-        roboto:bold="true"/>
+        android:textSize="45sp" />
 
     <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page5_searching_notice_textview"
         android:layout_width="match_parent"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/activity_tutorial_page5_search_success_textview"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:paddingTop="15dp"
-        android:text="@string/tutorial_5_text"
+        android:text="@string/tutorial_success_text"
         android:textColor="@color/left_menu_item_text_color"
         android:textSize="15sp"/>
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/activity_tutorial_page5_searching_notice_textview"
-        android:layout_marginTop="20dp">
+        android:layout_centerInParent="true">
 
         <ImageView
             android:layout_width="120dp"
@@ -61,6 +58,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="60dp"
-        android:text="@string/start_config_watch_tv"
+        android:text="@string/tutorial_success_tap_to_continue"
         android:textColor="@color/tutorial_text_color"/>
 </RelativeLayout>

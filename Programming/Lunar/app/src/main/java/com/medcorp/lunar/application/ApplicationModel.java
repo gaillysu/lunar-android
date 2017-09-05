@@ -47,17 +47,6 @@ import com.medcorp.lunar.event.bluetooth.PositionAddressChangeEvent;
 import com.medcorp.lunar.event.google.api.GoogleApiClientConnectionFailedEvent;
 import com.medcorp.lunar.event.google.api.GoogleApiClientConnectionSuspendedEvent;
 import com.medcorp.lunar.event.google.fit.GoogleFitUpdateEvent;
-import com.medcorp.lunar.event.med.MedAddRoutineRecordEvent;
-import com.medcorp.lunar.event.med.MedAddSleepRecordEvent;
-import com.medcorp.lunar.event.med.MedReadMoreRoutineRecordsModelEvent;
-import com.medcorp.lunar.event.med.MedReadMoreSleepRecordsModelEvent;
-import com.medcorp.lunar.event.validic.ValidicAddRoutineRecordEvent;
-import com.medcorp.lunar.event.validic.ValidicAddSleepRecordEvent;
-import com.medcorp.lunar.event.validic.ValidicCreateUserEvent;
-import com.medcorp.lunar.event.validic.ValidicDeleteRoutineRecordEvent;
-import com.medcorp.lunar.event.validic.ValidicDeleteSleepRecordModelEvent;
-import com.medcorp.lunar.event.validic.ValidicException;
-import com.medcorp.lunar.event.validic.ValidicUpdateRoutineRecordsModelEvent;
 import com.medcorp.lunar.fragment.AnalysisSleepFragment;
 import com.medcorp.lunar.fragment.AnalysisSolarFragment;
 import com.medcorp.lunar.fragment.AnalysisStepsFragment;
@@ -101,7 +90,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -927,119 +915,6 @@ public class ApplicationModel extends Application {
         MultiDex.install(this);
     }
 
-    @Subscribe
-    public void onValidicAddRoutineRecordEvent(ValidicAddRoutineRecordEvent
-                                                       validicAddRoutineRecordEvent) {
-        saveDailySteps(validicAddRoutineRecordEvent.getSteps());
-
-    }
-
-    @Subscribe
-    public void onValidicAddSleepRecordEvent(ValidicAddSleepRecordEvent
-                                                     validicAddSleepRecordEvent) {
-        saveDailySleep(validicAddSleepRecordEvent.getSleep());
-    }
-
-    @Subscribe
-    public void onMedAddRoutineRecordEvent(MedAddRoutineRecordEvent medAddRoutineRecordEvent) {
-        saveDailySteps(medAddRoutineRecordEvent.getSteps());
-
-    }
-
-    @Subscribe
-    public void onMedAddSleepRecordEvent(MedAddSleepRecordEvent medAddSleepRecordEvent) {
-        saveDailySleep(medAddSleepRecordEvent.getSleep());
-    }
-
-    @Subscribe
-    public void onValidicCreateUserEvent(ValidicCreateUserEvent validicCreateUserEvent) {
-        saveUser(validicCreateUserEvent.getUser());
-        getSyncController().getDailyTrackerInfo(true);
-        userDatabaseHelper.getLoginUser().subscribe(new Consumer<User>() {
-            @Override
-            public void accept(final User user) throws Exception {
-                getNeedSyncSteps(user.getUserID()).subscribe(new Consumer<List<Steps>>() {
-                    @Override
-                    public void accept(final List<Steps> stepses) throws Exception {
-                        getNeedSyncSleep(user.getUserID()).subscribe(new Consumer<List<Sleep>>() {
-                            @Override
-                            public void accept(List<Sleep> sleeps) throws Exception {
-                                getCloudSyncManager().launchSyncAll(user, stepses, sleeps);
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-    @Subscribe
-    public void onValidicDeleteSleepRecordModelEvent(ValidicDeleteSleepRecordModelEvent
-                                                             validicDeleteSleepRecordModelEvent) {
-        sleepDatabaseHelper.remove(validicDeleteSleepRecordModelEvent.getUserId() + "", validicDeleteSleepRecordModelEvent.getDate());
-    }
-
-    @Subscribe
-    public void onValidicException(ValidicException validicException) {
-        Log.w("Karl", "Exception occured!");
-        validicException.getException().printStackTrace();
-    }
-
-    @Subscribe
-    public void onMedReadMoreRoutineRecordsModelEvent(MedReadMoreRoutineRecordsModelEvent
-                                                              medReadMoreRoutineRecordsModelEvent) {
-
-        if (medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps() == null
-                || medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps().size() == 0) {
-            return;
-        }
-        for (ObtainMoreStepsResponse.StepsBean routine : medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps()) {
-            try {
-                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(routine.getDate().getDate());
-                // if not exist in local Steps table, save it
-                if (!isFoundInLocalSteps(date, routine.getUid() + "")) {
-                    saveStepsFromMed(routine, date);
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Subscribe
-    public void onMedReadMoreSleepRecordsModelEvent(MedReadMoreSleepRecordsModelEvent
-                                                            medReadMoreSleepRecordsModelEvent) {
-
-        if (medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep() == null
-                || medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep().size() == 0) {
-            return;
-        }
-        for (ObtainMoreSleepResponse.SleepBean sleep :
-                medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep()) {
-            try {
-                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(sleep.getDate().getDate());
-                // if not exist in local Sleep table, save it
-                if (!isFoundInLocalSleep(date, sleep.getUid() + "")) {
-                    saveSleepFromMed(sleep, date);
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Subscribe
-    public void onValidicUpdateRoutineRecordsModelEvent(ValidicUpdateRoutineRecordsModelEvent
-                                                                validicUpdateRoutineRecordsModelEvent) {
-        saveDailySteps(validicUpdateRoutineRecordsModelEvent.getSteps());
-
-    }
-
-    @Subscribe
-    public void onValidicDeleteRoutineRecordEvent(ValidicDeleteRoutineRecordEvent
-                                                          validicDeleteRoutineRecordEvent) {
-        stepsDatabaseHelper.remove(validicDeleteRoutineRecordEvent.getUserId() + "", validicDeleteRoutineRecordEvent.getDate());
-    }
 
     public void getWeChatToken(String code) {
 
@@ -1195,7 +1070,7 @@ public class ApplicationModel extends Application {
     }
 
     private void addSleepDefGoal() {
-        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_long), 630, true)).subscribe(new Consumer<Boolean>() {
+        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_weekend), 720, true)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
@@ -1203,15 +1078,7 @@ public class ApplicationModel extends Application {
                 }
             }
         });
-        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_noon), 480, false)).subscribe(new Consumer<Boolean>() {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception {
-                if (aBoolean) {
-                    Log.i("jason", "add def sleep success");
-                }
-            }
-        });
-        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_short), 380, false)).subscribe(new Consumer<Boolean>() {
+        sleepGoalDatabaeHelper.add(new SleepGoal(getString(R.string.sleep_goal_def_weekdays), 640, false)).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {

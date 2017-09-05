@@ -15,8 +15,7 @@
         android:gravity="center"
         android:text="@string/activity_goals_title"
         android:textColor="@color/black"
-        android:textSize="45sp"
-        roboto:bold="true"/>
+        android:textSize="45sp" />
 
     <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_goals_describe"
@@ -36,9 +35,8 @@
         android:id="@+id/activity_goals_step_goal_ll"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@+id/activity_goals_describe"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="40dp">
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/activity_goals_sleep_goal_ll">
 
         <TextView
             android:id="@+id/activity_goals_step_tv"
@@ -65,9 +63,8 @@
         android:id="@+id/activity_goals_sleep_goal_ll"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@+id/activity_goals_step_goal_ll"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="10dp">
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp">
 
         <TextView
             android:id="@+id/activity_goals_sleep_tv"
@@ -94,9 +91,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
         android:layout_below="@+id/activity_goals_sleep_goal_ll"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="20dp">
 
         <TextView
             android:id="@+id/activity_goals_solar_tv"

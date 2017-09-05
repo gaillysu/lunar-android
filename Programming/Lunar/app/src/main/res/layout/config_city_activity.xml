@@ -16,7 +16,6 @@
         android:text="@string/config_time_title"
         android:textColor="@color/black"
         android:textSize="43sp"
-        roboto:bold="true"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
 
@@ -27,27 +26,20 @@
         android:layout_below="@+id/activity_tutorial_page5_search_success_textview"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:paddingTop="5dp"
+        android:paddingTop="16dp"
         android:text="@string/config_city_describe"
         android:textColor="@color/left_menu_item_text_color"
         android:textSize="15sp"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/select_sync_local_time"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_centerInParent="true"
+
         android:background="@drawable/select_city_search_button_bg"
-        android:button="@null"
-        android:checked="true"
-        android:drawablePadding="10dp"
-        android:drawableTop="@drawable/ic_home_time"
-        android:gravity="center_horizontal"
-        android:textSize="15sp"
-        android:paddingTop="40dp"
-        android:text="@string/more_setting_place_local"
-        android:textAllCaps="false"
-        android:textColor="@color/history_data_black"/>
+        android:src="@drawable/ic_home_time"
+        />
 
     <LinearLayout
         android:id="@+id/show_location_city_ll"
@@ -81,10 +73,11 @@
         android:id="@+id/config_location_city"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingStart="32dp"
         android:layout_below="@+id/show_location_city_ll"
         android:layout_centerHorizontal="true"
         android:background="@color/transparent"
-        android:drawableRight="@drawable/ic_down"
+        android:drawableEnd="@drawable/ic_down"
         android:textSize="15sp"
         android:text="@string/select_local_city"
         android:textAllCaps="false"

@@ -32,7 +32,7 @@
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/welcome_activity_facebook_login"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="36dp"
                 android:background="@drawable/facebook_button_bg"
                 android:drawableLeft="@drawable/ic_facebook"
                 android:text="@string/welcome_activity_facebook_login"
@@ -43,9 +43,10 @@
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/welcome_activity_wechat_login_bt"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="36dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/wechat_button_bg"
+
                 android:button="@null"
                 android:checked="true"
                 android:drawableLeft="@drawable/ic_wechart"
@@ -64,8 +65,8 @@
                 android:orientation="horizontal">
 
                 <com.medcorp.lunar.view.XCRoundRectImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:src="@drawable/email_bt"/>
 
                 <TextView
@@ -83,7 +84,7 @@
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/login_bt"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="36dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/full_button_bg"
                 android:button="@null"

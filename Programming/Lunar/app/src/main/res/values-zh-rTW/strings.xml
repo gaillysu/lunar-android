@@ -462,9 +462,8 @@
     <string name="more_settings_solar_goal">太陽能目標</string>
     <string name="more_settings_steps_goal">步行目標</string>
     <string name="def_goal_sleep_name">睡眠目標</string>
-    <string name="sleep_goal_def_long">長睡</string>
-    <string name="sleep_goal_def_noon">午睡</string>
-    <string name="sleep_goal_def_short">短睡</string>
+    <string name="sleep_goal_def_weekend">週末</string>
+    <string name="sleep_goal_def_weekdays">工作日</string>
     <string name="sleep_unit_hour">小時</string>
     <string name="sleep_unit_minute">分鐘</string>
     <string name="solar_goal_def_long">大目標</string>
@@ -592,7 +591,6 @@
     <string name="time_unit_hours">&#160;小时&#160;</string>
     <string name="time_unit_middle">&#160;</string>
     <string name="time_unit_minutes">&#160;分钟</string>
-    <string name="add_alarm_dialog_describe">輸選擇鬧鐘時間</string>
     <string name="hot_key_describe">如果手邊沒有連接,將在手表連接的時候同步.</string>
     <string name="hot_key_dialog_control_music">調節音樂</string>
     <string name="hot_key_dialog_find_my_phone">尋找我的手機</string>
@@ -606,4 +604,5 @@
     <string name="setting_user_gender_dialog_title">選擇性別</string>
     <string name="setting_user_height_dialog_title">選擇身高</string>
     <string name="setting_user_weight_dialog_title">選擇體重</string>
+    <string name="tutorial_success_text">"Now let's configure LunaR to your preferences. "</string>
 </resources>

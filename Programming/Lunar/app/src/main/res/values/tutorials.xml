@@ -18,7 +18,7 @@
     <!--login-->
     <string name="forget_password_activity_title_dec">Forget Password</string>
     <string name="forget_password_activity_page_dec">Tell us the email-address you used to register a LunaR-account. Within minutes after the request you will receive a new temporary password.</string>
-    <string name="forget_password_send_request_bt_text">SEND</string>
+    <string name="forget_password_send_request_bt_text">Send</string>
     <string name="tips_user_account_password">Email must not be empty</string>
     <string name="email_format_error">Invalid Email format</string>
     <string name="forget_password_result_prompt">Check your inbox</string>
@@ -41,7 +41,7 @@
     <string name="start_config_watch_tv">Configurate LunaR</string>
     <string name="config_time_title">Second Timezone</string>
     <string name="config_time_describe">LunaR can display your home or local time by pushing on the right button. Which time would you like to use?</string>
-    <string name="config_city_describe">Select your location</string>
+    <string name="config_city_describe">Select your Home Time</string>
     <string name="location_describe_title">Your local time has been set to</string>
     <string name="config_location_failed">Location Failed</string>
     <string name="select_local_city">Or set your location manualy</string>

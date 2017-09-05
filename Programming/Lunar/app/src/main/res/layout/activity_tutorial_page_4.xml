@@ -15,8 +15,7 @@
         android:gravity="center"
         android:text="@string/tutorial_4_title"
         android:textColor="@color/black"
-        android:textSize="45sp"
-        roboto:bold="true"/>
+        android:textSize="45sp" />
 
     <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page4_notice_textview"
