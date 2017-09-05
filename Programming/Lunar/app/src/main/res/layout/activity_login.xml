@@ -77,8 +77,8 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:background="@drawable/shape_input_email_account_bg"
                         android:layout_marginTop="10dp"
+                        android:background="@drawable/shape_input_email_account_bg"
                         android:paddingRight="4dp"
                         android:textColorHint="@color/colorAccent"
                         app:hintTextAppearance="@style/hintAppearance">

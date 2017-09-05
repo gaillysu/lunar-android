@@ -230,8 +230,8 @@ public class MainClockFragment extends BaseFragment {
     }
 
     private void setHomeCityData() {
-        homeName = Preferences.getPositionCity(MainClockFragment.this.getActivity());
-        homeCountryName = Preferences.getPositionCountry(MainClockFragment.this.getActivity());
+        homeName = Preferences.getPositionCity(getContext());
+        homeCountryName = Preferences.getPositionCountry(getContext());
         if (homeName == null) {
             if (mPositionLocal == null) {
                 if (mDefaultTimeZoneCity != null) {
