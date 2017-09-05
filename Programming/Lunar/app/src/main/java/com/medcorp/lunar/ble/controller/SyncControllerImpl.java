@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -21,7 +23,9 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -35,6 +39,7 @@ import com.medcorp.lunar.ble.model.packet.ChargingNotificationPacket;
 import com.medcorp.lunar.ble.model.packet.DailyStepsPacket;
 import com.medcorp.lunar.ble.model.packet.DailyTrackerInfoPacket;
 import com.medcorp.lunar.ble.model.packet.DailyTrackerPacket;
+import com.medcorp.lunar.ble.model.packet.DoublePressLeftkeyPacket;
 import com.medcorp.lunar.ble.model.packet.NewApplicationArrivedPacket;
 import com.medcorp.lunar.ble.model.packet.Packet;
 import com.medcorp.lunar.ble.model.packet.WatchInfoPacket;
@@ -461,13 +466,13 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                                 float pv_voltage = ((pv_adc + 1) * 360f / 1024) / 100;
                                 Log.i(TAG, "battery_adc= " + battery_adc + ",battery_voltage= " + battery_voltage + ",pv_adc= " + pv_adc + ",pv_voltage= " + pv_voltage);
                                 EventBus.getDefault().post(new SolarConvertEvent(pv_adc));
-                            } else if ((byte) FindPhoneRequest.HEADER == lunarData.getRawData()[1]) {
+                            } else if ((byte) DoublePressLeftkeyPacket.HEADER == packet.getHeader()) {
                                 if (mLocalService != null) {
-                                    mLocalService.findCellPhone();
+                                    mLocalService.doublePressLeftkey(Preferences.getHotKey(mContext));
                                     //let all LED light on, means that find CellPhone is successful.
                                     sendRequest(new TestModeRequest(mContext, 0xFFFFFF, false, TestModeRequest.MODE_F0));
                                 }
-                            } else if ((byte) GetStepsGoalRequest.HEADER == lunarData.getRawData()[1]) {
+                            } else if ((byte) GetStepsGoalRequest.HEADER == packet.getHeader()) {
                                 //save current day's step count to "Steps" table
                                 DailyStepsPacket stepPacket = new DailyStepsPacket(packet.getPackets());
                                 Log.i(TAG, "little sync,Date:" + stepPacket.getDailyDate().toString() + ",steps:" + stepPacket.getDailySteps() + ",goal:" + stepPacket.getDailyStepsGoal());
@@ -480,7 +485,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                                 //I can't calculator these value from this packet, they should come from CMD 0x25 cmd
                                 ((ApplicationModel) mContext).saveDailySteps(steps);
                                 //end save
-                            } else if ((byte) NewApplicationArrivedPacket.HEADER == lunarData.getRawData()[1]) {
+                            } else if ((byte) NewApplicationArrivedPacket.HEADER == packet.getHeader()) {
                                 NewApplicationArrivedPacket newApplicationArrivedPacket = new NewApplicationArrivedPacket(packet.getPackets());
                                 Log.i(TAG, "new Application arrived,total:" + newApplicationArrivedPacket.getTotalApplications());
                                 Log.i(TAG, "new Application arrived,ID: " + newApplicationArrivedPacket.getApplicationInfomation().getData());
@@ -969,8 +974,16 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 LocalService.this.PopupMessage(titleID, msgID);
             }
 
-            void findCellPhone() {
-                LocalService.this.findCellPhone();
+            void doublePressLeftkey(int function) {
+                if(function == 0) {
+                    LocalService.this.findCellPhone();
+                }
+                else if(function == 1) {
+                    LocalService.this.playPauseMusic();
+                }
+                else if(function == 2) {
+                    LocalService.this.takePhoto();
+                }
             }
 
             void setPairedWatch(String address) {
@@ -996,6 +1009,29 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             new SoundPlayer(this).startPlayer(R.raw.bell);
         }
 
+        private void sendHardKey(int keyCode) {
+            AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            if(keyCode == KeyEvent.KEYCODE_CAMERA)
+            {
+                audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keyCode));
+            }
+            else if(keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE)
+            {
+                if(audioManager.isMusicActive()) {
+                    keyCode = KeyEvent.KEYCODE_MEDIA_PAUSE;
+                }
+                else {
+                    keyCode = KeyEvent.KEYCODE_MEDIA_PLAY;
+                }
+                audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, keyCode));
+            }
+        }
+        private void takePhoto() {
+            sendHardKey(KeyEvent.KEYCODE_CAMERA);
+        }
+        private void playPauseMusic() {
+            sendHardKey(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
+        }
     }
 
     @Override

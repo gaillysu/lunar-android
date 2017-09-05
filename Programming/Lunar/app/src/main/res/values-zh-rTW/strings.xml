@@ -596,7 +596,6 @@
     <string name="hot_key_dialog_find_my_phone">尋找我的手機</string>
     <string name="hot_key_dialog_remote_camera">控制照相機</string>
 
-    <string name="add_alarm_dialog_describe">設置鬧鐘時間</string>
     <string name="profile_fragment_user_gender_text">性別</string>
     <string name="profile_user_information_title">個人信息</string>
     <string name="profile_user_more_about_you_title">更多信息</string>
