@@ -4,6 +4,7 @@ package com.medcorp.lunar.ble.model.notification;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.ble.model.color.LightGreenLed;
 import com.medcorp.lunar.ble.model.color.NevoLed;
+import com.medcorp.lunar.ble.model.color.PurpleLed;
 import com.medcorp.lunar.ble.model.notification.visitor.NotificationVisitor;
 
 /**
@@ -45,7 +46,7 @@ public class QQNotification extends Notification {
 
     @Override
     public NevoLed getDefaultColor() {
-        return new LightGreenLed();
+        return new PurpleLed();
     }
 
     @Override

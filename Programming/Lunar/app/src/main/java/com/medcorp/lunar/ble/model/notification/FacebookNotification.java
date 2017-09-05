@@ -3,6 +3,8 @@ package com.medcorp.lunar.ble.model.notification;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.ble.model.color.BlueLed;
+import com.medcorp.lunar.ble.model.color.DarkCyanLed;
+import com.medcorp.lunar.ble.model.color.DeepSkyBlueLed;
 import com.medcorp.lunar.ble.model.color.NevoLed;
 import com.medcorp.lunar.ble.model.notification.visitor.NotificationVisitor;
 
@@ -45,7 +47,7 @@ public class FacebookNotification extends Notification {
 
     @Override
     public NevoLed getDefaultColor() {
-        return new BlueLed();
+        return new DarkCyanLed();
     }
 
     @Override

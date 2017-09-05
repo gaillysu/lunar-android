@@ -21,10 +21,6 @@ public class UnknownLed extends NevoLed {
         return 0;
     }
 
-    @Override
-    public int getImageResource() {
-        return 0;
-    }
 
     @Override
     public String getTag() {

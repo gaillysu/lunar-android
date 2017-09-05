@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 
 import com.medcorp.lunar.ble.model.color.NevoLed;
 import com.medcorp.lunar.ble.model.color.OrangeLed;
+import com.medcorp.lunar.ble.model.color.RedLed;
 import com.medcorp.lunar.ble.model.notification.visitor.NotificationVisitor;
 
 import java.util.List;
@@ -47,7 +48,7 @@ public class OtherAppNotification extends Notification {
 
     @Override
     public NevoLed getDefaultColor() {
-        return new OrangeLed();
+        return new RedLed();
     }
 
     @Override

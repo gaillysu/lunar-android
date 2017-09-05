@@ -152,7 +152,16 @@ public class Preferences {
 
     public static NevoLed  getNotificationColor(Context context, Notification notification, ApplicationModel model) {
         init(context);
-        return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()), model);
+        NevoLed nevoLed =  notification.getDefaultColor();
+        int color = preferences.getInt(notification.getTag(), nevoLed.getHexColor());
+        if(color == nevoLed.getHexColor()) {
+            return nevoLed;
+        }
+        nevoLed =  distinguish(color, model);
+        if(nevoLed == null) {
+            nevoLed = notification.getDefaultColor();
+        }
+        return nevoLed;
     }
 
     public static void setWatchId(Context context, int id) {
@@ -175,24 +184,6 @@ public class Preferences {
     public static int getWatchModel(Context context) {
         init(context);
         return preferences.getInt(context.getString(R.string.key_prefs_watch_model), 1);
-    }
-
-    private static NevoLed  distinguish(int ledColor) {
-        switch (ledColor) {
-            case 0x100000:
-                return new GreenLed();
-            case 0x020000:
-                return new LightGreenLed();
-            case 0x080000:
-                return new OrangeLed();
-            case 0x010000:
-                return new BlueLed();
-            case 0x040000:
-                return new YellowLed();
-            case 0x200000:
-                return new RedLed();
-        }
-        return null;
     }
 
     private static NevoLed distinguish(int ledColor, ApplicationModel model) {

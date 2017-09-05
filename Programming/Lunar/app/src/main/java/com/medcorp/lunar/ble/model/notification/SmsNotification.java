@@ -4,6 +4,7 @@ package com.medcorp.lunar.ble.model.notification;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.ble.model.color.GreenLed;
 import com.medcorp.lunar.ble.model.color.NevoLed;
+import com.medcorp.lunar.ble.model.color.RedLed;
 import com.medcorp.lunar.ble.model.notification.visitor.NotificationVisitor;
 
 /**
@@ -44,7 +45,7 @@ public class SmsNotification extends Notification {
 
     @Override
     public NevoLed getDefaultColor() {
-        return new GreenLed();
+        return new RedLed();
     }
 
     @Override

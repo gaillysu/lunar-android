@@ -2,6 +2,7 @@ package com.medcorp.lunar.ble.model.notification;
 
 
 import com.medcorp.lunar.R;
+import com.medcorp.lunar.ble.model.color.BlueLed;
 import com.medcorp.lunar.ble.model.color.NevoLed;
 import com.medcorp.lunar.ble.model.color.RedLed;
 import com.medcorp.lunar.ble.model.notification.visitor.NotificationVisitor;
@@ -45,7 +46,7 @@ public class CalendarNotification extends Notification {
 
     @Override
     public NevoLed getDefaultColor() {
-        return new RedLed();
+        return new BlueLed();
     }
 
     @Override

@@ -804,17 +804,13 @@ public class ApplicationModel extends Application {
     }
 
     public LedLamp getUserSelectLedLamp(int color) {
-        LedLamp ledlamp = new LedLamp();
-        ledlamp.setColor(getResources().getColor(R.color.red_normal));
-        ledlamp.setName(getString(R.string.notification_def_name));
-
         List<LedLamp> allLedLamp = getAllLedLamp();
         for (LedLamp lamp : allLedLamp) {
             if (lamp.getColor() == color) {
                 return lamp;
             }
         }
-        return ledlamp;
+        return null;
     }
 
     public boolean isBluetoothOn() {

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.application.ApplicationModel;
+import com.medcorp.lunar.ble.model.color.LedLamp;
 import com.medcorp.lunar.ble.model.color.NevoLed;
 import com.medcorp.lunar.ble.model.notification.Notification;
 import com.medcorp.lunar.ble.model.notification.OtherAppNotification;
@@ -54,7 +55,12 @@ public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> 
         }
         if (notification.isOn()) {
             NevoLed nevoLed = Preferences.getNotificationColor(mApplicationModel, notification, mApplicationModel);
-            notificationValue.setText(nevoLed.getTag());
+            if(nevoLed instanceof LedLamp) {
+                notificationValue.setText(nevoLed.getTag());
+            }
+            else {
+                notificationValue.setText(nevoLed.getStringResource());
+            }
         } else {
             notificationValue.setText(R.string.notification_deactivated);
         }

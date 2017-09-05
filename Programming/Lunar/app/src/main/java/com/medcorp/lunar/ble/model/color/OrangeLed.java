@@ -22,10 +22,6 @@ public class OrangeLed extends NevoLed {
         return R.string.notification_led_orange;
     }
 
-    @Override
-    public int getImageResource() {
-        return R.drawable.orange_dot;
-    }
 
     @Override
     public String getTag() {

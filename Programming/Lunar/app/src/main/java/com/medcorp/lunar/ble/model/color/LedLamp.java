@@ -68,10 +68,6 @@ public class LedLamp extends NevoLed {
         return 0;
     }
 
-    @Override
-    public int getImageResource() {
-        return 0;
-    }
 
     @Override
     public String getTag() {

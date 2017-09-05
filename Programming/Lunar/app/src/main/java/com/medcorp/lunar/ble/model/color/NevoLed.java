@@ -8,7 +8,6 @@ import com.medcorp.lunar.ble.model.color.visitor.NevoLedVisitable;
 public abstract class NevoLed implements NevoLedVisitable {
     public abstract int getHexColor();
     public abstract int getStringResource();
-    public abstract int getImageResource();
     public abstract String getTag();
 
     @Override

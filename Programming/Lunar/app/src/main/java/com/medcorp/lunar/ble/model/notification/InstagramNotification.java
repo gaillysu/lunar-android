@@ -4,6 +4,7 @@ package com.medcorp.lunar.ble.model.notification;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.ble.model.color.LightGreenLed;
 import com.medcorp.lunar.ble.model.color.NevoLed;
+import com.medcorp.lunar.ble.model.color.OrangeRedLed;
 import com.medcorp.lunar.ble.model.notification.visitor.NotificationVisitor;
 
 /**
@@ -40,12 +41,12 @@ public class InstagramNotification extends Notification {
 
     @Override
     public int getImageResource() {
-        return R.drawable.wechart_notification;
+        return R.drawable.instagram;
     }
 
     @Override
     public NevoLed getDefaultColor() {
-        return new LightGreenLed();
+        return new OrangeRedLed();
     }
 
     @Override

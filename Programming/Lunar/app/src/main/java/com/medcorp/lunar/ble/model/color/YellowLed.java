@@ -8,8 +8,8 @@ import com.medcorp.lunar.ble.model.color.visitor.NevoLedVisitor;
  */
 public class YellowLed extends NevoLed {
 
-    public final static int COLOR = 0x040000;
-    private final String TAG = "YELLOW";
+    public final static int COLOR = 0xFFFF00;
+    private final String TAG = "Yellow";
     @Override
     public int getHexColor() {
         return COLOR;
@@ -20,10 +20,6 @@ public class YellowLed extends NevoLed {
         return R.string.notification_led_yellow;
     }
 
-    @Override
-    public int getImageResource() {
-        return R.drawable.yellow_dot;
-    }
 
     @Override
     public String getTag() {

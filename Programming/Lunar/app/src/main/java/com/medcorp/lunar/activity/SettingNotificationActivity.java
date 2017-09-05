@@ -201,6 +201,9 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
             contentView.findViewById(R.id.setting_notification_item_active_bt).setVisibility(View.GONE);
             contentView.findViewById(R.id.setting_notification_item_inactive_bt).setVisibility(View.VISIBLE);
         }
+        if(!(selectNotification instanceof OtherAppNotification)) {
+            contentView.findViewById(R.id.setting_notification_item_delete_bt).setVisibility(View.GONE);
+        }
         dialog.show();
         contentView.findViewById(R.id.setting_notification_item_active_bt).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,6 +242,17 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                Set<String> appList = helper.getNotificationAppList();
+                if (type == ACTIVITY_FLAG) {
+                    activeNotificationList.remove(position);
+                    activeNotificationArrayAdapter.notifyDataSetChanged();
+                }
+                else {
+                    inactiveNotificationList.remove(position);
+                    inactiveNotificationArrayAdapter.notifyDataSetChanged();
+                }
+                appList.remove(selectNotification.getTag());
+                helper.setNotificationAppList(appList);
             }
         });
     }
@@ -249,7 +263,12 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         final GridView allColors = (GridView) inflateView.findViewById(R.id.notification_choose_color_all_colors_gd);
         final List<LedLamp> allLamp = getModel().getLedDataBase().getAll();
         NevoLed notificationColor = Preferences.getNotificationColor(this, selectNotification, getModel());
-        selectLedLamp = (LedLamp) notificationColor;
+        if(notificationColor instanceof LedLamp) {
+            selectLedLamp = (LedLamp) notificationColor;
+        }
+        else {
+            selectLedLamp = null;
+        }
         for (LedLamp ledLamp : allLamp) {
             if (ledLamp.getColor() == notificationColor.getHexColor()) {
                 ledLamp.setSelect(true);
@@ -290,10 +309,6 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
                         if (selectLedLamp != null) {
                             Preferences.saveNotificationColor(SettingNotificationActivity.this, selectNotification, selectLedLamp.getColor());
                             if (type == ACTIVITY_FLAG) {
-                                LedLamp currentColor = (LedLamp) Preferences.getNotificationColor(SettingNotificationActivity.this, selectNotification, getModel());
-                                currentColor.setColor(selectLedLamp.getColor());
-                                activeNotificationList.remove(position);
-                                activeNotificationList.add(selectNotification);
                                 activeNotificationArrayAdapter.notifyDataSetChanged();
                             }
                         }
@@ -335,18 +350,11 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
                 if (!TextUtils.isEmpty(name) && selectedColor != 0) {
                     addNewColorDialog.dismiss();
                     LedLamp mLedLamp = new LedLamp();
-                    mLedLamp.setSelect(true);
                     mLedLamp.setName(name);
                     mLedLamp.setColor(selectedColor);
                     getModel().addLedLamp(mLedLamp);
                     if (type == ACTIVITY_FLAG) {
-
-                        LedLamp currentColor = (LedLamp) Preferences.getNotificationColor(SettingNotificationActivity.this, selectNotification, getModel());
-                        currentColor.setColor(selectedColor);
-                        currentColor.setName(name);
-                        activeNotificationList.remove(position);
                         Preferences.saveNotificationColor(SettingNotificationActivity.this, selectNotification, selectedColor);
-                        activeNotificationList.add(selectNotification);
                         activeNotificationArrayAdapter.notifyDataSetChanged();
                     }
                 } else {

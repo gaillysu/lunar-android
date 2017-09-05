@@ -7,10 +7,10 @@ import com.medcorp.lunar.ble.model.color.visitor.NevoLedVisitor;
 /**
  * Created by Karl on 9/30/15.
  */
-public class BlueLed extends NevoLed {
+public class DeepSkyBlueLed extends NevoLed {
 
-    public final static int COLOR = 0x0000FF;
-    private final String TAG = "Blue";
+    public final static int COLOR = 0x00BFFF;
+    private final String TAG = "DeepSkyBlue";
 
     @Override
     public int getHexColor() {
@@ -19,7 +19,7 @@ public class BlueLed extends NevoLed {
 
     @Override
     public int getStringResource() {
-        return R.string.notification_led_blue;
+        return R.string.notification_led_deep_sky_blue;
     }
 
 

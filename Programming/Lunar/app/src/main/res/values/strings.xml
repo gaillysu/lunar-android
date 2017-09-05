@@ -90,12 +90,18 @@
 
     <string name="notification_allow">Allow Notifications</string>
     <string name="notification">Notification</string>
-    <string name="notification_led_red">Red LED</string>
-    <string name="notification_led_blue">Blue LED</string>
-    <string name="notification_led_light_green">Light green LED</string>
-    <string name="notification_led_yellow">Yellow LED</string>
-    <string name="notification_led_orange">Orange LED</string>
-    <string name="notification_led_green">Green LED</string>
+    <string name="notification_led_red">Red</string>
+    <string name="notification_led_blue">Blue</string>
+    <string name="notification_led_light_green">Light green</string>
+    <string name="notification_led_yellow">Yellow</string>
+    <string name="notification_led_orange">Orange</string>
+    <string name="notification_led_green">Green</string>
+    <string name="notification_led_gold">Gold</string>
+    <string name="notification_led_deep_sky_blue">Deep Sky Blue</string>
+    <string name="notification_led_dark_cyan">Dark Cyan</string>
+    <string name="notification_led_orange_red">Orange Red</string>
+    <string name="notification_led_purple">Purple</string>
+    <string name="notification_led_turquoise">Turquoise</string>
     <string name="notification_position">Position</string>
     <string name="notification_ok">OK</string>
     <string name="notification_cancel">Cancel</string>

@@ -22,10 +22,7 @@ public class LightGreenLed extends NevoLed {
         return R.string.notification_led_light_green;
     }
 
-    @Override
-    public int getImageResource() {
-        return R.drawable.light_green_dot;
-    }
+
     @Override
     public String getTag() {
         return TAG;
