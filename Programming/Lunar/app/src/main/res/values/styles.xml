@@ -163,6 +163,8 @@
 
     <style name="hintAppearance" parent="TextAppearance.AppCompat">
         <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColorHint">@color/colorAccent</item>
     </style>
 
     <style name="hintTextStyle" parent="TextAppearance.AppCompat">

@@ -143,7 +143,7 @@ public class ApplicationModel extends Application {
     private LocationController locationController;
     private IWXAPI mIWXAPI;
     private Steps steps = null;
-    private List<Steps> allSteps;
+    private List<Steps> allSteps = new ArrayList<>();
     private final String REALM_NAME = "med_lunar.realm";
     private Sleep mSleep;
     private boolean upDateIsSuccess;

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -57,7 +56,7 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         ButterKnife.bind(this);
         List<SettingsMenuItem> menuList = new ArrayList<>();
         menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_google_fit), R.drawable.google_fit_small, Preferences.isGoogleFitSet(this)));
-        settingsAdapter = new   SettingMenuAdapter(this, menuList, this);
+        settingsAdapter = new SettingMenuAdapter(this, menuList, this);
         otherAppsListView.setAdapter(settingsAdapter);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -74,15 +73,6 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private MaterialDialog.SingleButtonCallback validicNegativeCallback = new MaterialDialog.SingleButtonCallback() {
-        @Override
-        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-            settingsAdapter.getItem(validicPositionInList).setSwitchStatus(false);
-            settingsAdapter.notifyDataSetChanged();
-        }
-    };
-
 
     private MaterialDialog.SingleButtonCallback googleFitPositiveCallback = new MaterialDialog.SingleButtonCallback() {
         @Override
@@ -125,6 +115,21 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
 
     @Override
     public void onCheckedChange(CompoundButton buttonView, boolean isChecked, int position) {
-
+        if (position == 0) {
+            if (isChecked) {
+                Preferences.setGoogleFit(this, true);
+                getModel().initGoogleFit(this);
+            } else {
+                googleFitLogoutDialog = new MaterialDialog.Builder(this)
+                        .title(R.string.google_fit_log_out_title)
+                        .content(R.string.google_fit_log_out_message)
+                        .positiveText(R.string.google_fit_log_out)
+                        .negativeText(R.string.google_fit_cancel)
+                        .onPositive(googleFitPositiveCallback)
+                        .onNegative(googleFitNegativeCallback)
+                        .build();
+                googleFitLogoutDialog.show();
+            }
+        }
     }
 }

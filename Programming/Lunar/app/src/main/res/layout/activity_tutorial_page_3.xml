@@ -38,13 +38,13 @@
         android:layout_centerInParent="true"
         android:layout_marginTop="20dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_dial_crown"/>
+        android:src="@drawable/ic_setting_time"/>
 
     <com.medcorp.lunar.view.customfontview.RobotoButton
         android:id="@+id/activity_tutorial_3_next_button"
         style="@style/TutorialButton"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="54dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="60dp"
         android:text="@string/tutorial_next_step_text"/>

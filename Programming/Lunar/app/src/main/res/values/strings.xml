@@ -102,7 +102,9 @@
     <string name="notification_connect_content">your Nevo has got connected</string>
     <string name="notification_disconnect_title">Nevo disconnect</string>
     <string name="notification_disconnect_content">your Nevo has got disconnect</string>
-
+    <string name="access_google_fit_message">Are you sure to link your GoogleFit</string>
+    <string name="first_access_google_fit">Link GoogleFit</string>
+    <string name="first_things_activity_title">First things first</string>
     <string name="tutorial_1_title">Let\'s get started!</string>
 
     <string name="tutorial_2_title">Turn on Bluetooth</string>
@@ -422,6 +424,12 @@
     <string name="register_create_account">Submit</string>
 
     <string name="log_in_email">E-mail</string>
+    <string name="first_things_turn_notifications">Turn on Push Notifications</string>
+    <string name="first_things_access_location">Allow Access to Location</string>
+    <string name="first_things_access_google_fit">Allow Access to Google Fit</string>
+    <string name="first_things_activity_describe">To get the most out of LunaR</string>
+    <string name="first_things_button_text">Let\'s get started</string>
+    <string name="first_things_activity_sub_describe">please grant the following permissions:</string>
     <string name="register_terms_is_agree">I agree to the terms and conditions</string>
     <string name="tutorial_1_text">Use your LunaR watch to set, track and analyse\n your personal health and fitness data</string>
     <string name="tutorial_1_lets_activate">Activate LunaR</string>
@@ -431,7 +439,9 @@
     <string name="tutorial_2_continue">Turn Bluetooth on</string>
     <string name="tutorial_4_title">Turn on LunaR </string>
     <string name="tutorial_4_text">Push any button to turn on LunaR\'s bluetooth. But for now, press the lower right button. The 12 o\'clock LED will blink white.</string>
+
     <string name="tutorial_failed_text">Make sure your phone\'s bluetooth is enabled and that you\'ve at least pressed one button on your LunaR.</string>
+
     <string name="in_app_notification_found_nevo">Found LunaR!</string>
     <string name="in_app_notification_nevo_disconnected">LunaR disconnected.</string>
     <string name="in_app_notification_searching">Searching for LunaR&#8230;</string>

@@ -67,14 +67,14 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
     @Bind(R.id.notification_color_root_view)
     LinearLayout rootView;
 
+    private Notification selectNotification;
+    private int selectedColor;
+    private MaterialDialog mDialog;
     private SettingNotificationArrayAdapter activeNotificationArrayAdapter;
     private SettingNotificationArrayAdapter inactiveNotificationArrayAdapter;
     private List<Notification> activeNotificationList;
     private List<Notification> inactiveNotificationList;
     private LedLamp selectLedLamp;
-    private Notification selectNotification;
-    private int selectedColor;
-    private MaterialDialog mDialog;
     private final static int ACTIVITY_FLAG = 0x01;
     private final static int INACTIVITY_FLAG = 0x02;
     private NotificationDataHelper helper;

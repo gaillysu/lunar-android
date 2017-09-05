@@ -77,8 +77,8 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:background="@drawable/shape_input_email_account_bg"
                         android:layout_marginTop="10dp"
+                        android:background="@drawable/shape_input_email_account_bg"
                         android:paddingRight="4dp"
                         android:textColorHint="@color/colorAccent"
                         app:hintTextAppearance="@style/hintAppearance">
@@ -98,7 +98,7 @@
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/login_activity_login_bt"
                         android:layout_width="fill_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="54dp"
                         android:layout_marginBottom="20dp"
                         android:layout_marginTop="20dp"
                         android:background="@drawable/shape_login_button_bg"

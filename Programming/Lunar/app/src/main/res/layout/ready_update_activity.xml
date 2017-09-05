@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:android_custom="http://schemas.android.com/apk/res-auto"
-                xmlns:roboto="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/window_background_color"
@@ -11,86 +9,97 @@
 
     <include layout="@layout/toolbar"/>
 
-
-    <ImageView
-        android:id="@+id/ready_update_watch_icon_iv"
-        android:layout_width="262dp"
-        android:layout_height="262dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
-        android:src="@drawable/firmware_clock"/>
-
-    <TextView
-        android:id="@+id/ready_update_watch_title_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ready_update_watch_icon_iv"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="@string/ready_update_describe_title"
-        android:textColor="@color/text_color"
-        android:textSize="39sp"
-        />
-
-    <TextView
-        android:id="@+id/ready_update_watch_describe_subtitle_tv"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ready_update_watch_title_tv"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center_horizontal"
-        android:text="@string/ready_update_describe_subtitle"
-        android:textColor="@color/user_sex_text_normal_color"
-        android:textSize="15sp"/>
+        android:layout_height="match_parent"
+       android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/update_watch_firmware_careful_first"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ready_update_watch_describe_subtitle_tv"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:text="@string/update_watch_firmware_careful_one"
-        android:textColor="@color/text_color"
-        android:textSize="15sp"
-        />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/update_watch_firmware_careful_second"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/update_watch_firmware_careful_first"
-        android:gravity="center_horizontal"
-        android:text="@string/update_watch_firmware_careful_second"
-        android:textColor="@color/text_color"
-        android:textSize="15sp"
-        />
+            <ImageView
+                android:id="@+id/ready_update_watch_icon_iv"
+                android:layout_width="260dp"
+                android:layout_height="260dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="80dp"
+                android:src="@drawable/firmware_clock"/>
 
-    <TextView
-        android:id="@+id/update_watch_firmware_careful_third"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/update_watch_firmware_careful_second"
-        android:gravity="center_horizontal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/update_watch_firmware_careful_third"
-        android:textColor="@color/text_color"
-        android:textSize="15sp"/>
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/start_update_watch_firmware_button"
-        android:layout_width="300dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/update_watch_firmware_careful_third"
-        android:layout_marginTop="20dp"
-        android:textSize="15sp"
-        android:textAllCaps="false"
-        android:text="@string/ready_update_to_update_button_tv"
-        android:background="@drawable/outline_fill_button"
-        android:textColor="@color/text_color"
-        android:layout_height="50dp"/>
+            <TextView
+                android:id="@+id/ready_update_watch_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ready_update_watch_icon_iv"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="@string/ready_update_describe_title"
+                android:textColor="@color/text_color"
+                android:textSize="39sp"
+                />
 
+            <TextView
+                android:id="@+id/ready_update_watch_describe_subtitle_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ready_update_watch_title_tv"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_horizontal"
+                android:text="@string/ready_update_describe_subtitle"
+                android:textColor="@color/user_sex_text_normal_color"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/update_watch_firmware_careful_first"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ready_update_watch_describe_subtitle_tv"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
+                android:text="@string/update_watch_firmware_careful_one"
+                android:textColor="@color/text_color"
+                android:textSize="12sp"
+                />
+
+            <TextView
+                android:id="@+id/update_watch_firmware_careful_second"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/update_watch_firmware_careful_first"
+                android:gravity="center_horizontal"
+                android:text="@string/update_watch_firmware_careful_second"
+                android:textColor="@color/text_color"
+                android:textSize="12sp"
+                />
+
+            <TextView
+                android:id="@+id/update_watch_firmware_careful_third"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/update_watch_firmware_careful_second"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center_horizontal"
+                android:text="@string/update_watch_firmware_careful_third"
+                android:textColor="@color/text_color"
+                android:textSize="12sp"/>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/start_update_watch_firmware_button"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_below="@+id/update_watch_firmware_careful_third"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="60dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/outline_fill_button"
+                android:text="@string/ready_update_to_update_button_tv"
+                android:textAllCaps="false"
+                android:textColor="@color/text_color"
+                android:textSize="15sp"/>
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

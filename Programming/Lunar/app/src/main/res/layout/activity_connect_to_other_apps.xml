@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/window_background_color"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/window_background_color"
+              android:orientation="vertical"
     >
 
     <include
@@ -12,13 +13,13 @@
         />
 
     <ListView
-        android:background="@color/window_background_color"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:divider="@drawable/notification_list_view_divider"
-        android:dividerHeight="@null"
         android:id="@+id/activity_connect_to_other_apps_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="@color/window_background_color"
+        android:divider="@drawable/notification_list_view_divider"
+        android:dividerHeight="@null"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"/>
 
 </LinearLayout>

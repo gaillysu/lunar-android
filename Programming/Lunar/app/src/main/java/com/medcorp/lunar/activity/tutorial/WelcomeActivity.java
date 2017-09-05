@@ -128,12 +128,16 @@ public class WelcomeActivity extends BaseActivity {
 
     @OnClick(R.id.login_skip_bt)
     public void skipLogin() {
-        Preferences.saveIsFirstLogin(this, false);
-        if (getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true)
-                && !getModel().isWatchConnected()) {
-            startActivity(TutorialPage1Activity.class);
-        } else {
-            startActivity(MainActivity.class);
+        if (Preferences.getIsFirstLogin(this)) {
+            startActivity(FirstThingsActivity.class);
+        }else{
+            Preferences.saveIsFirstLogin(this, false);
+            if (getIntent().getBooleanExtra(getString(R.string.open_activity_is_tutorial), true)
+                    && !getModel().isWatchConnected()) {
+                startActivity(TutorialPage1Activity.class);
+            } else {
+                startActivity(MainActivity.class);
+            }
         }
         finish();
     }

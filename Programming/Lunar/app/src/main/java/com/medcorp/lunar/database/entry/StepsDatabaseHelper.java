@@ -187,13 +187,10 @@ public class StepsDatabaseHelper {
         return Observable.create(new ObservableOnSubscribe<List<Steps>>() {
             @Override
             public void subscribe(ObservableEmitter<List<Steps>> e) throws Exception {
-                List<Steps> allSteps = null;
-                List<Steps> stepses = mRealm.where(Steps.class).equalTo(mContext.getString(R.string.database_user_id),
-                        userId).findAll();
+                List<Steps> allSteps = new ArrayList<Steps>();
+                List<Steps> stepses = mRealm.where(Steps.class).equalTo(mContext.getString(R.string.database_user_id), userId).findAll();
                 if(stepses!=null){
                     allSteps = mRealm.copyFromRealm(stepses);
-                }else{
-                    allSteps = new ArrayList<>();
                 }
                 e.onNext(allSteps);
                 e.onComplete();
@@ -212,7 +209,6 @@ public class StepsDatabaseHelper {
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 RealmResults<Steps> steps = Realm.getDefaultInstance().where(Steps.class)
                         .equalTo(mContext.getString(R.string.database_id), activity_id).findAll();
-
                 if (steps != null) {
                     e.onNext(true);
                     e.onComplete();
