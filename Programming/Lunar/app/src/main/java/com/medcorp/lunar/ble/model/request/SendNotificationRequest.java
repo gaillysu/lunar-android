@@ -14,6 +14,7 @@ import com.medcorp.lunar.ble.model.notification.Notification;
 import com.medcorp.lunar.ble.model.notification.SmsNotification;
 import com.medcorp.lunar.ble.model.notification.TelephoneNotification;
 import com.medcorp.lunar.ble.model.notification.WeChatNotification;
+import com.medcorp.lunar.ble.model.notification.WhatsappNotification;
 import com.medcorp.lunar.ble.model.notification.visitor.NotificationVisitor;
 
 import net.medcorp.library.ble.model.request.BLERequestData;

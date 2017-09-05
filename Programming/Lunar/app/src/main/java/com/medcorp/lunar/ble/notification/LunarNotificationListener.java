@@ -125,12 +125,17 @@ public class LunarNotificationListener extends NotificationBaseListenerService i
                 }
             }
             else if(getAppListbyType(R.array.SMS_APPS).contains(statusBarNotification.getPackageName())) {
-                if(helper.getState(new MessengerNotification()).isOn() && statusBarNotification.getPackageName().contains("com.facebook")) {
-                    sendNotification(Preferences.getNotificationColor(this, new MessengerNotification(),mApplicationModel).getHexColor());
-                    return;
+                //facebook messenger
+                if(statusBarNotification.getPackageName().contains("com.facebook")) {
+                    if(helper.getState(new MessengerNotification()).isOn() ) {
+                        sendNotification(Preferences.getNotificationColor(this, new MessengerNotification(),mApplicationModel).getHexColor());
+                    }
                 }
-                if(helper.getState(new SmsNotification()).isOn()) {
-                    sendNotification(Preferences.getNotificationColor(this, new SmsNotification(),mApplicationModel).getHexColor());
+                //other messenger apps
+                else {
+                    if (helper.getState(new SmsNotification()).isOn()) {
+                        sendNotification(Preferences.getNotificationColor(this, new SmsNotification(), mApplicationModel).getHexColor());
+                    }
                 }
             } else if(getAppListbyType(R.array.EMAIL_APPS).contains(statusBarNotification.getPackageName())){
                 if(helper.getState(new EmailNotification()).isOn()) {
@@ -147,11 +152,9 @@ public class LunarNotificationListener extends NotificationBaseListenerService i
             } else if(statusBarNotification.getPackageName().contains("com.tencent") && getAppListbyType(R.array.SOCIAL_APPS).contains(statusBarNotification.getPackageName())){
                 if(helper.getState(new WeChatNotification()).isOn() && statusBarNotification.getPackageName().contains(".mm")) {
                     sendNotification(Preferences.getNotificationColor(this, new WeChatNotification(),mApplicationModel).getHexColor());
-                    return;
                 }
                 if(helper.getState(new QQNotification()).isOn() && (statusBarNotification.getPackageName().contains(".qq") || statusBarNotification.getPackageName().contains(".mobileqq"))) {
                     sendNotification(Preferences.getNotificationColor(this, new QQNotification(),mApplicationModel).getHexColor());
-                    return;
                 }
             } else if(statusBarNotification.getPackageName().contains("com.twitter") && getAppListbyType(R.array.SOCIAL_APPS).contains(statusBarNotification.getPackageName())){
                 if(helper.getState(new TwitterNotification()).isOn()) {

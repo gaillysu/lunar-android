@@ -7,6 +7,7 @@ import com.medcorp.lunar.ble.model.notification.Notification;
 import com.medcorp.lunar.ble.model.notification.SmsNotification;
 import com.medcorp.lunar.ble.model.notification.TelephoneNotification;
 import com.medcorp.lunar.ble.model.notification.WeChatNotification;
+import com.medcorp.lunar.ble.model.notification.WhatsappNotification;
 
 /**
  * Created by Karl on 9/30/15.
