@@ -15,7 +15,7 @@
         android:gravity="center"
         android:text="@string/tutorial_4_title"
         android:textColor="@color/black"
-        android:textSize="45sp" />
+        android:textSize="39sp" />
 
     <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page4_notice_textview"
@@ -35,19 +35,16 @@
         android:layout_width="240dp"
         android:layout_height="240dp"
         android:layout_centerInParent="true"
-        android:layout_below="@+id/activity_tutorial_page4_notice_textview"
-        android:layout_marginTop="20dp"
-        android:scaleType="fitXY"
         android:src="@drawable/ic_dial_press_left"/>
 
     <com.medcorp.lunar.view.customfontview.RobotoButton
         android:id="@+id/activity_tutorial_4_next_button"
         style="@style/TutorialButton"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="62dp"
+        android:layout_marginBottom="60dp"
         android:text="@string/tutorial_next_step_text"/>
 
 

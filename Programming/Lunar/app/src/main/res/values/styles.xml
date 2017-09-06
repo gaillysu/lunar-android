@@ -86,11 +86,11 @@
     </style>
 
     <style name="TutorialButton">
-        <item name="android:layout_height">54dp</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:background">@drawable/outline_fill_button</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:layout_alignParentBottom">true</item>
         <item name="android:layout_marginBottom">60dp</item>
         <item name="android:textColor">@color/tutorial_text_color</item>
         <item name="android:textAlignment">center</item>

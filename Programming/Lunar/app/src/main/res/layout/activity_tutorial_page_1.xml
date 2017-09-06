@@ -11,12 +11,13 @@
         android:id="@+id/activity_tutorial_page1_start_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="70dp"
         android:gravity="center_horizontal"
         android:text="@string/tutorial_1_title"
         android:textColor="@color/black"
-        android:textSize="45sp" />
+        android:textSize="39sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
 
     <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page1_notice_textview"
@@ -26,9 +27,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
-        android:paddingTop="5dp"
         android:text="@string/tutorial_1_text"
         android:textColor="@color/left_menu_item_text_color"
         android:textSize="15sp"/>
@@ -37,19 +37,15 @@
         android:id="@+id/imageView"
         android:layout_width="240dp"
         android:layout_height="240dp"
-        android:layout_below="@+id/activity_tutorial_page1_notice_textview"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:layout_marginTop="20dp"
-        android:scaleType="fitXY"
         android:src="@drawable/tutorial_nevo_1"/>
 
     <com.medcorp.lunar.view.customfontview.RobotoButton
         android:id="@+id/activity_tutorial_1_activate_button"
         style="@style/TutorialButton"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
+        android:layout_height="50dp"
         android:text="@string/tutorial_1_lets_activate"
         android:textColor="@color/tutorial_text_color"/>
 

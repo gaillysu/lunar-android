@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/welcome_activity_root_view"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/login_background"
-                android:gravity="bottom"
-                android:orientation="vertical">
+<RelativeLayout
+    android:id="@+id/welcome_activity_root_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background"
+    android:gravity="bottom"
+    android:orientation="vertical">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -17,12 +18,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,32 +56,19 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"/>
 
-
-            <LinearLayout
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/create_account_bt"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="36dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/normal_button_bg"
-                android:orientation="horizontal">
-
-                <com.medcorp.lunar.view.XCRoundRectImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@drawable/email_bt"/>
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:button="@null"
-                    android:gravity="center_horizontal"
-                    android:text="@string/welcome_activity_create_account"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"/>
-            </LinearLayout>
+                android:background="@drawable/wechat_button_bg"
+                android:button="@null"
+                android:checked="true"
+                android:drawableLeft="@drawable/ic_email"
+                android:text="@string/welcome_activity_create_account"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/login_bt"
@@ -96,13 +84,13 @@
                 android:textSize="16sp"/>
         </LinearLayout>
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/login_skip_bt"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:background="@color/transparent"
             android:button="@null"
             android:text="@string/welcome_activity_skip_login"

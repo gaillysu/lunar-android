@@ -12,11 +12,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="50dp"
         android:gravity="center"
         android:text="@string/tutorial_success_title"
         android:textColor="@color/black"
-        android:textSize="45sp" />
+        android:textSize="39sp" />
 
     <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page5_searching_notice_textview"
@@ -54,7 +54,7 @@
         android:id="@+id/activity_tutorial_success_next_button"
         style="@style/TutorialButton"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="60dp"

@@ -9,12 +9,13 @@
         android:id="@+id/prompt_update_firmware_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="70dp"
         android:gravity="center"
         android:text="@string/prompt_update_firmware_title_text"
         android:textColor="@color/black"
-        android:textSize="45sp"/>
+        android:textSize="39sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
 
     <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/prompt_update_firmware_describe_tv"
@@ -34,18 +35,15 @@
         android:id="@+id/update_firmware_icon"
         android:layout_width="240dp"
         android:layout_height="240dp"
-        android:layout_below="@+id/prompt_update_firmware_describe_tv"
         android:layout_centerInParent="true"
-        android:layout_marginTop="20dp"
-        android:scaleType="fitXY"
         android:src="@drawable/tutorial_nevo_1"/>
 
     <com.medcorp.lunar.view.customfontview.RobotoButton
         android:id="@+id/update_firmware_bt"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_below="@+id/update_firmware_icon"
-        android:layout_marginTop="60dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:background="@drawable/outline_fill_button"
@@ -57,9 +55,9 @@
         android:id="@+id/not_update_firmware_bt"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="5dp"
-        android:layout_below="@id/update_firmware_bt"
         android:layout_marginLeft="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
         android:layout_marginRight="40dp"
         android:background="@android:color/transparent"
         android:text="@string/later_update_bt"

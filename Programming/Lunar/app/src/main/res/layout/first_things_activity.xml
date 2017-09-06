@@ -16,7 +16,7 @@
         android:gravity="center_horizontal"
         android:text="@string/first_things_activity_title"
         android:textColor="@color/black"
-        android:textSize="45sp" />
+        android:textSize="39sp"/>
 
     <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/first_things_describe"
@@ -28,7 +28,6 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:paddingTop="5dp"
         android:text="@string/first_things_activity_describe"
         android:textColor="@color/left_menu_item_text_color"
         android:textSize="15sp"/>
@@ -41,19 +40,17 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        roboto:bold="true"
         android:gravity="center"
-        android:paddingTop="5dp"
         android:text="@string/first_things_activity_sub_describe"
         android:textColor="@color/tutorial_text_color"
-        android:textSize="15sp"/>
+        android:textSize="15sp"
+        roboto:bold="true"/>
 
     <LinearLayout
         android:id="@+id/first_things_content_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginTop="20dp"
         android:orientation="vertical"
         android:paddingLeft="40dp"
         android:paddingRight="40dp">
@@ -61,7 +58,7 @@
         <RelativeLayout
             android:id="@+id/first_things_access_notification_rl"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="50dp"
             android:background="@drawable/shape_first_things_button">
 
             <TextView
@@ -87,7 +84,7 @@
         <RelativeLayout
             android:id="@+id/first_things_access_location_rl"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="50dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/shape_first_things_button">
 
@@ -114,7 +111,7 @@
         <RelativeLayout
             android:id="@+id/first_things_access_google_fit_rl"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="50dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/shape_first_things_button">
 
@@ -143,9 +140,7 @@
         android:id="@+id/first_things_start_button"
         style="@style/TutorialButton"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_below="@+id/first_things_content_group"
-        android:layout_marginTop="25dp"
+        android:layout_height="50dp"
         android:text="@string/first_things_button_text"
         android:textColor="@color/tutorial_text_color"/>
 

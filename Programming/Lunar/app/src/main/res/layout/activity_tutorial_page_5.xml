@@ -15,7 +15,7 @@
         android:gravity="center"
         android:text="@string/tutorial_5_title"
         android:textColor="@color/black"
-        android:textSize="45sp" />
+        android:textSize="39sp" />
 
     <com.medcorp.lunar.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page5_searching_notice_textview"
@@ -41,8 +41,6 @@
         <ImageView
             android:layout_width="240dp"
             android:layout_height="240dp"
-            android:layout_marginTop="20dp"
-            android:scaleType="fitXY"
             android:layout_centerInParent="true"
             android:src="@drawable/tutorial_nevo_1"/>
 
