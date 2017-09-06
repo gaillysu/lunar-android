@@ -95,6 +95,9 @@
         <activity
             android:name=".activity.SettingNotificationActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.tutorial.PromptUpdateActivity"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".activity.SettingAboutActivity"

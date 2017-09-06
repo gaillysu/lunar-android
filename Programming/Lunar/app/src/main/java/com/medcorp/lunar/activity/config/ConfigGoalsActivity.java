@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.lunar.R;
 import com.medcorp.lunar.activity.MainActivity;
-import com.medcorp.lunar.activity.MyWatchActivity;
+import com.medcorp.lunar.activity.tutorial.PromptUpdateActivity;
 import com.medcorp.lunar.base.BaseActivity;
 import com.medcorp.lunar.fragment.MainClockFragment;
 import com.medcorp.lunar.model.SleepGoal;
@@ -224,7 +224,7 @@ public class ConfigGoalsActivity extends BaseActivity {
             int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
             final int buildingFirmwareVersion = getResources().getInteger(R.integer.launar_version);
             if (currentFirmwareVersion < buildingFirmwareVersion) {
-                startAndFinishActivity(MyWatchActivity.class);
+                startAndFinishActivity(PromptUpdateActivity.class);
             } else {
                 startAndFinishActivity(MainActivity.class);
             }

@@ -118,7 +118,10 @@
 
     <string name="tutorial_5_title">Searching</string>
     <string name="tutorial_5_text">Trying to connect with LunaR. Make sure you keep LunaR in reach of your phone!</string>
-
+    <string name="prompt_update_firmware_title_text">Update LunaR</string>
+    <string name="prompt_update_firmware_describe_text">A new firmware-version is available.\nUpdate now and be able to use the latest features of LunaR!</string>
+    <string name="prompt_update_bt">Update now</string>
+    <string name="later_update_bt">or update later</string>
     <string name="tutorial_failed_title">Connection failed</string>
     <string name="tutorial_failed_try_again">Try Again</string>
 
