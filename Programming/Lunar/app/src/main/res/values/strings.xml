@@ -440,7 +440,7 @@
     <string name="tutorial_2_continue">Turn Bluetooth on</string>
     <string name="tutorial_4_title">Turn on LunaR </string>
     <string name="tutorial_4_text">Push any button to turn on LunaR\'s bluetooth. But for now, press the lower right button. The 12 o\'clock LED will blink white.</string>
-    <string name="tutorial_5_title">Connected</string>
+    <string name="tutorial_5_title">Searching</string>
     <string name="tutorial_failed_text">Make sure your phone\'s bluetooth is enabled and that the LED on the LunaR is blinking.</string>
     <string name="in_app_notification_found_nevo">Found LunaR!</string>
     <string name="in_app_notification_nevo_disconnected">LunaR disconnected.</string>
