@@ -101,7 +101,7 @@
     <string name="lunar_fragment_distance_km_text">Km</string>
     <string name="lunar_fragment_steps_text">Steps</string>
     <string name="lunar_home_clock_solar_harvest_charge">Charging</string>
-    <string name="lunar_home_clock_solar_harvest_idle">Idle</string>
+    <string name="lunar_home_clock_solar_harvest_stand_by">Stand-by</string>
     <string name="lunar_home_clock_steps_title_tv">STEPS TAKEN</string>
     <string name="lunar_main_clock_charging_status_title">HARVESTING STATUS</string>
     <string name="lunar_main_clock_home_city_sunrise">SUNRISE</string>
@@ -397,7 +397,7 @@
     <string name="in_app_notification_max_three_alarm">LunaR unterstützt nur drei Alarme.</string>
 
     <string name="title_alarm">Alarm</string>
-    <string name="title_my_nevo">Meine LunaR</string>
+    <string name="title_my_lunar">Meine LunaR</string>
     <string name="title_about">Info über</string>
     <string name="title_notifications">Benachrichtigungen</string>
     <string name="title_steps">Aktivität</string>

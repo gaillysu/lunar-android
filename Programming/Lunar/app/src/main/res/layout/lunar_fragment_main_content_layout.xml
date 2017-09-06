@@ -26,7 +26,7 @@
                 android:maxLines="1"
                 android:text="@string/lunar_home_clock_steps_title_tv"
                 android:textColor="@color/text_color"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/lunar_main_clock_steps_count"
@@ -35,7 +35,7 @@
                 android:layout_centerInParent="true"
                 android:maxLines="1"
                 android:textColor="@color/text_color"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/steps_of_goal_percentage"
@@ -47,14 +47,13 @@
                 android:maxLines="1"
                 android:textAllCaps="false"
                 android:textColor="@color/text_color"
-                android:textSize="12sp"
-                />
+                android:textSize="12sp" />
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:background="@color/window_background_color"/>
+            android:background="@color/window_background_color" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,8 +61,7 @@
             android:layout_weight="1"
             android:background="@drawable/main_clock_fragment_content_shape"
             android:gravity="center"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -73,8 +71,7 @@
                 android:text="@string/lunar_main_clock_sleep_time_title"
                 android:textAllCaps="false"
                 android:textColor="@color/text_color"
-                android:textSize="12sp"
-                />
+                android:textSize="12sp" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -84,7 +81,7 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="2dp"
                 android:layout_weight="1"
-                android:src="@drawable/moon_icon"/>
+                android:src="@drawable/moon_icon" />
 
             <TextView
                 android:id="@+id/lunar_main_clock_sleep_time_count"
@@ -94,8 +91,7 @@
                 android:maxLines="1"
                 android:text="@string/def_sleep_text"
                 android:textColor="@color/text_color"
-                android:textSize="12sp"
-                />
+                android:textSize="12sp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -152,7 +148,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="8dp"
                 android:maxLines="1"
-                android:text="@string/lunar_home_clock_solar_harvest_idle"
+                android:text="hi"
                 android:textColor="@color/edit_alarm_item_text_color"
                 android:textSize="12sp"/>
         </LinearLayout>
@@ -309,8 +305,7 @@
                 android:text="@string/lunar_main_clock_home_city_sunrise"
                 android:textAllCaps="false"
                 android:textColor="@color/text_color"
-                android:textSize="12sp"
-                />
+                android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/lunar_main_clock_home_city_sunrise_icon"

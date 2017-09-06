@@ -66,7 +66,7 @@ public class MyWatchActivity extends BaseActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        toolbar.setTitle(R.string.title_my_nevo);
+        toolbar.setTitle(R.string.title_my_lunar);
     }
 
     @Override

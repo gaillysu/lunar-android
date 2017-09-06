@@ -91,7 +91,6 @@ public class ProfileActivity extends BaseActivity {
     private String userEmail;
     private static final int REQUEST_IMAGE = 2;
     protected static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
-    private ArrayList<String> mSelectPath;
     private ProgressDialog progressDialog;
     private Calendar calendar = Calendar.getInstance();
     private int height = 0;
@@ -126,7 +125,6 @@ public class ProfileActivity extends BaseActivity {
             }
         });
     }
-
 
     private void initView() {
         progressDialog = new ProgressDialog(this, AppTheme_Dark_Dialog);
@@ -410,6 +408,7 @@ public class ProfileActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
+            ArrayList<String> mSelectPath;
             if (requestCode == REQUEST_IMAGE) {
                 mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                 if (mSelectPath.size() > 0) {

@@ -194,7 +194,7 @@ public class MainSolarDetailsFragment extends BaseFragment {
                 if (event.getPv_adc() >= 170) {
                     showSolarStatusTv.setText(R.string.lunar_home_clock_solar_harvest_charge);
                 } else {
-                    showSolarStatusTv.setText(R.string.lunar_home_clock_solar_harvest_idle);
+                    showSolarStatusTv.setText(R.string.lunar_home_clock_solar_harvest_stand_by);
                 }
             }
         });

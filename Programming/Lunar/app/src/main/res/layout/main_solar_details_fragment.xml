@@ -101,7 +101,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="10dp"
                         android:maxLines="1"
-                        android:text="@string/lunar_home_clock_solar_harvest_idle"
+                        android:text="@string/lunar_home_clock_solar_harvest_stand_by"
                         android:textColor="@color/text_color"
                         android:textSize="14sp"/>
 

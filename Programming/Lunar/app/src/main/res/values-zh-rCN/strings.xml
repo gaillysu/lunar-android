@@ -220,7 +220,7 @@
     <string name="in_app_notification_max_three_alarm">手表仅支持3个闹钟.</string>
 
     <string name="title_alarm">闹钟</string>
-    <string name="title_my_nevo">我的手表</string>
+    <string name="title_my_lunar">我的手表</string>
     <string name="title_about">关于</string>
     <string name="title_notifications">通知</string>
     <string name="title_steps">活动</string>
@@ -437,7 +437,7 @@
     <string name="edit_home_position_city">定位城市</string>
     <string name="edit_home_all_city">城市列表</string>
     <string name="lunar_home_clock_solar_harvest_charge">充电中</string>
-    <string name="lunar_home_clock_solar_harvest_idle">空闲</string>
+    <string name="lunar_home_clock_solar_harvest_stand_by">空闲</string>
     <string name="check_email_message">邮箱已经存在!!!</string>
     <string name="check_wechat_fail">检查失败</string>
     <string name="obtain_facebook_info_failed">获取个人信息失败</string>

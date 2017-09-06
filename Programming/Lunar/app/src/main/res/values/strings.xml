@@ -215,7 +215,7 @@
     <string name="in_app_notification_no_watch">No watch connected.</string>
     <string name="in_app_notification_max_alarms">Lunar supports only 20 alarms.</string>
     <string name="title_alarm">Alarm</string>
-    <string name="title_my_nevo">My Lunar</string>
+    <string name="title_my_lunar">My LunaR</string>
     <string name="title_about">About</string>
     <string name="title_notifications">Notifications</string>
 
@@ -499,7 +499,7 @@
     <string name="lunar_main_clock_home_city_sunset">SUNSET</string>
     <string name="lunar_home_clock_steps_title_tv">STEPS TAKEN</string>
     <string name="lunar_home_clock_solar_harvest_charge">Charging</string>
-    <string name="lunar_home_clock_solar_harvest_idle">Idle</string>
+    <string name="lunar_home_clock_solar_harvest_stand_by">Stand-by</string>
     <string name="wechat_uninstall">WeChat is not installed</string>
     <string name="check_wechat_fail">Check wechat account fail</string>
     <string name="wechat_create_account_fail">Create account fail</string>
