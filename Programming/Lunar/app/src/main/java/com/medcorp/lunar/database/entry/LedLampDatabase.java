@@ -18,17 +18,15 @@ import io.realm.RealmResults;
 
 public class LedLampDatabase {
 
-    private Realm mRealm;
     private boolean isSuccess;
     private Context mContext;
 
     public LedLampDatabase(Context context) {
-        mRealm = Realm.getDefaultInstance();
         mContext = context;
     }
 
     public boolean add(final LedLamp object) {
-        mRealm.executeTransaction(new Realm.Transaction() {
+        Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 realm.copyToRealm(convertToDao(object));
@@ -40,10 +38,10 @@ public class LedLampDatabase {
 
 
     public boolean update(final LedLamp object) {
-        mRealm.executeTransaction(new Realm.Transaction() {
+        Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                LedLampDAO led = mRealm.where(LedLampDAO.class).equalTo(mContext.getString(R.string.database_id)
+                LedLampDAO led = Realm.getDefaultInstance().where(LedLampDAO.class).equalTo(mContext.getString(R.string.database_id)
                         , object.getId()).findFirst();
                 led.setColor(object.getColor());
                 led.setName(object.getName());
@@ -54,10 +52,10 @@ public class LedLampDatabase {
     }
 
     public boolean remove(final String name, final int color) {
-        final LedLampDAO ledLamp = mRealm.where(LedLampDAO.class)
+        final LedLampDAO ledLamp = Realm.getDefaultInstance().where(LedLampDAO.class)
                 .equalTo(mContext.getString(R.string.led_lamp_name), name)
                 .equalTo(mContext.getString(R.string.led_lamp_color), color).findFirst();
-        mRealm.executeTransaction(new Realm.Transaction() {
+        Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 if (ledLamp != null) {
@@ -71,14 +69,15 @@ public class LedLampDatabase {
 
 
     public LedLamp get(String name, int color) {
-        LedLamp led = convertToNormal(mRealm.where(LedLampDAO.class)
+        LedLamp led = convertToNormal(Realm.getDefaultInstance().where(LedLampDAO.class)
                 .equalTo(mContext.getString(R.string.led_lamp_name), name)
                 .equalTo(mContext.getString(R.string.led_lamp_color), color).findFirst());
         return led;
     }
 
     public List<LedLamp> getAll() {
-        RealmResults<LedLampDAO> all = mRealm.where(LedLampDAO.class).findAll();
+
+        RealmResults<LedLampDAO> all = Realm.getDefaultInstance().where(LedLampDAO.class).findAll();
         return convertToNormalList(all);
     }
 
